@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class HomeActivity extends BaseActivity {
 
-    private Map<String, Map<String, Promotion>> companies;
+    ///private Map<String, Map<String, Promotion>> companies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

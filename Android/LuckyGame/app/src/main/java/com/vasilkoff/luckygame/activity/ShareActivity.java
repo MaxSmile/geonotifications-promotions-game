@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -15,18 +16,31 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.entity.Promotion;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+import java.util.Random;
+
 public class ShareActivity extends BaseActivity {
 
     private CallbackManager callbackManager;
+    private Promotion randomPromotion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
+
+        Random generator = new Random();
+        Object[] values = companies.get(getIntent().getStringExtra("company")).values().toArray();
+        randomPromotion = (Promotion)values[generator.nextInt(values.length)];
+
+        String title = String.format(getResources().getString(R.string.share_title),
+                randomPromotion.getName());
+        ((TextView) findViewById(R.id.shareTitle)).setText(title);
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -68,8 +82,7 @@ public class ShareActivity extends BaseActivity {
 
     private void createCoupon(String id) {
         String coupon = id + String.valueOf(System.currentTimeMillis());
-        System.out.println("TEST coupon = " + coupon);
-        dbHelper.saveCoupon(coupon);
+        dbHelper.saveCoupon(coupon, randomPromotion);
         startActivity(new Intent(ShareActivity.this, ListCouponsActivity.class));
         finish();
     }

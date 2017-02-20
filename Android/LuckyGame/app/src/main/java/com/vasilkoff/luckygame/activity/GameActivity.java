@@ -41,7 +41,9 @@ public class GameActivity extends AppCompatActivity {
                 checkAccount();
                 break;
             case R.id.gameWin:
-                startActivity(new Intent(this, ShareActivity.class));
+                Intent intent = new Intent(this, ShareActivity.class);
+                intent.putExtra("company", getIntent().getStringExtra("company"));
+                startActivity(intent);
                 finish();
                 break;
             case R.id.gameLose:

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.vasilkoff.luckygame.entity.Coupon;
+import com.vasilkoff.luckygame.entity.Promotion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +58,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 + ")");
     }
 
-    public void saveCoupon(String code) {
+    public void saveCoupon(String code, Promotion promotion) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_ACTIVE, 1);
         contentValues.put(KEY_CODE, code);
+        contentValues.put(KEY_NAME, promotion.getName());
+        contentValues.put(KEY_DESCRIPTION, promotion.getDescription());
+        contentValues.put(KEY_DATE_EXPIRE, promotion.getDateFinish());
 
 
         db.insert(TABLE_COUPONS, null, contentValues);
