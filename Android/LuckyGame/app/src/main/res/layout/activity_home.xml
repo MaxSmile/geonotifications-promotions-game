@@ -9,10 +9,23 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vasilkoff.luckygame.activity.HomeActivity">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/homeCompanyList"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/homeToCoupons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Coupons"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/homeCompanyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+    </LinearLayout>
 
 </RelativeLayout>

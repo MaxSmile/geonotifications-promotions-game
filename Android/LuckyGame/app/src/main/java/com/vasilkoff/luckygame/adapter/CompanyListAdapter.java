@@ -58,6 +58,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, GameActivity.class);
+                    intent.putExtra("dateFinish", companies.get);
 
                     context.startActivity(intent);
                 }

@@ -2,8 +2,15 @@ package com.vasilkoff.luckygame.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.vasilkoff.luckygame.entity.Coupon;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kusenko on 14.02.2017.
@@ -14,6 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "data.db";
     private static final String TABLE_COUPONS = "coupons";
+    private static final String TAG = "DBHelper";
 
     private static final String KEY_ID = "_id";
     private static final String KEY_ACTIVE = "active";
@@ -52,10 +60,45 @@ public class DBHelper extends SQLiteOpenHelper {
     public void saveCoupon(String code) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_ACTIVE, 1);
         contentValues.put(KEY_CODE, code);
 
 
         db.insert(TABLE_COUPONS, null, contentValues);
         db.close();
+    }
+
+    public List<Coupon> getCouponsList() {
+        List<Coupon> couponsList = new ArrayList<Coupon>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + TABLE_COUPONS
+                + " WHERE "
+                + KEY_ACTIVE
+                + " > 0"
+                , null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                couponsList.add(parseCoupon(cursor));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return couponsList;
+    }
+
+    private Coupon parseCoupon(Cursor cursor) {
+        return new Coupon(
+                cursor.getInt(1) > 0,
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4),
+                cursor.getString(5)
+        );
     }
 }
