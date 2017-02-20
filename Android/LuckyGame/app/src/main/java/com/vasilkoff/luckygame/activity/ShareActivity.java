@@ -5,15 +5,21 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.vasilkoff.luckygame.R;
 
-public class ShareActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class ShareActivity extends BaseActivity {
 
     private CallbackManager callbackManager;
 
@@ -37,12 +43,13 @@ public class ShareActivity extends AppCompatActivity {
         fbShareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                System.out.println("TEST Share+");
+                getUserInfo();
             }
 
             @Override
             public void onCancel() {
-                System.out.println("TEST Share-");
+                startActivity(new Intent(ShareActivity.this, HomeActivity.class));
+                finish();
             }
 
             @Override
@@ -58,4 +65,39 @@ public class ShareActivity extends AppCompatActivity {
 
         callbackManager.onActivityResult(requestCode, responseCode, intent);
     }
+
+    private void createCoupon(String id) {
+        String coupon = id + String.valueOf(System.currentTimeMillis());
+        System.out.println("TEST coupon = " + coupon);
+        dbHelper.saveCoupon(coupon);
+        startActivity(new Intent(ShareActivity.this, ListCouponsActivity.class));
+        finish();
+    }
+
+    private void getUserInfo() {
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                          /*  String gender = object.getString("gender");
+                            String birthday = object.getString("birthday");
+                            String name = object.getString("name");
+                            String id = object.getString("id");
+                            System.out.println("TEST = " + name + id);*/
+                            createCoupon(object.getString("id"));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,gender,name,birthday,picture.type(large)");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+    }
+
 }

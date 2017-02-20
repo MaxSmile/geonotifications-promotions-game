@@ -1,12 +1,14 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.vasilkoff.luckygame.database.DBHelper;
 
 /**
- * Created by Kusenko on 17.02.2017.
+ * Created by Kusenko on 20.02.2017.
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -15,4 +17,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     DatabaseReference dbVersion = reference.child("ver1");
     DatabaseReference dbCompanies = dbVersion.child("companies");
     DatabaseReference dbPlaces = dbVersion.child("places");
+
+    static DBHelper dbHelper;
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+
+        if (dbHelper == null)
+            dbHelper = new DBHelper(this);
+    }
 }
