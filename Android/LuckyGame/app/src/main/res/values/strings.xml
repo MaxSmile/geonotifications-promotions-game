@@ -13,4 +13,12 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="choose_action_title">We are sorry, you did not win
+        \nanything this time.
+        \nBut you can:
+    </string>
+    <string name="choose_action_check_in">Do a Check in using Facebook</string>
+    <string name="choose_action_like">Like the Facebook page</string>
+    <string name="choose_action_home">Try to come tomorrow</string>
+    <string name="share_title">Share this and get coupon</string>
 </resources>

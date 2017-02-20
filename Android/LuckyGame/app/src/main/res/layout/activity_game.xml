@@ -19,4 +19,25 @@
         android:layout_centerHorizontal="true"
         android:onClick="onClickGame"/>
 
+    <Button
+        android:id="@+id/gameWin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Win"
+        android:onClick="onClickGame"
+        android:layout_alignBaseline="@+id/gamePlay"
+        android:layout_alignBottom="@+id/gamePlay"
+        android:layout_toStartOf="@+id/gamePlay" />
+
+    <Button
+        android:id="@+id/gameLose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lose"
+        android:onClick="onClickGame"
+        android:layout_alignBaseline="@+id/gamePlay"
+        android:layout_alignBottom="@+id/gamePlay"
+        android:layout_toEndOf="@+id/gamePlay"
+        android:layout_marginStart="11dp" />
+
 </RelativeLayout>
