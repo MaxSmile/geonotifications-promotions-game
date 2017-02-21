@@ -30,6 +30,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_DATE_EXPIRE = "dateExpire";
     private static final String KEY_CODE = "code";
+    private static final String KEY_COMPANY = "company";
+    private static final String KEY_USER_ID = "userId";
 
 
     public DBHelper(Context context) {
@@ -54,11 +56,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_NAME + " text,"
                 + KEY_DESCRIPTION + " text,"
                 + KEY_DATE_EXPIRE + " text,"
-                + KEY_CODE + " text"
+                + KEY_CODE + " text,"
+                + KEY_COMPANY + " text,"
+                + KEY_USER_ID + " text"
                 + ")");
     }
 
-    public void saveCoupon(String code, Promotion promotion) {
+    public void saveCoupon(String code, String company, String userId, Promotion promotion) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_ACTIVE, 1);
@@ -66,6 +70,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_NAME, promotion.getName());
         contentValues.put(KEY_DESCRIPTION, promotion.getDescription());
         contentValues.put(KEY_DATE_EXPIRE, promotion.getDateFinish());
+        contentValues.put(KEY_COMPANY, company);
+        contentValues.put(KEY_USER_ID, userId);
 
 
         db.insert(TABLE_COUPONS, null, contentValues);
@@ -111,7 +117,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getString(2),
                 cursor.getString(3),
                 cursor.getString(4),
-                cursor.getString(5)
+                cursor.getString(5),
+                cursor.getString(6),
+                cursor.getString(7)
         );
     }
 }

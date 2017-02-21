@@ -20,10 +20,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     DatabaseReference dbVersion = reference.child("ver1");
     DatabaseReference dbCompanies = dbVersion.child("companies");
     DatabaseReference dbPlaces = dbVersion.child("places");
+    DatabaseReference dbRedeemed = dbVersion.child("redeemed");
 
     static Map<String, Map<String, Promotion>> companies;
 
     static DBHelper dbHelper;
+
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {

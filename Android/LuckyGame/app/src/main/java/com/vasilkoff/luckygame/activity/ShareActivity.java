@@ -82,7 +82,7 @@ public class ShareActivity extends BaseActivity {
 
     private void createCoupon(String id) {
         String coupon = id + String.valueOf(System.currentTimeMillis());
-        dbHelper.saveCoupon(coupon, randomPromotion);
+        dbHelper.saveCoupon(coupon, getIntent().getStringExtra("company"), id, randomPromotion);
         startActivity(new Intent(ShareActivity.this, ListCouponsActivity.class));
         finish();
     }
@@ -98,7 +98,8 @@ public class ShareActivity extends BaseActivity {
                             String birthday = object.getString("birthday");
                             String name = object.getString("name");
                             String id = object.getString("id");
-                            System.out.println("TEST = " + name + id);*/
+                            */
+
                             createCoupon(object.getString("id"));
 
                         } catch (JSONException e) {

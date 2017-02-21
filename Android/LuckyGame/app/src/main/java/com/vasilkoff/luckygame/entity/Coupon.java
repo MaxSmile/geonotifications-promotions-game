@@ -8,18 +8,23 @@ import android.os.Parcelable;
  */
 
 public class Coupon implements Parcelable {
+
     private boolean active;
     private String name;
     private String description;
     private String dateExpire;
     private String code;
+    private String company;
+    private String userId;
 
-    public Coupon(boolean active, String name, String description, String dateExpire, String code) {
+    public Coupon(boolean active, String name, String description, String dateExpire, String code, String company, String userId) {
         this.active = active;
         this.name = name;
         this.description = description;
         this.dateExpire = dateExpire;
         this.code = code;
+        this.company = company;
+        this.userId = userId;
     }
 
     protected Coupon(Parcel in) {
@@ -28,6 +33,8 @@ public class Coupon implements Parcelable {
         description = in.readString();
         dateExpire = in.readString();
         code = in.readString();
+        company = in.readString();
+        userId = in.readString();
     }
 
     public static final Creator<Coupon> CREATOR = new Creator<Coupon>() {
@@ -82,6 +89,22 @@ public class Coupon implements Parcelable {
         this.code = code;
     }
 
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -94,5 +117,7 @@ public class Coupon implements Parcelable {
         parcel.writeString(description);
         parcel.writeString(dateExpire);
         parcel.writeString(code);
+        parcel.writeString(company);
+        parcel.writeString(userId);
     }
 }
