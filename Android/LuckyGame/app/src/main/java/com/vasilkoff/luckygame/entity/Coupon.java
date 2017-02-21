@@ -1,11 +1,13 @@
 package com.vasilkoff.luckygame.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Kusenko on 20.02.2017.
  */
 
-public class Coupon {
-
+public class Coupon implements Parcelable {
     private boolean active;
     private String name;
     private String description;
@@ -19,6 +21,26 @@ public class Coupon {
         this.dateExpire = dateExpire;
         this.code = code;
     }
+
+    protected Coupon(Parcel in) {
+        active = in.readByte() != 0;
+        name = in.readString();
+        description = in.readString();
+        dateExpire = in.readString();
+        code = in.readString();
+    }
+
+    public static final Creator<Coupon> CREATOR = new Creator<Coupon>() {
+        @Override
+        public Coupon createFromParcel(Parcel in) {
+            return new Coupon(in);
+        }
+
+        @Override
+        public Coupon[] newArray(int size) {
+            return new Coupon[size];
+        }
+    };
 
     public boolean isActive() {
         return active;
@@ -58,5 +80,19 @@ public class Coupon {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeByte((byte) (active ? 1 : 0));
+        parcel.writeString(name);
+        parcel.writeString(description);
+        parcel.writeString(dateExpire);
+        parcel.writeString(code);
     }
 }

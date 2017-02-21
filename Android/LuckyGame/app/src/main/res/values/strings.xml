@@ -21,4 +21,5 @@
     <string name="choose_action_like">Like the Facebook page</string>
     <string name="choose_action_home">Try to come tomorrow</string>
     <string name="share_title">Share %s and get coupon</string>
+    <string name="coupon_redeem">Redeem</string>
 </resources>

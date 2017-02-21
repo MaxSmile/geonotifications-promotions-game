@@ -1,6 +1,7 @@
 package com.vasilkoff.luckygame.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.activity.CouponActivity;
 import com.vasilkoff.luckygame.entity.Coupon;
 
 import java.util.List;
@@ -48,14 +50,15 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             super(v);
             name = (TextView) v.findViewById(R.id.couponName);
 
-           /* v.setOnClickListener(new View.OnClickListener() {
+            v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, GameActivity.class);
+                    Intent intent = new Intent(context, CouponActivity.class);
+                    intent.putExtra(Coupon.class.getCanonicalName(), couponsList.get(getAdapterPosition()));
 
                     context.startActivity(intent);
                 }
-            });*/
+            });
         }
     }
 }

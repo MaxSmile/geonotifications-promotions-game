@@ -72,6 +72,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void setInactive(String code) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ACTIVE, 0);
+        db.update(TABLE_COUPONS, values, KEY_CODE + " = ?", new String[] {code});
+
+        db.close();
+    }
+
     public List<Coupon> getCouponsList() {
         List<Coupon> couponsList = new ArrayList<Coupon>();
         SQLiteDatabase db = this.getWritableDatabase();

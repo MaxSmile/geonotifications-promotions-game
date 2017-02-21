@@ -34,7 +34,8 @@
             android:name=".activity.ChooseAccountActivity"
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".activity.ShareActivity" />
-        <activity android:name=".activity.ListCouponsActivity"></activity>
+        <activity android:name=".activity.ListCouponsActivity" />
+        <activity android:name=".activity.CouponActivity"></activity>
     </application>
 
 </manifest>
