@@ -14,18 +14,22 @@ public class Promotion {
     private String name;
     private boolean active;
     private List<String> listPlaces;
+    private String imageUrl;
+    private String contentUrl;
 
     public Promotion() {
 
     }
 
-    public Promotion(long dateStart, long dateFinish, String description, String name, boolean active, List<String> listPlaces) {
+    public Promotion(long dateStart, long dateFinish, String description, String name, boolean active, List<String> listPlaces, String imageUrl, String contentUrl) {
         this.dateStart = dateStart;
         this.dateFinish = dateFinish;
         this.description = description;
         this.name = name;
         this.active = active;
         this.listPlaces = listPlaces;
+        this.imageUrl = imageUrl;
+        this.contentUrl = contentUrl;
     }
 
     public long getDateStart() {
@@ -74,5 +78,21 @@ public class Promotion {
 
     public void setListPlaces(List<String> listPlaces) {
         this.listPlaces = listPlaces;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getContentUrl() {
+        return contentUrl;
+    }
+
+    public void setContentUrl(String contentUrl) {
+        this.contentUrl = contentUrl;
     }
 }

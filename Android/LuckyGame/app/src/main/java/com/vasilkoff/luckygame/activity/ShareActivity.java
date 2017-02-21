@@ -46,12 +46,10 @@ public class ShareActivity extends BaseActivity {
 
         ShareButton fbShareButton = (ShareButton) findViewById(R.id.fb_share_button);
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentTitle("Hello Guys")
-                .setContentDescription(
-                        "Food is good))")
-                .setContentUrl(Uri.parse("http://google.com"))
-                .setImageUrl(Uri.parse("http://depts.washington.edu/nwcenter/wp-content/uploads/2016/09/maxresdefault.jpg"))
-
+                .setContentTitle(randomPromotion.getName())
+                .setContentDescription(randomPromotion.getDescription())
+                .setContentUrl(Uri.parse(randomPromotion.getContentUrl()))
+                .setImageUrl(Uri.parse(randomPromotion.getImageUrl()))
                 .build();
         fbShareButton.setShareContent(content);
         fbShareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
