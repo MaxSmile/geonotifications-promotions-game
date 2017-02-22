@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
 
 import java.util.Map;
@@ -18,11 +19,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     DatabaseReference dbVersion = reference.child("ver1");
-    DatabaseReference dbCompanies = dbVersion.child("companies");
-    DatabaseReference dbPlaces = dbVersion.child("places");
+    DatabaseReference dbData = dbVersion.child("data");
+    DatabaseReference dbCompanies = dbData.child("companies");
+    DatabaseReference dbPlaces = dbData.child("places");
     DatabaseReference dbRedeemed = dbVersion.child("redeemed");
 
     static Map<String, Map<String, Promotion>> companies;
+    static Map<String, Place> uniquePlaces;
 
     static DBHelper dbHelper;
 

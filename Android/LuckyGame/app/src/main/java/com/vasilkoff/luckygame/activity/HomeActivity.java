@@ -1,34 +1,30 @@
 package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
+import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class HomeActivity extends BaseActivity {
 
-    ///private Map<String, Map<String, Promotion>> companies;
+    //private Set<String> uniquePlacesNames;
+    private RecyclerView companiesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,31 +46,16 @@ public class HomeActivity extends BaseActivity {
 
         }*/
 
-        final RecyclerView companiesList = (RecyclerView) findViewById(R.id.homeCompanyList);
+        companiesList = (RecyclerView) findViewById(R.id.homeCompanyList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         companiesList.setLayoutManager(llm);
 
-        dbCompanies.addValueEventListener(new ValueEventListener() {
+        dbData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                companies = new HashMap<String, Map<String, Promotion>>();
-                
                 if (dataSnapshot.exists()) {
-                    GenericTypeIndicator<Promotion> promotionType = new GenericTypeIndicator<Promotion>() {};
-                    for (DataSnapshot company : dataSnapshot.getChildren()) {
-                        Map<String, Promotion> promotions = new HashMap<String, Promotion>();
-                        for (DataSnapshot promotion : company.getChildren()) {
-                            if (promotion.child("active").getValue().equals(true)) {
-                                promotions.put(promotion.getKey(), promotion.getValue(promotionType));
-                            }
-                        }
-                        if (promotions.size() > 0) {
-                            companies.put(company.getKey(), promotions);
-                        }
-                    }
+                    updateData(dataSnapshot);
                 }
-
-                companiesList.setAdapter(new CompanyListAdapter(HomeActivity.this, companies));
             }
 
             @Override
@@ -83,11 +64,81 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
+        /*dbCompanies.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                companies = new HashMap<String, Map<String, Promotion>>();
+                uniquePlacesNames = new HashSet<>();
+
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot company : dataSnapshot.getChildren()) {
+                        Map<String, Promotion> promotions = new HashMap<String, Promotion>();
+                        for (DataSnapshot promotion : company.getChildren()) {
+                            if (promotion.child("active").getValue().equals(true)) {
+                                Promotion promotionValue = promotion.getValue(Promotion.class);
+                                promotions.put(promotion.getKey(), promotionValue);
+
+                                for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
+                                    uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
+                                }
+
+                            }
+                        }
+                        if (promotions.size() > 0) {
+                            companies.put(company.getKey(), promotions);
+                        }
+                    }
+                }
+                companiesList.setAdapter(new CompanyListAdapter(HomeActivity.this, companies));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        */
+
         ((Button) findViewById(R.id.homeToCoupons)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(HomeActivity.this, ListCouponsActivity.class));
             }
         });
+    }
+
+    private void updateData(DataSnapshot dataSnapshot) {
+        companies = new HashMap<String, Map<String, Promotion>>();
+        Set<String> uniquePlacesNames = new HashSet<>();
+
+        for (DataSnapshot company : dataSnapshot.child("companies").getChildren()) {
+            Map<String, Promotion> promotions = new HashMap<String, Promotion>();
+            for (DataSnapshot promotion : company.getChildren()) {
+                if (promotion.child("active").getValue().equals(true)) {
+                    Promotion promotionValue = promotion.getValue(Promotion.class);
+                    promotions.put(promotion.getKey(), promotionValue);
+
+                    for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
+                        uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
+                    }
+                }
+            }
+            if (promotions.size() > 0) {
+                companies.put(company.getKey(), promotions);
+            }
+        }
+
+        companiesList.setAdapter(new CompanyListAdapter(HomeActivity.this, companies));
+
+        GenericTypeIndicator<Map<String, Place>> type = new GenericTypeIndicator<Map<String, Place>>() {};
+        Map<String, Place> places = dataSnapshot.child("places").getValue(type);
+        uniquePlaces = new HashMap<String, Place>();
+
+        for (String placeName : uniquePlacesNames) {
+            uniquePlaces.put(placeName, places.get(placeName));
+        }
+
     }
 }
