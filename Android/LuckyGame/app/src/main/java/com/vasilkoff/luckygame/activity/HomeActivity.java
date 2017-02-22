@@ -15,6 +15,7 @@ import android.widget.Button;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
@@ -56,10 +57,21 @@ public class HomeActivity extends BaseActivity {
         dbCompanies.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<Map<String, Map<String, Promotion>>> type = new GenericTypeIndicator<Map<String, Map<String, Promotion>>>() {};
-                companies = dataSnapshot.getValue(type);
-                if (companies == null) {
-                    companies = new HashMap<String, Map<String, Promotion>>();
+                companies = new HashMap<String, Map<String, Promotion>>();
+                
+                if (dataSnapshot.exists()) {
+                    GenericTypeIndicator<Promotion> promotionType = new GenericTypeIndicator<Promotion>() {};
+                    for (DataSnapshot company : dataSnapshot.getChildren()) {
+                        Map<String, Promotion> promotions = new HashMap<String, Promotion>();
+                        for (DataSnapshot promotion : company.getChildren()) {
+                            if (promotion.child("active").getValue().equals(true)) {
+                                promotions.put(promotion.getKey(), promotion.getValue(promotionType));
+                            }
+                        }
+                        if (promotions.size() > 0) {
+                            companies.put(company.getKey(), promotions);
+                        }
+                    }
                 }
 
                 companiesList.setAdapter(new CompanyListAdapter(HomeActivity.this, companies));
