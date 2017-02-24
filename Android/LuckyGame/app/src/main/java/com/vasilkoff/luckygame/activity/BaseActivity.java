@@ -9,6 +9,8 @@ import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     DatabaseReference dbRedeemed = dbVersion.child("redeemed");
 
     static Map<String, Map<String, Promotion>> companies;
-    static Map<String, Place> uniquePlaces;
+    static ArrayList<Place> uniquePlaces;
 
     static DBHelper dbHelper;
 

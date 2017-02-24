@@ -1,10 +1,13 @@
 package com.vasilkoff.luckygame.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Kusenko on 22.02.2017.
  */
 
-public class Place {
+public class Place implements Parcelable {
 
     private String address;
     private String name;
@@ -23,6 +26,26 @@ public class Place {
         this.lat = lat;
         this.lon = lon;
     }
+
+    protected Place(Parcel in) {
+        address = in.readString();
+        name = in.readString();
+        nameCompany = in.readString();
+        lat = in.readDouble();
+        lon = in.readDouble();
+    }
+
+    public static final Creator<Place> CREATOR = new Creator<Place>() {
+        @Override
+        public Place createFromParcel(Parcel in) {
+            return new Place(in);
+        }
+
+        @Override
+        public Place[] newArray(int size) {
+            return new Place[size];
+        }
+    };
 
     public String getAddress() {
         return address;
@@ -62,5 +85,19 @@ public class Place {
 
     public void setLon(double lon) {
         this.lon = lon;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(address);
+        parcel.writeString(name);
+        parcel.writeString(nameCompany);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lon);
     }
 }

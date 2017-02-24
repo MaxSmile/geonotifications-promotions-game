@@ -15,7 +15,9 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
+import com.vasilkoff.luckygame.service.LocationService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -134,11 +136,17 @@ public class HomeActivity extends BaseActivity {
 
         GenericTypeIndicator<Map<String, Place>> type = new GenericTypeIndicator<Map<String, Place>>() {};
         Map<String, Place> places = dataSnapshot.child("places").getValue(type);
-        uniquePlaces = new HashMap<String, Place>();
+        uniquePlaces = new ArrayList<Place>();
 
         for (String placeName : uniquePlacesNames) {
-            uniquePlaces.put(placeName, places.get(placeName));
+            uniquePlaces.add(places.get(placeName));
         }
+
+        Intent intent = new Intent(this, LocationService.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("uniquePlaces", uniquePlaces);
+        intent.putExtras(bundle);
+        startService(intent);
 
     }
 }
