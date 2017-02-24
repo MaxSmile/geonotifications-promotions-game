@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -142,11 +143,13 @@ public class HomeActivity extends BaseActivity {
             uniquePlaces.add(places.get(placeName));
         }
 
-        Intent intent = new Intent(this, LocationService.class);
+        dbHelper.savePlaces(uniquePlaces);
+
+      /*  Intent intent = new Intent(this, LocationService.class);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("uniquePlaces", uniquePlaces);
-        intent.putExtras(bundle);
-        startService(intent);
+        intent.putExtras(bundle);*/
+        startService(new Intent(this, LocationService.class));
 
     }
 }

@@ -20,10 +20,12 @@ import android.util.Log;
 
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.HomeActivity;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.receiver.ProximityIntentReceiver;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kusenko on 23.02.2017.
@@ -45,6 +47,9 @@ public class LocationService extends Service {
     private LocationManager locationManager;
 
     private boolean serviceRunning;
+
+    private List<ProximityIntentReceiver> receivers;
+    private List<PendingIntent> pendingIntents;
 
     @Nullable
     @Override
@@ -93,6 +98,8 @@ public class LocationService extends Service {
         Notification notification = builder.build();
         startForeground(777, notification);
 
+        receivers = new ArrayList<ProximityIntentReceiver>();
+        pendingIntents = new ArrayList<PendingIntent>();
     }
 
     @Override
@@ -104,10 +111,12 @@ public class LocationService extends Service {
             return START_NOT_STICKY;
         }
 
-        if (!serviceRunning) {
+        /*if (!serviceRunning) {
             serviceRunning = true;
-            loadPlaces(intent);
-        }
+            loadPlaces();
+        }*/
+
+        loadPlaces();
 
 
         return START_STICKY;
@@ -116,18 +125,36 @@ public class LocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        for (ProximityIntentReceiver receiver : receivers) {
+            unregisterReceiver(receiver);
+        }
         Log.i("Test", "Service: onDestroy");
     }
 
-    private void loadPlaces(Intent intent) {
-        Bundle bundle = intent.getExtras();
-        ArrayList<Place> uniquePlaces = bundle.getParcelableArrayList("uniquePlaces");
+    private void loadPlaces() {
+        for (ProximityIntentReceiver receiver : receivers) {
+            unregisterReceiver(receiver);
+        }
+
+        for (PendingIntent pendingIntent : pendingIntents) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.removeProximityAlert(pendingIntent);
+        }
+
+        ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
         for (int i = 0; i < uniquePlaces.size(); i++) {
             Place place = uniquePlaces.get(i);
             addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
         }
-      /*  addProximityAlert(37.422, -129.084);
-        addProximityAlert(37.422, -127.084);*/
     }
 
     private void addProximityAlert(double latitude, double longitude, String id) {
@@ -151,10 +178,13 @@ public class LocationService extends Service {
                 longitude,
                 POINT_RADIUS,
                 PROX_ALERT_EXPIRATION,
-                proximityIntent // will be used to generate an Intent to fire when entry to or exit from the alert region is detected
+                proximityIntent
         );
+        pendingIntents.add(proximityIntent);
 
-        registerReceiver(new ProximityIntentReceiver(), new IntentFilter(PROX_ALERT_INTENT + id));
+        ProximityIntentReceiver receiver = new ProximityIntentReceiver();
+        registerReceiver(receiver, new IntentFilter(PROX_ALERT_INTENT + id));
+        receivers.add(receiver);
 
         Log.i("Test", "requestCode = " + id);
         requestCode++;
