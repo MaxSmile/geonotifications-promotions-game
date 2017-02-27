@@ -1,38 +1,85 @@
 package com.vasilkoff.luckygame.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
+import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
-import com.vasilkoff.luckygame.service.LocationService;
+import com.vasilkoff.luckygame.fragment.ActiveCompaniesFragment;
+import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
+import com.vasilkoff.luckygame.fragment.CouponsFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class HomeActivity extends BaseActivity {
 
-    //private Set<String> uniquePlacesNames;
-    private RecyclerView companiesList;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private ActiveCompaniesFragment activeCompaniesFragment;
+    private CouponsFragment couponsFragment;
+    private AllCompaniesFragment allCompaniesFragment;
+
+    private List<Company> allCompanyList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        activeCompaniesFragment = new ActiveCompaniesFragment();
+        couponsFragment = new CouponsFragment();
+        allCompaniesFragment = new AllCompaniesFragment();
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        allCompaniesFragment.refreshList();
+                        break;
+                    case 1:
+                        activeCompaniesFragment.refreshList();
+                        break;
+                    case 2:
+                        couponsFragment.refreshList();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+
 
         /* try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -49,10 +96,6 @@ public class HomeActivity extends BaseActivity {
 
         }*/
 
-        companiesList = (RecyclerView) findViewById(R.id.homeCompanyList);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        companiesList.setLayoutManager(llm);
-
         dbData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,59 +109,17 @@ public class HomeActivity extends BaseActivity {
 
             }
         });
-
-        /*dbCompanies.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                companies = new HashMap<String, Map<String, Promotion>>();
-                uniquePlacesNames = new HashSet<>();
-
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot company : dataSnapshot.getChildren()) {
-                        Map<String, Promotion> promotions = new HashMap<String, Promotion>();
-                        for (DataSnapshot promotion : company.getChildren()) {
-                            if (promotion.child("active").getValue().equals(true)) {
-                                Promotion promotionValue = promotion.getValue(Promotion.class);
-                                promotions.put(promotion.getKey(), promotionValue);
-
-                                for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
-                                    uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
-                                }
-
-                            }
-                        }
-                        if (promotions.size() > 0) {
-                            companies.put(company.getKey(), promotions);
-                        }
-                    }
-                }
-                companiesList.setAdapter(new CompanyListAdapter(HomeActivity.this, companies));
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        */
-
-        ((Button) findViewById(R.id.homeToCoupons)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this, ListCouponsActivity.class));
-            }
-        });
     }
 
     private void updateData(DataSnapshot dataSnapshot) {
         companies = new HashMap<String, Map<String, Promotion>>();
+        allCompanyList = new ArrayList<Company>();
         Set<String> uniquePlacesNames = new HashSet<>();
 
         for (DataSnapshot company : dataSnapshot.child("companies").getChildren()) {
+            allCompanyList.add(new Company(company.getKey(), company.child("info").getValue().toString()));
             Map<String, Promotion> promotions = new HashMap<String, Promotion>();
-            for (DataSnapshot promotion : company.getChildren()) {
+            for (DataSnapshot promotion : company.child("promo").getChildren()) {
                 if (promotion.child("active").getValue().equals(true)) {
                     Promotion promotionValue = promotion.getValue(Promotion.class);
                     promotions.put(promotion.getKey(), promotionValue);
@@ -133,7 +134,13 @@ public class HomeActivity extends BaseActivity {
             }
         }
 
-        companiesList.setAdapter(new CompanyListAdapter(HomeActivity.this, companies));
+        activeCompaniesFragment.setCompanies(companies);
+        if (activeCompaniesFragment.isVisible())
+            activeCompaniesFragment.refreshList();
+
+        allCompaniesFragment.setCompanies(allCompanyList);
+        if (allCompaniesFragment.isVisible())
+            allCompaniesFragment.refreshList();
 
         GenericTypeIndicator<Map<String, Place>> type = new GenericTypeIndicator<Map<String, Place>>() {};
         Map<String, Place> places = dataSnapshot.child("places").getValue(type);
@@ -144,12 +151,45 @@ public class HomeActivity extends BaseActivity {
         }
 
         dbHelper.savePlaces(uniquePlaces);
+       // startService(new Intent(this, LocationService.class));
 
-      /*  Intent intent = new Intent(this, LocationService.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("uniquePlaces", uniquePlaces);
-        intent.putExtras(bundle);*/
-        startService(new Intent(this, LocationService.class));
+    }
 
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return allCompaniesFragment;
+                case 1:
+                    return activeCompaniesFragment;
+                case 2:
+                    return couponsFragment;
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.fragment_companies_title);
+                case 1:
+                    return getString(R.string.fragment_active_companies_title);
+                case 2:
+                    return getString(R.string.fragment_coupons_title);
+            }
+            return null;
+        }
     }
 }

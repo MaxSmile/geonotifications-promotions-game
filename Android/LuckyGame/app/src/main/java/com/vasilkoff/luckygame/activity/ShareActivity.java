@@ -69,6 +69,8 @@ public class ShareActivity extends BaseActivity {
 
             }
         });
+
+        //createCoupon("22");
     }
 
     @Override
