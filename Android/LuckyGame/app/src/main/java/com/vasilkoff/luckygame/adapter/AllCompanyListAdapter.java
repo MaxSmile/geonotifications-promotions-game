@@ -2,6 +2,7 @@ package com.vasilkoff.luckygame.adapter;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.activity.InfoActivity;
 import com.vasilkoff.luckygame.entity.Company;
 
 import java.util.List;
@@ -49,6 +51,14 @@ public class AllCompanyListAdapter extends RecyclerView.Adapter<AllCompanyListAd
         public Holder(View v) {
             super(v);
             name = (TextView) v.findViewById(R.id.companyName);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, InfoActivity.class);
+                    intent.putExtra("info", companiesList.get(getAdapterPosition()).getInfo());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

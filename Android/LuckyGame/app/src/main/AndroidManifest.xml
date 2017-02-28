@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.vasilkoff.luckygame">
 
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -41,8 +40,11 @@
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".activity.ShareActivity" />
         <activity android:name=".activity.ListCouponsActivity" />
-        <activity android:name=".activity.CouponActivity"/>
-        <service android:name=".service.LocationService"/>
+        <activity android:name=".activity.CouponActivity" />
+
+        <service android:name=".service.LocationService" />
+
+        <activity android:name=".activity.InfoActivity"></activity>
     </application>
 
 </manifest>
