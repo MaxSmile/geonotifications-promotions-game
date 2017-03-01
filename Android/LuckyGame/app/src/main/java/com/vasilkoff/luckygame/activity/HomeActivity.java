@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
@@ -117,10 +118,12 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         if (!checkLogin() && showPopUpLogin) {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
+        //startActivity(new Intent(this, ChooseAccountActivity.class));
     }
 
     private void updateData(DataSnapshot dataSnapshot) {

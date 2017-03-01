@@ -2,7 +2,6 @@ package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -21,35 +20,30 @@ import com.vasilkoff.luckygame.entity.Promotion;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-import java.util.Random;
-
 public class ShareActivity extends BaseActivity {
 
     private CallbackManager callbackManager;
-    private Promotion randomPromotion;
+    private Promotion winPromotion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        Random generator = new Random();
-        Object[] values = companies.get(getIntent().getStringExtra("company")).values().toArray();
-        randomPromotion = (Promotion)values[generator.nextInt(values.length)];
+        winPromotion = getIntent().getParcelableExtra(Promotion.class.getCanonicalName());
 
         String title = String.format(getResources().getString(R.string.share_title),
-                randomPromotion.getName());
+                winPromotion.getName());
         ((TextView) findViewById(R.id.shareTitle)).setText(title);
 
         callbackManager = CallbackManager.Factory.create();
 
         ShareButton fbShareButton = (ShareButton) findViewById(R.id.fb_share_button);
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentTitle(randomPromotion.getName())
-                .setContentDescription(randomPromotion.getDescription())
-                .setContentUrl(Uri.parse(randomPromotion.getContentUrl()))
-                .setImageUrl(Uri.parse(randomPromotion.getImageUrl()))
+                .setContentTitle(winPromotion.getName())
+                .setContentDescription(winPromotion.getDescription())
+                .setContentUrl(Uri.parse(winPromotion.getContentUrl()))
+                .setImageUrl(Uri.parse(winPromotion.getImageUrl()))
                 .build();
         fbShareButton.setShareContent(content);
         fbShareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
@@ -69,8 +63,6 @@ public class ShareActivity extends BaseActivity {
 
             }
         });
-
-        //createCoupon("22");
     }
 
     @Override
@@ -80,12 +72,6 @@ public class ShareActivity extends BaseActivity {
         callbackManager.onActivityResult(requestCode, responseCode, intent);
     }
 
-    private void createCoupon(String id) {
-        String coupon = id + String.valueOf(System.currentTimeMillis());
-        dbHelper.saveCoupon(coupon, getIntent().getStringExtra("company"), id, randomPromotion);
-        startActivity(new Intent(ShareActivity.this, ListCouponsActivity.class));
-        finish();
-    }
 
     private void getUserInfo() {
         GraphRequest request = GraphRequest.newMeRequest(
@@ -99,8 +85,7 @@ public class ShareActivity extends BaseActivity {
                             String name = object.getString("name");
                             String id = object.getString("id");
                             */
-
-                            createCoupon(object.getString("id"));
+                            object.getString("id");
 
                         } catch (JSONException e) {
                             e.printStackTrace();

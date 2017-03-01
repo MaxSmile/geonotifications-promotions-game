@@ -26,4 +26,5 @@
     <string name="fragment_companies_title">Places</string>
     <string name="fragment_active_companies_title">Active spins</string>
     <string name="fragment_coupons_title">Prizes</string>
+    <string name="login_success_message">You succeeded login</string>
 </resources>

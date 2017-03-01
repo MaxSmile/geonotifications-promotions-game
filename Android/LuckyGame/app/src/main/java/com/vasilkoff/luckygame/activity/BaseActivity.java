@@ -1,11 +1,14 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -19,6 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +48,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     static DBHelper dbHelper;
 
-    static boolean isLogin;
     static GoogleApiClient mGoogleApiClient;
     static GoogleSignInAccount accountGoogle;
+    static JSONObject objectFacebook;
+
+
+    private static final String TAG = "SignInActivity";
 
 
     @Override
@@ -68,22 +77,41 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     boolean checkLogin() {
         if (AccessToken.getCurrentAccessToken() != null) {
+            getFacebookUserInfo();
             return true;
         } else {
             OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
             if (opr.isDone()) {
-                //GoogleSignInResult result = opr.get();
+                GoogleSignInResult result = opr.get();
+                handleSignInResult(result);
                 return true;
             }
         }
-
         return false;
+    }
+
+    void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess())
+            accountGoogle = result.getSignInAccount();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
-
+    void getFacebookUserInfo() {
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        objectFacebook = object;
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,gender,name,birthday,picture.type(large)");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
 }

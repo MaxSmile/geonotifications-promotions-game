@@ -1,12 +1,15 @@
 package com.vasilkoff.luckygame.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by Kusenko on 17.02.2017.
  */
 
-public class Promotion {
+public class Promotion implements Parcelable {
 
     private long dateStart;
     private long dateFinish;
@@ -31,6 +34,29 @@ public class Promotion {
         this.imageUrl = imageUrl;
         this.contentUrl = contentUrl;
     }
+
+    protected Promotion(Parcel in) {
+        dateStart = in.readLong();
+        dateFinish = in.readLong();
+        description = in.readString();
+        name = in.readString();
+        active = in.readByte() != 0;
+        listPlaces = in.createStringArrayList();
+        imageUrl = in.readString();
+        contentUrl = in.readString();
+    }
+
+    public static final Creator<Promotion> CREATOR = new Creator<Promotion>() {
+        @Override
+        public Promotion createFromParcel(Parcel in) {
+            return new Promotion(in);
+        }
+
+        @Override
+        public Promotion[] newArray(int size) {
+            return new Promotion[size];
+        }
+    };
 
     public long getDateStart() {
         return dateStart;
@@ -94,5 +120,22 @@ public class Promotion {
 
     public void setContentUrl(String contentUrl) {
         this.contentUrl = contentUrl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(dateStart);
+        parcel.writeLong(dateFinish);
+        parcel.writeString(description);
+        parcel.writeString(name);
+        parcel.writeByte((byte) (active ? 1 : 0));
+        parcel.writeStringList(listPlaces);
+        parcel.writeString(imageUrl);
+        parcel.writeString(contentUrl);
     }
 }

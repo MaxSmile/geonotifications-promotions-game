@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -26,6 +27,7 @@ import com.vasilkoff.luckygame.R;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ChooseAccountActivity extends BaseActivity  {
 
@@ -51,7 +53,8 @@ public class ChooseAccountActivity extends BaseActivity  {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                onBackPressed();
+                getFacebookUserInfo();
+                showLoginSuccessMessage();
             }
 
             @Override
@@ -80,16 +83,20 @@ public class ChooseAccountActivity extends BaseActivity  {
 
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            Log.d("TEST", "acct:" + acct.getDisplayName());
-        } else {
-            // Signed out, show unauthenticated UI.
-            Log.d("TEST", "handleSignInResult----" );
+    private void showLoginSuccessMessage() {
+        Toast.makeText(this, getString(R.string.login_success_message), Toast.LENGTH_SHORT).show();
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        onBackPressed();
+    }
+
+    @Override
+    void handleSignInResult(GoogleSignInResult result) {
+        super.handleSignInResult(result);
+        showLoginSuccessMessage();
     }
 
     @Override

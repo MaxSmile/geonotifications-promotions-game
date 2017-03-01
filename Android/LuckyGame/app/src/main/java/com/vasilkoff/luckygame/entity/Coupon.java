@@ -15,16 +15,14 @@ public class Coupon implements Parcelable {
     private String dateExpire;
     private String code;
     private String company;
-    private String userId;
 
-    public Coupon(boolean active, String name, String description, String dateExpire, String code, String company, String userId) {
+    public Coupon(boolean active, String name, String description, String dateExpire, String code, String company) {
         this.active = active;
         this.name = name;
         this.description = description;
         this.dateExpire = dateExpire;
         this.code = code;
         this.company = company;
-        this.userId = userId;
     }
 
     protected Coupon(Parcel in) {
@@ -34,7 +32,6 @@ public class Coupon implements Parcelable {
         dateExpire = in.readString();
         code = in.readString();
         company = in.readString();
-        userId = in.readString();
     }
 
     public static final Creator<Coupon> CREATOR = new Creator<Coupon>() {
@@ -97,14 +94,6 @@ public class Coupon implements Parcelable {
         this.company = company;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -118,6 +107,5 @@ public class Coupon implements Parcelable {
         parcel.writeString(dateExpire);
         parcel.writeString(code);
         parcel.writeString(company);
-        parcel.writeString(userId);
     }
 }

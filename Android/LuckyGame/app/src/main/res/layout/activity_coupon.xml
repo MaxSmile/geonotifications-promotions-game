@@ -19,7 +19,10 @@
         <TextView
             android:id="@+id/couponCode"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/couponName"
             android:layout_width="wrap_content"

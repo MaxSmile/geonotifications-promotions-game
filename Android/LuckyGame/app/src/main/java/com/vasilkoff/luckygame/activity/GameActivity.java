@@ -13,6 +13,10 @@ import android.widget.RelativeLayout;
 
 import com.facebook.AccessToken;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.entity.Promotion;
+
+import java.util.Random;
+import java.util.UUID;
 
 public class GameActivity extends BaseActivity {
 
@@ -42,10 +46,7 @@ public class GameActivity extends BaseActivity {
                 checkAccount();
                 break;
             case R.id.gameWin:
-                Intent intent = new Intent(this, ShareActivity.class);
-                intent.putExtra("company", getIntent().getStringExtra("company"));
-                startActivity(intent);
-                finish();
+                createCoupon();
                 break;
             case R.id.gameLose:
                 chooseAction();
@@ -55,6 +56,19 @@ public class GameActivity extends BaseActivity {
 
     private void playGame() {
 
+    }
+
+    private void createCoupon() {
+        Random generator = new Random();
+        Object[] values = companies.get(getIntent().getStringExtra("company")).values().toArray();
+        Promotion winPromotion = (Promotion)values[generator.nextInt(values.length)];
+        String coupon = UUID.randomUUID().toString();
+        dbHelper.saveCoupon(coupon, getIntent().getStringExtra("company"), winPromotion);
+
+        Intent intent = new Intent(this, ShareActivity.class);
+        intent.putExtra(Promotion.class.getCanonicalName(), winPromotion);
+        startActivity(intent);
+        finish();
     }
 
     private void chooseAction() {
@@ -72,10 +86,6 @@ public class GameActivity extends BaseActivity {
 
 
         popupWindow.showAtLocation(parentLayout, Gravity.CENTER,0, 0);
-    }
-
-    private void shareDialog() {
-
     }
 
 }

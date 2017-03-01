@@ -30,8 +30,8 @@ public class CouponsFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
         dbHelper = new DBHelper(getContext());
         couponsList = (RecyclerView) getActivity().findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
