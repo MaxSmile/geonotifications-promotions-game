@@ -55,7 +55,7 @@ public class ShareActivity extends BaseActivity {
         fbShareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                getUserInfo();
+                //getUserInfo();
             }
 
             @Override

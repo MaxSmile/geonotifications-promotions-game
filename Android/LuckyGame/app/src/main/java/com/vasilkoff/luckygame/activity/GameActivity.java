@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import com.facebook.AccessToken;
 import com.vasilkoff.luckygame.R;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends BaseActivity {
 
     private PopupWindow popupWindow;
     private RelativeLayout parentLayout;
@@ -25,6 +25,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         parentLayout = (RelativeLayout) findViewById(R.id.activity_game);
+
     }
 
     private void checkAccount() {

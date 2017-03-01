@@ -1,11 +1,13 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +37,7 @@ public class HomeActivity extends BaseActivity {
     private AllCompaniesFragment allCompaniesFragment;
 
     private List<Company> allCompanyList;
+    private static boolean showPopUpLogin = true;
 
 
     @Override
@@ -109,6 +112,15 @@ public class HomeActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!checkLogin() && showPopUpLogin) {
+            showPopUpLogin = false;
+            startActivity(new Intent(this, ChooseAccountActivity.class));
+        }
     }
 
     private void updateData(DataSnapshot dataSnapshot) {
