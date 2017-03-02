@@ -1,8 +1,13 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,6 +26,7 @@ import com.vasilkoff.luckygame.entity.Promotion;
 import com.vasilkoff.luckygame.fragment.ActiveCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.CouponsFragment;
+import com.vasilkoff.luckygame.service.LocationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,7 +172,16 @@ public class HomeActivity extends BaseActivity {
         }
 
         dbHelper.savePlaces(uniquePlaces);
-       // startService(new Intent(this, LocationService.class));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+            }
+        } else {
+            startService(new Intent(this, LocationService.class));
+        }
 
     }
 
@@ -207,4 +222,13 @@ public class HomeActivity extends BaseActivity {
             return null;
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startService(new Intent(this, LocationService.class));
+        }
+    }
+
 }

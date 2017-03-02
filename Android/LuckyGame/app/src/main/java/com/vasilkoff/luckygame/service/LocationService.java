@@ -46,7 +46,7 @@ public class LocationService extends Service {
 
     private LocationManager locationManager;
 
-    private boolean serviceRunning;
+
 
     private List<ProximityIntentReceiver> receivers;
     private List<PendingIntent> pendingIntents;
@@ -59,47 +59,37 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-        Log.i("Test", "Service: onCreate");
-        serviceRunning = false;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                MINIMUM_TIME_BETWEEN_UPDATE,
-                MINIMUM_DISTANCE_CHANGE_FOR_UPDATE,
-                new MyLocationListener()
-        );
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    MINIMUM_TIME_BETWEEN_UPDATE,
+                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATE,
+                    new MyLocationListener()
+            );
 
-        Intent disconnectVPN = new Intent(this, LocationService.class);
-        disconnectVPN.setAction(DISCONNECT_VPN);
-        PendingIntent disconnectPendingIntent = PendingIntent.getService(
-                this, 0, disconnectVPN, 0);
+            Intent intent = new Intent(this, HomeActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setContentIntent(pendingIntent)
-                .setOngoing(true)
-                .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher, getString(R.string.location_service_stop), disconnectPendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher);
+            Intent disconnectVPN = new Intent(this, LocationService.class);
+            disconnectVPN.setAction(DISCONNECT_VPN);
+            PendingIntent disconnectPendingIntent = PendingIntent.getService(
+                    this, 0, disconnectVPN, 0);
 
-        Notification notification = builder.build();
-        startForeground(777, notification);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
+                    .setAutoCancel(true)
+                    .addAction(R.mipmap.ic_launcher, getString(R.string.location_service_stop), disconnectPendingIntent)
+                    .setSmallIcon(R.mipmap.ic_launcher);
 
-        receivers = new ArrayList<ProximityIntentReceiver>();
-        pendingIntents = new ArrayList<PendingIntent>();
+            Notification notification = builder.build();
+            startForeground(777, notification);
+
+            Log.i("Test", "Service: onCreate");
+        }
     }
 
     @Override
@@ -111,14 +101,7 @@ public class LocationService extends Service {
             return START_NOT_STICKY;
         }
 
-        /*if (!serviceRunning) {
-            serviceRunning = true;
-            loadPlaces();
-        }*/
-
         loadPlaces();
-
-
         return START_STICKY;
     }
 
@@ -132,63 +115,58 @@ public class LocationService extends Service {
     }
 
     private void loadPlaces() {
-        for (ProximityIntentReceiver receiver : receivers) {
-            unregisterReceiver(receiver);
-        }
-
-        for (PendingIntent pendingIntent : pendingIntents) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
+        if (receivers != null) {
+            for (int i = 0; i < receivers.size(); i++) {
+                unregisterReceiver(receivers.get(i));
             }
-            locationManager.removeProximityAlert(pendingIntent);
+        } else {
+            receivers = new ArrayList<ProximityIntentReceiver>();
         }
 
-        ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
-        for (int i = 0; i < uniquePlaces.size(); i++) {
-            Place place = uniquePlaces.get(i);
-            addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
+        if (pendingIntents != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                for (PendingIntent pendingIntent : pendingIntents) {
+                    locationManager.removeProximityAlert(pendingIntent);
+                }
+
+                ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
+                for (int i = 0; i < uniquePlaces.size(); i++) {
+                    Place place = uniquePlaces.get(i);
+                    addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
+                }
+            }
+        } else {
+            pendingIntents = new ArrayList<PendingIntent>();
         }
+
     }
 
     private void addProximityAlert(double latitude, double longitude, String id) {
-        Intent intent = new Intent(PROX_ALERT_INTENT + id);
-        intent.putExtra("id", id);
-        PendingIntent proximityIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(PROX_ALERT_INTENT + id);
+            intent.putExtra("id", id);
+            PendingIntent proximityIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            locationManager.addProximityAlert(
+                    latitude,
+                    longitude,
+                    POINT_RADIUS,
+                    PROX_ALERT_EXPIRATION,
+                    proximityIntent
+            );
+
+            pendingIntents.add(proximityIntent);
+
+            ProximityIntentReceiver receiver = new ProximityIntentReceiver();
+            registerReceiver(receiver, new IntentFilter(PROX_ALERT_INTENT + id));
+            receivers.add(receiver);
+
+            Log.i("Test", "requestCode = " + id);
+            requestCode++;
         }
-
-        locationManager.addProximityAlert(
-                latitude,
-                longitude,
-                POINT_RADIUS,
-                PROX_ALERT_EXPIRATION,
-                proximityIntent
-        );
-        pendingIntents.add(proximityIntent);
-
-        ProximityIntentReceiver receiver = new ProximityIntentReceiver();
-        registerReceiver(receiver, new IntentFilter(PROX_ALERT_INTENT + id));
-        receivers.add(receiver);
-
-        Log.i("Test", "requestCode = " + id);
-        requestCode++;
-
     }
 
     public class MyLocationListener implements LocationListener {
