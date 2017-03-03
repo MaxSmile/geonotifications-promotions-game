@@ -12,9 +12,14 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.facebook.AccessToken;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.entity.Promotion;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -22,6 +27,7 @@ public class GameActivity extends BaseActivity {
 
     private PopupWindow popupWindow;
     private RelativeLayout parentLayout;
+    private Map<String, Promotion> promotions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,46 @@ public class GameActivity extends BaseActivity {
         setContentView(R.layout.activity_game);
 
         parentLayout = (RelativeLayout) findViewById(R.id.activity_game);
+        init(getIntent());
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        init(intent);
+    }
+
+    private void init(Intent intent) {
+        String company = intent.getStringExtra("company");
+        System.out.println("TEST company = " + company);
+        if (company != null) {
+            dbCompanies.child(company).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    updateData(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void updateData(DataSnapshot dataSnapshot) {
+        promotions = new HashMap<String, Promotion>();
+        for (DataSnapshot promotion : dataSnapshot.child("promo").getChildren()) {
+            if (promotion.child("active").getValue().equals(true)) {
+                Promotion promotionValue = promotion.getValue(Promotion.class);
+                promotions.put(promotion.getKey(), promotionValue);
+            }
+        }
+
+        if (promotions.size() > 0) {
+            System.out.println("TEST GAME ok");
+        }
     }
 
     private void checkAccount() {

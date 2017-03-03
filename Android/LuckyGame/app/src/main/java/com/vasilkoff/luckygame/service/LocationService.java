@@ -63,11 +63,20 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
+            LocationListener locationListener = new MyLocationListener();
+
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     MINIMUM_TIME_BETWEEN_UPDATE,
                     MINIMUM_DISTANCE_CHANGE_FOR_UPDATE,
-                    new MyLocationListener()
+                    locationListener
+            );
+
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MINIMUM_TIME_BETWEEN_UPDATE,
+                    MINIMUM_DISTANCE_CHANGE_FOR_UPDATE,
+                    locationListener
             );
 
             Intent intent = new Intent(this, HomeActivity.class);
@@ -87,6 +96,9 @@ public class LocationService extends Service {
 
             Notification notification = builder.build();
             startForeground(777, notification);
+
+            receivers = new ArrayList<ProximityIntentReceiver>();
+            pendingIntents = new ArrayList<PendingIntent>();
 
             Log.i("Test", "Service: onCreate");
         }
@@ -115,29 +127,32 @@ public class LocationService extends Service {
     }
 
     private void loadPlaces() {
-        if (receivers != null) {
+      /*  if (receivers != null) {
             for (int i = 0; i < receivers.size(); i++) {
                 unregisterReceiver(receivers.get(i));
             }
         } else {
             receivers = new ArrayList<ProximityIntentReceiver>();
-        }
+        }*/
 
-        if (pendingIntents != null) {
+       /* if (pendingIntents != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 for (PendingIntent pendingIntent : pendingIntents) {
                     locationManager.removeProximityAlert(pendingIntent);
                 }
-
-                ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
-                for (int i = 0; i < uniquePlaces.size(); i++) {
-                    Place place = uniquePlaces.get(i);
-                    addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
-                }
             }
         } else {
             pendingIntents = new ArrayList<PendingIntent>();
+        }*/
+
+
+
+        ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
+        for (int i = 0; i < uniquePlaces.size(); i++) {
+            Place place = uniquePlaces.get(i);
+            addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
+            Log.i("Test", "Service: place = " + place.getNameCompany());
         }
 
     }
@@ -147,7 +162,7 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(PROX_ALERT_INTENT + id);
-            intent.putExtra("id", id);
+            intent.putExtra("company", id);
             PendingIntent proximityIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             locationManager.addProximityAlert(
@@ -163,14 +178,14 @@ public class LocationService extends Service {
             ProximityIntentReceiver receiver = new ProximityIntentReceiver();
             registerReceiver(receiver, new IntentFilter(PROX_ALERT_INTENT + id));
             receivers.add(receiver);
-
-            Log.i("Test", "requestCode = " + id);
             requestCode++;
         }
     }
 
     public class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
+            Log.i("Test", "Service: location Latitude = " + location.getLatitude());
+            Log.i("Test", "Service: location Longitude = " + location.getLongitude());
         }
         public void onStatusChanged(String s, int i, Bundle b) {
         }
