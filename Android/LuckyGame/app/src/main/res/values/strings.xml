@@ -23,8 +23,11 @@
     <string name="share_title">Share %s and get coupon</string>
     <string name="coupon_redeem">Redeem</string>
     <string name="location_service_stop">Stop</string>
-    <string name="fragment_companies_title">Places</string>
-    <string name="fragment_active_companies_title">Active spins</string>
-    <string name="fragment_coupons_title">Prizes</string>
+    <string name="fragment_companies_title">All \nPlaces</string>
+    <string name="fragment_active_companies_title">Available \nSpins</string>
+    <string name="fragment_coupons_title">My \nCoupons</string>
     <string name="login_success_message">You succeeded login</string>
+    <string name="search">Search</string>
+    <string name="near_me">Near me</string>
+    <string name="filters">Filters</string>
 </resources>
