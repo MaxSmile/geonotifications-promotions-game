@@ -30,4 +30,5 @@
     <string name="search">Search</string>
     <string name="near_me">Near me</string>
     <string name="filters">Filters</string>
+    <string name="spin_active">Spin Active</string>
 </resources>

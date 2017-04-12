@@ -7,4 +7,5 @@
     <color name="colorTabText">#ffffff</color>
     <color name="colorTabTextSelected">#ffbf44</color>
     <color name="colorFiltersText">#ffffff</color>
+    <color name="colorNameCompany">#000000</color>
 </resources>
