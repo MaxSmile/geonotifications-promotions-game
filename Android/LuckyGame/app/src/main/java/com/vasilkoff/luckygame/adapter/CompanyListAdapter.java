@@ -6,10 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.GameActivity;
+import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Promotion;
 
 import java.util.ArrayList;
@@ -23,12 +26,12 @@ import java.util.Map;
 public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.Holder>{
     private Context context;
     private Map<String, Map<String, Promotion>> companies;
-    private List<String> companiesList;
+    private List<Company> activeCompanyListInfo;
 
-    public CompanyListAdapter(Context context, Map<String, Map<String, Promotion>> companies) {
+    public CompanyListAdapter(Context context, Map<String, Map<String, Promotion>> companies, List<Company> activeCompanyListInfo) {
         this.context = context;
         this.companies = companies;
-        companiesList = new ArrayList<String>(companies.keySet());
+        this.activeCompanyListInfo = activeCompanyListInfo;
     }
 
     @Override
@@ -39,26 +42,31 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        holder.name.setText(companiesList.get(position));
+        holder.name.setText(activeCompanyListInfo.get(position).getName());
+        String logoUri = activeCompanyListInfo.get(position).getLogo();
+        if (logoUri != null)
+            Picasso.with(context).load(logoUri).into(holder.logo);
     }
 
     @Override
     public int getItemCount() {
-        return companiesList.size();
+        return activeCompanyListInfo.size();
     }
 
     class Holder extends RecyclerView.ViewHolder {
         TextView name;
+        ImageView logo;
 
         public Holder(View v) {
             super(v);
             name = (TextView) v.findViewById(R.id.companyName);
+            logo = (ImageView) v.findViewById(R.id.companyLogo);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, GameActivity.class);
-                    intent.putExtra("company", companiesList.get(getAdapterPosition()));
+                    intent.putExtra("company", activeCompanyListInfo.get(getAdapterPosition()).getName());
 
                     context.startActivity(intent);
                 }

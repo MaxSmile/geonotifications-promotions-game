@@ -44,6 +44,7 @@ public class HomeActivity extends BaseActivity {
     private AllCompaniesFragment allCompaniesFragment;
 
     private List<Company> allCompanyList;
+    private List<Company> activeCompanyListInfo;
     private static boolean showPopUpLogin = true;
 
 
@@ -135,27 +136,39 @@ public class HomeActivity extends BaseActivity {
     private void updateData(DataSnapshot dataSnapshot) {
         companies = new HashMap<String, Map<String, Promotion>>();
         allCompanyList = new ArrayList<Company>();
+        activeCompanyListInfo = new ArrayList<Company>();
         Set<String> uniquePlacesNames = new HashSet<>();
 
         for (DataSnapshot company : dataSnapshot.child("companies").getChildren()) {
-            allCompanyList.add(new Company(company.getKey(), company.child("info").getValue().toString()));
+            allCompanyList.add(
+                    new Company(
+                            company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
+                            company.child("info").exists() ? company.child("info").getValue().toString() : null,
+                            company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
             Map<String, Promotion> promotions = new HashMap<String, Promotion>();
             for (DataSnapshot promotion : company.child("promo").getChildren()) {
                 if (promotion.child("active").getValue().equals(true)) {
                     Promotion promotionValue = promotion.getValue(Promotion.class);
                     promotions.put(promotion.getKey(), promotionValue);
 
-                    for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
-                        uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
+                    if (promotionValue.getListPlaces() != null) {
+                        for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
+                            uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
+                        }
                     }
                 }
             }
             if (promotions.size() > 0) {
                 companies.put(company.getKey(), promotions);
+                activeCompanyListInfo.add(
+                        new Company(
+                                company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
+                                company.child("info").exists() ? company.child("info").getValue().toString() : null,
+                                company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
             }
         }
 
-        activeCompaniesFragment.setCompanies(companies);
+        activeCompaniesFragment.setCompanies(companies, activeCompanyListInfo);
         if (activeCompaniesFragment.isVisible())
             activeCompaniesFragment.refreshList();
 

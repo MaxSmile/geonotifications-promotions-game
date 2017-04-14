@@ -31,4 +31,13 @@
     <string name="near_me">Near me</string>
     <string name="filters">Filters</string>
     <string name="spin_active">Spin Active</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="all">All</string>
+    <string name="food">Food</string>
+    <string name="nightlife">Nightlife</string>
+    <string name="coffee">Coffee</string>
+    <string name="events">Events</string>
+    <string name="shops">Shops</string>
+    <string name="services">Services</string>
+    <string name="favorites">Favorites</string>
 </resources>

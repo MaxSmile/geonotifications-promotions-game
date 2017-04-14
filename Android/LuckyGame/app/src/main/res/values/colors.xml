@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="colorBg">#fafafb</color>
+    <color name="colorLine">#e1e1e1</color>
     <color name="colorTabText">#ffffff</color>
     <color name="colorTabTextSelected">#ffbf44</color>
     <color name="colorFiltersText">#ffffff</color>
