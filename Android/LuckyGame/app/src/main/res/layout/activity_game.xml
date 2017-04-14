@@ -10,34 +10,98 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vasilkoff.luckygame.activity.GameActivity">
 
-    <Button
-        android:id="@+id/gamePlay"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play Game"
+        android:id="@+id/frameLayout"
+        android:layout_marginTop="20dp">
+        <ProgressBar
+            android:id="@+id/powerBar"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="?android:attr/progressBarStyleHorizontal"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/powerbar"/>
+    </FrameLayout>
+    <ImageView
+        android:id="@+id/imageHill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/hill"
+        android:layout_above="@+id/imageWheel"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageWheel"
+        android:src="@drawable/wheel"
+        android:adjustViewBounds="false"
+        android:scaleType="center"
+        android:layout_gravity="center"
         android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <ImageView
+        android:id="@+id/powerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/spin_button"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="false"
+        android:scaleType="center"
+        android:layout_gravity="center" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/circle"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="false"
+        android:scaleType="center"
+        android:layout_gravity="center"
+        android:id="@+id/imageCircle" />
+    <ImageView
+        android:id="@+id/imagePointer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pointer"
+        android:layout_above="@+id/imageWheel"
         android:layout_centerHorizontal="true"
-        android:onClick="onClickGame"/>
+        android:layout_marginBottom="-8dp"/>
 
-    <Button
-        android:id="@+id/gameWin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Win"
-        android:onClick="onClickGame"
-        android:layout_alignBaseline="@+id/gamePlay"
-        android:layout_alignBottom="@+id/gamePlay"
-        android:layout_toStartOf="@+id/gamePlay" />
 
-    <Button
-        android:id="@+id/gameLose"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lose"
-        android:onClick="onClickGame"
-        android:layout_alignBaseline="@+id/gamePlay"
-        android:layout_alignBottom="@+id/gamePlay"
-        android:layout_toEndOf="@+id/gamePlay"
-        android:layout_marginStart="11dp" />
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone">
+        <Button
+            android:id="@+id/gamePlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play Game"
+            android:onClick="onClickGame"/>
+
+        <Button
+            android:id="@+id/gameWin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Win"
+            android:onClick="onClickGame"/>
+
+        <Button
+            android:id="@+id/gameLose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lose"
+            android:onClick="onClickGame"/>
+    </LinearLayout>
+
+
 
 </RelativeLayout>
