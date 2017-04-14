@@ -142,6 +142,7 @@ public class HomeActivity extends BaseActivity {
         for (DataSnapshot company : dataSnapshot.child("companies").getChildren()) {
             allCompanyList.add(
                     new Company(
+                            company.getKey(),
                             company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
                             company.child("info").exists() ? company.child("info").getValue().toString() : null,
                             company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
@@ -162,6 +163,7 @@ public class HomeActivity extends BaseActivity {
                 companies.put(company.getKey(), promotions);
                 activeCompanyListInfo.add(
                         new Company(
+                                company.getKey(),
                                 company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
                                 company.child("info").exists() ? company.child("info").getValue().toString() : null,
                                 company.child("logo").exists() ? company.child("logo").getValue().toString() : null));

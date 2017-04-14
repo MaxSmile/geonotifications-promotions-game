@@ -42,6 +42,8 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
+        int count = companies.get(activeCompanyListInfo.get(position).getId()).size();
+        holder.countPromo.setText(String.valueOf(count));
         holder.name.setText(activeCompanyListInfo.get(position).getName());
         String logoUri = activeCompanyListInfo.get(position).getLogo();
         if (logoUri != null)
@@ -55,18 +57,20 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     class Holder extends RecyclerView.ViewHolder {
         TextView name;
+        TextView countPromo;
         ImageView logo;
 
         public Holder(View v) {
             super(v);
             name = (TextView) v.findViewById(R.id.companyName);
+            countPromo = (TextView) v.findViewById(R.id.textCountPromo);
             logo = (ImageView) v.findViewById(R.id.companyLogo);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, GameActivity.class);
-                    intent.putExtra("company", activeCompanyListInfo.get(getAdapterPosition()).getName());
+                    intent.putExtra("company", activeCompanyListInfo.get(getAdapterPosition()).getId());
 
                     context.startActivity(intent);
                 }

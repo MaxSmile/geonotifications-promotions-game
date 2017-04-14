@@ -20,6 +20,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.google.firebase.database.DataSnapshot;
@@ -189,9 +190,10 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         String coupon = UUID.randomUUID().toString();
         dbHelper.saveCoupon(coupon, getIntent().getStringExtra("company"), winPromotion);
 
-        Intent intent = new Intent(this, ShareActivity.class);
+        Toast.makeText(this, "You got coupon!", Toast.LENGTH_LONG).show();
+      /*  Intent intent = new Intent(this, ShareActivity.class);
         intent.putExtra(Promotion.class.getCanonicalName(), winPromotion);
-        startActivity(intent);
+        startActivity(intent);*/
         finish();
     }
 

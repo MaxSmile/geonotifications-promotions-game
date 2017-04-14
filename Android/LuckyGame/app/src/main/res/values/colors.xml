@@ -10,4 +10,5 @@
     <color name="colorTabTextSelected">#ffbf44</color>
     <color name="colorFiltersText">#ffffff</color>
     <color name="colorNameCompany">#000000</color>
+    <color name="colorCouponPercent">#ddcd0c</color>
 </resources>
