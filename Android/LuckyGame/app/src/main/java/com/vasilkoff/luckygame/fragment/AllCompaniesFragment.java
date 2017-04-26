@@ -51,4 +51,6 @@ public class AllCompaniesFragment extends Fragment {
     public void refreshList() {
         companiesList.setAdapter(new AllCompanyListAdapter(getContext(), allCompanyList));
     }
+
+
 }

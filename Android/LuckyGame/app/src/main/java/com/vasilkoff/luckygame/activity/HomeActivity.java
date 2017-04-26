@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
@@ -244,6 +245,15 @@ public class HomeActivity extends BaseActivity {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startService(new Intent(this, LocationService.class));
         }
+    }
+
+    public void onHomeClick(View view) {
+        switch (view.getId()) {
+            case R.id.companyComing:
+                System.out.println("Test click=Coming");
+                break;
+        }
+        System.out.println("Test click=" + view.getId());
     }
 
 }

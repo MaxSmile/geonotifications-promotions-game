@@ -2,6 +2,7 @@ package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +24,14 @@ public class CouponActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
+
+        /*DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int widthWindow = dm.widthPixels;
+        int heightWindow = dm.heightPixels;
+
+        getWindow().setLayout((int)(widthWindow * 0.9), (int)(heightWindow * 0.9));*/
 
         final Coupon coupon = getIntent().getParcelableExtra(Coupon.class.getCanonicalName());
 

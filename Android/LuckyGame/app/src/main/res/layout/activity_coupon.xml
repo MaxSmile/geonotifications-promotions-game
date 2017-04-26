@@ -4,43 +4,119 @@
     android:id="@+id/activity_coupon"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="50dp"
+    android:paddingLeft="35dp"
+    android:paddingRight="35dp"
+    android:paddingTop="40dp"
+    android:background="@color/colorCouponBg"
     tools:context="com.vasilkoff.luckygame.activity.CouponActivity">
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true">
-        <TextView
-            android:id="@+id/couponCode"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/base">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/couponName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/couponDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/couponExpire"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/couponRedeem"
-            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layoutCouponTop"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="80dp"
+                android:src="@drawable/cover"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorCouponName"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:paddingLeft="5dp"
+                android:text="Marino Limasso"/>
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cancel"
+                android:background="@null"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutCouponCongrats"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/coupon_redeem"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:background="@drawable/rectangle"
+            android:orientation="vertical"
+            android:layout_below="@+id/layoutCouponTop"
+            android:layout_alignParentStart="true">
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutCouponRedeem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:layout_above="@+id/layoutCouponCode"
+            android:layout_alignParentStart="true">
+            <TextView
+                android:id="@+id/couponCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/couponName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/couponDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/couponExpire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/couponRedeem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/redeem_bg"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textColor="@color/colorRedeemText"
+                android:minHeight="40dp"
+                android:text="@string/coupon_redeem"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:gravity="center"
+            android:id="@+id/layoutCouponCode">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Coupon Code"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/colorCouponCode"
+                android:textAllCaps="true"
+                android:paddingLeft="5dp"
+                android:text="5954tjh7th54e7f4f7h"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

@@ -4,30 +4,92 @@
     android:id="@+id/activity_choose_account"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#FFcbecfd"
+    android:paddingBottom="64dp"
+    android:paddingTop="64dp"
+    android:background="@drawable/bg_login"
     tools:context="com.vasilkoff.luckygame.activity.ChooseAccountActivity">
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true">
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/btnFacebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_fb"
+                android:text="@string/login_fb_btn"
+                android:onClick="onClickLogin"
+                style="@style/LoginBtn"/>
+        </FrameLayout>
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
+        <Button
+            android:id="@+id/btnGoogle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="34dp" />
+            android:background="@drawable/bg_btn_google"
+            android:onClick="onClickLogin"
+            android:text="@string/login_google_btn"
+            style="@style/LoginBtn"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_login"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textAllCaps="true"
+                android:textColor="@color/colorLoginText"
+                android:text="@string/or"
+                android:gravity="center"/>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:src="@drawable/line_login"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnLoginSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_skip"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:background="@null"
+            android:textColor="@color/colorLoginText"
+            android:padding="20dp"
+            android:onClick="onClickLogin"/>
+
     </LinearLayout>
 
 </RelativeLayout>

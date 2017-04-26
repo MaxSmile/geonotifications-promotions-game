@@ -32,6 +32,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"            >
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyAll"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -49,6 +50,7 @@
                             android:text="@string/all"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyFood"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -66,6 +68,7 @@
                             android:text="@string/food"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyNightlife"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -89,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"            >
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyCoffee"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -106,6 +110,7 @@
                             android:text="@string/coffee"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyEvents"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -123,6 +128,7 @@
                             android:text="@string/events"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyShops"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -146,6 +152,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"            >
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyServices"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -163,6 +170,7 @@
                             android:text="@string/services"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyFavorites"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -180,12 +188,14 @@
                             android:text="@string/favorites"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyComing"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:background="@drawable/bg">
+                        android:background="@drawable/bg"
+                        android:onClick="onHomeClick">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

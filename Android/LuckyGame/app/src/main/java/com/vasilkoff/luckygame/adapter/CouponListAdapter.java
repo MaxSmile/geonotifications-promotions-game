@@ -50,7 +50,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             super(v);
             name = (TextView) v.findViewById(R.id.couponName);
 
-            /*v.setOnClickListener(new View.OnClickListener() {
+            v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, CouponActivity.class);
@@ -58,7 +58,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
 
                     context.startActivity(intent);
                 }
-            });*/
+            });
         }
     }
 }

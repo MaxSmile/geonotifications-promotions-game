@@ -40,4 +40,8 @@
     <string name="shops">Shops</string>
     <string name="services">Services</string>
     <string name="favorites">Favorites</string>
+    <string name="or">or</string>
+    <string name="login_skip">Skip for now</string>
+    <string name="login_fb_btn">Log in with <b>Facebook</b></string>
+    <string name="login_google_btn">Log in with <b>Google</b></string>
 </resources>

@@ -25,7 +25,7 @@
 
         <activity
             android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.HomeActivity"
             android:screenOrientation="portrait">
@@ -37,27 +37,29 @@
         </activity>
         <activity
             android:name=".activity.GameActivity"
-            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:noHistory="true"
-            android:launchMode="singleTop"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChooseAccountActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ListCouponsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CouponActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
-            android:name=".activity.ShareActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.ListCouponsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.CouponActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.InfoActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <service android:name=".service.LocationService" />
+
+        <activity android:name=".activity.FilteredCompanyActivity"></activity>
     </application>
 
 </manifest>
