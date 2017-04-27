@@ -69,7 +69,8 @@ public class ChooseAccountActivity extends BaseActivity  {
     @Override
     void handleSignInResult(GoogleSignInResult result) {
         super.handleSignInResult(result);
-        showLoginSuccessMessage();
+        if (result.isSuccess())
+            showLoginSuccessMessage();
     }
 
     @Override

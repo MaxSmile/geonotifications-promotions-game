@@ -11,9 +11,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +51,8 @@ public class HomeActivity extends BaseActivity {
     private List<Company> activeCompanyListInfo;
     private static boolean showPopUpLogin = true;
 
+    private TabLayout tabLayout;
+    private TextView customTabText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +93,42 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                ((TextView) tab.getCustomView().findViewById(R.id.customTabText))
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+                if (tab.getPosition() == 1) {
+                    TextView customTabCount = (TextView) tab.getCustomView().findViewById(R.id.customTabCount);
+                    customTabCount.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+                    customTabCount.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_count_active));
+                }
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                ((TextView) tab.getCustomView().findViewById(R.id.customTabText))
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+                if (tab.getPosition() == 1) {
+                    TextView customTabCount = (TextView) tab.getCustomView().findViewById(R.id.customTabCount);
+                    customTabCount.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+                    customTabCount.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_count));
+                }
 
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(mSectionsPagerAdapter.getTabView(i));
+        }
 
         /* try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -134,6 +171,13 @@ public class HomeActivity extends BaseActivity {
         //startActivity(new Intent(this, ChooseAccountActivity.class));
     }
 
+    private void setCountActiveCompanies(int count) {
+        TextView customTabCount = (TextView) tabLayout.getTabAt(1).getCustomView().findViewById(R.id.customTabCount);
+        customTabCount.setVisibility(View.VISIBLE);
+        customTabCount.setText(String.valueOf(count));
+        customTabCount.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_count));
+    }
+
     private void updateData(DataSnapshot dataSnapshot) {
         companies = new HashMap<String, Map<String, Promotion>>();
         allCompanyList = new ArrayList<Company>();
@@ -170,6 +214,8 @@ public class HomeActivity extends BaseActivity {
                                 company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
             }
         }
+
+        setCountActiveCompanies(companies.size());
 
         activeCompaniesFragment.setCompanies(companies, activeCompanyListInfo);
         if (activeCompaniesFragment.isVisible())
@@ -236,6 +282,15 @@ public class HomeActivity extends BaseActivity {
                     return getString(R.string.fragment_coupons_title);
             }
             return null;
+        }
+
+        public View getTabView(int position) {
+            View tab = LayoutInflater.from(HomeActivity.this).inflate(R.layout.custom_tab, null);
+            TextView tv = (TextView) tab.findViewById(R.id.customTabText);
+            if (position == 0)
+                tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+            tv.setText(getPageTitle(position));
+            return tab;
         }
     }
 
