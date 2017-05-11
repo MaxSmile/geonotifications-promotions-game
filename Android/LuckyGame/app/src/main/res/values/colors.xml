@@ -17,4 +17,11 @@
     <color name="colorCouponCode">#000000</color>
     <color name="colorCouponName">#000000</color>
     <color name="colorLoginText">#ffffff</color>
+    <color name="colorGameTitle">#ffffff</color>
+    <color name="colorCouponInfoBg">#ffffff</color>
+    <color name="colorCouponRulesBg">#f1f4f9</color>
+    <color name="colorCouponCongratsText">#ffffff</color>
+    <color name="colorCouponRulesTitle">#B5BBC7</color>
+    <color name="colorCouponRulesText">#7A8397</color>
+    <color name="colorCouponShareText">#4A90E2</color>
 </resources>

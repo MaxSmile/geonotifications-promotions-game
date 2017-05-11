@@ -44,4 +44,16 @@
     <string name="login_skip">Skip for now</string>
     <string name="login_fb_btn">Log in with <b>Facebook</b></string>
     <string name="login_google_btn">Log in with <b>Google</b></string>
+    <string name="game_title">Press, hold and release SPIN button</string>
+    <string name="congrats">Congrats!</string>
+    <string name="rules_conditions_title">Rules &amp; Conditions</string>
+    <string name="rules_conditions">
+        - Show to cashier before you redeem
+        \n- Lorem ipsum dolor sit amet, consectetur
+        \n- Lorem ipsum dolor sit amet, consectetur
+    </string>
+    <string name="locks">Locks in:</string>
+    <string name="expires">Expires in:</string>
+    <string name="share_coupon">Share\ncoupon</string>
+    <string name="send_friends">Send to\nfriends</string>
 </resources>

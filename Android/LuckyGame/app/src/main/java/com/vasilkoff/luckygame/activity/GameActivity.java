@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -27,12 +25,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.util.Properties;
 import com.vasilkoff.luckygame.entity.Promotion;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends BaseActivity implements Animation.AnimationListener {
 
@@ -50,6 +50,8 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private long mSpinDuration;
     private float mSpinRevolutions;
     private ImageView pointerImageView;
+
+    private boolean spinActive = false;
 
 
     @Override
@@ -142,6 +144,23 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
             });
         }
     }
+
+    private void checkSpin() {
+        if (!Properties.getSpinActive()) {
+            if (Properties.getSpinTimeCreate() == 0) {
+                Properties.setSpinActive(true);
+                Properties.setSpinTimeCreate(System.currentTimeMillis());
+                spinActive = true;
+            } else {
+                long diff = System.currentTimeMillis() - Properties.getSpinTimeCreate();
+                if (TimeUnit.MILLISECONDS.toMinutes(diff) <= 3) {
+
+                }
+            }
+        }
+    }
+
+
 
     private void updateData(DataSnapshot dataSnapshot) {
         promotions = new HashMap<String, Promotion>();

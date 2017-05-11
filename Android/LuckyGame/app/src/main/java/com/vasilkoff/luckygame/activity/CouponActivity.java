@@ -90,4 +90,12 @@ public class CouponActivity extends BaseActivity {
         /*startActivity(new Intent(this, HomeActivity.class));
         finish();*/
     }
+
+    public void onClickCoupon(View view) {
+        switch (view.getId()) {
+            case R.id.couponInfoClose:
+                onBackPressed();
+                break;
+        }
+    }
 }
