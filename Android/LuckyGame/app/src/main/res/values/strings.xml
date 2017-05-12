@@ -56,4 +56,6 @@
     <string name="expires">Expires in:</string>
     <string name="share_coupon">Share\ncoupon</string>
     <string name="send_friends">Send to\nfriends</string>
+    <string name="next_version">Coming soon in the next version!</string>
+    <string name="login_title">Do you feel lucky today?</string>
 </resources>

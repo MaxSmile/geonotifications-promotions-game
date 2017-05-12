@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.database.DataSnapshot;
@@ -304,11 +305,10 @@ public class HomeActivity extends BaseActivity {
 
     public void onHomeClick(View view) {
         switch (view.getId()) {
-            case R.id.companyComing:
-                System.out.println("Test click=Coming");
-                break;
+            default:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
         }
-        System.out.println("Test click=" + view.getId());
+
     }
 
 }

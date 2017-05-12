@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.entity.Coupon;
@@ -96,6 +97,10 @@ public class CouponActivity extends BaseActivity {
             case R.id.couponInfoClose:
                 onBackPressed();
                 break;
+            case R.id.couponInfoShare:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+            case R.id.couponInfoSend:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
         }
     }
 }

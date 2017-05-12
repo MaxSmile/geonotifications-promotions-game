@@ -31,7 +31,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/spindeal"
+                    android:src="@drawable/logo"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>
@@ -62,11 +62,13 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
             <LinearLayout
+                android:id="@+id/homeSearch"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:onClick="onHomeClick">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,11 +80,13 @@
                     style="@style/FiltersText"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/homeNearMe"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:onClick="onHomeClick">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -94,11 +98,13 @@
                     style="@style/FiltersText"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/homeFilters"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:onClick="onHomeClick">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
