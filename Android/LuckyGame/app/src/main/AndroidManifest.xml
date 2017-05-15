@@ -55,10 +55,14 @@
             android:name=".activity.InfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.FilteredCompanyActivity" />
+            android:name=".activity.FilteredCompanyActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.DetailsActivity"
+            android:screenOrientation="portrait"/>
+
 
         <service android:name=".service.LocationService" />
-
     </application>
 
 </manifest>

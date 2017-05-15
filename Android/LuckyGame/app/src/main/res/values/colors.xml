@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorBg">#fafafb</color>
+    <color name="colorBgWhite">#ffffff</color>
     <color name="colorLine">#e1e1e1</color>
     <color name="colorTabText">#ffffff</color>
     <color name="colorTabTextSelected">#ffbf44</color>
@@ -24,4 +25,8 @@
     <color name="colorCouponRulesTitle">#B5BBC7</color>
     <color name="colorCouponRulesText">#7A8397</color>
     <color name="colorCouponShareText">#4A90E2</color>
+    <color name="colorDetailsTitle">#ffffff</color>
+    <color name="colorDetailsBtnText">#9b9b9b</color>
+    <color name="colorDetailsTextInfo">#A9AFBC</color>
+    <color name="colorDetailsTextInfoBg">#F7F9FB</color>
 </resources>

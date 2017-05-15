@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="company_type">
+        <item>@string/food</item>
+        <item>@string/nightlife</item>
+        <item>@string/coffee</item>
+        <item>@string/events</item>
+        <item>@string/shops</item>
+        <item>@string/services</item>
+        <item>@string/favorites</item>
+        <item>@string/coming_soon</item>
+    </string-array>
+    <array name="company_type_icons">
+        <item>@drawable/food</item>
+        <item>@drawable/cocktail</item>
+        <item>@drawable/cafe</item>
+        <item>@drawable/star</item>
+        <item>@drawable/shopping_bag</item>
+        <item>@drawable/services</item>
+        <item>@drawable/favourites</item>
+        <item>@drawable/plus</item>
+    </array>
+</resources>

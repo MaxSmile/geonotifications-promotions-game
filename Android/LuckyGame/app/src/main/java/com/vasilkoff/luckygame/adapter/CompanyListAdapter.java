@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.activity.DetailsActivity;
 import com.vasilkoff.luckygame.activity.GameActivity;
+import com.vasilkoff.luckygame.activity.InfoActivity;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Promotion;
 
@@ -69,7 +71,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, GameActivity.class);
+                    Intent intent = new Intent(context, DetailsActivity.class);
                     intent.putExtra("company", activeCompanyListInfo.get(getAdapterPosition()).getId());
 
                     context.startActivity(intent);

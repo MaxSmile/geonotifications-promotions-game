@@ -19,12 +19,13 @@ public class Promotion implements Parcelable {
     private List<String> listPlaces;
     private String imageUrl;
     private String contentUrl;
+    private int colorBox;
 
     public Promotion() {
 
     }
 
-    public Promotion(long dateStart, long dateFinish, String description, String name, boolean active, List<String> listPlaces, String imageUrl, String contentUrl) {
+    public Promotion(long dateStart, long dateFinish, String description, String name, boolean active, List<String> listPlaces, String imageUrl, String contentUrl, int colorBox) {
         this.dateStart = dateStart;
         this.dateFinish = dateFinish;
         this.description = description;
@@ -33,6 +34,7 @@ public class Promotion implements Parcelable {
         this.listPlaces = listPlaces;
         this.imageUrl = imageUrl;
         this.contentUrl = contentUrl;
+        this.colorBox = colorBox;
     }
 
     protected Promotion(Parcel in) {
@@ -44,6 +46,7 @@ public class Promotion implements Parcelable {
         listPlaces = in.createStringArrayList();
         imageUrl = in.readString();
         contentUrl = in.readString();
+        colorBox = in.readInt();
     }
 
     public static final Creator<Promotion> CREATOR = new Creator<Promotion>() {
@@ -122,20 +125,29 @@ public class Promotion implements Parcelable {
         this.contentUrl = contentUrl;
     }
 
+    public int getColorBox() {
+        return colorBox;
+    }
+
+    public void setColorBox(int colorBox) {
+        this.colorBox = colorBox;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(dateStart);
-        parcel.writeLong(dateFinish);
-        parcel.writeString(description);
-        parcel.writeString(name);
-        parcel.writeByte((byte) (active ? 1 : 0));
-        parcel.writeStringList(listPlaces);
-        parcel.writeString(imageUrl);
-        parcel.writeString(contentUrl);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(dateStart);
+        dest.writeLong(dateFinish);
+        dest.writeString(description);
+        dest.writeString(name);
+        dest.writeByte((byte) (active ? 1 : 0));
+        dest.writeStringList(listPlaces);
+        dest.writeString(imageUrl);
+        dest.writeString(contentUrl);
+        dest.writeInt(colorBox);
     }
 }
