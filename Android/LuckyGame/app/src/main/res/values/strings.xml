@@ -68,5 +68,7 @@
     <string name="dont_wont_notifications">I don\'t wont notifications</string>
     <string name="out_of_spins"><b>Out of spins?</b> Get an extra spins</string>
     <string name="play">Play</string>
+    <string name="gifts_info">gifts info</string>
+    <string name="finish_on">Finish on %s</string>
 
 </resources>

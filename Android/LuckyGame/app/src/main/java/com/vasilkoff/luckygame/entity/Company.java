@@ -1,12 +1,13 @@
 package com.vasilkoff.luckygame.entity;
 
-import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Kusenko on 27.02.2017.
  */
 
-public class Company {
+public class Company implements Parcelable {
 
     private String id;
     private String name;
@@ -15,6 +16,7 @@ public class Company {
     private String typeName;
     private int type;
     private int icon;
+    private int countPromo;
 
     public Company(String id, String name, String info, String logo) {
         this.id = id;
@@ -23,7 +25,7 @@ public class Company {
         this.logo = logo;
     }
 
-    public Company(String id, String name, String info, String logo, String typeName, int type, int icon) {
+    public Company(String id, String name, String info, String logo, String typeName, int type, int icon, int countPromo) {
         this.id = id;
         this.name = name;
         this.info = info;
@@ -31,7 +33,31 @@ public class Company {
         this.typeName = typeName;
         this.type = type;
         this.icon = icon;
+        this.countPromo = countPromo;
     }
+
+    protected Company(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        info = in.readString();
+        logo = in.readString();
+        typeName = in.readString();
+        type = in.readInt();
+        icon = in.readInt();
+        countPromo = in.readInt();
+    }
+
+    public static final Creator<Company> CREATOR = new Creator<Company>() {
+        @Override
+        public Company createFromParcel(Parcel in) {
+            return new Company(in);
+        }
+
+        @Override
+        public Company[] newArray(int size) {
+            return new Company[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -83,5 +109,34 @@ public class Company {
 
     public int getIcon() {
         return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
+    }
+
+    public int getCountPromo() {
+        return countPromo;
+    }
+
+    public void setCountPromo(int countPromo) {
+        this.countPromo = countPromo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(info);
+        dest.writeString(logo);
+        dest.writeString(typeName);
+        dest.writeInt(type);
+        dest.writeInt(icon);
+        dest.writeInt(countPromo);
     }
 }

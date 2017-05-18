@@ -7,9 +7,8 @@
         <variable
             name="company"
             type="com.vasilkoff.luckygame.entity.Company" />
-        <variable
-            name="promotionCount"
-            type="int"/>
+        <import type="android.view.View" alias="v"/>
+
     </data>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -288,40 +287,44 @@
             android:orientation="horizontal"
             android:background="@drawable/bottom_base"
             android:layout_alignParentBottom="true">
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:paddingBottom="12dp">
-                <ImageButton
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/companyShowDetailsGifts"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/gift_blue"
-                    android:background="@null"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/companyDetailsGifts"
-                    android:paddingTop="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="20dp"
-                    android:minWidth="20dp"
-                    android:gravity="center"
-                    android:textColor="@color/colorDetailsTitle"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-
-                    android:background="@drawable/bg_count_blue"
-                    android:padding="1dp"
-                    android:text="5"
-                    android:layout_toEndOf="@+id/companyDetailsGifts" />
-            </RelativeLayout>
+                    android:onClick="onClickDetails">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@{company.countPromo > 0 ? @drawable/gift_blue : @drawable/gift_grey}"
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/companyDetailsGifts"
+                        android:paddingTop="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="20dp"
+                        android:minWidth="20dp"
+                        android:gravity="center"
+                        android:textColor="@color/colorDetailsTitle"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:background="@drawable/bg_count_blue"
+                        android:padding="1dp"
+                        android:text="@{String.valueOf(company.countPromo)}"
+                        android:layout_toEndOf="@+id/companyDetailsGifts"
+                        android:visibility="@{company.countPromo > 0 ? v.VISIBLE : v.GONE}"/>
+                </RelativeLayout>
+            </LinearLayout>
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent">
-
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -350,34 +353,38 @@
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:paddingBottom="12dp">
-                <ImageButton
-                    android:id="@+id/companyDetailsCoupons"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/cutting_coupon_big"
-                    android:background="@null"
-                    android:layout_centerHorizontal="true"
-                    android:paddingTop="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="20dp"
-                    android:minWidth="20dp"
-                    android:gravity="center"
-                    android:textColor="@color/colorDetailsTitle"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
-                    android:background="@drawable/bg_count_blue"
-                    android:padding="1dp"
-                    android:text="2"
-                    android:layout_toEndOf="@+id/companyDetailsCoupons" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/companyShowDetailsCoupons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/companyDetailsCoupons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cutting_coupon_big"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="20dp"
+                        android:minWidth="20dp"
+                        android:gravity="center"
+                        android:textColor="@color/colorDetailsTitle"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:background="@drawable/bg_count_blue"
+                        android:padding="1dp"
+                        android:text="2"
+                        android:layout_toEndOf="@+id/companyDetailsCoupons" />
+                </RelativeLayout>
+            </LinearLayout>
 
 
         </LinearLayout>

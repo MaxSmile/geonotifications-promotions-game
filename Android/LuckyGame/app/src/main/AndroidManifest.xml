@@ -56,13 +56,18 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FilteredCompanyActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DetailsActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LegendActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUp"/>
 
         <service android:name=".service.LocationService" />
+
+
     </application>
 
 </manifest>

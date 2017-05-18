@@ -13,13 +13,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
@@ -32,6 +33,7 @@ import com.vasilkoff.luckygame.fragment.ActiveCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.CouponsFragment;
 import com.vasilkoff.luckygame.service.LocationService;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,12 +55,15 @@ public class HomeActivity extends BaseActivity {
     private static boolean showPopUpLogin = true;
 
     private TabLayout tabLayout;
-    private TextView customTabText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         activeCompaniesFragment = new ActiveCompaniesFragment();

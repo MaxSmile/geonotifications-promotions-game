@@ -29,4 +29,6 @@
     <color name="colorDetailsBtnText">#9b9b9b</color>
     <color name="colorDetailsTextInfo">#A9AFBC</color>
     <color name="colorDetailsTextInfoBg">#F7F9FB</color>
+    <color name="colorLegendTitle">#4a4a4a</color>
+    <color name="colorLegendSubText">#cacaca</color>
 </resources>
