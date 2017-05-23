@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,6 +68,17 @@ public class DetailsActivity extends BaseActivity {
 
     public void onClickDetails(View view) {
         switch (view.getId()) {
+            case R.id.detailsBack:
+                onBackPressed();
+                break;
+            case R.id.detailsBtnPlay:
+                if (company.getCountPromo() > 0) {
+                    Intent intent = new Intent(this, GameActivity.class);
+                    intent.putExtra(Promotion.class.getCanonicalName(), promotions);
+                    intent.putExtra(Company.class.getCanonicalName(), company);
+                    startActivity(intent);
+                }
+                break;
             case R.id.companyShowDetailsGifts:
                 if (company.getCountPromo() > 0) {
                     Intent intent = new Intent(this, LegendActivity.class);
@@ -74,6 +86,18 @@ public class DetailsActivity extends BaseActivity {
                     intent.putExtra(Company.class.getCanonicalName(), company);
                     startActivity(intent);
                 }
+                break;
+            case R.id.companyDetailsCall:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.companyDetailsInfo:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.companyDetailsDirections:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.companyDetailsWeb:
+                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

@@ -2,14 +2,13 @@ package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.entity.Coupon;
+import com.vasilkoff.luckygame.entity.CouponDB;
 
 import org.json.JSONException;
 
@@ -34,7 +33,7 @@ public class CouponActivity extends BaseActivity {
 
         getWindow().setLayout((int)(widthWindow * 0.9), (int)(heightWindow * 0.9));*/
 
-        final Coupon coupon = getIntent().getParcelableExtra(Coupon.class.getCanonicalName());
+        final CouponDB coupon = getIntent().getParcelableExtra(CouponDB.class.getCanonicalName());
 
         couponCode = (TextView) findViewById(R.id.couponCode);
         couponCode.setText(coupon.getCode());
@@ -56,7 +55,7 @@ public class CouponActivity extends BaseActivity {
         });
     }
 
-    private void redeem(Coupon coupon) {
+    private void redeem(CouponDB coupon) {
         dbHelper.setInactive(coupon.getCode());
         couponCode.setVisibility(View.VISIBLE);
         buttonRedeem.setVisibility(View.GONE);
@@ -83,7 +82,7 @@ public class CouponActivity extends BaseActivity {
         }
 
 
-        dbRedeemed
+        dbCoupons
                 .child(coupon.getCompany())
                 .child(String.valueOf(System.currentTimeMillis()))
                 .setValue(redeemCoupon);

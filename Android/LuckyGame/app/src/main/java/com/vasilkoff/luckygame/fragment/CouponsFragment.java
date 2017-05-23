@@ -10,9 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CouponListAdapter;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.entity.Coupon;
+import com.vasilkoff.luckygame.entity.CouponExtension;
+import com.vasilkoff.luckygame.entity.Promotion;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Kusenko on 27.02.2017.
@@ -22,6 +36,11 @@ public class CouponsFragment extends Fragment {
 
     private RecyclerView couponsList;
     private DBHelper dbHelper;
+    private DatabaseReference dbCoupons = Constants.dbCoupons;
+    private DatabaseReference dbCompanies = Constants.dbCompanies;
+    private List<CouponExtension> coupons;
+    private CouponExtension coupon;
+    private List<String> couponsCode;
 
     @Nullable
     @Override
@@ -40,6 +59,50 @@ public class CouponsFragment extends Fragment {
     }
 
     public void refreshList() {
-        couponsList.setAdapter(new CouponListAdapter(getContext(), dbHelper.getCouponsList()));
+        getCoupons();
+    }
+
+    private void getCoupons() {
+        couponsCode = dbHelper.getCoupons();
+        coupons = new ArrayList<CouponExtension>();
+        for (int i = 0; i < couponsCode.size(); i++) {
+            dbCoupons.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    coupon = dataSnapshot.getValue(CouponExtension.class);
+                    if (coupon != null) {
+                        dbCompanies.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Promotion promotion = dataSnapshot.child("promo").child(coupon.getPromoKey()).getValue(Promotion.class);
+                                coupon.setCompanyName(dataSnapshot.child("name").getValue().toString());
+                                coupon.setLogo(dataSnapshot.child("logo").getValue().toString());
+                                coupon.setType((long)dataSnapshot.child("type").getValue());
+                                coupon.setPromoName(promotion.getName());
+
+                                coupons.add(coupon);
+
+                                if (couponsCode.size() == coupons.size()) {
+
+                                    couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
     }
 }

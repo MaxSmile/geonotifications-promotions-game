@@ -17,6 +17,6 @@ public class ListCouponsActivity extends BaseActivity {
         final RecyclerView couponsList = (RecyclerView) findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         couponsList.setLayoutManager(llm);
-        couponsList.setAdapter(new CouponListAdapter(this, dbHelper.getCouponsList()));
+        //couponsList.setAdapter(new CouponListAdapter(this, dbHelper.getCouponsList()));
     }
 }

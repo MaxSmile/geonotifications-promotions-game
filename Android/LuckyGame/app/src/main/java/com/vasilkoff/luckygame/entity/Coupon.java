@@ -1,81 +1,40 @@
 package com.vasilkoff.luckygame.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
- * Created by Kusenko on 20.02.2017.
+ * Created by Kvm on 19.05.2017.
  */
 
-public class Coupon implements Parcelable {
+public class Coupon {
 
-    private boolean active;
-    private String name;
-    private String description;
-    private String dateExpire;
+    private int status;
     private String code;
-    private String company;
+    private String companyKey;
+    private String promoKey;
+    private String creator;
+    private long creation;
+    private long expired;
+    private long locks;
 
-    public Coupon(boolean active, String name, String description, String dateExpire, String code, String company) {
-        this.active = active;
-        this.name = name;
-        this.description = description;
-        this.dateExpire = dateExpire;
+    public Coupon() {
+    }
+
+    public Coupon(int status, String code, String company, String promo, String creator, long creations, long expired, long locks) {
+        this.status = status;
         this.code = code;
-        this.company = company;
+        this.companyKey = company;
+        this.promoKey = promo;
+        this.creator = creator;
+        this.creation = creations;
+        this.expired = expired;
+        this.locks = locks;
     }
 
-    protected Coupon(Parcel in) {
-        active = in.readByte() != 0;
-        name = in.readString();
-        description = in.readString();
-        dateExpire = in.readString();
-        code = in.readString();
-        company = in.readString();
+    public int getStatus() {
+        return status;
     }
 
-    public static final Creator<Coupon> CREATOR = new Creator<Coupon>() {
-        @Override
-        public Coupon createFromParcel(Parcel in) {
-            return new Coupon(in);
-        }
-
-        @Override
-        public Coupon[] newArray(int size) {
-            return new Coupon[size];
-        }
-    };
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDateExpire() {
-        return dateExpire;
-    }
-
-    public void setDateExpire(String dateExpire) {
-        this.dateExpire = dateExpire;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getCode() {
@@ -86,26 +45,51 @@ public class Coupon implements Parcelable {
         this.code = code;
     }
 
-    public String getCompany() {
-        return company;
+    public String getCompanyKey() {
+        return companyKey;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setCompanyKey(String companyKey) {
+        this.companyKey = companyKey;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getPromoKey() {
+        return promoKey;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeByte((byte) (active ? 1 : 0));
-        parcel.writeString(name);
-        parcel.writeString(description);
-        parcel.writeString(dateExpire);
-        parcel.writeString(code);
-        parcel.writeString(company);
+    public void setPromoKey(String promoKey) {
+        this.promoKey = promoKey;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public long getCreation() {
+        return creation;
+    }
+
+    public void setCreation(long creation) {
+        this.creation = creation;
+    }
+
+    public long getExpired() {
+        return expired;
+    }
+
+    public void setExpired(long expired) {
+        this.expired = expired;
+    }
+
+    public long getLocks() {
+        return locks;
+    }
+
+    public void setLocks(long locks) {
+        this.locks = locks;
     }
 }

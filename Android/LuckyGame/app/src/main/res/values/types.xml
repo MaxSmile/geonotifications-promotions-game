@@ -28,4 +28,9 @@
         <item>@drawable/box_grey</item>
         <item>@drawable/box_pink</item>
     </integer-array>
+    <integer-array name="coupon_type">
+        <item>@drawable/coupon_locked</item>
+        <item>@drawable/coupon_redeemed</item>
+        <item>@drawable/coupon_expired</item>
+    </integer-array>
 </resources>

@@ -42,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     DatabaseReference dbData = dbVersion.child("data");
     DatabaseReference dbCompanies = dbData.child("companies");
     DatabaseReference dbPlaces = dbData.child("places");
-    DatabaseReference dbRedeemed = dbVersion.child("redeemed");
+    DatabaseReference dbCoupons = dbVersion.child("coupons");
 
     static Map<String, Map<String, Promotion>> companies;
     static ArrayList<Place> uniquePlaces;

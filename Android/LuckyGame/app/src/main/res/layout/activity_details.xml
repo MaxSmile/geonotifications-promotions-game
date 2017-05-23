@@ -34,13 +34,15 @@
                         android:layout_height="wrap_content">
 
                         <ImageButton
-                            android:id="@+id/imageButton"
+                            android:id="@+id/detailsBack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20dp"
                             android:background="@null"
-                            android:src="@drawable/back" />
+                            android:src="@drawable/back"
+                            android:onClick="onClickDetails"
+                            android:padding="10dp"/>
                         <TextView                                                    android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -58,9 +60,11 @@
                     android:background="@drawable/menu_base"
                     android:orientation="horizontal">
                     <RelativeLayout
+                        android:id="@+id/companyDetailsCall"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:onClick="onClickDetails">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -77,9 +81,11 @@
 
                     </RelativeLayout>
                     <RelativeLayout
+                        android:id="@+id/companyDetailsInfo"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:onClick="onClickDetails">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -96,9 +102,11 @@
 
                     </RelativeLayout>
                     <RelativeLayout
+                        android:id="@+id/companyDetailsDirections"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:onClick="onClickDetails">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -115,9 +123,11 @@
 
                     </RelativeLayout>
                     <RelativeLayout
+                        android:id="@+id/companyDetailsWeb"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:onClick="onClickDetails">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -332,7 +342,8 @@
                     android:background="@null"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:id="@+id/detailsBtnPlay" />
+                    android:id="@+id/detailsBtnPlay"
+                    android:onClick="onClickDetails"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
