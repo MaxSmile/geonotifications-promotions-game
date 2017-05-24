@@ -19,7 +19,10 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
     private int startWidth;
     private int startHeight;
     private int minHeight;
+    private int minWidth;
+    private int minTop;
     private float startAppBarY;
+    private float startY;
 
 
     public ImageBehavior() {
@@ -30,6 +33,8 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageBehavior);
             minHeight = (int)a.getDimension(R.styleable.ImageBehavior_minHeight, 0);
+            minWidth = (int)a.getDimension(R.styleable.ImageBehavior_minWidth, 0);
+            minTop = (int)a.getDimension(R.styleable.ImageBehavior_minTop, 0);
 
             a.recycle();
         }
@@ -45,6 +50,7 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
         if (startWidth == 0) {
             startWidth = child.getWidth();
             startHeight = child.getHeight();
+            startY = child.getY();
         }
 
         AppBarLayout appBarLayout = (AppBarLayout) dependency;
@@ -54,8 +60,8 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
         int width = (int)(startWidth - (startWidth*factor));
         int height = (int)(startHeight - (startHeight*factor));
 
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
         if (height >= minHeight) {
-            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
             lp.width = width;
             lp.height = height;
             child.setLayoutParams(lp);
@@ -68,6 +74,17 @@ public class ImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
 
             float top = child.getY() - diff;
             child.setY(top);
+        }
+
+        if (appBarLayout.getY() == 0) {
+            child.setY(startY);
+        }
+
+        if (range == -appBarLayout.getY()) {
+            child.setY(minTop);
+            lp.width = minWidth;
+            lp.height = minHeight;
+            child.setLayoutParams(lp);
         }
 
         return true;

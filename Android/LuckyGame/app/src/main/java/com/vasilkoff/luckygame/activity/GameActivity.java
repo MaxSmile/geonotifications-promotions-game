@@ -254,9 +254,9 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         int status = -1;
         long lockTime = System.currentTimeMillis() + promotion.getTimeLock();
 
-        if (!social && lockTime > System.currentTimeMillis()) {
+       /* if (!social && lockTime > System.currentTimeMillis()) {
             status = 0;
-        }
+        }*/
 
         Coupon coupon = new Coupon(
                 status,

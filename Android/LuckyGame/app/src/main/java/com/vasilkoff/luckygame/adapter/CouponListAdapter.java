@@ -49,7 +49,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             coupon.setStatus(2);
 
         if (coupon.getLocks() > System.currentTimeMillis())
-            coupon.setStatus(1);
+            coupon.setStatus(0);
 
         String locks = DateFormat.getDiff(coupon.getLocks());
         if (locks != null)
@@ -58,6 +58,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         String expire = DateFormat.getDiff(coupon.getExpired());
         if (expire != null)
             coupon.setExpiredDiff(expire);
+
+        System.out.println("Test coupon.getStatus()=" + coupon.getStatus());
 
         if (coupon.getStatus() >= 0) {
             TypedArray ta = context.getResources().obtainTypedArray(R.array.coupon_type);
