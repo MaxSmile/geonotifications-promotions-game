@@ -1,4 +1,4 @@
-package com.vasilkoff.luckygame.adapter.handler;
+package com.vasilkoff.luckygame.binding.handler;
 
 import android.view.View;
 

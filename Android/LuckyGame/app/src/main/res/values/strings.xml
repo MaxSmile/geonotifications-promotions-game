@@ -73,5 +73,7 @@
     <string name="finish_on">Finish on %s</string>
     <string name="day">%dd</string>
     <string name="time">%1$dh,%2$dm</string>
+    <string name="distance">3.7km Limassol</string>
+    <string name="more_about">More\nAbout</string>
 
 </resources>

@@ -8,15 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.CouponActivity;
-import com.vasilkoff.luckygame.adapter.handler.CouponsRowHandler;
+import com.vasilkoff.luckygame.binding.handler.CouponsRowHandler;
 import com.vasilkoff.luckygame.databinding.CouponsRowBinding;
-import com.vasilkoff.luckygame.entity.CouponDB;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.util.DateFormat;
 
@@ -29,10 +26,12 @@ import java.util.List;
 public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Holder>{
     private Context context;
     private List<CouponExtension> couponsList;
+    private String[] companyTypeNames;
 
     public CouponListAdapter(Context context, List<CouponExtension> couponsList) {
         this.context = context;
         this.couponsList = couponsList;
+        companyTypeNames = context.getResources().getStringArray(R.array.company_type);
     }
 
     @Override
@@ -44,6 +43,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         CouponExtension coupon = couponsList.get(position);
+
+        coupon.setDistance(context.getString(R.string.distance));
+        coupon.setTypeString(companyTypeNames[(int)coupon.getType()]);
 
         if (coupon.getExpired() < System.currentTimeMillis())
             coupon.setStatus(2);
@@ -58,8 +60,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         String expire = DateFormat.getDiff(coupon.getExpired());
         if (expire != null)
             coupon.setExpiredDiff(expire);
-
-        System.out.println("Test coupon.getStatus()=" + coupon.getStatus());
 
         if (coupon.getStatus() >= 0) {
             TypedArray ta = context.getResources().obtainTypedArray(R.array.coupon_type);
@@ -86,11 +86,11 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*Intent intent = new Intent(context, CouponActivity.class);
-                    intent.putExtra(CouponDB.class.getCanonicalName(), couponsList.get(getAdapterPosition()));
-
-                    context.startActivity(intent);*/
-                    System.out.println("Test coupon+= " + coupon.getCompanyName());
+                    if (coupon.getStatus() < 1) {
+                        Intent intent = new Intent(context, CouponActivity.class);
+                        intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+                        context.startActivity(intent);
+                    }
                 }
             });
         }
@@ -103,12 +103,12 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
 
         @Override
         public void send(View view) {
-            System.out.println("Test coupon= " + coupon.getCompanyName());
+            Toast.makeText(context, R.string.next_version, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void unlock(View view) {
-
+            Toast.makeText(context, R.string.next_version, Toast.LENGTH_SHORT).show();
         }
     }
 }

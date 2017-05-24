@@ -39,7 +39,6 @@ public class CouponsFragment extends Fragment {
     private DatabaseReference dbCoupons = Constants.dbCoupons;
     private DatabaseReference dbCompanies = Constants.dbCompanies;
     private List<CouponExtension> coupons;
-    private CouponExtension coupon;
     private List<String> couponsCode;
 
     @Nullable
@@ -69,7 +68,7 @@ public class CouponsFragment extends Fragment {
             dbCoupons.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    coupon = dataSnapshot.getValue(CouponExtension.class);
+                    final CouponExtension coupon = dataSnapshot.getValue(CouponExtension.class);
                     if (coupon != null) {
                         dbCompanies.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

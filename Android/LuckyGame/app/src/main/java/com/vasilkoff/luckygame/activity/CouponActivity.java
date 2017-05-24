@@ -1,6 +1,7 @@
 package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,32 +9,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.entity.CouponDB;
+import com.vasilkoff.luckygame.binding.handler.CouponHandler;
+import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 
-import org.json.JSONException;
+import com.vasilkoff.luckygame.entity.CouponExtension;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class CouponActivity extends BaseActivity {
+public class CouponActivity extends BaseActivity implements CouponHandler{
 
     private TextView couponCode;
     private Button buttonRedeem;
+    private CouponExtension coupon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
-        /*DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
+        ActivityCouponBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_coupon);
+        binding.setCoupon(coupon);
+        binding.setHandler(this);
 
-        int widthWindow = dm.widthPixels;
-        int heightWindow = dm.heightPixels;
-
-        getWindow().setLayout((int)(widthWindow * 0.9), (int)(heightWindow * 0.9));*/
-
-        final CouponDB coupon = getIntent().getParcelableExtra(CouponDB.class.getCanonicalName());
+        /*final CouponDB coupon = getIntent().getParcelableExtra(CouponDB.class.getCanonicalName());
 
         couponCode = (TextView) findViewById(R.id.couponCode);
         couponCode.setText(coupon.getCode());
@@ -52,10 +50,10 @@ public class CouponActivity extends BaseActivity {
                     redeem(coupon);
                 }
             }
-        });
+        });*/
     }
 
-    private void redeem(CouponDB coupon) {
+   /* private void redeem(CouponDB coupon) {
         dbHelper.setInactive(coupon.getCode());
         couponCode.setVisibility(View.VISIBLE);
         buttonRedeem.setVisibility(View.GONE);
@@ -87,19 +85,30 @@ public class CouponActivity extends BaseActivity {
                 .child(String.valueOf(System.currentTimeMillis()))
                 .setValue(redeemCoupon);
 
-        /*startActivity(new Intent(this, HomeActivity.class));
-        finish();*/
+        *//*startActivity(new Intent(this, HomeActivity.class));
+        finish();*//*
+    }*/
+
+
+    @Override
+    public void send(View view) {
+        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
     }
 
-    public void onClickCoupon(View view) {
-        switch (view.getId()) {
-            case R.id.couponInfoClose:
-                onBackPressed();
-                break;
-            case R.id.couponInfoShare:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-            case R.id.couponInfoSend:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void unlock(View view) {
+        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void more(View view) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("company", coupon.getCompanyKey());
+        startActivity(intent);
+    }
+
+    @Override
+    public void redeem(View view) {
+        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
     }
 }

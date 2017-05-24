@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
@@ -35,7 +36,8 @@ import java.util.Map;
  * Created by Kusenko on 20.02.2017.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+        BaseHandler {
 
     private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     DatabaseReference dbVersion = reference.child("ver1");
@@ -118,5 +120,10 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         parameters.putString("fields", "id,gender,name,birthday,picture.type(large)");
         request.setParameters(parameters);
         request.executeAsync();
+    }
+
+    @Override
+    public void back(View view) {
+        onBackPressed();
     }
 }

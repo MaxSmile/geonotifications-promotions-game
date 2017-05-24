@@ -8,7 +8,7 @@
             type="com.vasilkoff.luckygame.entity.CouponExtension" />
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.adapter.handler.CouponsRowHandler"/>
+            type="com.vasilkoff.luckygame.binding.handler.CouponsRowHandler"/>
         <import type="android.view.View" alias="v"/>
     </data>
 
@@ -22,179 +22,185 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/coupons"
-            android:orientation="vertical">
-
+            android:orientation="horizontal">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="896"
+                android:minHeight="190dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:background="@drawable/coupons_bg_1"
+                android:orientation="vertical">
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingTop="25dp"
-                    android:paddingLeft="25dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:src="@{coupon.logo}"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="25dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorNameCompany"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        android:text="@{coupon.companyName}"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1,9 km Limassol"/>
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="bottom"
-                        android:paddingLeft="5dp">
+                        android:layout_weight="3"
+                        android:orientation="vertical"
+                        android:paddingTop="25dp"
+                        android:paddingLeft="25dp">
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/open_present_box"/>
-
-                        <TextView
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
-                            android:layout_marginBottom="-3dp"
-                            android:textColor="@color/colorCouponPercent"
-                            android:textSize="23sp"
-                            android:textStyle="bold"
-                            android:text="@{coupon.promoName}"/>
+                            android:layout_height="100dp"
+                            android:layout_gravity="center"
+                            android:src="@{coupon.logo}"/>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_weight="5"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="25dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorNameCompany"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:text="@{coupon.companyName}"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1,9 km Limassol"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Locks in:"
-                                android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Expires in:"
-                                android:visibility="@{coupon.expiredDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
+                            android:gravity="bottom"
                             android:paddingLeft="5dp">
 
-                            <TextView
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{coupon.lockDiff}"
-                                android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+                                android:src="@drawable/open_present_box"/>
 
                             <TextView
+                                android:maxLines="1"
+                                android:ellipsize="end"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{coupon.expiredDiff}"
-                                android:visibility="@{coupon.expiredDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+                                android:paddingLeft="5dp"
+                                android:layout_marginBottom="-3dp"
+                                android:textColor="@color/colorCouponPercent"
+                                android:textSize="23sp"
+                                android:textStyle="bold"
+                                android:text="@{coupon.promoName}"/>
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Locks in:"
+                                    android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Expires in:"
+                                    android:visibility="@{coupon.expiredDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingLeft="5dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{coupon.lockDiff}"
+                                    android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{coupon.expiredDiff}"
+                                    android:visibility="@{coupon.expiredDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+
                     </LinearLayout>
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:paddingTop="17dp">
-                    <ImageView
-                        android:id="@+id/couponRowStatus"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="7"
                         android:layout_height="wrap_content"
-                        android:src="@{coupon.statusIcon}"/>
-                    <Space
+                        android:layout_weight="2"
+                        android:orientation="horizontal"
+                        android:paddingTop="19dp"
+                        android:gravity="end">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@{coupon.statusIcon}"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="30dp">
+
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="4"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/bg_rectangle"
+                            android:textColor="@color/colorCouponShareText"
+                            android:text="@string/send_friends"
+                            android:onClick="@{handler::send}"
+                            android:visibility="@{coupon.status == -1 ? v.VISIBLE : v.GONE}"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+                        <TextView
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/bg_rectangle"
+                            android:textColor="@color/colorCouponShareText"
+                            android:text="@string/unlock"
+                            android:visibility="@{coupon.status == 0 ? v.VISIBLE : v.GONE}"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="30dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center">
-                    <TextView
-                        android:gravity="center"
-                        android:textSize="12sp"
-                        android:layout_width="70dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/bg_rectangle"
-                        android:textColor="@color/colorCouponShareText"
-                        android:text="@string/send_friends"
-                        android:onClick="@{handler::send}"
-                        android:visibility="@{coupon.status == -1 ? v.VISIBLE : v.GONE}"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center">
-                    <TextView
-                        android:gravity="center"
-                        android:textSize="12sp"
-                        android:layout_width="70dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/bg_rectangle"
-                        android:textColor="@color/colorCouponShareText"
-                        android:text="@string/unlock"
-                        android:visibility="@{coupon.status == 1 ? v.VISIBLE : v.GONE}"/>
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_width="0dp"
+                android:layout_weight="103"
+                android:layout_height="match_parent"
+                android:background="@drawable/coupons_bg_2"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
