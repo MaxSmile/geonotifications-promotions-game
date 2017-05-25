@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
@@ -39,12 +40,9 @@ import java.util.Map;
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         BaseHandler {
 
-    private DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference dbVersion = reference.child("ver1");
-    DatabaseReference dbData = dbVersion.child("data");
-    DatabaseReference dbCompanies = dbData.child("companies");
-    DatabaseReference dbPlaces = dbData.child("places");
-    DatabaseReference dbCoupons = dbVersion.child("coupons");
+    DatabaseReference dbData = Constants.dbData;
+    DatabaseReference dbCompanies = Constants.dbCompanies;
+    DatabaseReference dbCoupons = Constants.dbCoupons;
 
     static Map<String, Map<String, Promotion>> companies;
     static ArrayList<Place> uniquePlaces;

@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.CouponActivity;
+import com.vasilkoff.luckygame.activity.UnlockActivity;
 import com.vasilkoff.luckygame.binding.handler.CouponsRowHandler;
 import com.vasilkoff.luckygame.databinding.CouponsRowBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
@@ -47,11 +49,13 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         coupon.setDistance(context.getString(R.string.distance));
         coupon.setTypeString(companyTypeNames[(int)coupon.getType()]);
 
-        if (coupon.getExpired() < System.currentTimeMillis())
-            coupon.setStatus(2);
+        if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE) {
+            if (coupon.getExpired() < System.currentTimeMillis())
+                coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
 
-        if (coupon.getLocks() > System.currentTimeMillis())
-            coupon.setStatus(0);
+            if (coupon.getLocks() > System.currentTimeMillis())
+                coupon.setStatus(Constants.COUPON_STATUS_LOCK);
+        }
 
         String locks = DateFormat.getDiff(coupon.getLocks());
         if (locks != null)
@@ -61,7 +65,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         if (expire != null)
             coupon.setExpiredDiff(expire);
 
-        if (coupon.getStatus() >= 0) {
+        if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
             TypedArray ta = context.getResources().obtainTypedArray(R.array.coupon_type);
             coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
             ta.recycle();
@@ -108,7 +112,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
 
         @Override
         public void unlock(View view) {
-            Toast.makeText(context, R.string.next_version, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, UnlockActivity.class);
+            intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+            context.startActivity(intent);
         }
     }
 }

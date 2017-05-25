@@ -2,12 +2,22 @@ package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.CouponHandler;
 import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
@@ -17,19 +27,23 @@ import com.vasilkoff.luckygame.entity.CouponExtension;
 
 public class CouponActivity extends BaseActivity implements CouponHandler{
 
-    private TextView couponCode;
-    private Button buttonRedeem;
     private CouponExtension coupon;
+    private PopupWindow popupWindow;
+    private LinearLayout parentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
+
+
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
         ActivityCouponBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_coupon);
         binding.setCoupon(coupon);
         binding.setHandler(this);
+
+        parentLayout = (LinearLayout) findViewById(R.id.couponParentLayout);
 
         /*final CouponDB coupon = getIntent().getParcelableExtra(CouponDB.class.getCanonicalName());
 
@@ -89,6 +103,48 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
         finish();*//*
     }*/
 
+    private void redeem() {
+        dbCoupons.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
+        dbCoupons.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
+        onBackPressed();
+    }
+
+    private void showPopUp() {
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.pop_up_redeem, null);
+
+        popupWindow = new PopupWindow(
+                view,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        popupWindow.setOutsideTouchable(false);
+        popupWindow.setFocusable(true);
+
+        ((ImageButton) view.findViewById(R.id.couponPopUpClose)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        ((TextView) view.findViewById(R.id.couponPopUpNot)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        ((Button) view.findViewById(R.id.couponPopUpRedeem)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                redeem();
+            }
+        });
+
+        popupWindow.showAtLocation(parentLayout, Gravity.CENTER,0, 0);
+    }
+
 
     @Override
     public void send(View view) {
@@ -97,7 +153,10 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
 
     @Override
     public void unlock(View view) {
-        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, UnlockActivity.class);
+        intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -109,6 +168,6 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
 
     @Override
     public void redeem(View view) {
-        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+        showPopUp();
     }
 }

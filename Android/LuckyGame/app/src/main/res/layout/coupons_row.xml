@@ -39,14 +39,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:orientation="vertical"
                         android:paddingTop="25dp"
-                        android:paddingLeft="25dp">
+                        android:paddingLeft="25dp"
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="100dp"
-                            android:layout_gravity="center"
                             android:src="@{coupon.logo}"/>
                     </LinearLayout>
 
@@ -192,6 +191,7 @@
                             android:background="@drawable/bg_rectangle"
                             android:textColor="@color/colorCouponShareText"
                             android:text="@string/unlock"
+                            android:onClick="@{handler::unlock}"
                             android:visibility="@{coupon.status == 0 ? v.VISIBLE : v.GONE}"/>
                     </LinearLayout>
                 </LinearLayout>

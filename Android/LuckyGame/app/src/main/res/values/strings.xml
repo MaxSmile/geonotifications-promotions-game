@@ -75,5 +75,13 @@
     <string name="time">%1$dh,%2$dm</string>
     <string name="distance">3.7km Limassol</string>
     <string name="more_about">More\nAbout</string>
-
+    <string name="coupon_code">Coupon Code</string>
+    <string name="important">Important!</string>
+    <string name="redeem_text">Make sure you show this coupon before redeem it to the cashier</string>
+    <string name="not_now">Not Now</string>
+    <string name="unlock_title">Unlock</string>
+    <string name="unlock_text1">You can <b>unlock</b> and <b>redeem</b> this coupon very easy</string>
+    <string name="unlock_text2">Just use one of the below</string>
+    <string name="unlock_text3">You can always tell your friends next to you to try their luck</string>
+    <string name="unlock_text4">send you their coupons</string>
 </resources>

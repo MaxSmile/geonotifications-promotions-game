@@ -14,4 +14,8 @@ public class Constants {
     public static final DatabaseReference dbData = dbVersion.child("data");
     public static final DatabaseReference dbCompanies = dbData.child("companies");
     public static final DatabaseReference dbCoupons = dbVersion.child("coupons");
+    public static final int COUPON_STATUS_ACTIVE = -1;
+    public static final int COUPON_STATUS_LOCK = 0;
+    public static final int COUPON_STATUS_REDEEMED = 1;
+    public static final int COUPON_STATUS_EXPIRED = 2;
 }

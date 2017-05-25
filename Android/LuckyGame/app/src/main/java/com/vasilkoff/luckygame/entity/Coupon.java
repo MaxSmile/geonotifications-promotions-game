@@ -14,6 +14,7 @@ public class Coupon {
     private long creation;
     private long expired;
     private long locks;
+    private long redeemed;
 
     public Coupon() {
     }
@@ -91,5 +92,13 @@ public class Coupon {
 
     public void setLocks(long locks) {
         this.locks = locks;
+    }
+
+    public long getRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(long redeemed) {
+        this.redeemed = redeemed;
     }
 }

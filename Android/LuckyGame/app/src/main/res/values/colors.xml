@@ -31,4 +31,7 @@
     <color name="colorDetailsTextInfoBg">#F7F9FB</color>
     <color name="colorLegendTitle">#4a4a4a</color>
     <color name="colorLegendSubText">#cacaca</color>
+    <color name="colorUnlockExpired">#ffffff</color>
+    <color name="colorUnlockText">#9B9B9B</color>
+    <color name="colorUnlockTextBlue">#4a90e2</color>
 </resources>

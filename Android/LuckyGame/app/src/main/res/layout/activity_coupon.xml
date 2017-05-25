@@ -13,6 +13,7 @@
         <import type="android.view.View" alias="v"/>
     </data>
     <LinearLayout
+        android:id="@+id/couponParentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="40dp"
@@ -24,7 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:orientation="horizontal"
             android:paddingTop="5dp"
             android:paddingRight="10dp"
@@ -33,8 +34,9 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="80dp"
-                android:src="@{coupon.logo}"/>
+                android:layout_height="wrap_content"
+                android:src="@{coupon.logo}"
+                android:layout_gravity="center"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="2"
@@ -66,8 +68,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="bottom">
+                    android:orientation="horizontal">
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_weight="3"
@@ -89,11 +90,11 @@
                         android:orientation="vertical"
                         android:gravity="center">
                         <TextView
-                            android:layout_width="60dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
                             android:gravity="center"
-                            android:padding="2dp"
+                            android:padding="3dp"
                             android:background="@drawable/bg_rectangle"
                             android:textColor="@color/colorCouponShareText"
                             android:text="@string/more_about"
@@ -110,7 +111,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:background="@drawable/rectangle"
             android:orientation="vertical"
             android:padding="5dp">
@@ -144,7 +145,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:orientation="vertical"
             android:background="@color/colorCouponRulesBg">
             <TextView
@@ -152,23 +153,23 @@
                 android:layout_height="wrap_content"
                 android:text="@string/rules_conditions_title"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
                 android:textColor="@color/colorCouponRulesTitle"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rules_conditions"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
                 android:lineSpacingMultiplier="1.4"
                 android:textColor="@color/colorCouponRulesText"/>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:background="@drawable/redeem_info_bg"
             android:paddingBottom="5dp">
             <LinearLayout
@@ -204,14 +205,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/locks"
                         android:textColor="@color/colorCouponRulesTitle"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/expires"
                         android:textColor="@color/colorCouponRulesTitle"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:layout_marginTop="5dp"
                         android:visibility="@{coupon.expiredDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
 
@@ -224,14 +225,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="19sp"
+                        android:textSize="18sp"
                         android:textColor="@color/colorCouponCode"
                         android:text="@{coupon.lockDiff}"
                         android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="19sp"
+                        android:textSize="18sp"
                         android:textColor="@color/colorCouponCode"
                         android:layout_marginTop="5dp"
                         android:text="@{coupon.expiredDiff}"
@@ -253,8 +254,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center">
                     <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:background="@drawable/bg_share"
                         android:gravity="center"
                         android:text="@string/unlock"
@@ -270,7 +271,7 @@
                     android:gravity="center">
                     <Button
                         android:layout_width="wrap_content"
-                        android:layout_height="50dp"
+                        android:layout_height="45dp"
                         android:background="@{coupon.status == -1 ? @drawable/redeem_bg : @drawable/redeem_inactive_bg}"
                         android:paddingLeft="25dp"
                         android:paddingRight="25dp"
@@ -278,7 +279,8 @@
                         android:textAllCaps="false"
                         android:textColor="@color/colorRedeemText"
                         android:textSize="20sp"
-                        android:onClick="@{handler::redeem}"/>
+                        android:onClick="@{handler::redeem}"
+                        style="?android:attr/borderlessButtonStyle"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -286,8 +288,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center">
                     <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:background="@drawable/bg_share"
                         android:gravity="center"
                         android:text="@string/send_friends"
@@ -311,10 +313,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/colorCouponRulesTitle"
-                android:text="Coupon Code"/>
+                android:text="@string/coupon_code"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

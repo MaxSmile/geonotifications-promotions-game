@@ -26,6 +26,7 @@ public class CouponExtension implements Parcelable {
     private int statusIcon;
     private String typeString;
     private String distance;
+    private long redeemed;
 
     public CouponExtension() {
     }
@@ -83,6 +84,7 @@ public class CouponExtension implements Parcelable {
         statusIcon = in.readInt();
         typeString = in.readString();
         distance = in.readString();
+        redeemed = in.readLong();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -233,6 +235,14 @@ public class CouponExtension implements Parcelable {
         this.distance = distance;
     }
 
+    public long getRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(long redeemed) {
+        this.redeemed = redeemed;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -257,5 +267,6 @@ public class CouponExtension implements Parcelable {
         dest.writeInt(statusIcon);
         dest.writeString(typeString);
         dest.writeString(distance);
+        dest.writeLong(redeemed);
     }
 }
