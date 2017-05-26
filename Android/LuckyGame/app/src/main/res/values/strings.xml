@@ -23,7 +23,7 @@
     <string name="share_title">Share %s and get coupon</string>
     <string name="coupon_redeem">Redeem</string>
     <string name="location_service_stop">Stop</string>
-    <string name="fragment_companies_title">All \nPlaces</string>
+    <string name="fragment_companies_title">All \nPartners</string>
     <string name="fragment_active_companies_title">Available \nSpins</string>
     <string name="fragment_coupons_title">My \nCoupons</string>
     <string name="login_success_message">You succeeded login</string>
@@ -84,4 +84,8 @@
     <string name="unlock_text2">Just use one of the below</string>
     <string name="unlock_text3">You can always tell your friends next to you to try their luck</string>
     <string name="unlock_text4">send you their coupons</string>
+    <string name="time_left">Time left:</string>
+    <string name="unlock_facebook_like">Like %s facebook page</string>
+    <string name="unlock_facebook_check_in">Check in at %s</string>
+    <string name="unlock_invite_friends">Invite your friends</string>
 </resources>

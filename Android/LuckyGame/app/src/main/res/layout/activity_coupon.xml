@@ -20,7 +20,7 @@
         android:paddingLeft="35dp"
         android:paddingRight="35dp"
         android:paddingTop="40dp"
-        android:background="@drawable/shadow_big_bg"
+        android:background="@drawable/shadow_big"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"

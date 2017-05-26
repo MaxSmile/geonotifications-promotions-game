@@ -18,6 +18,13 @@ public class UnlockActivity extends BaseActivity {
 
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
         ((TextView)findViewById(R.id.unlockExpires)).setText(coupon.getExpiredDiff());
+
+        ((TextView)findViewById(R.id.unlockLikeText))
+                .setText(String.format(getString(R.string.unlock_facebook_like), coupon.getCompanyName()));
+        ((TextView)findViewById(R.id.unlockCheckInText))
+                .setText(String.format(getString(R.string.unlock_facebook_check_in), coupon.getCompanyName()));
+
+
     }
 
     private void unlock() {

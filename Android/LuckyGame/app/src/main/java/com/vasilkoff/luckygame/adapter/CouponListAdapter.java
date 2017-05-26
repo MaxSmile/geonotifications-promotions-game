@@ -90,7 +90,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (coupon.getStatus() < 1) {
+                    if (coupon.getStatus() < Constants.COUPON_STATUS_REDEEMED) {
                         Intent intent = new Intent(context, CouponActivity.class);
                         intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
                         context.startActivity(intent);

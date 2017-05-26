@@ -17,6 +17,9 @@ public class Company implements Parcelable {
     private int type;
     private int icon;
     private int countPromo;
+    private String distance;
+    private int countCoupon;
+
 
     public Company(String id, String name, String info, String logo) {
         this.id = id;
@@ -36,6 +39,19 @@ public class Company implements Parcelable {
         this.countPromo = countPromo;
     }
 
+    public Company(String id, String name, String info, String logo, String typeName, int type, int icon, int countPromo, String distance, int countCoupon) {
+        this.id = id;
+        this.name = name;
+        this.info = info;
+        this.logo = logo;
+        this.typeName = typeName;
+        this.type = type;
+        this.icon = icon;
+        this.countPromo = countPromo;
+        this.distance = distance;
+        this.countCoupon = countCoupon;
+    }
+
     protected Company(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -45,6 +61,8 @@ public class Company implements Parcelable {
         type = in.readInt();
         icon = in.readInt();
         countPromo = in.readInt();
+        distance = in.readString();
+        countCoupon = in.readInt();
     }
 
     public static final Creator<Company> CREATOR = new Creator<Company>() {
@@ -123,6 +141,22 @@ public class Company implements Parcelable {
         this.countPromo = countPromo;
     }
 
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public int getCountCoupon() {
+        return countCoupon;
+    }
+
+    public void setCountCoupon(int countCoupon) {
+        this.countCoupon = countCoupon;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -138,5 +172,7 @@ public class Company implements Parcelable {
         dest.writeInt(type);
         dest.writeInt(icon);
         dest.writeInt(countPromo);
+        dest.writeString(distance);
+        dest.writeInt(countCoupon);
     }
 }

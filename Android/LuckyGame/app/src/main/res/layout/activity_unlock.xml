@@ -8,7 +8,7 @@
     android:paddingLeft="35dp"
     android:paddingRight="35dp"
     android:paddingTop="40dp"
-    android:background="@drawable/drop_shadow"
+    android:background="@drawable/shadow_small"
     android:gravity="center_vertical"
     android:orientation="vertical"
     tools:context="com.vasilkoff.luckygame.activity.UnlockActivity">
@@ -21,15 +21,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp">
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/unlock_title"
-                android:textColor="@color/colorLegendTitle"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:orientation="horizontal"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lock"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unlock_title"
+                    android:textColor="@color/colorLegendTitle"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="-3dp"/>
+            </LinearLayout>
             <ImageButton
                 android:id="@+id/unlockClose"
                 android:layout_width="wrap_content"
@@ -67,6 +79,71 @@
                 android:text="@string/unlock_text2"
                 android:gravity="center"
                 android:textColor="@color/colorUnlockText"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/facebook_like"
+                    android:minWidth="28dp"/>
+                <TextView
+                    android:id="@+id/unlockLikeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    style="@style/UnlockActionsText"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/geo_fence"
+                    android:minWidth="28dp"/>
+                <TextView
+                    android:id="@+id/unlockCheckInText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    style="@style/UnlockActionsText"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/paper_plane"
+                    android:minWidth="28dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unlock_invite_friends"
+                    android:layout_gravity="center_vertical"
+                    style="@style/UnlockActionsText"/>
+            </LinearLayout>
         </LinearLayout>
         <Button
             android:id="@+id/unlockUnlock"

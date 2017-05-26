@@ -55,11 +55,14 @@ public class HomeActivity extends BaseActivity {
     private static boolean showPopUpLogin = true;
 
     private TabLayout tabLayout;
+    private String[] companyTypeNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        companyTypeNames = getResources().getStringArray(R.array.company_type);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

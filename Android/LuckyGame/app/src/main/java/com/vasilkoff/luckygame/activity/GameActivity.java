@@ -79,12 +79,18 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         ActivityGameBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
 
-        parentLayout = (RelativeLayout) findViewById(R.id.activity_game);
+        parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
 
         progressBar = (ProgressBar)findViewById(R.id.powerBar);
         progressBar.setMax(100);
         progressBar.setProgress(0);
         progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progress));
+
+
+
+        powerButton = (ImageView)findViewById(R.id.powerButton);
+        powerButton.setOnTouchListener(new PowerTouchListener());
+        pointerImageView = (ImageView)findViewById(R.id.imageWheel);
 
         handler = new Handler(new Handler.Callback() {
             @Override
@@ -93,12 +99,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                 return false;
             }
         });
-
-        powerButton = (ImageView)findViewById(R.id.powerButton);
-        powerButton.setOnTouchListener(new PowerTouchListener());
-        pointerImageView = (ImageView)findViewById(R.id.imageWheel);
-
-
         //init(getIntent());
     }
 
@@ -360,6 +360,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                 case MotionEvent.ACTION_DOWN:
                     flag = true;
                     count = 0;
+                    powerButton.setImageResource(R.drawable.wheel_button_pressed);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -383,6 +384,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                     }).start();
                     return true;
                 case MotionEvent.ACTION_UP:
+                    powerButton.setImageResource(R.drawable.wheel_button);
                     flag = false;
 
                     StartSpinner();

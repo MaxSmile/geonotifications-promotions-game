@@ -43,4 +43,11 @@
         <item name="android:minWidth">280dp</item>
     </style>
 
+    <style name="UnlockActionsText">
+        <item name="android:textColor">@color/colorUnlockText</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
 </resources>

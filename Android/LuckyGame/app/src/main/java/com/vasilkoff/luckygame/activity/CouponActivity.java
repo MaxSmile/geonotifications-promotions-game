@@ -2,10 +2,9 @@ package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.BitmapDrawable;
+
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

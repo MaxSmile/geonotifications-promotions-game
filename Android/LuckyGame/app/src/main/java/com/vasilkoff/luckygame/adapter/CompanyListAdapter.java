@@ -2,6 +2,7 @@ package com.vasilkoff.luckygame.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 import com.vasilkoff.luckygame.activity.GameActivity;
 import com.vasilkoff.luckygame.activity.InfoActivity;
+import com.vasilkoff.luckygame.binding.handler.CompanyRowHandler;
+import com.vasilkoff.luckygame.databinding.CompaniesRowBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Promotion;
 
@@ -44,12 +47,9 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        int count = companies.get(activeCompanyListInfo.get(position).getId()).size();
-        holder.countPromo.setText(String.valueOf(count));
-        holder.name.setText(activeCompanyListInfo.get(position).getName());
-        String logoUri = activeCompanyListInfo.get(position).getLogo();
-        if (logoUri != null)
-            Picasso.with(context).load(logoUri).into(holder.logo);
+        Company company = activeCompanyListInfo.get(position);
+        company.setCountPromo(companies.get(activeCompanyListInfo.get(position).getId()).size());
+        holder.bind(company);
     }
 
     @Override
@@ -57,26 +57,41 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         return activeCompanyListInfo.size();
     }
 
-    class Holder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView countPromo;
-        ImageView logo;
+    class Holder extends RecyclerView.ViewHolder implements CompanyRowHandler {
+        private CompaniesRowBinding binding;
+        private Company company;
 
         public Holder(View v) {
             super(v);
-            name = (TextView) v.findViewById(R.id.companyName);
+            binding = DataBindingUtil.bind(v);
+           /* name = (TextView) v.findViewById(R.id.companyName);
             countPromo = (TextView) v.findViewById(R.id.textCountPromo);
             logo = (ImageView) v.findViewById(R.id.companyLogo);
-
+*/
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, DetailsActivity.class);
-                    intent.putExtra("company", activeCompanyListInfo.get(getAdapterPosition()).getId());
-
+                    intent.putExtra("company", company.getId());
                     context.startActivity(intent);
                 }
             });
+        }
+
+        public void bind(Company company) {
+            this.company = company;
+            binding.setCompany(company);
+            binding.setHandler(this);
+        }
+
+        @Override
+        public void showCoupons(View view) {
+
+        }
+
+        @Override
+        public void getSpin(View view) {
+
         }
     }
 }
