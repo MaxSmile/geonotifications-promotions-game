@@ -35,9 +35,9 @@ public class AllCompaniesFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        companiesList = (RecyclerView) getActivity().findViewById(R.id.allCompaniesList);
+        //companiesList = (RecyclerView) getActivity().findViewById(R.id.allCompaniesList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        companiesList.setLayoutManager(llm);
+        //companiesList.setLayoutManager(llm);
         if (allCompanyList == null)
             allCompanyList = new ArrayList<Company>();
         refreshList();
@@ -49,7 +49,7 @@ public class AllCompaniesFragment extends Fragment {
     }
 
     public void refreshList() {
-        companiesList.setAdapter(new AllCompanyListAdapter(getContext(), allCompanyList));
+        //companiesList.setAdapter(new AllCompanyListAdapter(getContext(), allCompanyList));
     }
 
 

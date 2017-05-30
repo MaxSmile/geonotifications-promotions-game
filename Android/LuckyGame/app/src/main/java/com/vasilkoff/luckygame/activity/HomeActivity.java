@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,13 +61,17 @@ public class HomeActivity extends BaseActivity {
     private TabLayout tabLayout;
     private String[] companyTypeNames;
     private AppBarLayout appBarLayout;
-
+    private ImageView logo;
+    private ImageView logoSmall;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        logo = (ImageView) findViewById(R.id.homeLogo);
+        logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         companyTypeNames = getResources().getStringArray(R.array.company_type);
@@ -117,10 +122,20 @@ public class HomeActivity extends BaseActivity {
                 ((TextView) tab.getCustomView().findViewById(R.id.customTabText))
                         .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
                 if (tab.getPosition() == 1) {
-                    appBarLayout.setBackground(ContextCompat.getDrawable(HomeActivity.this, R.drawable.cover_small));
                     TextView customTabCount = (TextView) tab.getCustomView().findViewById(R.id.customTabCount);
                     customTabCount.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
                     customTabCount.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_count_active));
+                }
+
+                if (tab.getPosition() == 0) {
+                    appBarLayout.setBackground(ContextCompat.getDrawable(HomeActivity.this, R.drawable.cover));
+
+                    logoSmall.setVisibility(View.GONE);
+                    logo.setVisibility(View.VISIBLE);
+                } else {
+                    appBarLayout.setBackground(ContextCompat.getDrawable(HomeActivity.this, R.drawable.cover_small));
+                    logo.setVisibility(View.GONE);
+                    logoSmall.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -129,7 +144,6 @@ public class HomeActivity extends BaseActivity {
                 ((TextView) tab.getCustomView().findViewById(R.id.customTabText))
                         .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
                 if (tab.getPosition() == 1) {
-                    appBarLayout.setBackground(ContextCompat.getDrawable(HomeActivity.this, R.drawable.cover));
                     TextView customTabCount = (TextView) tab.getCustomView().findViewById(R.id.customTabCount);
                     customTabCount.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
                     customTabCount.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_count));
