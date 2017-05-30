@@ -24,7 +24,7 @@
     <string name="coupon_redeem">Redeem</string>
     <string name="location_service_stop">Stop</string>
     <string name="fragment_companies_title">All \nPartners</string>
-    <string name="fragment_active_companies_title">Available \nSpins</string>
+    <string name="fragment_active_companies_title">Active \nSpins</string>
     <string name="fragment_coupons_title">My \nCoupons</string>
     <string name="login_success_message">You succeeded login</string>
     <string name="search">Search</string>
@@ -36,8 +36,8 @@
     <string name="food">Food</string>
     <string name="nightlife">Nightlife</string>
     <string name="coffee">Coffee</string>
-    <string name="events">Events</string>
-    <string name="shops">Shops</string>
+    <string name="events">Specials</string>
+    <string name="shops">Shopping</string>
     <string name="services">Services</string>
     <string name="favorites">Favorites</string>
     <string name="or">or</string>
@@ -88,4 +88,5 @@
     <string name="unlock_facebook_like">Like %s facebook page</string>
     <string name="unlock_facebook_check_in">Check in at %s</string>
     <string name="unlock_invite_friends">Invite your friends</string>
+    <string name="login_license">By login in or accessing SpinDeals app you agree and accept our Terms &amp; Conditions</string>
 </resources>

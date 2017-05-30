@@ -3,6 +3,7 @@ package com.vasilkoff.luckygame.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,11 +23,12 @@ public class Promotion implements Parcelable {
     private String contentUrl;
     private int colorBox;
     private long timeLock;
+    private int capacityBox;
 
     public Promotion() {
     }
 
-    public Promotion(String id, long dateStart, long dateFinish, String description, String name, boolean active, List<String> listPlaces, String imageUrl, String contentUrl, int colorBox, long timeLock) {
+    public Promotion(String id, long dateStart, long dateFinish, String description, String name, boolean active, List<String> listPlaces, String imageUrl, String contentUrl, int colorBox, long timeLock, int capacityBox) {
         this.id = id;
         this.dateStart = dateStart;
         this.dateFinish = dateFinish;
@@ -38,7 +40,35 @@ public class Promotion implements Parcelable {
         this.contentUrl = contentUrl;
         this.colorBox = colorBox;
         this.timeLock = timeLock;
+        this.capacityBox = capacityBox;
     }
+
+    protected Promotion(Parcel in) {
+        id = in.readString();
+        dateStart = in.readLong();
+        dateFinish = in.readLong();
+        description = in.readString();
+        name = in.readString();
+        active = in.readByte() != 0;
+        listPlaces = in.createStringArrayList();
+        imageUrl = in.readString();
+        contentUrl = in.readString();
+        colorBox = in.readInt();
+        timeLock = in.readLong();
+        capacityBox = in.readInt();
+    }
+
+    public static final Creator<Promotion> CREATOR = new Creator<Promotion>() {
+        @Override
+        public Promotion createFromParcel(Parcel in) {
+            return new Promotion(in);
+        }
+
+        @Override
+        public Promotion[] newArray(int size) {
+            return new Promotion[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -128,31 +158,13 @@ public class Promotion implements Parcelable {
         this.timeLock = timeLock;
     }
 
-    protected Promotion(Parcel in) {
-        id = in.readString();
-        dateStart = in.readLong();
-        dateFinish = in.readLong();
-        description = in.readString();
-        name = in.readString();
-        active = in.readByte() != 0;
-        listPlaces = in.createStringArrayList();
-        imageUrl = in.readString();
-        contentUrl = in.readString();
-        colorBox = in.readInt();
-        timeLock = in.readLong();
+    public int getCapacityBox() {
+        return capacityBox;
     }
 
-    public static final Creator<Promotion> CREATOR = new Creator<Promotion>() {
-        @Override
-        public Promotion createFromParcel(Parcel in) {
-            return new Promotion(in);
-        }
-
-        @Override
-        public Promotion[] newArray(int size) {
-            return new Promotion[size];
-        }
-    };
+    public void setCapacityBox(int capacityBox) {
+        this.capacityBox = capacityBox;
+    }
 
     @Override
     public int describeContents() {
@@ -172,5 +184,6 @@ public class Promotion implements Parcelable {
         dest.writeString(contentUrl);
         dest.writeInt(colorBox);
         dest.writeLong(timeLock);
+        dest.writeInt(capacityBox);
     }
 }

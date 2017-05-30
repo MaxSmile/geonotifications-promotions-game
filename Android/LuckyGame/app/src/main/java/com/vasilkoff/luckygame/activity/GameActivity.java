@@ -2,7 +2,11 @@ package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -38,7 +42,11 @@ import com.vasilkoff.luckygame.entity.Promotion;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -55,7 +63,11 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private Handler handler;
     private ImageView powerButton;
 
-    final int prizes[] = {200,1000,200,1000,200,400,400,200,3000,400,1000,400};
+    private static final float D_TO_R = 0.0174532925f;
+    private String prizes[] = new String[12];
+    private Integer colorBox[] = new Integer[12];
+    private float angleDelay = 360f/prizes.length;
+    private float startAngle = 0;
     private long mSpinDuration;
     private float mSpinRevolutions;
     private ImageView pointerImageView;
@@ -66,7 +78,8 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
     private Company company;
     private HashMap<String, Promotion> promotions;
-
+    private Promotion winPromotion;
+    private String winKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +113,85 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
             }
         });
         //init(getIntent());
+        initData();
+    }
+
+    private void initData() {
+        Arrays.fill(colorBox, -1);
+        int i = 0;
+        for (HashMap.Entry<String, Promotion> promo : promotions.entrySet()) {
+            Promotion promotion = promo.getValue();
+            if ((i + promotion.getCapacityBox()) <= prizes.length) {
+                for (int j = 0; j < promotion.getCapacityBox(); j++) {
+                    if (i < prizes.length) {
+                        colorBox[i] = promotion.getColorBox();
+                    }
+                    i++;
+                }
+            }
+        }
+
+        List<Integer> lst = Arrays.asList(colorBox);
+        Collections.shuffle(lst);
+        colorBox = lst.toArray(colorBox);
+
+        for (HashMap.Entry<String, Promotion> promo : promotions.entrySet()) {
+            Promotion promotion = promo.getValue();
+            for (int j = 0; j < colorBox.length; j++) {
+                if (colorBox[j] == promotion.getColorBox()) {
+                    prizes[j] = promo.getKey();
+                }
+            }
+        }
+
+        initWheel();
+    }
+
+    private void initWheel() {
+        Bitmap bitmapWheel = BitmapFactory.decodeResource(getResources(),
+                R.drawable.wheel);
+
+        Bitmap bitmap = Bitmap.createBitmap(bitmapWheel.getWidth(), bitmapWheel.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(bitmapWheel, 0, 0, null);
+
+
+        int diameter = bitmapWheel.getHeight();
+        int centerX =  diameter / 2;
+        int centerY = diameter / 2;
+        int radius = diameter / 2;
+        float medianAngle = angleDelay / 2;
+
+        radius *= 0.75;
+
+        TypedArray ta = getResources().obtainTypedArray(R.array.game_gift_type);
+
+        canvas.rotate(-90, centerX, centerX);
+        for (int i = colorBox.length - 1; i >= 0; i--) {
+            startAngle += angleDelay;
+            float angle = (startAngle - medianAngle) * D_TO_R;
+            float x = (float)(centerX + (radius * Math.cos(angle)));
+            float y = (float)(centerY + (radius * Math.sin(angle)));
+
+            canvas.save();
+            float rotateAngle = (startAngle - medianAngle) + 90;
+            canvas.rotate(rotateAngle, x, y);
+            if (colorBox[i] >= 0) {
+                Bitmap bitmapGift = BitmapFactory.decodeResource(getResources(),
+                        ta.getResourceId(colorBox[i], 0));
+
+                int widthGift = bitmapGift.getWidth() / 2;
+                float xGift =  x - widthGift;
+                float yGift =  y - widthGift;
+                canvas.drawBitmap(bitmapGift, xGift, yGift, null);
+            }
+
+            canvas.restore();
+        }
+        ta.recycle();
+
+        pointerImageView.setImageBitmap(bitmap);
     }
 
     @Override
@@ -110,7 +202,8 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     }
 
     private void StartSpinner() {
-        //mSpinDuration = (long)(2000 + Math.random() * 3000);//random: 2000-5000
+        initWheel();
+
         mSpinRevolutions = count*60;
 
         mSpinDuration = (long) (mSpinRevolutions*6);
@@ -119,22 +212,16 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
             mSpinDuration = (long) (mSpinRevolutions*4);
         }
 
-//        if (count >= 60) {
-//            mSpinRevolutions = 3600*3
-//            mSpinDuration = 15000;
-//        }
-
-
-        // Final point of rotation defined right here:
         int end = (int)Math.floor(Math.random() * 360);//random: 0-360
         int numOfPrizes = prizes.length;// quantity of prizes
         int degreesPerPrize = 360/numOfPrizes;// size of sector per prize in degrees
-        int shift = 0; //shit where the arrow points
-        int prizeIndex = (shift + end/degreesPerPrize)%numOfPrizes;
-        //prizeText = "Prize is: "+ prizes[prizeIndex];
+
+        float all = mSpinRevolutions + end;
+        int prizeIndex = (int)((all/degreesPerPrize)%numOfPrizes);
+        winKey = prizes[prizeIndex];
 
 
-        RotateAnimation rotateAnim = new RotateAnimation(0f, mSpinRevolutions + end,
+        RotateAnimation rotateAnim = new RotateAnimation(0f, all,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnim.setInterpolator(new DecelerateInterpolator());
         rotateAnim.setRepeatCount(0);
@@ -149,7 +236,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private void init(Intent intent) {
         //initPlayer();
         String company = intent.getStringExtra("company");
-        System.out.println("TEST company = " + company);
         if (company != null) {
             dbCompanies.child(company).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -324,18 +410,24 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
     @Override
     public void onAnimationStart(Animation animation) {
-        System.out.println("TEST Start= ");
+
 
     }
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        System.out.println("TEST End= ");
+        if (winKey != null) {
+            winPromotion = promotions.get(winKey);
+            System.out.println("TEST win= " + winPromotion.getName());
+        } else {
+            System.out.println("TEST win=lose");
+        }
+
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-        System.out.println("TEST Repeat= ");
+
     }
 
  /*   private void initPlayer() {

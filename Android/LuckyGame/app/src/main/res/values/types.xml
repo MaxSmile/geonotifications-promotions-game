@@ -28,6 +28,14 @@
         <item>@drawable/box_grey</item>
         <item>@drawable/box_pink</item>
     </integer-array>
+    <integer-array name="game_gift_type">
+        <item>@drawable/game_gift_green</item>
+        <item>@drawable/game_gift_yellow</item>
+        <item>@drawable/game_gift_red</item>
+        <item>@drawable/game_gift_blue</item>
+        <item>@drawable/game_gift_grey</item>
+        <item>@drawable/game_gift_pink</item>
+    </integer-array>
     <integer-array name="coupon_type">
         <item>@drawable/coupon_locked</item>
         <item>@drawable/coupon_redeemed</item>
