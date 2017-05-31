@@ -115,32 +115,38 @@
             android:background="@drawable/rectangle"
             android:orientation="vertical"
             android:padding="5dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/congrats"
-                android:textColor="@color/colorCouponCongratsText"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"/>
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/open_gift_box_yellow"/>
+                    android:layout_width="60dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/open_gift_box_yellow"
+                    android:id="@+id/imageView2"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/congrats"
                     android:textColor="@color/colorCouponCongratsText"
-                    android:textSize="25sp"
+                    android:textSize="32sp"
                     android:textStyle="bold"
-                    android:layout_gravity="center_vertical"
-                    android:text="@{coupon.promoName}"/>
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    />
+            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorCouponCongratsText"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:text="@{coupon.promoName}"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -262,7 +268,7 @@
                         android:textColor="@color/colorCouponShareText"
                         android:textSize="12sp"
                         android:onClick="@{handler::unlock}"
-                        android:visibility="@{coupon.status == 0 ? v.VISIBLE : v.GONE}"/>
+                        android:visibility="gone"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -275,7 +281,7 @@
                         android:background="@{coupon.status == -1 ? @drawable/redeem_bg : @drawable/redeem_inactive_bg}"
                         android:paddingLeft="25dp"
                         android:paddingRight="25dp"
-                        android:text="@string/coupon_redeem"
+                        android:text="@{coupon.status == 0 ? @string/unlock : @string/coupon_redeem}"
                         android:textAllCaps="false"
                         android:textColor="@color/colorRedeemText"
                         android:textSize="20sp"
@@ -293,7 +299,7 @@
                         android:background="@drawable/bg_share"
                         android:gravity="center"
                         android:text="@string/send_friends"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textColor="@color/colorCouponShareText"
                         android:onClick="@{handler::send}"
                         android:visibility="@{coupon.status == -1 ? v.VISIBLE : v.GONE}"/>

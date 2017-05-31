@@ -152,10 +152,7 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
 
     @Override
     public void unlock(View view) {
-        Intent intent = new Intent(this, UnlockActivity.class);
-        intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
-        startActivity(intent);
-        finish();
+
     }
 
     @Override
@@ -167,6 +164,13 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
 
     @Override
     public void redeem(View view) {
-        showPopUp();
+        if (coupon.getStatus() == 0) {
+            Intent intent = new Intent(this, UnlockActivity.class);
+            intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+            startActivity(intent);
+            finish();
+        } else {
+            showPopUp();
+        }
     }
 }

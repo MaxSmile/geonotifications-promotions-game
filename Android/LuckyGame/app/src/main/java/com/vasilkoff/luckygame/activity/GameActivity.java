@@ -121,13 +121,11 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         int i = 0;
         for (HashMap.Entry<String, Promotion> promo : promotions.entrySet()) {
             Promotion promotion = promo.getValue();
-            if ((i + promotion.getCapacityBox()) <= prizes.length) {
-                for (int j = 0; j < promotion.getCapacityBox(); j++) {
-                    if (i < prizes.length) {
-                        colorBox[i] = promotion.getColorBox();
-                    }
-                    i++;
+            for (int j = 0; j < promotion.getCapacityBox(); j++) {
+                if (i < prizes.length) {
+                    colorBox[i] = promotion.getColorBox();
                 }
+                i++;
             }
         }
 
