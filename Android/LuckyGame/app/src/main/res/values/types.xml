@@ -41,4 +41,7 @@
         <item>@drawable/coupon_redeemed</item>
         <item>@drawable/coupon_expired</item>
     </integer-array>
+    <integer-array name="spin_type">
+        <item>@drawable/green_dot</item>
+    </integer-array>
 </resources>

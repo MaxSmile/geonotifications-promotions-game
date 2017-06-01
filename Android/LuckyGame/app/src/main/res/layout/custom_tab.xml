@@ -23,5 +23,5 @@
         android:visibility="gone"
         android:layout_toEndOf="@+id/customTabText"
         android:layout_marginStart="-5dp"
-        android:background="@drawable/bg_count_active"/>
+        android:background="@drawable/bg_count"/>
 </RelativeLayout>

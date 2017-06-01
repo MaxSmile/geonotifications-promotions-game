@@ -103,8 +103,8 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
     }*/
 
     private void redeem() {
-        dbCoupons.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
-        dbCoupons.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
+        Constants.dbCoupons.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
+        Constants.dbCoupons.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
         onBackPressed();
     }
 

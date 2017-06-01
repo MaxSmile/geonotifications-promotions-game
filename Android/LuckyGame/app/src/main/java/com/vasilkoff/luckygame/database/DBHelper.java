@@ -86,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ContentValues contentValues = new ContentValues();
             contentValues.put(KEY_ADDRESS, place.getAddress());
             contentValues.put(KEY_NAME, place.getName());
-            contentValues.put(KEY_NAME_COMPANY, place.getNameCompany());
+           // contentValues.put(KEY_NAME_COMPANY, place.getNameCompany());
             contentValues.put(KEY_LAT, place.getLat());
             contentValues.put(KEY_LON, place.getLon());
             db.insert(TABLE_PLACES, null, contentValues);
@@ -102,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                placesList.add(parsePlace(cursor));
+                //placesList.add(parsePlace(cursor));
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -185,7 +185,7 @@ public class DBHelper extends SQLiteOpenHelper {
         );
     }
 
-    private Place parsePlace(Cursor cursor) {
+   /* private Place parsePlace(Cursor cursor) {
         return new Place(
                 cursor.getString(1),
                 cursor.getString(2),
@@ -193,5 +193,5 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getDouble(4),
                 cursor.getDouble(5)
         );
-    }
+    }*/
 }

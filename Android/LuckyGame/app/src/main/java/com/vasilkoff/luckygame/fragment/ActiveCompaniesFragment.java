@@ -1,6 +1,8 @@
 package com.vasilkoff.luckygame.fragment;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,10 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
 import com.vasilkoff.luckygame.entity.Company;
+import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Promotion;
+import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +38,14 @@ import java.util.Map;
 public class ActiveCompaniesFragment extends Fragment {
 
     private RecyclerView companiesList;
-    private Map<String, Map<String, Promotion>> companies;
-    private List<Company> activeCompanyListInfo;
+    private int count;
+    private DataBridge dataBridge;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        dataBridge = (DataBridge) context;
+    }
 
     @Nullable
     @Override
@@ -44,19 +60,72 @@ public class ActiveCompaniesFragment extends Fragment {
         companiesList = (RecyclerView) getActivity().findViewById(R.id.activeCompaniesList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
-        if (companies == null) {
-            activeCompanyListInfo = new ArrayList<Company>();
-            companies = new HashMap<String, Map<String, Promotion>>();
-        }
         refreshList();
     }
 
+
+
+    private void updateData() {
+        Constants.dbSpin.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<Spin> spins = new ArrayList<Spin>();
+                final HashMap<String, Place> places = new HashMap<String, Place>();
+                final HashMap<String, Company> companies = new HashMap<String, Company>();
+                count = 0;
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Spin spin = data.getValue(Spin.class);
+                    if (spin.getDateStart() <= System.currentTimeMillis()) {
+                        spin.setStatus(Constants.SPIN_STATUS_ACTIVE);
+                        spin.setTimeLeft(DateFormat.getDiff(spin.getDateFinish()));
+                        spins.add(spin);
+                        count++;
+                        Constants.dbPlace.child(spin.getPlaceKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Place place = dataSnapshot.getValue(Place.class);
+                                place.setTypeName(Constants.companyTypeNames[place.getType()]);
+                                places.put(place.getId(), place);
+                                Constants.dbCompany.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Company company = dataSnapshot.getValue(Company.class);
+                                        companies.put(dataSnapshot.getKey(), company);
+
+                                        dataBridge.activeSpins(count);
+                                        companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void setCompanies(Map<String, Map<String, Promotion>> companies, List<Company> activeCompanyListInfo) {
-        this.companies = companies;
-        this.activeCompanyListInfo = activeCompanyListInfo;
+
     }
 
     public void refreshList() {
-        companiesList.setAdapter(new CompanyListAdapter(getContext(), companies, activeCompanyListInfo));
+        updateData();
     }
 }

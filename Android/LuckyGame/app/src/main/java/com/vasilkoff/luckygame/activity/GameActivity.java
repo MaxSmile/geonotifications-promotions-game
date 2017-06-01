@@ -235,7 +235,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         //initPlayer();
         String company = intent.getStringExtra("company");
         if (company != null) {
-            dbCompanies.child(company).addValueEventListener(new ValueEventListener() {
+            Constants.dbCompanies.child(company).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     updateData(dataSnapshot);
@@ -351,7 +351,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                 lockTime
         );
 
-        dbCoupons.child(couponCode).setValue(coupon);
+        Constants.dbCoupons.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(coupon);
 
 

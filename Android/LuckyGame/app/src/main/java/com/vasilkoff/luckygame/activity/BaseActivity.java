@@ -40,10 +40,6 @@ import java.util.Map;
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         BaseHandler {
 
-    DatabaseReference dbData = Constants.dbData;
-    DatabaseReference dbCompanies = Constants.dbCompanies;
-    DatabaseReference dbCoupons = Constants.dbCoupons;
-
     static Map<String, Map<String, Promotion>> companies;
     static ArrayList<Place> uniquePlaces;
 

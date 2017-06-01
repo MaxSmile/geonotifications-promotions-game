@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -36,6 +37,7 @@ import com.vasilkoff.luckygame.entity.Promotion;
 import com.vasilkoff.luckygame.fragment.ActiveCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.CouponsFragment;
+import com.vasilkoff.luckygame.fragment.DataBridge;
 import com.vasilkoff.luckygame.service.LocationService;
 
 
@@ -46,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements DataBridge {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -87,7 +89,7 @@ public class HomeActivity extends BaseActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+       /* mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -102,9 +104,9 @@ public class HomeActivity extends BaseActivity {
                     case 1:
                         activeCompaniesFragment.refreshList();
                         break;
-                    /*case 2:
+                    *//*case 2:
                         couponsFragment.refreshList();
-                        break;*/
+                        break;*//*
                 }
             }
 
@@ -112,7 +114,7 @@ public class HomeActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        });*/
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -177,7 +179,7 @@ public class HomeActivity extends BaseActivity {
 
         }*/
 
-        dbData.addValueEventListener(new ValueEventListener() {
+        Constants.dbData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -201,13 +203,6 @@ public class HomeActivity extends BaseActivity {
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
         //startActivity(new Intent(this, ChooseAccountActivity.class));
-    }
-
-    private void setCountActiveCompanies(int count) {
-        TextView customTabCount = (TextView) tabLayout.getTabAt(1).getCustomView().findViewById(R.id.customTabCount);
-        customTabCount.setVisibility(View.VISIBLE);
-        customTabCount.setText(String.valueOf(count));
-        customTabCount.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_count));
     }
 
     private void updateData(DataSnapshot dataSnapshot) {
@@ -247,7 +242,7 @@ public class HomeActivity extends BaseActivity {
             }
         }
 
-        setCountActiveCompanies(companies.size());
+        //setCountActiveCompanies(companies.size());
 
         activeCompaniesFragment.setCompanies(companies, activeCompanyListInfo);
         if (activeCompaniesFragment.isVisible())
@@ -277,6 +272,13 @@ public class HomeActivity extends BaseActivity {
             startService(new Intent(this, LocationService.class));
         }
 
+    }
+
+    @Override
+    public void activeSpins(int count) {
+        TextView customTabCount = (TextView) tabLayout.getTabAt(1).getCustomView().findViewById(R.id.customTabCount);
+        customTabCount.setVisibility(View.VISIBLE);
+        customTabCount.setText(String.valueOf(count));
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

@@ -5,6 +5,9 @@
     tools:context="com.vasilkoff.luckygame.activity.LegendActivity">
     <data>
         <variable
+            name="place"
+            type="com.vasilkoff.luckygame.entity.Place" />
+        <variable
             name="company"
             type="com.vasilkoff.luckygame.entity.Company" />
     </data>
@@ -41,7 +44,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{company.name}"
+                        android:text="@{place.name}"
                         android:textColor="@color/colorLegendTitle"
                         android:textStyle="bold"
                         android:textSize="18sp"/>

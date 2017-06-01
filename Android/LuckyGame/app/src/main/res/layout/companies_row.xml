@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
+            name="spin"
+            type="com.vasilkoff.luckygame.entity.Spin" />
+        <variable
+            name="place"
+            type="com.vasilkoff.luckygame.entity.Place" />
+        <variable
             name="company"
             type="com.vasilkoff.luckygame.entity.Company" />
         <variable
@@ -39,12 +45,12 @@
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:textColor="@color/colorNameCompany"
-                        android:text="@{company.name}"/>
+                        android:text="@{place.name}"/>
                     <TextView
                         android:id="@+id/companyDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Food"/>
+                        android:text="@{place.typeName}"/>
                     <TextView
                         android:id="@+id/companyAddress"
                         android:layout_width="wrap_content"
@@ -83,7 +89,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/green_dot"
+                            android:src="@{spin.statusIcon}"
                             android:layout_marginEnd="2dp"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -106,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
                             android:layout_marginLeft="2dp"
-                            android:text="12h,30m"/>
+                            android:text="@{spin.timeLeft}"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout

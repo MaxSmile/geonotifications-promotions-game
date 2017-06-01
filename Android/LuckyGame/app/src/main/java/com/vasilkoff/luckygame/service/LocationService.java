@@ -151,8 +151,8 @@ public class LocationService extends Service {
         ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
         for (int i = 0; i < uniquePlaces.size(); i++) {
             Place place = uniquePlaces.get(i);
-            addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
-            Log.i("Test", "Service: place = " + place.getNameCompany());
+            /*addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
+            Log.i("Test", "Service: place = " + place.getNameCompany());*/
         }
 
     }

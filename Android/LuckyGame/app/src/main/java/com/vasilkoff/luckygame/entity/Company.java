@@ -20,6 +20,8 @@ public class Company implements Parcelable {
     private String distance;
     private int countCoupon;
 
+    public Company() {
+    }
 
     public Company(String id, String name, String info, String logo) {
         this.id = id;

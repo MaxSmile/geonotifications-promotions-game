@@ -10,28 +10,59 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
 import com.vasilkoff.luckygame.entity.Company;
-import com.vasilkoff.luckygame.entity.Promotion;
-
-import java.util.HashMap;
+import com.vasilkoff.luckygame.entity.Place;
+import com.vasilkoff.luckygame.entity.Spin;
 
 public class DetailsActivity extends BaseActivity {
 
-    private HashMap<String, Promotion> promotions;
-    private String[] companyTypeNames;
     private Company company;
+    private Place place;
+    private Spin spin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        companyTypeNames = getResources().getStringArray(R.array.company_type);
+        spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
 
+        final ActivityDetailsBinding binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
 
-        dbCompanies.child(getIntent().getStringExtra("company")).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.dbPlace.child(getIntent().getStringExtra(Place.class.getCanonicalName())).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                place = dataSnapshot.getValue(Place.class);
+                place.setTypeName(Constants.companyTypeNames[place.getType()]);
+                TypedArray iconArray = getResources().obtainTypedArray(R.array.company_type_icons);
+                place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
+                iconArray.recycle();
+                Constants.dbCompany.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        company = dataSnapshot.getValue(Company.class);
+                        binding.setCompany(company);
+                        binding.setPlace(place);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+      /*  dbCompanies.child(getIntent().getStringExtra("company")).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 promotions = new HashMap<String, Promotion>();
@@ -63,7 +94,7 @@ public class DetailsActivity extends BaseActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     public void onClickDetails(View view) {
@@ -72,20 +103,19 @@ public class DetailsActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.detailsBtnPlay:
-                if (company.getCountPromo() > 0) {
+                if (spin != null) {
                     Intent intent = new Intent(this, GameActivity.class);
-                    intent.putExtra(Promotion.class.getCanonicalName(), promotions);
+                    intent.putExtra(Place.class.getCanonicalName(), place);
+                    intent.putExtra(Spin.class.getCanonicalName(), spin);
                     intent.putExtra(Company.class.getCanonicalName(), company);
                     startActivity(intent);
                 }
                 break;
             case R.id.companyShowDetailsGifts:
-                if (company.getCountPromo() > 0) {
-                    Intent intent = new Intent(this, LegendActivity.class);
-                    intent.putExtra(Promotion.class.getCanonicalName(), promotions);
-                    intent.putExtra(Company.class.getCanonicalName(), company);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(this, LegendActivity.class);
+                intent.putExtra(Place.class.getCanonicalName(), place);
+                intent.putExtra(Company.class.getCanonicalName(), company);
+                startActivity(intent);
                 break;
             case R.id.companyDetailsCall:
                 Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();

@@ -7,6 +7,9 @@
         <variable
             name="company"
             type="com.vasilkoff.luckygame.entity.Company" />
+        <variable
+            name="place"
+            type="com.vasilkoff.luckygame.entity.Place" />
         <import type="android.view.View" alias="v"/>
 
     </data>
@@ -175,13 +178,19 @@
                             android:textColor="@color/colorDetailsTextInfo"
                             android:textSize="15sp"
                             android:textStyle="bold"
-                            android:text="@{company.name}"/>
+                            android:text="@{place.name}"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorDetailsTextInfo"
                             android:textSize="15sp"
-                            android:text="@{company.typeName}"/>
+                            android:text="@{place.typeName}"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorDetailsTextInfo"
+                            android:textSize="15sp"
+                            android:text="@string/distance"/>
                     </LinearLayout>
                     <FrameLayout
                         android:layout_width="0dp"
@@ -195,7 +204,7 @@
                             android:layout_width="17dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:src="@{company.icon}"/>
+                            android:src="@{place.typeIcon}"/>
                     </FrameLayout>
 
                 </LinearLayout>
@@ -215,7 +224,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{company.info}"
+                        android:text="@{place.info}"
                         android:textColor="@color/colorDetailsTextInfo"
                         android:textSize="16sp"/>
                 </LinearLayout>
@@ -311,7 +320,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@{company.countPromo > 0 ? @drawable/gift_blue : @drawable/gift_grey}"
+                        android:src="@{place.box.size() > 0 ? @drawable/gift_blue : @drawable/gift_grey}"
                         android:layout_centerHorizontal="true"
                         android:id="@+id/companyDetailsGifts"
                         android:paddingTop="10dp"/>
@@ -326,9 +335,9 @@
                         android:textSize="12sp"
                         android:background="@drawable/bg_count_blue"
                         android:padding="1dp"
-                        android:text="@{String.valueOf(company.countPromo)}"
+                        android:text="@{String.valueOf(place.box.size())}"
                         android:layout_toEndOf="@+id/companyDetailsGifts"
-                        android:visibility="@{company.countPromo > 0 ? v.VISIBLE : v.GONE}"/>
+                        android:visibility="@{place.box.size() > 0 ? v.VISIBLE : v.GONE}"/>
                 </RelativeLayout>
             </LinearLayout>
             <RelativeLayout

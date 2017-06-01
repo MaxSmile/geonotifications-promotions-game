@@ -28,11 +28,17 @@ public class DateFormat {
         if (diff > 0) {
             long d = diff / 86400000;
             if (d > 0) {
-                return String.format(App.getResourceString(R.string.day), d);
+                if (d == 1) {
+                    return String.format(App.getResourceString(R.string.day), d);
+                }
+                return String.format(App.getResourceString(R.string.days), d);
             } else {
                 long h = diff / 3600000;
                 long m = (diff - (h * 3600000)) / 60000;
-                return String.format(App.getResourceString(R.string.time), h, m);
+                if (h > 0) {
+                    return String.format(App.getResourceString(R.string.time), h, m);
+                }
+                return String.format(App.getResourceString(R.string.time_short), m);
             }
         } else {
             return null;
