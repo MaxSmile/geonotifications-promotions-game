@@ -12,13 +12,17 @@ public class CouponExtension implements Parcelable {
     private int status;
     private String code;
     private String companyKey;
-    private String promoKey;
+    private String giftKey;
+    private String placeKey;
+    private String description;
     private String creator;
     private long creation;
     private long expired;
     private long locks;
+    private long redeemed;
+    private String redeemUser;
     private String companyName;
-    private String promoName;
+    private String placeName;
     private String logo;
     private long type;
     private String lockDiff;
@@ -26,57 +30,44 @@ public class CouponExtension implements Parcelable {
     private int statusIcon;
     private String typeString;
     private String distance;
-    private long redeemed;
+
 
     public CouponExtension() {
     }
 
-    public CouponExtension(int status, String code, String companyKey, String promoKey, String creator, long creation, long expired, long locks, String companyName, String promoName, String logo, long type) {
+    public CouponExtension(int status, String code, String companyKey, String giftKey, String placeKey, String description, String creator, long creation, long expired, long locks, String companyName, String placeName, String logo, long type, String typeString) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
-        this.promoKey = promoKey;
+        this.giftKey = giftKey;
+        this.placeKey = placeKey;
+        this.description = description;
         this.creator = creator;
         this.creation = creation;
         this.expired = expired;
         this.locks = locks;
         this.companyName = companyName;
-        this.promoName = promoName;
+        this.placeName = placeName;
         this.logo = logo;
         this.type = type;
-    }
-
-    public CouponExtension(int status, String code, String companyKey, String promoKey, String creator, long creation, long expired, long locks, String companyName, String promoName, String logo, long type, String lockDiff, String expiredDiff, int statusIcon, String typeString, String distance) {
-        this.status = status;
-        this.code = code;
-        this.companyKey = companyKey;
-        this.promoKey = promoKey;
-        this.creator = creator;
-        this.creation = creation;
-        this.expired = expired;
-        this.locks = locks;
-        this.companyName = companyName;
-        this.promoName = promoName;
-        this.logo = logo;
-        this.type = type;
-        this.lockDiff = lockDiff;
-        this.expiredDiff = expiredDiff;
-        this.statusIcon = statusIcon;
         this.typeString = typeString;
-        this.distance = distance;
     }
 
     protected CouponExtension(Parcel in) {
         status = in.readInt();
         code = in.readString();
         companyKey = in.readString();
-        promoKey = in.readString();
+        giftKey = in.readString();
+        placeKey = in.readString();
+        description = in.readString();
         creator = in.readString();
         creation = in.readLong();
         expired = in.readLong();
         locks = in.readLong();
+        redeemed = in.readLong();
+        redeemUser = in.readString();
         companyName = in.readString();
-        promoName = in.readString();
+        placeName = in.readString();
         logo = in.readString();
         type = in.readLong();
         lockDiff = in.readString();
@@ -84,7 +75,6 @@ public class CouponExtension implements Parcelable {
         statusIcon = in.readInt();
         typeString = in.readString();
         distance = in.readString();
-        redeemed = in.readLong();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -123,12 +113,28 @@ public class CouponExtension implements Parcelable {
         this.companyKey = companyKey;
     }
 
-    public String getPromoKey() {
-        return promoKey;
+    public String getGiftKey() {
+        return giftKey;
     }
 
-    public void setPromoKey(String promoKey) {
-        this.promoKey = promoKey;
+    public void setGiftKey(String giftKey) {
+        this.giftKey = giftKey;
+    }
+
+    public String getPlaceKey() {
+        return placeKey;
+    }
+
+    public void setPlaceKey(String placeKey) {
+        this.placeKey = placeKey;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCreator() {
@@ -163,6 +169,22 @@ public class CouponExtension implements Parcelable {
         this.locks = locks;
     }
 
+    public long getRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(long redeemed) {
+        this.redeemed = redeemed;
+    }
+
+    public String getRedeemUser() {
+        return redeemUser;
+    }
+
+    public void setRedeemUser(String redeemUser) {
+        this.redeemUser = redeemUser;
+    }
+
     public String getCompanyName() {
         return companyName;
     }
@@ -171,12 +193,12 @@ public class CouponExtension implements Parcelable {
         this.companyName = companyName;
     }
 
-    public String getPromoName() {
-        return promoName;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setPromoName(String promoName) {
-        this.promoName = promoName;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getLogo() {
@@ -235,14 +257,6 @@ public class CouponExtension implements Parcelable {
         this.distance = distance;
     }
 
-    public long getRedeemed() {
-        return redeemed;
-    }
-
-    public void setRedeemed(long redeemed) {
-        this.redeemed = redeemed;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -253,13 +267,17 @@ public class CouponExtension implements Parcelable {
         dest.writeInt(status);
         dest.writeString(code);
         dest.writeString(companyKey);
-        dest.writeString(promoKey);
+        dest.writeString(giftKey);
+        dest.writeString(placeKey);
+        dest.writeString(description);
         dest.writeString(creator);
         dest.writeLong(creation);
         dest.writeLong(expired);
         dest.writeLong(locks);
+        dest.writeLong(redeemed);
+        dest.writeString(redeemUser);
         dest.writeString(companyName);
-        dest.writeString(promoName);
+        dest.writeString(placeName);
         dest.writeString(logo);
         dest.writeLong(type);
         dest.writeString(lockDiff);
@@ -267,6 +285,5 @@ public class CouponExtension implements Parcelable {
         dest.writeInt(statusIcon);
         dest.writeString(typeString);
         dest.writeString(distance);
-        dest.writeLong(redeemed);
     }
 }

@@ -10,6 +10,9 @@
         <variable
             name="place"
             type="com.vasilkoff.luckygame.entity.Place" />
+        <variable
+            name="spin"
+            type="com.vasilkoff.luckygame.entity.Spin" />
         <import type="android.view.View" alias="v"/>
 
     </data>
@@ -365,7 +368,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6d, 4h, 40m"
+                    android:text="@{spin.timeLeft}"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorDetailsTextInfo"

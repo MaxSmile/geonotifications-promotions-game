@@ -12,20 +12,16 @@ import android.view.ViewGroup;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CouponListAdapter;
 import com.vasilkoff.luckygame.database.DBHelper;
-import com.vasilkoff.luckygame.entity.Coupon;
+import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
-import com.vasilkoff.luckygame.entity.Promotion;
+import com.vasilkoff.luckygame.entity.Place;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,8 +32,6 @@ public class CouponsFragment extends Fragment {
 
     private RecyclerView couponsList;
     private DBHelper dbHelper;
-    private DatabaseReference dbCoupons = Constants.dbCoupons;
-    private DatabaseReference dbCompanies = Constants.dbCompanies;
     private List<CouponExtension> coupons;
     private List<String> couponsCode;
 
@@ -65,26 +59,33 @@ public class CouponsFragment extends Fragment {
         couponsCode = dbHelper.getCoupons();
         coupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
-            dbCoupons.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+            Constants.dbCoupon.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final CouponExtension coupon = dataSnapshot.getValue(CouponExtension.class);
                     if (coupon != null) {
-                        dbCompanies.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        Constants.dbPlace.child(coupon.getPlaceKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Promotion promotion = dataSnapshot.child("promo").child(coupon.getPromoKey()).getValue(Promotion.class);
-                                coupon.setCompanyName(dataSnapshot.child("name").getValue().toString());
-                                coupon.setLogo(dataSnapshot.child("logo").getValue().toString());
-                                coupon.setType((long)dataSnapshot.child("type").getValue());
-                                coupon.setPromoName(promotion.getName());
+                                Place place = dataSnapshot.getValue(Place.class);
+                                coupon.setPlaceName(place.getName());
+                                coupon.setType(place.getType());
+                                Constants.dbCompany.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Company company = dataSnapshot.getValue(Company.class);
+                                        coupon.setCompanyName(company.getName());
+                                        coupon.setLogo(company.getLogo());
+                                        coupons.add(coupon);
+                                        couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+                                    }
 
-                                coupons.add(coupon);
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                if (couponsCode.size() == coupons.size()) {
+                                    }
+                                });
 
-                                    couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
-                                }
                             }
 
                             @Override

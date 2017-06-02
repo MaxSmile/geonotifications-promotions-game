@@ -11,9 +11,7 @@ public class Constants {
 
     public static final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     public static final DatabaseReference dbVersion = reference.child("ver1");
-    public static final DatabaseReference dbData = dbVersion.child("data");
-    public static final DatabaseReference dbCompanies = dbData.child("companies");
-    public static final DatabaseReference dbCoupons = dbVersion.child("coupons");
+    public static final DatabaseReference dbCoupon = dbVersion.child("coupon");
     public static final DatabaseReference dbCompany = dbVersion.child("company");
     public static final DatabaseReference dbPlace = dbVersion.child("place");
     public static final DatabaseReference dbGift = dbVersion.child("gift");

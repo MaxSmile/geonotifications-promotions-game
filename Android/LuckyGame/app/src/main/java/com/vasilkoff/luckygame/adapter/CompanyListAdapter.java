@@ -8,25 +8,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
-import com.vasilkoff.luckygame.activity.GameActivity;
-import com.vasilkoff.luckygame.activity.InfoActivity;
+
 import com.vasilkoff.luckygame.binding.handler.CompanyRowHandler;
 import com.vasilkoff.luckygame.databinding.CompaniesRowBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
-import com.vasilkoff.luckygame.entity.Promotion;
+
 import com.vasilkoff.luckygame.entity.Spin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Kusenko on 17.02.2017.

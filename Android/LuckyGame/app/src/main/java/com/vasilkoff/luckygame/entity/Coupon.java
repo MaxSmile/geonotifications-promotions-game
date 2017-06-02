@@ -4,28 +4,33 @@ package com.vasilkoff.luckygame.entity;
  * Created by Kvm on 19.05.2017.
  */
 
-public class Coupon {
+public class Coupon{
 
     private int status;
     private String code;
     private String companyKey;
-    private String promoKey;
+    private String giftKey;
+    private String placeKey;
+    private String description;
     private String creator;
     private long creation;
     private long expired;
     private long locks;
     private long redeemed;
+    private String redeemUser;
 
     public Coupon() {
     }
 
-    public Coupon(int status, String code, String company, String promo, String creator, long creations, long expired, long locks) {
+    public Coupon(int status, String code, String companyKey, String giftKey, String placeKey, String description, String creator, long creation, long expired, long locks) {
         this.status = status;
         this.code = code;
-        this.companyKey = company;
-        this.promoKey = promo;
+        this.companyKey = companyKey;
+        this.giftKey = giftKey;
+        this.placeKey = placeKey;
+        this.description = description;
         this.creator = creator;
-        this.creation = creations;
+        this.creation = creation;
         this.expired = expired;
         this.locks = locks;
     }
@@ -54,12 +59,28 @@ public class Coupon {
         this.companyKey = companyKey;
     }
 
-    public String getPromoKey() {
-        return promoKey;
+    public String getGiftKey() {
+        return giftKey;
     }
 
-    public void setPromoKey(String promoKey) {
-        this.promoKey = promoKey;
+    public void setGiftKey(String giftKey) {
+        this.giftKey = giftKey;
+    }
+
+    public String getPlaceKey() {
+        return placeKey;
+    }
+
+    public void setPlaceKey(String placeKey) {
+        this.placeKey = placeKey;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCreator() {
@@ -100,5 +121,13 @@ public class Coupon {
 
     public void setRedeemed(long redeemed) {
         this.redeemed = redeemed;
+    }
+
+    public String getRedeemUser() {
+        return redeemUser;
+    }
+
+    public void setRedeemUser(String redeemUser) {
+        this.redeemUser = redeemUser;
     }
 }

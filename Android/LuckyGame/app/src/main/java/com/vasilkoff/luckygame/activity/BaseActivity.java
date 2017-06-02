@@ -17,21 +17,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.vasilkoff.luckygame.Constants;
+
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
-import com.vasilkoff.luckygame.entity.Promotion;
 
-import org.json.JSONException;
+
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * Created by Kusenko on 20.02.2017.
@@ -40,7 +36,7 @@ import java.util.Map;
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         BaseHandler {
 
-    static Map<String, Map<String, Promotion>> companies;
+
     static ArrayList<Place> uniquePlaces;
 
     static DBHelper dbHelper;

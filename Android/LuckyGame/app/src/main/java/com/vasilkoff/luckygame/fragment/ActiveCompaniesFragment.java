@@ -22,7 +22,7 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
-import com.vasilkoff.luckygame.entity.Promotion;
+
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.util.DateFormat;
 
@@ -119,10 +119,6 @@ public class ActiveCompaniesFragment extends Fragment {
 
             }
         });
-    }
-
-    public void setCompanies(Map<String, Map<String, Promotion>> companies, List<Company> activeCompanyListInfo) {
-
     }
 
     public void refreshList() {

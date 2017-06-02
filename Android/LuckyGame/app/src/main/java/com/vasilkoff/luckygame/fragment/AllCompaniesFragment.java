@@ -22,9 +22,6 @@ import java.util.List;
 
 public class AllCompaniesFragment extends Fragment {
 
-    private RecyclerView companiesList;
-    private List<Company> allCompanyList;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,23 +31,5 @@ public class AllCompaniesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        //companiesList = (RecyclerView) getActivity().findViewById(R.id.allCompaniesList);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        //companiesList.setLayoutManager(llm);
-        if (allCompanyList == null)
-            allCompanyList = new ArrayList<Company>();
-        refreshList();
-
     }
-
-    public void setCompanies(List<Company> allCompanyList) {
-        this.allCompanyList = allCompanyList;
-    }
-
-    public void refreshList() {
-        //companiesList.setAdapter(new AllCompanyListAdapter(getContext(), allCompanyList));
-    }
-
-
 }

@@ -22,6 +22,7 @@ import com.vasilkoff.luckygame.binding.handler.CouponHandler;
 import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
+import com.vasilkoff.luckygame.util.DateFormat;
 
 
 public class CouponActivity extends BaseActivity implements CouponHandler{
@@ -35,35 +36,22 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
-
-
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
+        String locks = DateFormat.getDiff(coupon.getLocks());
+        if (locks != null)
+            coupon.setLockDiff(locks);
+
+        String expire = DateFormat.getDiff(coupon.getExpired());
+        if (expire != null)
+            coupon.setExpiredDiff(expire);
+
+        coupon.setDistance(getString(R.string.distance));
+
         ActivityCouponBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_coupon);
         binding.setCoupon(coupon);
         binding.setHandler(this);
 
         parentLayout = (LinearLayout) findViewById(R.id.couponParentLayout);
-
-        /*final CouponDB coupon = getIntent().getParcelableExtra(CouponDB.class.getCanonicalName());
-
-        couponCode = (TextView) findViewById(R.id.couponCode);
-        couponCode.setText(coupon.getCode());
-
-        ((TextView) findViewById(R.id.couponName)).setText(coupon.getName());
-        ((TextView) findViewById(R.id.couponDescription)).setText(coupon.getDescription());
-        ((TextView) findViewById(R.id.couponExpire)).setText(coupon.getDateExpire());
-
-        buttonRedeem = (Button)findViewById(R.id.couponRedeem);
-        buttonRedeem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!checkLogin()) {
-                    startActivity(new Intent(CouponActivity.this, ChooseAccountActivity.class));
-                } else {
-                    redeem(coupon);
-                }
-            }
-        });*/
     }
 
    /* private void redeem(CouponDB coupon) {
@@ -93,7 +81,7 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
         }
 
 
-        dbCoupons
+        dbCoupon
                 .child(coupon.getCompany())
                 .child(String.valueOf(System.currentTimeMillis()))
                 .setValue(redeemCoupon);
@@ -103,8 +91,8 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
     }*/
 
     private void redeem() {
-        Constants.dbCoupons.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
-        Constants.dbCoupons.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
+        Constants.dbCoupon.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
+        Constants.dbCoupon.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
         onBackPressed();
     }
 
@@ -157,9 +145,10 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
 
     @Override
     public void more(View view) {
-        Intent intent = new Intent(this, DetailsActivity.class);
+        /*Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("company", coupon.getCompanyKey());
-        startActivity(intent);
+        startActivity(intent);*/
+        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
     }
 
     @Override

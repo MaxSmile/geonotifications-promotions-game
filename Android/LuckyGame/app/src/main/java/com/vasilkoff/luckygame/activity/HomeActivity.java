@@ -33,7 +33,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
-import com.vasilkoff.luckygame.entity.Promotion;
+
 import com.vasilkoff.luckygame.fragment.ActiveCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.CouponsFragment;
@@ -61,7 +61,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     private static boolean showPopUpLogin = true;
 
     private TabLayout tabLayout;
-    private String[] companyTypeNames;
     private AppBarLayout appBarLayout;
     private ImageView logo;
     private ImageView logoSmall;
@@ -76,7 +75,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        companyTypeNames = getResources().getStringArray(R.array.company_type);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -178,20 +176,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         } catch (NoSuchAlgorithmException e) {
 
         }*/
-
-        Constants.dbData.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    updateData(dataSnapshot);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -206,51 +190,51 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     }
 
     private void updateData(DataSnapshot dataSnapshot) {
-        companies = new HashMap<String, Map<String, Promotion>>();
+       /* companies = new HashMap<String, Map<String, Promotion>>();
         allCompanyList = new ArrayList<Company>();
         activeCompanyListInfo = new ArrayList<Company>();
         Set<String> uniquePlacesNames = new HashSet<>();
 
         for (DataSnapshot company : dataSnapshot.child("companies").getChildren()) {
-            allCompanyList.add(
+
+        allCompanyList.add(
+                new Company(
+                        company.getKey(),
+                        company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
+                        company.child("info").exists() ? company.child("info").getValue().toString() : null,
+                        company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
+        Map<String, Promotion> promotions = new HashMap<String, Promotion>();
+        for (DataSnapshot promotion : company.child("promo").getChildren()) {
+            if (promotion.child("active").getValue().equals(true)) {
+                Promotion promotionValue = promotion.getValue(Promotion.class);
+                promotions.put(promotion.getKey(), promotionValue);
+
+                if (promotionValue.getListPlaces() != null) {
+                    for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
+                        uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
+                    }
+                }
+            }
+        }
+        if (promotions.size() > 0) {
+            companies.put(company.getKey(), promotions);
+            activeCompanyListInfo.add(
                     new Company(
                             company.getKey(),
                             company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
                             company.child("info").exists() ? company.child("info").getValue().toString() : null,
                             company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
-            Map<String, Promotion> promotions = new HashMap<String, Promotion>();
-            for (DataSnapshot promotion : company.child("promo").getChildren()) {
-                if (promotion.child("active").getValue().equals(true)) {
-                    Promotion promotionValue = promotion.getValue(Promotion.class);
-                    promotions.put(promotion.getKey(), promotionValue);
-
-                    if (promotionValue.getListPlaces() != null) {
-                        for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
-                            uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
-                        }
-                    }
-                }
-            }
-            if (promotions.size() > 0) {
-                companies.put(company.getKey(), promotions);
-                activeCompanyListInfo.add(
-                        new Company(
-                                company.getKey(),
-                                company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
-                                company.child("info").exists() ? company.child("info").getValue().toString() : null,
-                                company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
-            }
         }
-
+    }
         //setCountActiveCompanies(companies.size());
 
         activeCompaniesFragment.setCompanies(companies, activeCompanyListInfo);
         if (activeCompaniesFragment.isVisible())
             activeCompaniesFragment.refreshList();
 
-        allCompaniesFragment.setCompanies(allCompanyList);
+       *//* allCompaniesFragment.setCompanies(allCompanyList);
         if (allCompaniesFragment.isVisible())
-            allCompaniesFragment.refreshList();
+            allCompaniesFragment.refreshList();*//*
 
         GenericTypeIndicator<Map<String, Place>> type = new GenericTypeIndicator<Map<String, Place>>() {};
         Map<String, Place> places = dataSnapshot.child("places").getValue(type);
@@ -270,7 +254,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             }
         } else {
             startService(new Intent(this, LocationService.class));
-        }
+        }*/
 
     }
 

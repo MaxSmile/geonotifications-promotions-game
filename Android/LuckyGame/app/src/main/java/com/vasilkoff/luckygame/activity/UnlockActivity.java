@@ -29,7 +29,7 @@ public class UnlockActivity extends BaseActivity {
     }
 
     private void unlock() {
-        Constants.dbCoupons.child(coupon.getCode()).child("locks").setValue(System.currentTimeMillis());
+        Constants.dbCoupon.child(coupon.getCode()).child("locks").setValue(System.currentTimeMillis());
         onBackPressed();
     }
 

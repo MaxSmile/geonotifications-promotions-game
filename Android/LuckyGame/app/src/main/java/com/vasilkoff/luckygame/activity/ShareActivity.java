@@ -15,7 +15,7 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.entity.Promotion;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,13 +23,13 @@ import org.json.JSONObject;
 public class ShareActivity extends BaseActivity {
 
     private CallbackManager callbackManager;
-    private Promotion winPromotion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
-
+/*
         winPromotion = getIntent().getParcelableExtra(Promotion.class.getCanonicalName());
 
         String title = String.format(getResources().getString(R.string.share_title),
@@ -62,7 +62,7 @@ public class ShareActivity extends BaseActivity {
             public void onError(FacebookException error) {
 
             }
-        });
+        });*/
     }
 
     @Override

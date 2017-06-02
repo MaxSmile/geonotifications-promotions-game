@@ -1,14 +1,11 @@
 package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -21,36 +18,30 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.databinding.ActivityGameBinding;
+import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Coupon;
-import com.vasilkoff.luckygame.util.Properties;
-import com.vasilkoff.luckygame.entity.Promotion;
+import com.vasilkoff.luckygame.entity.CouponExtension;
+import com.vasilkoff.luckygame.entity.Gift;
+import com.vasilkoff.luckygame.entity.Place;
+import com.vasilkoff.luckygame.entity.Spin;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends BaseActivity implements Animation.AnimationListener {
 
@@ -71,26 +62,28 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private long mSpinDuration;
     private float mSpinRevolutions;
     private ImageView pointerImageView;
-
-    private boolean spinActive = false;
-
    // private MediaPlayer player;
 
-    private Company company;
-    private HashMap<String, Promotion> promotions;
-    private Promotion winPromotion;
     private String winKey;
+    private Company company;
+    private Place place;
+    private Spin spin;
+    private HashMap<String, Gift> gifts;
+    private boolean social = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        promotions = (HashMap<String, Promotion>)getIntent().getSerializableExtra(Promotion.class.getCanonicalName());
+        place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
+        gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
+        spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
 
         ActivityGameBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
+        binding.setPlace(place);
 
         parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
 
@@ -119,29 +112,28 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private void initData() {
         Arrays.fill(colorBox, -1);
         int i = 0;
-        for (HashMap.Entry<String, Promotion> promo : promotions.entrySet()) {
-            Promotion promotion = promo.getValue();
-            for (int j = 0; j < promotion.getCapacityBox(); j++) {
+        List<Box> boxes = place.getBox();
+        for (int j = 0; j < boxes.size(); j++) {
+            Box box = boxes.get(j);
+            for (int k = 0; k < box.getCount(); k++) {
                 if (i < prizes.length) {
-                    colorBox[i] = promotion.getColorBox();
+                    colorBox[i] = box.getColor();
                 }
                 i++;
             }
         }
-
         List<Integer> lst = Arrays.asList(colorBox);
         Collections.shuffle(lst);
         colorBox = lst.toArray(colorBox);
 
-        for (HashMap.Entry<String, Promotion> promo : promotions.entrySet()) {
-            Promotion promotion = promo.getValue();
-            for (int j = 0; j < colorBox.length; j++) {
-                if (colorBox[j] == promotion.getColorBox()) {
-                    prizes[j] = promo.getKey();
+        for (int j = 0; j < boxes.size(); j++) {
+            Box box = boxes.get(j);
+            for (int k = 0; k < colorBox.length; k++) {
+                if (box.getColor() == colorBox[k]) {
+                    prizes[k] = box.getGift();
                 }
             }
         }
-
         initWheel();
     }
 
@@ -153,7 +145,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(bitmapWheel, 0, 0, null);
-
 
         int diameter = bitmapWheel.getHeight();
         int centerX =  diameter / 2;
@@ -195,8 +186,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        //init(intent);
     }
 
     private void StartSpinner() {
@@ -231,59 +220,8 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         //player.start();
     }
 
-    private void init(Intent intent) {
-        //initPlayer();
-        String company = intent.getStringExtra("company");
-        if (company != null) {
-            Constants.dbCompanies.child(company).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    updateData(dataSnapshot);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-    }
-
-    private void checkSpin() {
-        if (!Properties.getSpinActive()) {
-            if (Properties.getSpinTimeCreate() == 0) {
-                Properties.setSpinActive(true);
-                Properties.setSpinTimeCreate(System.currentTimeMillis());
-                spinActive = true;
-            } else {
-                long diff = System.currentTimeMillis() - Properties.getSpinTimeCreate();
-                if (TimeUnit.MILLISECONDS.toMinutes(diff) <= 3) {
-
-                }
-            }
-        }
-    }
-
-
-
-    private void updateData(DataSnapshot dataSnapshot) {
-        promotions = new HashMap<String, Promotion>();
-        for (DataSnapshot promotion : dataSnapshot.child("promo").getChildren()) {
-            if (promotion.child("active").getValue().equals(true)) {
-                Promotion promotionValue = promotion.getValue(Promotion.class);
-                promotions.put(promotion.getKey(), promotionValue);
-            }
-        }
-
-        if (promotions.size() > 0) {
-            System.out.println("TEST GAME ok");
-        }
-    }
-
     private void checkAccount() {
         if (AccessToken.getCurrentAccessToken() != null) {
-            playGame();
         } else {
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
@@ -291,68 +229,70 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
     public void onClickGame(View view) {
         switch (view.getId()) {
-            case R.id.gamePlay:
-                checkAccount();
-                break;
-            case R.id.gameWin:
-                createCoupon();
-                break;
-            case R.id.gameLose:
-                chooseAction();
-                break;
             case R.id.gameBack:
                 onBackPressed();
                 break;
             case R.id.gameShowDetailsGifts:
-                if (company.getCountPromo() > 0) {
-                    Intent intent = new Intent(this, LegendActivity.class);
-                    intent.putExtra(Promotion.class.getCanonicalName(), promotions);
-                    intent.putExtra(Company.class.getCanonicalName(), company);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(this, LegendActivity.class);
+                intent.putExtra(Place.class.getCanonicalName(), place);
+                intent.putExtra(Company.class.getCanonicalName(), company);
+                intent.putExtra(Gift.class.getCanonicalName(), gifts);
+                startActivity(intent);
                 break;
         }
     }
 
-    private void playGame() {
-
-    }
-
-    private void createCoupon() {
-        /*Random generator = new Random();
-        Object[] values = companies.get(getIntent().getStringExtra("company")).values().toArray();
-        Promotion winPromotion = (Promotion)values[generator.nextInt(values.length)];
-        String coupon = UUID.randomUUID().toString();
-        dbHelper.saveCoupon(coupon, getIntent().getStringExtra("company"), winPromotion);*/
-
+    private void createCoupon(Gift gift) {
         StringBuilder couponCodeBuilder = new StringBuilder();
         couponCodeBuilder.append(company.getName().substring(0, 2).toLowerCase());
         couponCodeBuilder.append(String.valueOf(System.currentTimeMillis()).substring(0, 10));
         String couponCode = couponCodeBuilder.toString();
 
-        Promotion promotion = promotions.get("promo1");
-
-        boolean social = false;
         int status = Constants.COUPON_STATUS_ACTIVE;
-        long lockTime = System.currentTimeMillis() + promotion.getTimeLock();
+        long lockTime = System.currentTimeMillis() + gift.getTimeLock();
 
-       /* if (!social && lockTime > System.currentTimeMillis()) {
-            status = 0;
-        }*/
+        if (!social && lockTime > System.currentTimeMillis()) {
+            status = Constants.COUPON_STATUS_LOCK;
+        }
 
         Coupon coupon = new Coupon(
                 status,
                 couponCode,
-                company.getId(),
-                promotion.getId(),
-                "user",
+                place.getCompanyKey(),
+                gift.getId(),
+                place.getId(),
+                gift.getDescription(),
+                "userId",
                 System.currentTimeMillis(),
-                promotion.getDateFinish(),
+                gift.getDateFinish(),
                 lockTime
         );
 
-        Constants.dbCoupons.child(couponCode).setValue(coupon);
+        CouponExtension couponExtension = new CouponExtension(
+                status,
+                couponCode,
+                place.getCompanyKey(),
+                gift.getId(),
+                place.getId(),
+                gift.getDescription(),
+                "userId",
+                System.currentTimeMillis(),
+                gift.getDateFinish(),
+                lockTime,
+                company.getName(),
+                place.getName(),
+                company.getLogo(),
+                place.getType(),
+                place.getTypeName()
+        );
+
+
+        Constants.dbCoupon.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(coupon);
+
+        Intent intent = new Intent(this, CouponActivity.class);
+        intent.putExtra(CouponExtension.class.getCanonicalName(), couponExtension);
+        startActivity(intent);
 
 
        /* Map<String, String> redeemCoupon = new HashMap<String, String>();
@@ -377,31 +317,50 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         }
 
 
-        dbCoupons
+        dbCoupon
                 .child(coupon.getCompanyKey())
                 .child(String.valueOf(System.currentTimeMillis()))
                 .setValue(redeemCoupon);*/
 
-        Toast.makeText(this, "You got coupon!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "You got coupon!", Toast.LENGTH_LONG).show();
       /*  Intent intent = new Intent(this, ShareActivity.class);
         intent.putExtra(Promotion.class.getCanonicalName(), winPromotion);
         startActivity(intent);*/
         finish();
     }
 
-    private void chooseAction() {
+    private void gameLose() {
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.choose_action, null);
-
+        View view = inflater.inflate(R.layout.pop_up_lose, null);
         popupWindow = new PopupWindow(
                 view,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
         );
+
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
+        ((ImageButton) view.findViewById(R.id.losePopUpClose)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        ((LinearLayout) view.findViewById(R.id.losePopUpGetSpin)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                Toast.makeText(GameActivity.this, R.string.next_version, Toast.LENGTH_SHORT).show();
+            }
+        });
+        ((LinearLayout) view.findViewById(R.id.losePopUpNotify)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                Toast.makeText(GameActivity.this, R.string.next_version, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         popupWindow.showAtLocation(parentLayout, Gravity.CENTER,0, 0);
     }
@@ -415,12 +374,10 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     @Override
     public void onAnimationEnd(Animation animation) {
         if (winKey != null) {
-            winPromotion = promotions.get(winKey);
-            System.out.println("TEST win= " + winPromotion.getName());
+            createCoupon(gifts.get(winKey));
         } else {
-            System.out.println("TEST win=lose");
+            gameLose();
         }
-
     }
 
     @Override

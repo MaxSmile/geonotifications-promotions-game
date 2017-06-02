@@ -167,6 +167,25 @@
                             android:text="@string/services"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
                     <com.vasilkoff.luckygame.common.SquareLinearLayout
+                        android:id="@+id/companyEShops"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg"
+                        android:onClick="onHomeClick">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/e_shop_icon"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:text="@string/e_shops"/>
+                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
+                    <com.vasilkoff.luckygame.common.SquareLinearLayout
                         android:id="@+id/companyFavorites"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -185,25 +204,7 @@
                             android:paddingTop="5dp"
                             android:text="@string/favorites"/>
                     </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
-                        android:id="@+id/companyComing"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:background="@drawable/bg"
-                        android:onClick="onHomeClick">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/plus"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="5dp"
-                            android:text="@string/coming_soon"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
+
 
                 </LinearLayout>
 

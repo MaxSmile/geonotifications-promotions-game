@@ -34,4 +34,5 @@
     <color name="colorUnlockExpired">#ffffff</color>
     <color name="colorUnlockText">#9B9B9B</color>
     <color name="colorUnlockTextBlue">#4a90e2</color>
+    <color name="loseLineBg">#f1f4f9</color>
 </resources>

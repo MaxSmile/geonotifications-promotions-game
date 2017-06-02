@@ -10,7 +10,7 @@ import android.util.Log;
 import com.vasilkoff.luckygame.entity.Coupon;
 import com.vasilkoff.luckygame.entity.CouponDB;
 import com.vasilkoff.luckygame.entity.Place;
-import com.vasilkoff.luckygame.entity.Promotion;
+
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,13 +13,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="choose_action_title">We are sorry, you did not win
-        \nanything this time.
-        \nBut you can:
-    </string>
-    <string name="choose_action_check_in">Do a Check in using Facebook</string>
-    <string name="choose_action_like">Like the Facebook page</string>
-    <string name="choose_action_home">Try to come tomorrow</string>
     <string name="share_title">Share %s and get coupon</string>
     <string name="coupon_redeem">Redeem</string>
     <string name="location_service_stop">Stop</string>
@@ -31,7 +24,7 @@
     <string name="near_me">Near me</string>
     <string name="filters">Filters</string>
     <string name="spin_active">Active Spin</string>
-    <string name="coming_soon">Coming Soon</string>
+    <string name="e_shops">E-Shops</string>
     <string name="all">All</string>
     <string name="food">Food</string>
     <string name="nightlife">Nightlife</string>
@@ -91,4 +84,9 @@
     <string name="unlock_facebook_check_in">Check in at %s</string>
     <string name="unlock_invite_friends">Invite your friends</string>
     <string name="login_license">By login in or accessing SpinDeals app you agree and accept our Terms &amp; Conditions</string>
+    <string name="lose_title">You lost!</string>
+    <string name="lose_text1">Not lucky enough today…</string>
+    <string name="lose_text2">Don\'t give up just yet</string>
+    <string name="lose_text3">Get an extra spin</string>
+    <string name="lose_text4">Get notified for next spin</string>
 </resources>

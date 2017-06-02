@@ -49,12 +49,12 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         coupon.setDistance(context.getString(R.string.distance));
         coupon.setTypeString(companyTypeNames[(int)coupon.getType()]);
 
-        if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE) {
-            if (coupon.getExpired() < System.currentTimeMillis())
+        if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
+            if (coupon.getExpired() < System.currentTimeMillis()) {
                 coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
-
-            if (coupon.getLocks() > System.currentTimeMillis())
-                coupon.setStatus(Constants.COUPON_STATUS_LOCK);
+            } else if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK && coupon.getLocks() < System.currentTimeMillis()) {
+                coupon.setStatus(Constants.COUPON_STATUS_ACTIVE);
+            }
         }
 
         String locks = DateFormat.getDiff(coupon.getLocks());
@@ -72,7 +72,6 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         }
 
         holder.bind(coupon);
-
     }
 
     @Override

@@ -1,10 +1,13 @@
 package com.vasilkoff.luckygame.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Kvm on 01.06.2017.
  */
 
-public class Gift {
+public class Gift implements Parcelable {
 
     private String id;
     private long dateStart;
@@ -24,6 +27,27 @@ public class Gift {
         this.description = description;
         this.timeLock = timeLock;
     }
+
+    protected Gift(Parcel in) {
+        id = in.readString();
+        dateStart = in.readLong();
+        dateFinish = in.readLong();
+        companyKey = in.readString();
+        description = in.readString();
+        timeLock = in.readLong();
+    }
+
+    public static final Creator<Gift> CREATOR = new Creator<Gift>() {
+        @Override
+        public Gift createFromParcel(Parcel in) {
+            return new Gift(in);
+        }
+
+        @Override
+        public Gift[] newArray(int size) {
+            return new Gift[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -71,5 +95,20 @@ public class Gift {
 
     public void setTimeLock(long timeLock) {
         this.timeLock = timeLock;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeLong(dateStart);
+        dest.writeLong(dateFinish);
+        dest.writeString(companyKey);
+        dest.writeString(description);
+        dest.writeLong(timeLock);
     }
 }

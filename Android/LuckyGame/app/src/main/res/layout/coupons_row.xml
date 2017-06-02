@@ -63,7 +63,7 @@
                             android:textColor="@color/colorNameCompany"
                             android:textSize="17sp"
                             android:textStyle="bold"
-                            android:text="@{coupon.companyName}"/>
+                            android:text="@{coupon.placeName}"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                                 android:textColor="@color/colorCouponPercent"
                                 android:textSize="23sp"
                                 android:textStyle="bold"
-                                android:text="@{coupon.promoName}"/>
+                                android:text="@{coupon.description}"/>
                         </LinearLayout>
 
                         <LinearLayout
