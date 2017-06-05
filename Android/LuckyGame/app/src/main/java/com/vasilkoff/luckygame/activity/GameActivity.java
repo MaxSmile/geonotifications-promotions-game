@@ -6,6 +6,9 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -38,6 +41,7 @@ import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,7 +66,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private long mSpinDuration;
     private float mSpinRevolutions;
     private ImageView pointerImageView;
-   // private MediaPlayer player;
 
     private String winKey;
     private Company company;
@@ -70,6 +73,9 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private Spin spin;
     private HashMap<String, Gift> gifts;
     private boolean social = false;
+
+    private SoundPool sp;
+    private int soundIdLose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +111,27 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                 return false;
             }
         });
+
+
+        initSound();
         //init(getIntent());
         initData();
+    }
+
+    private void initSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sp = new SoundPool.Builder()
+                    .setMaxStreams(10)
+                    .build();
+        } else {
+            sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        }
+
+        try {
+            soundIdLose = sp.load(getAssets().openFd("loser.wav"), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initData() {
@@ -290,9 +315,13 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         Constants.dbCoupon.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(coupon);
 
+
+
         Intent intent = new Intent(this, CouponActivity.class);
         intent.putExtra(CouponExtension.class.getCanonicalName(), couponExtension);
+        intent.putExtra("userPrize", true);
         startActivity(intent);
+
 
 
        /* Map<String, String> redeemCoupon = new HashMap<String, String>();
@@ -376,6 +405,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         if (winKey != null) {
             createCoupon(gifts.get(winKey));
         } else {
+            sp.play(soundIdLose, 1, 1, 0, 0, 1);
             gameLose();
         }
     }
@@ -385,19 +415,12 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
     }
 
- /*   private void initPlayer() {
-        AssetFileDescriptor afd;
-        try {
-            afd = getAssets().openFd("spiniii.wav");
-            player = new MediaPlayer();
-            player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
-            player.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
+    @Override
+    protected void onDestroy() {
+        sp.release();
+        sp = null;
+        super.onDestroy();
+    }
 
     private class PowerTouchListener implements View.OnTouchListener {
 
@@ -414,7 +437,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                             while (flag) {
                                 count+=2;
                                 if (count >= 100) {
-                                    //flag = false;
                                     count = 1;
                                 }
 

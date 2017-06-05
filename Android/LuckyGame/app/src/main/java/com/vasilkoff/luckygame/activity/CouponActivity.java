@@ -3,6 +3,9 @@ package com.vasilkoff.luckygame.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.Gravity;
@@ -24,12 +27,18 @@ import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.util.DateFormat;
 
+import java.io.IOException;
 
-public class CouponActivity extends BaseActivity implements CouponHandler{
+
+public class CouponActivity extends BaseActivity implements SoundPool.OnLoadCompleteListener, CouponHandler{
 
     private CouponExtension coupon;
     private PopupWindow popupWindow;
     private LinearLayout parentLayout;
+    private boolean userPrize = false;
+    private SoundPool sp;
+    private int soundIdWin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,9 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
         setContentView(R.layout.activity_coupon);
 
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
+        userPrize = getIntent().getBooleanExtra("userPrize", false);
+        initSound();
+
         String locks = DateFormat.getDiff(coupon.getLocks());
         if (locks != null)
             coupon.setLockDiff(locks);
@@ -52,9 +64,39 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
         binding.setHandler(this);
 
         parentLayout = (LinearLayout) findViewById(R.id.couponParentLayout);
+
+
     }
 
-   /* private void redeem(CouponDB coupon) {
+    private void initSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sp = new SoundPool.Builder()
+                    .setMaxStreams(10)
+                    .build();
+        } else {
+            sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        }
+
+        sp.setOnLoadCompleteListener(this);
+
+        try {
+            soundIdWin = sp.load(getAssets().openFd("winning.mp3"), 1);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (sp != null) {
+            sp.release();
+            sp = null;
+        }
+        super.onDestroy();
+    }
+
+    /* private void redeem(CouponDB coupon) {
         dbHelper.setInactive(coupon.getCode());
         couponCode.setVisibility(View.VISIBLE);
         buttonRedeem.setVisibility(View.GONE);
@@ -160,6 +202,14 @@ public class CouponActivity extends BaseActivity implements CouponHandler{
             finish();
         } else {
             showPopUp();
+        }
+    }
+
+
+    @Override
+    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+        if (userPrize) {
+            sp.play(soundIdWin, 1, 1, 0, 0, 1);
         }
     }
 }
