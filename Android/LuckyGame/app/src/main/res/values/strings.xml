@@ -89,4 +89,6 @@
     <string name="lose_text2">Don\'t give up just yet</string>
     <string name="lose_text3">Get an extra spin</string>
     <string name="lose_text4">Get notified for next spin</string>
+    <string name="extra_spin_text1">Out of spins? You can get</string>
+    <string name="extra_spin_text2">an extra spin</string>
 </resources>

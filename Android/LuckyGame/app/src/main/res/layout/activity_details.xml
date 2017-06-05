@@ -13,6 +13,9 @@
         <variable
             name="spin"
             type="com.vasilkoff.luckygame.entity.Spin" />
+        <variable
+            name="handler"
+            type="com.vasilkoff.luckygame.binding.handler.DetailsHandler" />
         <import type="android.view.View" alias="v"/>
 
     </data>
@@ -40,16 +43,16 @@
                         android:layout_height="wrap_content">
 
                         <ImageButton
-                            android:id="@+id/detailsBack"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20dp"
                             android:background="@null"
                             android:src="@drawable/back"
-                            android:onClick="onClickDetails"
+                            android:onClick="@{handler::back}"
                             android:padding="10dp"/>
-                        <TextView                                                    android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
@@ -256,7 +259,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/get_notified_for_spins"
                             android:textColor="@color/colorDetailsTextInfo"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp"
+                            android:layout_centerVertical="true"/>
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -273,7 +277,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/dont_wont_notifications"
                             android:textColor="@color/colorDetailsTextInfo"
-                            android:textSize="17sp"/>
+                            android:textSize="17sp"
+                            android:layout_centerVertical="true"/>
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -284,18 +289,20 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp">
+                        android:padding="5dp"
+                        android:onClick="@{handler::getExtraSpin}">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/out_of_spins"
                             android:textColor="@color/colorDetailsTextInfo"
-                            android:textSize="17sp"/>
-                        <ImageButton
+                            android:textSize="17sp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true" />
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/plus_one"
-                            android:background="@null"
                             android:layout_alignParentEnd="true" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -319,7 +326,7 @@
                     android:id="@+id/companyShowDetailsGifts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="onClickDetails">
+                    android:onClick="@{handler::showGifts}">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -355,7 +362,7 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/detailsBtnPlay"
-                    android:onClick="onClickDetails"/>
+                    android:onClick="@{handler::goToPlay}"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

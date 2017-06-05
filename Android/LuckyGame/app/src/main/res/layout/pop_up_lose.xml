@@ -122,8 +122,8 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp">
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

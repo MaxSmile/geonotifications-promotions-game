@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
 import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DetailsActivity extends BaseActivity {
+public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private Company company;
     private Place place;
@@ -44,6 +45,7 @@ public class DetailsActivity extends BaseActivity {
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
 
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
+        binding.setHandler(this);
 
         Constants.dbPlace.child(getIntent().getStringExtra(Place.class.getCanonicalName())).addValueEventListener(new ValueEventListener() {
             @Override
@@ -112,26 +114,6 @@ public class DetailsActivity extends BaseActivity {
 
     public void onClickDetails(View view) {
         switch (view.getId()) {
-            case R.id.detailsBack:
-                onBackPressed();
-                break;
-            case R.id.detailsBtnPlay:
-                if (spin != null) {
-                    Intent intent = new Intent(this, GameActivity.class);
-                    intent.putExtra(Place.class.getCanonicalName(), place);
-                    intent.putExtra(Spin.class.getCanonicalName(), spin);
-                    intent.putExtra(Company.class.getCanonicalName(), company);
-                    intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.companyShowDetailsGifts:
-                Intent intent = new Intent(this, LegendActivity.class);
-                intent.putExtra(Place.class.getCanonicalName(), place);
-                intent.putExtra(Company.class.getCanonicalName(), company);
-                intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                startActivity(intent);
-                break;
             case R.id.companyDetailsCall:
                 Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
                 break;
@@ -148,4 +130,33 @@ public class DetailsActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void showGifts(View view) {
+        Intent intent = new Intent(this, LegendActivity.class);
+        intent.putExtra(Place.class.getCanonicalName(), place);
+        intent.putExtra(Company.class.getCanonicalName(), company);
+        intent.putExtra(Gift.class.getCanonicalName(), gifts);
+        startActivity(intent);
+    }
+
+    @Override
+    public void goToPlay(View view) {
+        if (spin != null) {
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra(Place.class.getCanonicalName(), place);
+            intent.putExtra(Spin.class.getCanonicalName(), spin);
+            intent.putExtra(Company.class.getCanonicalName(), company);
+            intent.putExtra(Gift.class.getCanonicalName(), gifts);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void getExtraSpin(View view) {
+        Intent intent = new Intent(this, ExtraSpinActivity.class);
+        intent.putExtra(Place.class.getCanonicalName(), place);
+        intent.putExtra(Spin.class.getCanonicalName(), spin);
+        intent.putExtra(Company.class.getCanonicalName(), company);
+        startActivity(intent);
+    }
 }

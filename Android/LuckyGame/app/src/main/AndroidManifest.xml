@@ -67,11 +67,11 @@
         <activity
             android:name=".activity.UnlockActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp"/>
+            android:theme="@style/AppTheme.PopUp" />
 
         <service android:name=".service.LocationService" />
 
-
+        <activity android:name=".activity.ExtraSpinActivity"></activity>
     </application>
 
 </manifest>
