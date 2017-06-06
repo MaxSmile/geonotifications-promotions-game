@@ -14,6 +14,9 @@
             name="spin"
             type="com.vasilkoff.luckygame.entity.Spin" />
         <variable
+            name="countGift"
+            type="Integer" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.DetailsHandler" />
         <import type="android.view.View" alias="v"/>
@@ -345,9 +348,9 @@
                         android:textSize="12sp"
                         android:background="@drawable/bg_count_blue"
                         android:padding="1dp"
-                        android:text="@{String.valueOf(place.box.size())}"
+                        android:text="@{String.valueOf(countGift)}"
                         android:layout_toEndOf="@+id/companyDetailsGifts"
-                        android:visibility="@{place.box.size() > 0 ? v.VISIBLE : v.GONE}"/>
+                        android:visibility="@{countGift > 0 ? v.VISIBLE : v.GONE}"/>
                 </RelativeLayout>
             </LinearLayout>
             <RelativeLayout

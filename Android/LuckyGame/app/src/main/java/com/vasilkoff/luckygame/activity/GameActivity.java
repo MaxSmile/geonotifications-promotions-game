@@ -90,6 +90,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         ActivityGameBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
         binding.setPlace(place);
+        binding.setCountGift(gifts.size());
 
         parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
 

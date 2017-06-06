@@ -55,9 +55,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 TypedArray iconArray = getResources().obtainTypedArray(R.array.company_type_icons);
                 place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
                 iconArray.recycle();
-
-                setBindingData();
                 setGift();
+                setBindingData();
             }
 
             @Override
@@ -85,7 +84,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Gift gift = dataSnapshot.getValue(Gift.class);
-                    gifts.put(gift.getId(), gift);
+                    if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
+                        gifts.put(gift.getId(), gift);
                 }
 
                 @Override
@@ -103,6 +103,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 company = dataSnapshot.getValue(Company.class);
                 binding.setCompany(company);
                 binding.setPlace(place);
+                binding.setCountGift(gifts.size());
             }
 
             @Override

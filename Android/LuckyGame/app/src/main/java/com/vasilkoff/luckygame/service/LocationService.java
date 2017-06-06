@@ -33,7 +33,7 @@ import java.util.List;
 
 public class LocationService extends Service {
 
-    private static final String DISCONNECT_VPN = "com.vasilkoff.luckygame.stop";
+    private static final String STOP_LOCATION_SERVICE = "com.vasilkoff.luckygame.stop";
 
     private static final String PROX_ALERT_INTENT = "com.vasilkoff.luckygame.";
 
@@ -82,10 +82,10 @@ public class LocationService extends Service {
             Intent intent = new Intent(this, HomeActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-            Intent disconnectVPN = new Intent(this, LocationService.class);
-            disconnectVPN.setAction(DISCONNECT_VPN);
+            Intent stopIntent = new Intent(this, LocationService.class);
+            stopIntent.setAction(STOP_LOCATION_SERVICE);
             PendingIntent disconnectPendingIntent = PendingIntent.getService(
-                    this, 0, disconnectVPN, 0);
+                    this, 0, stopIntent, 0);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setContentIntent(pendingIntent)
@@ -107,7 +107,7 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Test", "Service: onStartCommand");
-        if (intent != null && DISCONNECT_VPN.equals(intent.getAction())) {
+        if (intent != null && STOP_LOCATION_SERVICE.equals(intent.getAction())) {
             Log.i("Test", "Service: STOP");
             stopSelf();
             return START_NOT_STICKY;

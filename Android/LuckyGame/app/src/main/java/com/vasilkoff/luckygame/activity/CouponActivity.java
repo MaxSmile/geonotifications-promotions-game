@@ -25,6 +25,7 @@ import com.vasilkoff.luckygame.binding.handler.CouponHandler;
 import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
+import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.io.IOException;
@@ -187,10 +188,9 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
 
     @Override
     public void more(View view) {
-        /*Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("company", coupon.getCompanyKey());
-        startActivity(intent);*/
-        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(Place.class.getCanonicalName(), coupon.getPlaceKey());
+        startActivity(intent);
     }
 
     @Override
