@@ -15,8 +15,13 @@ public class Place implements Parcelable {
     private String address;
     private String name;
     private String companyKey;
-    private double lat;
-    private double lon;
+    private double geoLat;
+    private double geoLon;
+    private int geoRadius;
+    private String geoMessage;
+    private long geoTimeStart;
+    private long geoTimeFinish;
+    private long geoTimeFrequency;
     private List<Box> box;
     private int type;
     private String typeName;
@@ -27,13 +32,32 @@ public class Place implements Parcelable {
 
     }
 
-    public Place(String id, String address, String name, String companyKey, double lat, double lon, List<Box> box, int type, String typeName, int typeIcon, String info) {
+    public Place(String id, String address, String name, String companyKey, double geoLat, double geoLon, int geoRadius, String geoMessage, long geoTimeStart, long geoTimeFinish, long geoTimeFrequency) {
         this.id = id;
         this.address = address;
         this.name = name;
         this.companyKey = companyKey;
-        this.lat = lat;
-        this.lon = lon;
+        this.geoLat = geoLat;
+        this.geoLon = geoLon;
+        this.geoRadius = geoRadius;
+        this.geoMessage = geoMessage;
+        this.geoTimeStart = geoTimeStart;
+        this.geoTimeFinish = geoTimeFinish;
+        this.geoTimeFrequency = geoTimeFrequency;
+    }
+
+    public Place(String id, String address, String name, String companyKey, double geoLat, double geoLon, int geoRadius, String geoMessage, long geoTimeStart, long geoTimeFinish, long geoTimeFrequency, List<Box> box, int type, String typeName, int typeIcon, String info) {
+        this.id = id;
+        this.address = address;
+        this.name = name;
+        this.companyKey = companyKey;
+        this.geoLat = geoLat;
+        this.geoLon = geoLon;
+        this.geoRadius = geoRadius;
+        this.geoMessage = geoMessage;
+        this.geoTimeStart = geoTimeStart;
+        this.geoTimeFinish = geoTimeFinish;
+        this.geoTimeFrequency = geoTimeFrequency;
         this.box = box;
         this.type = type;
         this.typeName = typeName;
@@ -46,8 +70,13 @@ public class Place implements Parcelable {
         address = in.readString();
         name = in.readString();
         companyKey = in.readString();
-        lat = in.readDouble();
-        lon = in.readDouble();
+        geoLat = in.readDouble();
+        geoLon = in.readDouble();
+        geoRadius = in.readInt();
+        geoMessage = in.readString();
+        geoTimeStart = in.readLong();
+        geoTimeFinish = in.readLong();
+        geoTimeFrequency = in.readLong();
         box = in.createTypedArrayList(Box.CREATOR);
         type = in.readInt();
         typeName = in.readString();
@@ -99,20 +128,60 @@ public class Place implements Parcelable {
         this.companyKey = companyKey;
     }
 
-    public double getLat() {
-        return lat;
+    public double getGeoLat() {
+        return geoLat;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setGeoLat(double geoLat) {
+        this.geoLat = geoLat;
     }
 
-    public double getLon() {
-        return lon;
+    public double getGeoLon() {
+        return geoLon;
     }
 
-    public void setLon(double lon) {
-        this.lon = lon;
+    public void setGeoLon(double geoLon) {
+        this.geoLon = geoLon;
+    }
+
+    public int getGeoRadius() {
+        return geoRadius;
+    }
+
+    public void setGeoRadius(int geoRadius) {
+        this.geoRadius = geoRadius;
+    }
+
+    public String getGeoMessage() {
+        return geoMessage;
+    }
+
+    public void setGeoMessage(String geoMessage) {
+        this.geoMessage = geoMessage;
+    }
+
+    public long getGeoTimeStart() {
+        return geoTimeStart;
+    }
+
+    public void setGeoTimeStart(long geoTimeStart) {
+        this.geoTimeStart = geoTimeStart;
+    }
+
+    public long getGeoTimeFinish() {
+        return geoTimeFinish;
+    }
+
+    public void setGeoTimeFinish(long geoTimeFinish) {
+        this.geoTimeFinish = geoTimeFinish;
+    }
+
+    public long getGeoTimeFrequency() {
+        return geoTimeFrequency;
+    }
+
+    public void setGeoTimeFrequency(long geoTimeFrequency) {
+        this.geoTimeFrequency = geoTimeFrequency;
     }
 
     public List<Box> getBox() {
@@ -166,8 +235,13 @@ public class Place implements Parcelable {
         dest.writeString(address);
         dest.writeString(name);
         dest.writeString(companyKey);
-        dest.writeDouble(lat);
-        dest.writeDouble(lon);
+        dest.writeDouble(geoLat);
+        dest.writeDouble(geoLon);
+        dest.writeInt(geoRadius);
+        dest.writeString(geoMessage);
+        dest.writeLong(geoTimeStart);
+        dest.writeLong(geoTimeFinish);
+        dest.writeLong(geoTimeFrequency);
         dest.writeTypedList(box);
         dest.writeInt(type);
         dest.writeString(typeName);

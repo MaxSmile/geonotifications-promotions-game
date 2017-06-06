@@ -15,7 +15,8 @@
     </string>
     <string name="share_title">Share %s and get coupon</string>
     <string name="coupon_redeem">Redeem</string>
-    <string name="location_service_stop">Stop</string>
+    <string name="location_service_stop">Push for stop searching</string>
+    <string name="location_service_text">Search new spin in progress</string>
     <string name="fragment_companies_title">All \nPartners</string>
     <string name="fragment_active_companies_title">Active \nSpins</string>
     <string name="fragment_coupons_title">My \nCoupons</string>

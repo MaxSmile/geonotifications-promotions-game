@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,6 +18,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.vasilkoff.luckygame.R;
@@ -38,15 +41,13 @@ public class LocationService extends Service {
     private static final String PROX_ALERT_INTENT = "com.vasilkoff.luckygame.";
 
     private int requestCode = 100;
-    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATE = 1; // in Meters
+    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATE = 10; // in Meters
     private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000; // in Milliseconds
 
     private static final long POINT_RADIUS = 1000; // in Meters
     private static final long PROX_ALERT_EXPIRATION = -1;
 
     private LocationManager locationManager;
-
-
 
     private List<ProximityIntentReceiver> receivers;
     private List<PendingIntent> pendingIntents;
@@ -91,7 +92,9 @@ public class LocationService extends Service {
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
                     .setAutoCancel(true)
-                    .addAction(R.mipmap.ic_launcher, getString(R.string.location_service_stop), disconnectPendingIntent)
+                    .setContentText(getString(R.string.location_service_text))
+                    .addAction(R.drawable.ic_close_white, getString(R.string.location_service_stop), disconnectPendingIntent)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
                     .setSmallIcon(R.mipmap.ic_launcher);
 
             Notification notification = builder.build();
@@ -99,16 +102,12 @@ public class LocationService extends Service {
 
             receivers = new ArrayList<ProximityIntentReceiver>();
             pendingIntents = new ArrayList<PendingIntent>();
-
-            Log.i("Test", "Service: onCreate");
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("Test", "Service: onStartCommand");
         if (intent != null && STOP_LOCATION_SERVICE.equals(intent.getAction())) {
-            Log.i("Test", "Service: STOP");
             stopSelf();
             return START_NOT_STICKY;
         }
@@ -123,52 +122,29 @@ public class LocationService extends Service {
         for (ProximityIntentReceiver receiver : receivers) {
             unregisterReceiver(receiver);
         }
-        Log.i("Test", "Service: onDestroy");
     }
 
     private void loadPlaces() {
-      /*  if (receivers != null) {
-            for (int i = 0; i < receivers.size(); i++) {
-                unregisterReceiver(receivers.get(i));
-            }
-        } else {
-            receivers = new ArrayList<ProximityIntentReceiver>();
-        }*/
-
-       /* if (pendingIntents != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                for (PendingIntent pendingIntent : pendingIntents) {
-                    locationManager.removeProximityAlert(pendingIntent);
-                }
-            }
-        } else {
-            pendingIntents = new ArrayList<PendingIntent>();
-        }*/
-
-
-
-        ArrayList<Place> uniquePlaces = new DBHelper(this).getPlacesList();
+        ArrayList<Place> uniquePlaces = DBHelper.getInstance(this).getPlacesList();
         for (int i = 0; i < uniquePlaces.size(); i++) {
             Place place = uniquePlaces.get(i);
-            /*addProximityAlert(place.getLat(), place.getLon(), place.getNameCompany());
-            Log.i("Test", "Service: place = " + place.getNameCompany());*/
+            addProximityAlert(place.getGeoLat(), place.getGeoLon(), place.getId(), place.getGeoRadius());
         }
 
     }
 
-    private void addProximityAlert(double latitude, double longitude, String id) {
+    private void addProximityAlert(double latitude, double longitude, String id, int pointRadius) {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(PROX_ALERT_INTENT + id);
-            intent.putExtra("company", id);
+            intent.putExtra(Place.class.getCanonicalName(), id);
             PendingIntent proximityIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             locationManager.addProximityAlert(
                     latitude,
                     longitude,
-                    POINT_RADIUS,
+                    pointRadius,
                     PROX_ALERT_EXPIRATION,
                     proximityIntent
             );

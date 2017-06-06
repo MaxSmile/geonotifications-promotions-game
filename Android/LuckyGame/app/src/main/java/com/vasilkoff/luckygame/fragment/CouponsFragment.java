@@ -31,7 +31,6 @@ import java.util.List;
 public class CouponsFragment extends Fragment {
 
     private RecyclerView couponsList;
-    private DBHelper dbHelper;
     private List<CouponExtension> coupons;
     private List<String> couponsCode;
 
@@ -44,7 +43,6 @@ public class CouponsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        dbHelper = new DBHelper(getContext());
         couponsList = (RecyclerView) getActivity().findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         couponsList.setLayoutManager(llm);
@@ -56,7 +54,7 @@ public class CouponsFragment extends Fragment {
     }
 
     private void getCoupons() {
-        couponsCode = dbHelper.getCoupons();
+        couponsCode = DBHelper.getInstance(getContext()).getCoupons();
         coupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
             Constants.dbCoupon.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {

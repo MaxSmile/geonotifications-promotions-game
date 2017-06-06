@@ -181,12 +181,46 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     @Override
     protected void onResume() {
         super.onResume();
-        //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         if (!checkLogin() && showPopUpLogin) {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
-        //startActivity(new Intent(this, ChooseAccountActivity.class));
+
+        updateGeoPlaces();
+    }
+
+    private void updateGeoPlaces() {
+        Constants.dbPlace.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Place> placeList = new ArrayList<Place>();
+                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
+                    Place place = dataPlace.getValue(Place.class);
+                    if (place.getGeoTimeStart() < System.currentTimeMillis() && place.getGeoTimeFinish() > System.currentTimeMillis()) {
+                        placeList.add(place);
+                    }
+                }
+                dbHelper.savePlaces(placeList);
+                startGeoService();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void startGeoService() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+            }
+        } else {
+            startService(new Intent(this, LocationService.class));
+        }
     }
 
     private void updateData(DataSnapshot dataSnapshot) {

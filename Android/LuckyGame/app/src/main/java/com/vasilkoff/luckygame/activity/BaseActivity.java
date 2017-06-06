@@ -36,9 +36,6 @@ import java.util.ArrayList;
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         BaseHandler {
 
-
-    static ArrayList<Place> uniquePlaces;
-
     static DBHelper dbHelper;
 
     static GoogleApiClient mGoogleApiClient;
@@ -53,8 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
 
-        if (dbHelper == null)
-            dbHelper = new DBHelper(this);
+        dbHelper = DBHelper.getInstance(this);
 
         if (mGoogleApiClient == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
