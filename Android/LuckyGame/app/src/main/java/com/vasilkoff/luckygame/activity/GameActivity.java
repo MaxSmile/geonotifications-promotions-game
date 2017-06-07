@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.common.MyRotateAnimation;
 import com.vasilkoff.luckygame.databinding.ActivityGameBinding;
 import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
@@ -46,6 +47,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends BaseActivity implements Animation.AnimationListener {
 
@@ -56,6 +59,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private int count = 0;
     private boolean flag;
     private Handler handler;
+    private Handler animateHandler;
     private ImageView powerButton;
 
     private static final float D_TO_R = 0.0174532925f;
@@ -76,6 +80,12 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
     private SoundPool sp;
     private int soundIdLose;
+    private int soundIdTick;
+    private ImageView imagePointer;
+
+    private TimerTask timerTask;
+    private Timer timer;
+    private float lastRotation = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +103,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         binding.setCountGift(gifts.size());
 
         parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
+        imagePointer = (ImageView)findViewById(R.id.imagePointer);
 
         progressBar = (ProgressBar)findViewById(R.id.powerBar);
         progressBar.setMax(100);
@@ -109,6 +120,21 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
             @Override
             public boolean handleMessage(Message message) {
                 progressBar.setProgress(message.arg1);
+                return false;
+            }
+        });
+
+        animateHandler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                float rotation = msg.arg1%30;
+                if (lastRotation > rotation) {
+                    sp.play(soundIdTick, 1, 1, 0, 0, 1);
+                    imagePointer.setRotation(-1*10);
+                } else {
+                    imagePointer.setRotation(0);
+                }
+                lastRotation = rotation;
                 return false;
             }
         });
@@ -130,6 +156,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
         try {
             soundIdLose = sp.load(getAssets().openFd("loser.wav"), 1);
+            soundIdTick = sp.load(getAssets().openFd("tick.mp3"), 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -234,7 +261,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         winKey = prizes[prizeIndex];
 
 
-        RotateAnimation rotateAnim = new RotateAnimation(0f, all,
+        final MyRotateAnimation rotateAnim = new MyRotateAnimation(0f, all,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnim.setInterpolator(new DecelerateInterpolator());
         rotateAnim.setRepeatCount(0);
@@ -243,6 +270,20 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         rotateAnim.setFillAfter(true);
 
         pointerImageView.startAnimation(rotateAnim);
+
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                message.arg1 = (int) rotateAnim.getDegrees();
+                animateHandler.sendMessage(message);
+            }
+        };
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(timerTask,0,50);
+
+
         //player.start();
     }
 
@@ -403,6 +444,10 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
     @Override
     public void onAnimationEnd(Animation animation) {
+        timerTask.cancel();
+        timer.cancel();
+        timer.purge();
+        imagePointer.setRotation(0);
         if (winKey != null) {
             createCoupon(gifts.get(winKey));
         } else {

@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;

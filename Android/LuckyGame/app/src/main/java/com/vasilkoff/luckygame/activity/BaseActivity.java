@@ -21,9 +21,10 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
+import com.vasilkoff.luckygame.entity.User;
 
 
-
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     static GoogleSignInAccount accountGoogle;
     static JSONObject objectFacebook;
 
+    static User user;
 
     private static final String TAG = "SignInActivity";
 
@@ -71,6 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     boolean checkLogin() {
         if (AccessToken.getCurrentAccessToken() != null) {
             getFacebookUserInfo();
+
             return true;
         } else {
             OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
@@ -84,8 +87,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     }
 
     void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess())
+        if (result.isSuccess()) {
             accountGoogle = result.getSignInAccount();
+            user = new User(
+                    accountGoogle.getId(),
+                    accountGoogle.getDisplayName(),
+                    "google"
+            );
+        }
     }
 
     @Override
@@ -100,6 +109,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         objectFacebook = object;
+                        try {
+                            user = new User(
+                                    objectFacebook.getString("id"),
+                                    objectFacebook.getString("name"),
+                                    "facebook");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
         Bundle parameters = new Bundle();

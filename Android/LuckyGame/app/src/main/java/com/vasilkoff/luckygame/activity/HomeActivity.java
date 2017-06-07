@@ -176,6 +176,8 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         } catch (NoSuchAlgorithmException e) {
 
         }*/
+
+        updateGeoPlaces();
     }
 
     @Override
@@ -185,8 +187,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
-
-        updateGeoPlaces();
     }
 
     private void updateGeoPlaces() {
@@ -221,75 +221,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         } else {
             startService(new Intent(this, LocationService.class));
         }
-    }
-
-    private void updateData(DataSnapshot dataSnapshot) {
-       /* companies = new HashMap<String, Map<String, Promotion>>();
-        allCompanyList = new ArrayList<Company>();
-        activeCompanyListInfo = new ArrayList<Company>();
-        Set<String> uniquePlacesNames = new HashSet<>();
-
-        for (DataSnapshot company : dataSnapshot.child("companies").getChildren()) {
-
-        allCompanyList.add(
-                new Company(
-                        company.getKey(),
-                        company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
-                        company.child("info").exists() ? company.child("info").getValue().toString() : null,
-                        company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
-        Map<String, Promotion> promotions = new HashMap<String, Promotion>();
-        for (DataSnapshot promotion : company.child("promo").getChildren()) {
-            if (promotion.child("active").getValue().equals(true)) {
-                Promotion promotionValue = promotion.getValue(Promotion.class);
-                promotions.put(promotion.getKey(), promotionValue);
-
-                if (promotionValue.getListPlaces() != null) {
-                    for (int i = 0; i < promotionValue.getListPlaces().size(); i++) {
-                        uniquePlacesNames.add(promotionValue.getListPlaces().get(i));
-                    }
-                }
-            }
-        }
-        if (promotions.size() > 0) {
-            companies.put(company.getKey(), promotions);
-            activeCompanyListInfo.add(
-                    new Company(
-                            company.getKey(),
-                            company.child("name").exists() ? company.child("name").getValue().toString() : company.getKey(),
-                            company.child("info").exists() ? company.child("info").getValue().toString() : null,
-                            company.child("logo").exists() ? company.child("logo").getValue().toString() : null));
-        }
-    }
-        //setCountActiveCompanies(companies.size());
-
-        activeCompaniesFragment.setCompanies(companies, activeCompanyListInfo);
-        if (activeCompaniesFragment.isVisible())
-            activeCompaniesFragment.refreshList();
-
-       *//* allCompaniesFragment.setCompanies(allCompanyList);
-        if (allCompaniesFragment.isVisible())
-            allCompaniesFragment.refreshList();*//*
-
-        GenericTypeIndicator<Map<String, Place>> type = new GenericTypeIndicator<Map<String, Place>>() {};
-        Map<String, Place> places = dataSnapshot.child("places").getValue(type);
-        uniquePlaces = new ArrayList<Place>();
-
-        for (String placeName : uniquePlacesNames) {
-            uniquePlaces.add(places.get(placeName));
-        }
-
-        dbHelper.savePlaces(uniquePlaces);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-            }
-        } else {
-            startService(new Intent(this, LocationService.class));
-        }*/
-
     }
 
     @Override

@@ -142,6 +142,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void goToPlay(View view) {
+        if (!checkLogin()) {
+            startActivity(new Intent(this, ChooseAccountActivity.class));
+        }
         if (spin != null) {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra(Place.class.getCanonicalName(), place);
