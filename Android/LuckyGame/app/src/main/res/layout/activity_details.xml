@@ -333,7 +333,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@{place.box.size() > 0 ? @drawable/gift_blue : @drawable/gift_grey}"
+                        android:src="@{countGift > 0 ? @drawable/gift_blue : @drawable/gift_grey}"
                         android:layout_centerHorizontal="true"
                         android:id="@+id/companyDetailsGifts"
                         android:paddingTop="10dp"/>

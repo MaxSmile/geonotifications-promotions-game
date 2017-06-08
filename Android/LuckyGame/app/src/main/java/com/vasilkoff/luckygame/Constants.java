@@ -26,4 +26,8 @@ public class Constants {
     public static final int COUPON_STATUS_EXPIRED = 2;
 
     public static final int SPIN_STATUS_ACTIVE = 0;
+
+    public static final int USER_TYPE_FACEBOOK = 0;
+    public static final int USER_TYPE_GOOGLE = 1;
+
 }

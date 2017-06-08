@@ -1,214 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="40dp"
-    android:paddingLeft="35dp"
-    android:paddingRight="35dp"
-    android:paddingTop="40dp"
-    android:background="@drawable/shadow_small"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     tools:context="com.vasilkoff.luckygame.activity.UnlockActivity">
+    <data>
+        <variable
+            name="coupon"
+            type="com.vasilkoff.luckygame.entity.CouponExtension"/>
+        <variable
+            name="company"
+            type="com.vasilkoff.luckygame.entity.Company"/>
+        <variable
+            name="handler"
+            type="com.vasilkoff.luckygame.binding.handler.ExtraHandler"/>
+        <import type="android.view.View" alias="v"/>
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/coupon_top_bg">
-        <RelativeLayout
+        android:layout_height="match_parent"
+        android:paddingBottom="40dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:paddingTop="40dp"
+        android:background="@drawable/shadow_small"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/coupon_top_bg">
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
-                <ImageView
+                android:padding="10dp">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/lock"/>
+                    android:orientation="horizontal"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/lock"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unlock_title"
+                        android:textColor="@color/colorLegendTitle"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="-3dp"/>
+                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/unlockClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/cancel"
+                    android:background="@null"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:padding="2dp"
+                    android:onClick="@{handler::back}"/>
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:src="@drawable/line_hr"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/unlock_title"
-                    android:textColor="@color/colorLegendTitle"
-                    android:textSize="18sp"
+                    android:text="@string/unlock_text1"
+                    android:gravity="center"
+                    android:textColor="@color/colorLegendTitle"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/unlock_text2"
+                    android:gravity="center"
+                    android:textColor="@color/colorUnlockText"/>
+            </LinearLayout>
+
+            <include
+                layout="@layout/fb_button"
+                bind:company = "@{company}"
+                bind:handler = "@{handler}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unlock_text3"
+                    android:gravity="center"
+                    android:textColor="@color/colorLegendTitle"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/or"
                     android:textStyle="bold"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginBottom="-3dp"/>
-            </LinearLayout>
-            <ImageButton
-                android:id="@+id/unlockClose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/cancel"
-                android:background="@null"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:padding="2dp"
-                android:onClick="onClickUnlock"/>
-        </RelativeLayout>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:src="@drawable/line_hr"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unlock_text1"
-                android:gravity="center"
-                android:textColor="@color/colorLegendTitle"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/unlock_text2"
-                android:gravity="center"
-                android:textColor="@color/colorUnlockText"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/facebook_like"
-                    android:minWidth="28dp"/>
-                <TextView
-                    android:id="@+id/unlockLikeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    style="@style/UnlockActionsText"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/geo_fence"
-                    android:minWidth="28dp"/>
-                <TextView
-                    android:id="@+id/unlockCheckInText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    style="@style/UnlockActionsText"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/paper_plane"
-                    android:minWidth="28dp"/>
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:gravity="center"
+                    android:textColor="@color/colorUnlockTextBlue"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/unlock_invite_friends"
-                    android:layout_gravity="center_vertical"
-                    style="@style/UnlockActionsText"/>
+                    android:text="@string/unlock_text4"
+                    android:gravity="center"
+                    android:textColor="@color/colorLegendTitle"/>
             </LinearLayout>
-        </LinearLayout>
-        <Button
-            android:id="@+id/unlockUnlock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="unlock"
-            android:onClick="onClickUnlock"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unlock_text3"
-                android:gravity="center"
-                android:textColor="@color/colorLegendTitle"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/or"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textAllCaps="true"
-                android:gravity="center"
-                android:textColor="@color/colorUnlockTextBlue"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/unlock_text4"
-                android:gravity="center"
-                android:textColor="@color/colorLegendTitle"/>
-        </LinearLayout>
 
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@drawable/bg_bot"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expires"
+                android:textColor="@color/colorUnlockExpired"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/unlockExpires"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:textColor="@color/colorUnlockExpired"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="@drawable/bg_bot"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/expires"
-            android:textColor="@color/colorUnlockExpired"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/unlockExpires"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:textColor="@color/colorUnlockExpired"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
+</layout>
 
 
-
-
-</LinearLayout>

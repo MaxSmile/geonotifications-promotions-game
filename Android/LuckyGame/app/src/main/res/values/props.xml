@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="facebook_app_id">411450582532273</string>
+    <string name="facebook_app_link">https://fb.me/468319953512002</string>
+    <string name="app_preview_image_url">https://firebasestorage.googleapis.com/v0/b/lucky-game-e26de.appspot.com/o/logo_icon_new.png?alt=media&amp;token=64948477-d60d-4f60-8a78-7a8f26de6471</string>
 </resources>

@@ -60,7 +60,7 @@ public class ActiveCompaniesFragment extends Fragment {
         companiesList = (RecyclerView) getActivity().findViewById(R.id.activeCompaniesList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
-        refreshList();
+        updateData();
     }
 
 
@@ -80,13 +80,13 @@ public class ActiveCompaniesFragment extends Fragment {
                         spin.setTimeLeft(DateFormat.getDiff(spin.getDateFinish()));
                         spins.add(spin);
                         count++;
-                        Constants.dbPlace.child(spin.getPlaceKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        Constants.dbPlace.child(spin.getPlaceKey()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Place place = dataSnapshot.getValue(Place.class);
                                 place.setTypeName(Constants.companyTypeNames[place.getType()]);
                                 places.put(place.getId(), place);
-                                Constants.dbCompany.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                Constants.dbCompany.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Company company = dataSnapshot.getValue(Company.class);
@@ -101,8 +101,6 @@ public class ActiveCompaniesFragment extends Fragment {
 
                                     }
                                 });
-
-
                             }
 
                             @Override
@@ -119,9 +117,5 @@ public class ActiveCompaniesFragment extends Fragment {
 
             }
         });
-    }
-
-    public void refreshList() {
-        updateData();
     }
 }

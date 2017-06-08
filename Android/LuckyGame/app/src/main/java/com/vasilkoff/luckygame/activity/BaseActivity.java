@@ -1,5 +1,6 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -18,8 +19,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.entity.Box;
+import com.vasilkoff.luckygame.entity.Company;
+import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.User;
 
@@ -27,7 +36,9 @@ import com.vasilkoff.luckygame.entity.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -44,8 +55,15 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     static JSONObject objectFacebook;
 
     static User user;
+    static boolean lastSpinActive = false;
 
     private static final String TAG = "SignInActivity";
+
+    public Company company;
+    public Place place;
+    public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
+
+    public static final String PLACE_KEY = "placeKey";
 
 
     @Override
@@ -92,7 +110,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
             user = new User(
                     accountGoogle.getId(),
                     accountGoogle.getDisplayName(),
-                    "google"
+                    Constants.USER_TYPE_GOOGLE
             );
         }
     }
@@ -113,7 +131,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                             user = new User(
                                     objectFacebook.getString("id"),
                                     objectFacebook.getString("name"),
-                                    "facebook");
+                                    Constants.USER_TYPE_FACEBOOK);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -128,5 +146,58 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     @Override
     public void back(View view) {
         onBackPressed();
+    }
+
+    public void resultDataByPlace() {
+
+    }
+
+    public void getDataByPlace(String placeKey) {
+        Constants.dbPlace.child(placeKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                place = dataSnapshot.getValue(Place.class);
+                place.setTypeName(Constants.companyTypeNames[place.getType()]);
+                TypedArray iconArray = getResources().obtainTypedArray(R.array.company_type_icons);
+                place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
+                iconArray.recycle();
+                Constants.dbCompany.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        company = dataSnapshot.getValue(Company.class);
+                        List<Box> boxes = place.getBox();
+                        for (int i = 0; i < boxes.size(); i++) {
+                            Box box = boxes.get(i);
+                            Constants.dbGift.child(box.getGift()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Gift gift = dataSnapshot.getValue(Gift.class);
+                                    if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
+                                        gifts.put(gift.getId(), gift);
+
+                                    resultDataByPlace();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

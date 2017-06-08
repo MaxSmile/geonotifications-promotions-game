@@ -13,45 +13,10 @@ public class Company implements Parcelable {
     private String name;
     private String info;
     private String logo;
-    private String typeName;
+    private String facebookUrl;
     private int type;
-    private int icon;
-    private int countPromo;
-    private String distance;
-    private int countCoupon;
 
     public Company() {
-    }
-
-    public Company(String id, String name, String info, String logo) {
-        this.id = id;
-        this.name = name;
-        this.info = info;
-        this.logo = logo;
-    }
-
-    public Company(String id, String name, String info, String logo, String typeName, int type, int icon, int countPromo) {
-        this.id = id;
-        this.name = name;
-        this.info = info;
-        this.logo = logo;
-        this.typeName = typeName;
-        this.type = type;
-        this.icon = icon;
-        this.countPromo = countPromo;
-    }
-
-    public Company(String id, String name, String info, String logo, String typeName, int type, int icon, int countPromo, String distance, int countCoupon) {
-        this.id = id;
-        this.name = name;
-        this.info = info;
-        this.logo = logo;
-        this.typeName = typeName;
-        this.type = type;
-        this.icon = icon;
-        this.countPromo = countPromo;
-        this.distance = distance;
-        this.countCoupon = countCoupon;
     }
 
     protected Company(Parcel in) {
@@ -59,12 +24,8 @@ public class Company implements Parcelable {
         name = in.readString();
         info = in.readString();
         logo = in.readString();
-        typeName = in.readString();
+        facebookUrl = in.readString();
         type = in.readInt();
-        icon = in.readInt();
-        countPromo = in.readInt();
-        distance = in.readString();
-        countCoupon = in.readInt();
     }
 
     public static final Creator<Company> CREATOR = new Creator<Company>() {
@@ -111,12 +72,12 @@ public class Company implements Parcelable {
         this.logo = logo;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getFacebookUrl() {
+        return facebookUrl;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setFacebookUrl(String facebookUrl) {
+        this.facebookUrl = facebookUrl;
     }
 
     public int getType() {
@@ -125,38 +86,6 @@ public class Company implements Parcelable {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
-
-    public int getCountPromo() {
-        return countPromo;
-    }
-
-    public void setCountPromo(int countPromo) {
-        this.countPromo = countPromo;
-    }
-
-    public String getDistance() {
-        return distance;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
-    }
-
-    public int getCountCoupon() {
-        return countCoupon;
-    }
-
-    public void setCountCoupon(int countCoupon) {
-        this.countCoupon = countCoupon;
     }
 
     @Override
@@ -170,11 +99,7 @@ public class Company implements Parcelable {
         dest.writeString(name);
         dest.writeString(info);
         dest.writeString(logo);
-        dest.writeString(typeName);
+        dest.writeString(facebookUrl);
         dest.writeInt(type);
-        dest.writeInt(icon);
-        dest.writeInt(countPromo);
-        dest.writeString(distance);
-        dest.writeInt(countCoupon);
     }
 }

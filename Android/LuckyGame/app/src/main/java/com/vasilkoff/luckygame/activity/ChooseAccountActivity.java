@@ -25,11 +25,18 @@ public class ChooseAccountActivity extends BaseActivity  {
     public static CallbackManager callbackManager;
     private int RC_SIGN_IN = 100;
     private LoginButton loginFb;
+    private Button btnGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_account);
+
+        btnGoogle = (Button)findViewById(R.id.btnGoogle);
+
+        if (getIntent().getBooleanExtra("fbAction", false)) {
+            btnGoogle.setVisibility(View.GONE);
+        }
 
         callbackManager = CallbackManager.Factory.create();
         loginFb = (LoginButton)findViewById(R.id.login_button);

@@ -2,7 +2,9 @@ package com.vasilkoff.luckygame.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +19,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +45,8 @@ import com.vasilkoff.luckygame.fragment.DataBridge;
 import com.vasilkoff.luckygame.service.LocationService;
 
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -162,7 +168,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             tab.setCustomView(mSectionsPagerAdapter.getTabView(i));
         }
 
-        /* try {
+         /*try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.vasilkoff.luckygame",
                     PackageManager.GET_SIGNATURES);

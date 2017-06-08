@@ -141,7 +141,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
 
         initSound();
-        //init(getIntent());
         initData();
     }
 
@@ -282,16 +281,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
 
         timer = new Timer();
         timer.scheduleAtFixedRate(timerTask,0,50);
-
-
-        //player.start();
-    }
-
-    private void checkAccount() {
-        if (AccessToken.getCurrentAccessToken() != null) {
-        } else {
-            startActivity(new Intent(this, ChooseAccountActivity.class));
-        }
     }
 
     public void onClickGame(View view) {
@@ -422,7 +411,11 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                Toast.makeText(GameActivity.this, R.string.next_version, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GameActivity.this, ExtraSpinActivity.class);
+                intent.putExtra(Place.class.getCanonicalName(), place);
+                intent.putExtra(Spin.class.getCanonicalName(), spin);
+                intent.putExtra(Company.class.getCanonicalName(), company);
+                startActivity(intent);
             }
         });
         ((LinearLayout) view.findViewById(R.id.losePopUpNotify)).setOnClickListener(new View.OnClickListener() {
@@ -468,6 +461,11 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         super.onDestroy();
     }
 
+    private void emptySpin() {
+        sp.play(soundIdLose, 1, 1, 0, 0, 1);
+        Toast.makeText(GameActivity.this, R.string.empty_spin, Toast.LENGTH_LONG).show();
+    }
+
     private class PowerTouchListener implements View.OnTouchListener {
 
         @Override
@@ -501,8 +499,12 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                 case MotionEvent.ACTION_UP:
                     powerButton.setImageResource(R.drawable.wheel_button);
                     flag = false;
-
-                    StartSpinner();
+                    if (lastSpinActive) {
+                        StartSpinner();
+                    } else {
+                        emptySpin();
+                    }
+                    lastSpinActive = false;
                     return true;
             }
             return false;

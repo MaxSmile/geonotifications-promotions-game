@@ -27,6 +27,8 @@ public class Place implements Parcelable {
     private String typeName;
     private int typeIcon;
     private String info;
+    private String url;
+    private List<String> gallery;
 
     public Place() {
 
@@ -46,25 +48,6 @@ public class Place implements Parcelable {
         this.geoTimeFrequency = geoTimeFrequency;
     }
 
-    public Place(String id, String address, String name, String companyKey, double geoLat, double geoLon, int geoRadius, String geoMessage, long geoTimeStart, long geoTimeFinish, long geoTimeFrequency, List<Box> box, int type, String typeName, int typeIcon, String info) {
-        this.id = id;
-        this.address = address;
-        this.name = name;
-        this.companyKey = companyKey;
-        this.geoLat = geoLat;
-        this.geoLon = geoLon;
-        this.geoRadius = geoRadius;
-        this.geoMessage = geoMessage;
-        this.geoTimeStart = geoTimeStart;
-        this.geoTimeFinish = geoTimeFinish;
-        this.geoTimeFrequency = geoTimeFrequency;
-        this.box = box;
-        this.type = type;
-        this.typeName = typeName;
-        this.typeIcon = typeIcon;
-        this.info = info;
-    }
-
     protected Place(Parcel in) {
         id = in.readString();
         address = in.readString();
@@ -82,6 +65,8 @@ public class Place implements Parcelable {
         typeName = in.readString();
         typeIcon = in.readInt();
         info = in.readString();
+        url = in.readString();
+        gallery = in.createStringArrayList();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -224,6 +209,22 @@ public class Place implements Parcelable {
         this.info = info;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public List<String> getGallery() {
+        return gallery;
+    }
+
+    public void setGallery(List<String> gallery) {
+        this.gallery = gallery;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -247,5 +248,7 @@ public class Place implements Parcelable {
         dest.writeString(typeName);
         dest.writeInt(typeIcon);
         dest.writeString(info);
+        dest.writeString(url);
+        dest.writeStringList(gallery);
     }
 }
