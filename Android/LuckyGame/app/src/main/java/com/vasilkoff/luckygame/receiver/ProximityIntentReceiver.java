@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -43,7 +44,8 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
         DBHelper.getInstance(context).saveTimeNotification(place.getId());
 
         Intent activityIntent = new Intent(context, DetailsActivity.class);
-        activityIntent.putExtra(Place.class.getCanonicalName(), intent.getStringExtra(Place.class.getCanonicalName()));
+        activityIntent.putExtra(Constants.PLACE_KEY, intent.getStringExtra(Constants.PLACE_KEY));
+        activityIntent.putExtra("geoNotification", true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)

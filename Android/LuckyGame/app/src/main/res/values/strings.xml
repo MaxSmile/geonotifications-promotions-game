@@ -59,7 +59,7 @@
     <string name="web">Web</string>
     <string name="about">About</string>
     <string name="more_info">More info</string>
-    <string name="get_notified_for_spins">Get notified for spins</string>
+    <string name="add_to_favorites">Add to favorites</string>
     <string name="dont_wont_notifications">I don\'t want notifications</string>
     <string name="out_of_spins"><b>Out of spins?</b> Get an extra spin</string>
     <string name="play">Play</string>
@@ -98,4 +98,6 @@
     <string name="setting_title">Menu</string>
     <string name="logout">LogOut</string>
     <string name="login">LogIn</string>
+    <string name="spin_not_available">Today you spent spin for this place</string>
+    <string name="extra_spin_not_available">Today you spent extra spin for this place</string>
 </resources>

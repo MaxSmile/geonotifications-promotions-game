@@ -67,7 +67,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     private ImageView logo;
     private ImageView logoSmall;
 
-    private static boolean showPopUpLogin = true;
+
 
 
     @Override
@@ -183,6 +183,8 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         updateGeoPlaces();
     }
+
+
 
     @Override
     protected void onResume() {

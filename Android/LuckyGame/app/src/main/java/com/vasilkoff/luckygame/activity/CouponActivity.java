@@ -189,7 +189,7 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
     @Override
     public void more(View view) {
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra(Place.class.getCanonicalName(), coupon.getPlaceKey());
+        intent.putExtra(Constants.PLACE_KEY, coupon.getPlaceKey());
         startActivity(intent);
     }
 

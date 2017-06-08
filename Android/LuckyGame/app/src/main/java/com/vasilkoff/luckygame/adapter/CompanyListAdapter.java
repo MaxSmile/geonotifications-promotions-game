@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 
@@ -72,7 +73,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, DetailsActivity.class);
-                    intent.putExtra(Place.class.getCanonicalName(), place.getId());
+                    intent.putExtra(Constants.PLACE_KEY, place.getId());
                     intent.putExtra(Spin.class.getCanonicalName(), spin);
                     context.startActivity(intent);
                 }

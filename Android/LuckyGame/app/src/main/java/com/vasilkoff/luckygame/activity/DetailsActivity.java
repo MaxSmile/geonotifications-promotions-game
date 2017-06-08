@@ -23,6 +23,7 @@ import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.entity.UsedSpin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private ActivityDetailsBinding binding;
     private ImageButton detailsBtnPlay;
 
+    private boolean spinAvailable;
+    private boolean extraSpinAvailable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +46,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
 
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
+        binding.setSpin(spin);
         binding.setHandler(this);
 
-        getDataByPlace(getIntent().getStringExtra(Place.class.getCanonicalName()));
+        getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
 
       /*  detailsBtnPlay = (ImageButton) findViewById(R.id.detailsBtnPlay);
         RotateAnimation rotateAnim = new RotateAnimation(0f, 360,
@@ -57,11 +62,42 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         detailsBtnPlay.startAnimation(rotateAnim);*/
     }
 
+    private void checkSpinAvailable() {
+        if (user != null) {
+            long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
+            Constants.dbUser.child(user.getId()).child("place").child(place.getId())
+                    .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    spinAvailable = true;
+                    extraSpinAvailable = true;
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        UsedSpin usedSpin = data.getValue(UsedSpin.class);
+                        if (usedSpin.getType() == Constants.SPIN_TYPE) {
+                            spinAvailable = false;
+                        }
+
+                        if (usedSpin.getType() == Constants.EXTRA_SPIN_TYPE) {
+                            extraSpinAvailable = false;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
+
     @Override
     public void resultDataByPlace() {
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
+        checkSpinAvailable();
     }
 
     public void onClickDetails(View view) {
@@ -93,24 +129,32 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void goToPlay(View view) {
-       /* if (!checkLogin()) {
+        if (user != null) {
+            if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
+                Intent intent = new Intent(this, GameActivity.class);
+                intent.putExtra(Place.class.getCanonicalName(), place);
+                intent.putExtra(Spin.class.getCanonicalName(), spin);
+                intent.putExtra(Company.class.getCanonicalName(), company);
+                intent.putExtra(Gift.class.getCanonicalName(), gifts);
+                intent.putExtra("extraSpinAvailable", extraSpinAvailable);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+            }
+        } else {
             startActivity(new Intent(this, ChooseAccountActivity.class));
-        }*/
-        if (spin != null) {
-            lastSpinActive = true;
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra(Place.class.getCanonicalName(), place);
-            intent.putExtra(Spin.class.getCanonicalName(), spin);
-            intent.putExtra(Company.class.getCanonicalName(), company);
-            intent.putExtra(Gift.class.getCanonicalName(), gifts);
-            startActivity(intent);
         }
+
     }
 
     @Override
     public void getExtraSpin(View view) {
-        Intent intent = new Intent(this, ExtraSpinActivity.class);
-        intent.putExtra(PLACE_KEY, place.getId());
-        startActivity(intent);
+        if (extraSpinAvailable) {
+            Intent intent = new Intent(this, ExtraSpinActivity.class);
+            intent.putExtra(Constants.PLACE_KEY, place.getId());
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+        }
     }
 }

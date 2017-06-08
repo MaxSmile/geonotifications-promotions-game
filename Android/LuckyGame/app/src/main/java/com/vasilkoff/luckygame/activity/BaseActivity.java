@@ -55,7 +55,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     static JSONObject objectFacebook;
 
     static User user;
-    static boolean lastSpinActive = false;
 
     private static final String TAG = "SignInActivity";
 
@@ -63,7 +62,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public Place place;
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
 
-    public static final String PLACE_KEY = "placeKey";
+
+
+    public static boolean showPopUpLogin = true;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {

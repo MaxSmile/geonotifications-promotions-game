@@ -102,6 +102,7 @@ public class ChooseAccountActivity extends BaseActivity {
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
             case R.id.btnLoginSkip:
+                showPopUpLogin = false;
                 onBackPressed();
                 break;
         }

@@ -41,6 +41,7 @@ import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.entity.UsedSpin;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -86,6 +87,8 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private TimerTask timerTask;
     private Timer timer;
     private float lastRotation = 0;
+
+    private boolean gameAvailable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -411,11 +414,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                Intent intent = new Intent(GameActivity.this, ExtraSpinActivity.class);
-                intent.putExtra(Place.class.getCanonicalName(), place);
-                intent.putExtra(Spin.class.getCanonicalName(), spin);
-                intent.putExtra(Company.class.getCanonicalName(), company);
-                startActivity(intent);
+                getExtra();
             }
         });
         ((LinearLayout) view.findViewById(R.id.losePopUpNotify)).setOnClickListener(new View.OnClickListener() {
@@ -427,6 +426,16 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         });
 
         popupWindow.showAtLocation(parentLayout, Gravity.CENTER,0, 0);
+    }
+
+    public void getExtra() {
+        if (getIntent().getBooleanExtra("extraSpinAvailable", false)) {
+            Intent intent = new Intent(this, ExtraSpinActivity.class);
+            intent.putExtra(Constants.PLACE_KEY, place.getId());
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -443,15 +452,26 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         imagePointer.setRotation(0);
         if (winKey != null) {
             createCoupon(gifts.get(winKey));
+            setLog(Constants.GAME_WIN);
         } else {
             sp.play(soundIdLose, 1, 1, 0, 0, 1);
             gameLose();
+            setLog(Constants.GAME_LOSE);
         }
+
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+    private void setLog(int result) {
+        UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), 0, result);
+
+        Constants.dbUser.child(user.getId()).child("userInfo").setValue(user);
+        Constants.dbUser.child(user.getId()).child("place").child(place.getId())
+                .child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
     }
 
     @Override
@@ -499,12 +519,12 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
                 case MotionEvent.ACTION_UP:
                     powerButton.setImageResource(R.drawable.wheel_button);
                     flag = false;
-                    if (lastSpinActive) {
+                    if (gameAvailable) {
                         StartSpinner();
                     } else {
                         emptySpin();
                     }
-                    lastSpinActive = false;
+                    gameAvailable = false;
                     return true;
             }
             return false;
