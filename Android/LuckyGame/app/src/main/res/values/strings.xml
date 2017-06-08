@@ -94,4 +94,8 @@
     <string name="extra_spin_text2">an extra spin</string>
     <string name="empty_spin">Spin already inactive</string>
     <string name="spin_new_try">You have a new try</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="setting_title">Menu</string>
+    <string name="logout">LogOut</string>
+    <string name="login">LogIn</string>
 </resources>

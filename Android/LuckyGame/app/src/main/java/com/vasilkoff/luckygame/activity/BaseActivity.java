@@ -65,7 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public static final String PLACE_KEY = "placeKey";
 
-
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
@@ -91,7 +90,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     boolean checkLogin() {
         if (AccessToken.getCurrentAccessToken() != null) {
             getFacebookUserInfo();
-
             return true;
         } else {
             OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);

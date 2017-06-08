@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ChooseAccountActivity extends BaseActivity  {
+public class ChooseAccountActivity extends BaseActivity {
 
     public static CallbackManager callbackManager;
     private int RC_SIGN_IN = 100;
@@ -64,12 +64,12 @@ public class ChooseAccountActivity extends BaseActivity  {
     }
 
     private void showLoginSuccessMessage() {
-        Toast.makeText(this, getString(R.string.login_success_message), Toast.LENGTH_SHORT).show();
+        /*Toast.makeText(this, getString(R.string.login_success_message), Toast.LENGTH_SHORT).show();
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         onBackPressed();
     }
 

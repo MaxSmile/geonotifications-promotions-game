@@ -62,14 +62,12 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     private CouponsFragment couponsFragment;
     private AllCompaniesFragment allCompaniesFragment;
 
-    private List<Company> allCompanyList;
-    private List<Company> activeCompanyListInfo;
-    private static boolean showPopUpLogin = true;
-
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private ImageView logo;
     private ImageView logoSmall;
+
+    private static boolean showPopUpLogin = true;
 
 
     @Override
@@ -189,10 +187,16 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!checkLogin() && showPopUpLogin) {
+        if (showPopUpLogin && !checkLogin()) {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
+        if (user != null) {
+            System.out.println("TEST user=" + user.getType());
+        } else {
+            System.out.println("TEST user-");
+        }
+
     }
 
     private void updateGeoPlaces() {
@@ -293,6 +297,9 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
     public void onHomeClick(View view) {
         switch (view.getId()) {
+            case R.id.homeSetting:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
             default:
                 Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
         }

@@ -21,10 +21,12 @@
             android:layout_marginTop="20dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
             <ImageView
+                android:id="@+id/homeSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/menu"
-                android:layout_gravity="end"/>
+                android:layout_gravity="end"
+                android:onClick="onHomeClick"/>
             <ImageView
                 android:id="@+id/homeLogoSmall"
                 android:layout_width="wrap_content"
