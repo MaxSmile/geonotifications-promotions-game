@@ -152,7 +152,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:textColor="@color/colorUnlockExpired"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:text="@{coupon.expiredDiff}"/>
 
         </LinearLayout>
     </LinearLayout>

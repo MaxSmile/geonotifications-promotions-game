@@ -19,6 +19,7 @@ public class Constants {
     public static final DatabaseReference dbUser = dbVersion.child("user");
 
     public static final String PLACE_KEY = "placeKey";
+    public static final String SPIN_TYPE_KEY = "spinType";
 
     public static final String[] companyTypeNames = App.getInstance().getResources().getStringArray(R.array.company_type);
 
@@ -32,6 +33,7 @@ public class Constants {
     public static final int USER_TYPE_FACEBOOK = 0;
     public static final int USER_TYPE_GOOGLE = 1;
     public static final int DAY_TIME_SHIFT = 86400000;
+
     public static final int SPIN_TYPE = 0;
     public static final int EXTRA_SPIN_TYPE = 1;
 

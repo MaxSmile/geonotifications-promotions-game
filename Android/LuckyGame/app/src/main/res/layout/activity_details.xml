@@ -324,7 +324,7 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:paddingBottom="12dp">
+                android:paddingBottom="2dp">
                 <RelativeLayout
                     android:id="@+id/companyShowDetailsGifts"
                     android:layout_width="match_parent"
@@ -351,6 +351,14 @@
                         android:text="@{String.valueOf(countGift)}"
                         android:layout_toEndOf="@+id/companyDetailsGifts"
                         android:visibility="@{countGift > 0 ? v.VISIBLE : v.GONE}"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/see_gifts"
+                        android:textSize="10sp"
+                        android:layout_below="@+id/companyDetailsGifts"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@{countGift > 0 ? @color/giftTextActive : @color/giftDetailsText}"/>
                 </RelativeLayout>
             </LinearLayout>
             <RelativeLayout
@@ -404,7 +412,7 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:paddingBottom="12dp">
+                android:paddingBottom="2dp">
                 <RelativeLayout
                     android:id="@+id/companyShowDetailsCoupons"
                     android:layout_width="match_parent"
@@ -429,6 +437,14 @@
                         android:padding="1dp"
                         android:text="2"
                         android:layout_toEndOf="@+id/companyDetailsCoupons" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_coupons"
+                        android:textSize="10sp"
+                        android:layout_below="@+id/companyDetailsCoupons"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/giftTextActive"/>
                 </RelativeLayout>
             </LinearLayout>
 

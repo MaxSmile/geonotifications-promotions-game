@@ -6,8 +6,6 @@ import android.view.View;
  * Created by Kvm on 05.06.2017.
  */
 
-public interface DetailsHandler extends BaseHandler {
-    public void showGifts(View view);
+public interface DetailsHandler extends GameHandler {
     public void goToPlay(View view);
-    public void getExtraSpin(View view);
 }

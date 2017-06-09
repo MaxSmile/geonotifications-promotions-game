@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.binding.handler.GameHandler;
 import com.vasilkoff.luckygame.common.MyRotateAnimation;
 import com.vasilkoff.luckygame.databinding.ActivityGameBinding;
 import com.vasilkoff.luckygame.entity.Box;
@@ -51,7 +52,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameActivity extends BaseActivity implements Animation.AnimationListener {
+public class GameActivity extends BaseActivity implements GameHandler, Animation.AnimationListener {
 
     private PopupWindow popupWindow;
     private RelativeLayout parentLayout;
@@ -104,6 +105,8 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
+        binding.setSpin(spin);
+        binding.setHandler(this);
 
         parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
         imagePointer = (ImageView)findViewById(R.id.imagePointer);
@@ -286,21 +289,6 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         timer.scheduleAtFixedRate(timerTask,0,50);
     }
 
-    public void onClickGame(View view) {
-        switch (view.getId()) {
-            case R.id.gameBack:
-                onBackPressed();
-                break;
-            case R.id.gameShowDetailsGifts:
-                Intent intent = new Intent(this, LegendActivity.class);
-                intent.putExtra(Place.class.getCanonicalName(), place);
-                intent.putExtra(Company.class.getCanonicalName(), company);
-                intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                startActivity(intent);
-                break;
-        }
-    }
-
     private void createCoupon(Gift gift) {
         StringBuilder couponCodeBuilder = new StringBuilder();
         couponCodeBuilder.append(company.getName().substring(0, 2).toLowerCase());
@@ -349,46 +337,10 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         Constants.dbCoupon.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(coupon);
 
-
-
         Intent intent = new Intent(this, CouponActivity.class);
         intent.putExtra(CouponExtension.class.getCanonicalName(), couponExtension);
         intent.putExtra("userPrize", true);
         startActivity(intent);
-
-
-
-       /* Map<String, String> redeemCoupon = new HashMap<String, String>();
-        redeemCoupon.put("date", String.valueOf(System.currentTimeMillis()));
-        redeemCoupon.put("code", coupon.getCode());
-        redeemCoupon.put("name", coupon.getName());
-
-        if (objectFacebook != null) {
-            try {
-                redeemCoupon.put("userId", objectFacebook.getString("id"));
-                redeemCoupon.put("userName", objectFacebook.getString("name"));
-                redeemCoupon.put("userType", "facebook");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (accountGoogle != null) {
-            redeemCoupon.put("userId", accountGoogle.getId());
-            redeemCoupon.put("userName", accountGoogle.getDisplayName());
-            redeemCoupon.put("userType", "google");
-        }
-
-
-        dbCoupon
-                .child(coupon.getCompanyKey())
-                .child(String.valueOf(System.currentTimeMillis()))
-                .setValue(redeemCoupon);*/
-
-        //Toast.makeText(this, "You got coupon!", Toast.LENGTH_LONG).show();
-      /*  Intent intent = new Intent(this, ShareActivity.class);
-        intent.putExtra(Promotion.class.getCanonicalName(), winPromotion);
-        startActivity(intent);*/
         finish();
     }
 
@@ -432,6 +384,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
         if (getIntent().getBooleanExtra("extraSpinAvailable", false)) {
             Intent intent = new Intent(this, ExtraSpinActivity.class);
             intent.putExtra(Constants.PLACE_KEY, place.getId());
+            intent.putExtra(Spin.class.getCanonicalName(), spin);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
@@ -467,7 +420,7 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     }
 
     private void setLog(int result) {
-        UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), 0, result);
+        UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), getIntent().getIntExtra(Constants.SPIN_TYPE_KEY, 1), result);
 
         Constants.dbUser.child(user.getId()).child("userInfo").setValue(user);
         Constants.dbUser.child(user.getId()).child("place").child(place.getId())
@@ -484,6 +437,20 @@ public class GameActivity extends BaseActivity implements Animation.AnimationLis
     private void emptySpin() {
         sp.play(soundIdLose, 1, 1, 0, 0, 1);
         Toast.makeText(GameActivity.this, R.string.empty_spin, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showGifts(View view) {
+        Intent intent = new Intent(this, LegendActivity.class);
+        intent.putExtra(Place.class.getCanonicalName(), place);
+        intent.putExtra(Company.class.getCanonicalName(), company);
+        intent.putExtra(Gift.class.getCanonicalName(), gifts);
+        startActivity(intent);
+    }
+
+    @Override
+    public void getExtraSpin(View view) {
+        getExtra();
     }
 
     private class PowerTouchListener implements View.OnTouchListener {

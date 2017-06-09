@@ -70,6 +70,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
             ta.recycle();
         }
+        coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
 
         holder.bind(coupon);
     }

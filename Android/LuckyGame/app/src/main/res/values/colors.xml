@@ -36,4 +36,11 @@
     <color name="colorUnlockTextBlue">#4a90e2</color>
     <color name="loseLineBg">#f1f4f9</color>
     <color name="logout">#D82F44</color>
+    <color name="giftTextActive">#4a90e2</color>
+    <color name="giftDetailsText">#9B9B9B</color>
+    <color name="giftGameText">#ffffff</color>
+    <color name="gameText">#ffffff</color>
+    <color name="gameSubText">#d1d2d4</color>
+    <color name="couponRedeemed">#76c222</color>
+
 </resources>

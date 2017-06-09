@@ -42,6 +42,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private RotateAnimation rotateAnim;
     private ImageView detailsBtnPlay;
+    private boolean result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +105,20 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (result) {
+            checkSpinAvailable();
+        }
+    }
+
+    @Override
     public void resultDataByPlace() {
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
         checkSpinAvailable();
+        result = true;
     }
 
     public void onClickDetails(View view) {
@@ -141,21 +151,25 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void goToPlay(View view) {
         if (user != null) {
-            if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
-                Intent intent = new Intent(this, GameActivity.class);
-                intent.putExtra(Place.class.getCanonicalName(), place);
-                intent.putExtra(Spin.class.getCanonicalName(), spin);
-                intent.putExtra(Company.class.getCanonicalName(), company);
-                intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                intent.putExtra("extraSpinAvailable", extraSpinAvailable);
-                startActivity(intent);
+            if (result) {
+                if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
+                    Intent intent = new Intent(this, GameActivity.class);
+                    intent.putExtra(Place.class.getCanonicalName(), place);
+                    intent.putExtra(Spin.class.getCanonicalName(), spin);
+                    intent.putExtra(Company.class.getCanonicalName(), company);
+                    intent.putExtra(Gift.class.getCanonicalName(), gifts);
+                    intent.putExtra("extraSpinAvailable", extraSpinAvailable);
+                    intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+                }
             } else {
-                Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.wait_for_update_data, Toast.LENGTH_LONG).show();
             }
         } else {
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
-
     }
 
     @Override
@@ -163,6 +177,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         if (extraSpinAvailable) {
             Intent intent = new Intent(this, ExtraSpinActivity.class);
             intent.putExtra(Constants.PLACE_KEY, place.getId());
+            intent.putExtra(Spin.class.getCanonicalName(), spin);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();

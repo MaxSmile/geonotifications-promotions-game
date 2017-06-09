@@ -193,12 +193,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
-        if (user != null) {
-            System.out.println("TEST user=" + user.getType());
-        } else {
-            System.out.println("TEST user-");
-        }
-
     }
 
     private void updateGeoPlaces() {

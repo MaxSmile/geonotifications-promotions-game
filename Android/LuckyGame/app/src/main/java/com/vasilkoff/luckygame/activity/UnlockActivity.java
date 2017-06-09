@@ -23,8 +23,6 @@ public class UnlockActivity extends BaseFacebookActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_unlock);
         getDataByPlace(coupon.getPlaceKey());
 
-        ((TextView)findViewById(R.id.unlockExpires)).setText(coupon.getExpiredDiff());
-
     }
 
     @Override

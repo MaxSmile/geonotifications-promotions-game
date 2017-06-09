@@ -19,6 +19,7 @@ import com.vasilkoff.luckygame.entity.Spin;
 public class ExtraSpinActivity extends BaseFacebookActivity {
 
     private ActivityExtraSpinBinding binding;
+    private Spin spin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         setContentView(R.layout.activity_extra_spin);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_extra_spin);
+        spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
         getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
     }
 
@@ -34,6 +36,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         super.resultDataByPlace();
         binding.setCompany(company);
         binding.setPlace(place);
+        binding.setSpin(spin);
         binding.setHandler(this);
     }
 
@@ -44,6 +47,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         intent.putExtra(Company.class.getCanonicalName(), company);
         intent.putExtra(Gift.class.getCanonicalName(), gifts);
         intent.putExtra("extraSpinAvailable", false);
+        intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.EXTRA_SPIN_TYPE);
         startActivity(intent);
         finish();
     }

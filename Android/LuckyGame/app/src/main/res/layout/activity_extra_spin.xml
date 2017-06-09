@@ -11,6 +11,9 @@
             name="place"
             type="com.vasilkoff.luckygame.entity.Place"/>
         <variable
+            name="spin"
+            type="com.vasilkoff.luckygame.entity.Spin"/>
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.ExtraHandler"/>
         <import type="android.view.View" alias="v"/>
@@ -31,44 +34,48 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/coupon_top_bg">
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="9"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:src="@{company.logo}"
-                        android:layout_gravity="center_vertical"
-                        android:adjustViewBounds="true"/>
-                    <TextView
+                    android:gravity="center_horizontal">
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{place.name}"
-                        android:textColor="@color/colorLegendTitle"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginBottom="-3dp"/>
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:src="@{company.logo}"
+                            android:layout_gravity="center_vertical"
+                            android:adjustViewBounds="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{place.name}"
+                            android:textColor="@color/colorLegendTitle"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="5dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
                 <ImageButton
                     android:id="@+id/unlockClose"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:src="@drawable/cancel"
                     android:background="@null"
                     android:padding="3dp"
-                    android:onClick="@{handler::back}"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true" />
-            </RelativeLayout>
+                    android:onClick="@{handler::back}"/>
+            </LinearLayout>
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -122,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@color/colorLegendTitle"
-                    android:text="@string/lose_text4"
+                    android:text="@string/add_to_favorites"
                     android:layout_gravity="center_vertical"/>
                 <ImageView
                     android:layout_marginLeft="5dp"
@@ -181,7 +188,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:textColor="@color/colorUnlockExpired"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:text="@{spin.timeLeft}"/>
 
         </LinearLayout>
 

@@ -26,7 +26,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/menu"
                 android:layout_gravity="end"
-                android:onClick="onHomeClick"/>
+                android:onClick="onHomeClick"
+                android:padding="5dp"/>
             <ImageView
                 android:id="@+id/homeLogoSmall"
                 android:layout_width="wrap_content"
