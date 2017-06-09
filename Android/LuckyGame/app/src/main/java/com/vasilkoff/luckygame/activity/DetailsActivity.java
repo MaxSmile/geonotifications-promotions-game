@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -33,10 +35,13 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private Spin spin;
     private ActivityDetailsBinding binding;
-    private ImageButton detailsBtnPlay;
+
 
     private boolean spinAvailable;
     private boolean extraSpinAvailable;
+
+    private RotateAnimation rotateAnim;
+    private ImageView detailsBtnPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +56,14 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
         getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
 
-      /*  detailsBtnPlay = (ImageButton) findViewById(R.id.detailsBtnPlay);
-        RotateAnimation rotateAnim = new RotateAnimation(0f, 360,
+        detailsBtnPlay = (ImageView)findViewById(R.id.detailsBtnPlay);
+        rotateAnim = new RotateAnimation(0f, 360,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotateAnim.setInterpolator(new DecelerateInterpolator());
+        rotateAnim.setInterpolator(new LinearInterpolator());
         rotateAnim.setRepeatCount(Animation.INFINITE);
         rotateAnim.setRepeatMode(Animation.RESTART);
-        rotateAnim.setFillAfter(true);
+        rotateAnim.setDuration(2000);
 
-        detailsBtnPlay.startAnimation(rotateAnim);*/
     }
 
     private void checkSpinAvailable() {
@@ -81,6 +85,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             extraSpinAvailable = false;
                         }
                     }
+                    if (spinAvailable) {
+                        detailsBtnPlay.startAnimation(rotateAnim);
+                    } else {
+                        detailsBtnPlay.clearAnimation();
+                    }
                 }
 
                 @Override
@@ -88,6 +97,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
                 }
             });
+        } else {
+            detailsBtnPlay.startAnimation(rotateAnim);
         }
 
     }

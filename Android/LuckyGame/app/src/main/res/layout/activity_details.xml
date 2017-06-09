@@ -357,15 +357,28 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent">
-                <ImageButton
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/spin_new"
-                    android:background="@null"
+                    android:src="@drawable/small_circle"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/small_wheel"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/detailsBtnPlay"
                     android:onClick="@{handler::goToPlay}"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/small_pointer"
+                    android:layout_above="@+id/detailsBtnPlay"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="-4dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
