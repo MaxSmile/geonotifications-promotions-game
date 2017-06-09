@@ -71,7 +71,11 @@
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.SettingActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TermsConditionsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUp"/>
 
         <service android:name=".service.LocationService" />
 

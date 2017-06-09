@@ -84,7 +84,7 @@
     <string name="unlock_facebook_like">Like %s facebook page</string>
     <string name="unlock_facebook_share">Share with friends %s</string>
     <string name="unlock_invite_friends">Invite your friends</string>
-    <string name="login_license">By login in or accessing SpinDeals app you agree and accept our Terms &amp; Conditions</string>
+    <string name="login_license">By login in or accessing SpinDeals app you agree and accept our <u>Terms &amp; Conditions</u></string>
     <string name="lose_title">You lost!</string>
     <string name="lose_text1">Not lucky enough today…</string>
     <string name="lose_text2">Don\'t give up just yet</string>

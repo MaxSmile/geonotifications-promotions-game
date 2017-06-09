@@ -105,6 +105,9 @@ public class ChooseAccountActivity extends BaseActivity {
                 showPopUpLogin = false;
                 onBackPressed();
                 break;
+            case R.id.chooseAccountTermsConditions:
+                startActivity(new Intent(this, TermsConditionsActivity.class));
+                break;
         }
     }
 }
