@@ -25,6 +25,6 @@ public class SquareLinearLayout extends LinearLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        this.setMeasuredDimension(parentWidth, (int)(parentWidth*0.94));
+        this.setMeasuredDimension(parentWidth, (int)(parentWidth*0.83));
     }
 }
