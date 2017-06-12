@@ -2,7 +2,6 @@ package com.vasilkoff.luckygame.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
@@ -35,7 +34,7 @@ public class UnlockActivity extends BaseFacebookActivity {
 
     @Override
     protected void socialSuccess() {
-        Constants.dbCoupon.child(coupon.getCode()).child("locks").setValue(System.currentTimeMillis());
+        Constants.DB_COUPON.child(coupon.getCode()).child("locks").setValue(System.currentTimeMillis());
         onBackPressed();
     }
 }

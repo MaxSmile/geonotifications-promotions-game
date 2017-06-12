@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.GameHandler;
@@ -334,7 +332,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         );
 
 
-        Constants.dbCoupon.child(couponCode).setValue(coupon);
+        Constants.DB_COUPON.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(coupon);
 
         Intent intent = new Intent(this, CouponActivity.class);
@@ -422,8 +420,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private void setLog(int result) {
         UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), getIntent().getIntExtra(Constants.SPIN_TYPE_KEY, 1), result);
 
-        Constants.dbUser.child(user.getId()).child("userInfo").setValue(user);
-        Constants.dbUser.child(user.getId()).child("place").child(place.getId())
+        Constants.DB_USER.child(user.getId()).child("userInfo").setValue(user);
+        Constants.DB_USER.child(user.getId()).child("place").child(place.getId())
                 .child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
     }
 

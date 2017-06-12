@@ -54,9 +54,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
-                        android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:paddingTop="25dp">
+                        android:paddingTop="25dp"
+                        android:paddingLeft="5dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -64,14 +64,16 @@
                             android:textColor="@color/colorNameCompany"
                             android:textSize="17sp"
                             android:textStyle="bold"
-                            android:text="@{coupon.placeName}"
-                            android:gravity="center_horizontal"/>
+                            android:text="@{coupon.placeName}"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:text="@{coupon.typeString}"
+                            android:layout_marginTop="5dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="1,9 km Limassol"/>
-
 
                     </LinearLayout>
 

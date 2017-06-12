@@ -9,19 +9,19 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Constants {
 
-    public static final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-    public static final DatabaseReference dbVersion = reference.child("ver1");
-    public static final DatabaseReference dbCoupon = dbVersion.child("coupon");
-    public static final DatabaseReference dbCompany = dbVersion.child("company");
-    public static final DatabaseReference dbPlace = dbVersion.child("place");
-    public static final DatabaseReference dbGift = dbVersion.child("gift");
-    public static final DatabaseReference dbSpin = dbVersion.child("spin");
-    public static final DatabaseReference dbUser = dbVersion.child("user");
+    public static final DatabaseReference REFERENCE = FirebaseDatabase.getInstance().getReference();
+    public static final DatabaseReference DB_VERSION = REFERENCE.child("ver1");
+    public static final DatabaseReference DB_COUPON = DB_VERSION.child("coupon");
+    public static final DatabaseReference DB_COMPANY = DB_VERSION.child("company");
+    public static final DatabaseReference DB_PLACE = DB_VERSION.child("place");
+    public static final DatabaseReference DB_GIFT = DB_VERSION.child("gift");
+    public static final DatabaseReference DB_SPIN = DB_VERSION.child("spin");
+    public static final DatabaseReference DB_USER = DB_VERSION.child("user");
 
     public static final String PLACE_KEY = "placeKey";
     public static final String SPIN_TYPE_KEY = "spinType";
 
-    public static final String[] companyTypeNames = App.getInstance().getResources().getStringArray(R.array.company_type);
+    public static final String[] COMPANY_TYPE_NAMES = App.getInstance().getResources().getStringArray(R.array.company_type);
 
     public static final int COUPON_STATUS_ACTIVE = -1;
     public static final int COUPON_STATUS_LOCK = 0;

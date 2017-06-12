@@ -25,7 +25,6 @@ import com.vasilkoff.luckygame.binding.handler.CouponHandler;
 import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
-import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.io.IOException;
@@ -124,7 +123,7 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
         }
 
 
-        dbCoupon
+        DB_COUPON
                 .child(coupon.getCompany())
                 .child(String.valueOf(System.currentTimeMillis()))
                 .setValue(redeemCoupon);
@@ -134,8 +133,8 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
     }*/
 
     private void redeem() {
-        Constants.dbCoupon.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
-        Constants.dbCoupon.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
+        Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
+        Constants.DB_COUPON.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
         onBackPressed();
     }
 

@@ -57,18 +57,18 @@ public class CouponsFragment extends Fragment {
         couponsCode = DBHelper.getInstance(getContext()).getCoupons();
         coupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
-            Constants.dbCoupon.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+            Constants.DB_COUPON.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final CouponExtension coupon = dataSnapshot.getValue(CouponExtension.class);
                     if (coupon != null) {
-                        Constants.dbPlace.child(coupon.getPlaceKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        Constants.DB_PLACE.child(coupon.getPlaceKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Place place = dataSnapshot.getValue(Place.class);
                                 coupon.setPlaceName(place.getName());
                                 coupon.setType(place.getType());
-                                Constants.dbCompany.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                Constants.DB_COMPANY.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Company company = dataSnapshot.getValue(Company.class);

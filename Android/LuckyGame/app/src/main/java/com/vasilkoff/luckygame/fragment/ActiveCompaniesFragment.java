@@ -1,7 +1,6 @@
 package com.vasilkoff.luckygame.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
@@ -28,8 +25,6 @@ import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Kusenko on 27.02.2017.
@@ -66,7 +61,7 @@ public class ActiveCompaniesFragment extends Fragment {
 
 
     private void updateData() {
-        Constants.dbSpin.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
+        Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<Spin> spins = new ArrayList<Spin>();
@@ -80,13 +75,13 @@ public class ActiveCompaniesFragment extends Fragment {
                         spin.setTimeLeft(DateFormat.getDiff(spin.getDateFinish()));
                         spins.add(spin);
                         count++;
-                        Constants.dbPlace.child(spin.getPlaceKey()).addValueEventListener(new ValueEventListener() {
+                        Constants.DB_PLACE.child(spin.getPlaceKey()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Place place = dataSnapshot.getValue(Place.class);
-                                place.setTypeName(Constants.companyTypeNames[place.getType()]);
+                                place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
                                 places.put(place.getId(), place);
-                                Constants.dbCompany.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
+                                Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Company company = dataSnapshot.getValue(Company.class);

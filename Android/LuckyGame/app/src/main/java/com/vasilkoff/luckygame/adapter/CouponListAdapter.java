@@ -28,12 +28,10 @@ import java.util.List;
 public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Holder>{
     private Context context;
     private List<CouponExtension> couponsList;
-    private String[] companyTypeNames;
 
     public CouponListAdapter(Context context, List<CouponExtension> couponsList) {
         this.context = context;
         this.couponsList = couponsList;
-        companyTypeNames = context.getResources().getStringArray(R.array.company_type);
     }
 
     @Override
@@ -47,7 +45,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         CouponExtension coupon = couponsList.get(position);
 
         coupon.setDistance(context.getString(R.string.distance));
-        coupon.setTypeString(companyTypeNames[(int)coupon.getType()]);
+        coupon.setTypeString(Constants.COMPANY_TYPE_NAMES[(int)coupon.getType()]);
 
         if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
             if (coupon.getExpired() < System.currentTimeMillis()) {

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -61,6 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public Company company;
     public Place place;
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
+    public boolean result;
 
 
 
@@ -101,6 +103,13 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
             }
         }
         return false;
+    }
+
+    boolean checkResult() {
+        if (!result)
+            Toast.makeText(this, R.string.wait_for_update_data, Toast.LENGTH_LONG).show();
+
+        return result;
     }
 
     void handleSignInResult(GoogleSignInResult result) {
@@ -152,38 +161,41 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     }
 
     public void getDataByPlace(String placeKey) {
-        Constants.dbPlace.child(placeKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.DB_PLACE.child(placeKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 place = dataSnapshot.getValue(Place.class);
-                place.setTypeName(Constants.companyTypeNames[place.getType()]);
+                place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
                 TypedArray iconArray = getResources().obtainTypedArray(R.array.company_type_icons);
                 place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
                 iconArray.recycle();
-                Constants.dbCompany.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         company = dataSnapshot.getValue(Company.class);
                         List<Box> boxes = place.getBox();
-                        for (int i = 0; i < boxes.size(); i++) {
-                            Box box = boxes.get(i);
-                            Constants.dbGift.child(box.getGift()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Gift gift = dataSnapshot.getValue(Gift.class);
-                                    if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
-                                        gifts.put(gift.getId(), gift);
+                        if (boxes != null) {
+                            for (int i = 0; i < boxes.size(); i++) {
+                                Box box = boxes.get(i);
+                                Constants.DB_GIFT.child(box.getGift()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Gift gift = dataSnapshot.getValue(Gift.class);
+                                        if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
+                                            gifts.put(gift.getId(), gift);
 
-                                    resultDataByPlace();
-                                }
+                                        resultDataByPlace();
+                                    }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+                        } else {
+                            resultDataByPlace();
                         }
-
                     }
 
                     @Override

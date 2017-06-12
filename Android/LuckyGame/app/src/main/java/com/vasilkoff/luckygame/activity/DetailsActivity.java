@@ -1,15 +1,12 @@
 package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -20,16 +17,11 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
-import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
@@ -42,12 +34,13 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private RotateAnimation rotateAnim;
     private ImageView detailsBtnPlay;
-    private boolean result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        result = false;
 
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
 
@@ -70,7 +63,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private void checkSpinAvailable() {
         if (user != null) {
             long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
-            Constants.dbUser.child(user.getId()).child("place").child(place.getId())
+            Constants.DB_USER.child(user.getId()).child("place").child(place.getId())
                     .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -86,7 +79,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             extraSpinAvailable = false;
                         }
                     }
-                    if (spinAvailable) {
+                    if (spinAvailable && gifts.size() > 0) {
                         detailsBtnPlay.startAnimation(rotateAnim);
                     } else {
                         detailsBtnPlay.clearAnimation();
@@ -141,17 +134,19 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void showGifts(View view) {
-        Intent intent = new Intent(this, LegendActivity.class);
-        intent.putExtra(Place.class.getCanonicalName(), place);
-        intent.putExtra(Company.class.getCanonicalName(), company);
-        intent.putExtra(Gift.class.getCanonicalName(), gifts);
-        startActivity(intent);
+        if (gifts.size() > 0) {
+            Intent intent = new Intent(this, LegendActivity.class);
+            intent.putExtra(Place.class.getCanonicalName(), place);
+            intent.putExtra(Company.class.getCanonicalName(), company);
+            intent.putExtra(Gift.class.getCanonicalName(), gifts);
+            startActivity(intent);
+        }
     }
 
     @Override
     public void goToPlay(View view) {
         if (user != null) {
-            if (result) {
+            if (checkResult()) {
                 if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
                     Intent intent = new Intent(this, GameActivity.class);
                     intent.putExtra(Place.class.getCanonicalName(), place);
@@ -164,8 +159,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 } else {
                     Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(this, R.string.wait_for_update_data, Toast.LENGTH_LONG).show();
             }
         } else {
             startActivity(new Intent(this, ChooseAccountActivity.class));
