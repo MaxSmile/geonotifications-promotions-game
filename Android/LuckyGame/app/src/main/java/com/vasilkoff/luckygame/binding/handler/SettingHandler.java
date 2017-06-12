@@ -8,4 +8,5 @@ import android.view.View;
 
 public interface SettingHandler extends BaseHandler {
     public void logout(View view);
+    public void clear(View view);
 }

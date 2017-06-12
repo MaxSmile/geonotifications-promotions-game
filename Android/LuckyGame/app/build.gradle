@@ -22,7 +22,7 @@ android {
         applicationId "com.vasilkoff.luckygame"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 8
+        versionCode 9
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "luckygame-$versionName-$versionCode")
@@ -53,6 +53,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.19.0'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {

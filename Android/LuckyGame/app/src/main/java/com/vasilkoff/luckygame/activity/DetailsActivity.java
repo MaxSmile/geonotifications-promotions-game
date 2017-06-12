@@ -10,6 +10,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -23,6 +26,8 @@ import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
 
+import java.util.List;
+
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private Spin spin;
@@ -34,6 +39,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private RotateAnimation rotateAnim;
     private ImageView detailsBtnPlay;
+    private SliderLayout slider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,35 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         rotateAnim.setRepeatMode(Animation.RESTART);
         rotateAnim.setDuration(2000);
 
+
+    }
+
+    private void initSlider() {
+        slider = (SliderLayout)findViewById(R.id.detailsSlider);
+        List<String> gallery = place.getGallery();
+        if (gallery.size() > 0) {
+            for (int i = 0; i < gallery.size(); i++) {
+                DefaultSliderView sliderView = new DefaultSliderView(this);
+                sliderView
+                        .image(gallery.get(i))
+                        .setScaleType(BaseSliderView.ScaleType.Fit);
+                slider.addSlider(sliderView);
+            }
+
+            slider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
+            slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+            slider.startAutoCycle();
+            slider.setSliderTransformDuration(1000, new LinearInterpolator());
+            slider.setDuration(10000);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (slider != null)
+            slider.stopAutoCycle();
+
+        super.onDestroy();
     }
 
     private void checkSpinAvailable() {
@@ -112,6 +147,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         binding.setCountGift(gifts.size());
         checkSpinAvailable();
         result = true;
+        initSlider();
     }
 
     public void onClickDetails(View view) {

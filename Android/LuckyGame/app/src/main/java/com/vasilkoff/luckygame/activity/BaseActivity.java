@@ -173,7 +173,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         company = dataSnapshot.getValue(Company.class);
-                        List<Box> boxes = place.getBox();
+                        final List<Box> boxes = place.getBox();
                         if (boxes != null) {
                             for (int i = 0; i < boxes.size(); i++) {
                                 Box box = boxes.get(i);
@@ -184,7 +184,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                         if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
                                             gifts.put(gift.getId(), gift);
 
-                                        resultDataByPlace();
+                                        if (gifts.size() == boxes.size()) {
+                                            resultDataByPlace();
+                                        }
                                     }
 
                                     @Override
