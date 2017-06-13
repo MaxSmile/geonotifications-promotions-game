@@ -64,12 +64,6 @@ public class ChooseAccountActivity extends BaseActivity {
     }
 
     private void showLoginSuccessMessage() {
-        /*Toast.makeText(this, getString(R.string.login_success_message), Toast.LENGTH_SHORT).show();
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         onBackPressed();
     }
 

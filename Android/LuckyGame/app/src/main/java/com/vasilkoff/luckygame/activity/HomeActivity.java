@@ -28,8 +28,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 
+import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.fragment.ActiveCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.CouponsFragment;
@@ -38,6 +40,7 @@ import com.vasilkoff.luckygame.service.LocationService;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeActivity extends BaseActivity implements DataBridge {
 
@@ -85,15 +88,9 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
-                    case 0:
-                        allCompaniesFragment.refreshList();
-                        break;
                     case 1:
                         activeCompaniesFragment.refreshList();
                         break;
-                    *//*case 2:
-                        couponsFragment.refreshList();
-                        break;*//*
                 }
             }
 
@@ -169,7 +166,11 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         updateGeoPlaces();
     }
 
-
+    @Override
+    public void resultSpins(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+        super.resultSpins(spins, places, companies);
+        activeCompaniesFragment.refreshList(spins, places, companies);
+    }
 
     @Override
     protected void onResume() {
@@ -178,6 +179,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
+        getSpins();
     }
 
     private void updateGeoPlaces() {
@@ -281,10 +283,41 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             case R.id.homeSetting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
+            case R.id.companyAll:
+                goToCategory(-1);
+                break;
+            case R.id.companyFood:
+                goToCategory(0);
+                break;
+            case R.id.companyNightlife:
+                goToCategory(1);
+                break;
+            case R.id.companyCoffee:
+                goToCategory(2);
+                break;
+            case R.id.companyEvents:
+                goToCategory(3);
+                break;
+            case R.id.companyShops:
+                goToCategory(4);
+                break;
+            case R.id.companyServices:
+                goToCategory(5);
+                break;
+            case R.id.companyEShops:
+                goToCategory(6);
+                break;
             default:
                 Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
         }
 
     }
+
+    private void goToCategory(int type) {
+        Intent intent = new Intent(this, FilteredCompanyActivity.class);
+        intent.putExtra(Constants.PLACE_TYPE_KEY, type);
+        startActivity(intent);
+    }
+
 
 }

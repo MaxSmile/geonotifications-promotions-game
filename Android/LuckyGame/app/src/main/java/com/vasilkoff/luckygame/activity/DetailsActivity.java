@@ -106,11 +106,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     extraSpinAvailable = true;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         UsedSpin usedSpin = data.getValue(UsedSpin.class);
-                        if (usedSpin.getType() == Constants.SPIN_TYPE) {
+                        if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
                             spinAvailable = false;
                         }
 
-                        if (usedSpin.getType() == Constants.EXTRA_SPIN_TYPE) {
+                        if (usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
                             extraSpinAvailable = false;
                         }
                     }
@@ -181,35 +181,45 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void goToPlay(View view) {
-        if (user != null) {
-            if (checkResult()) {
-                if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
-                    Intent intent = new Intent(this, GameActivity.class);
-                    intent.putExtra(Place.class.getCanonicalName(), place);
-                    intent.putExtra(Spin.class.getCanonicalName(), spin);
-                    intent.putExtra(Company.class.getCanonicalName(), company);
-                    intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                    intent.putExtra("extraSpinAvailable", extraSpinAvailable);
-                    intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+        if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+            if (user != null) {
+                if (checkResult()) {
+                    if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
+                        Intent intent = new Intent(this, GameActivity.class);
+                        intent.putExtra(Place.class.getCanonicalName(), place);
+                        intent.putExtra(Spin.class.getCanonicalName(), spin);
+                        intent.putExtra(Company.class.getCanonicalName(), company);
+                        intent.putExtra(Gift.class.getCanonicalName(), gifts);
+                        intent.putExtra("extraSpinAvailable", extraSpinAvailable);
+                        intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_NORMAL);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+                    }
                 }
+            } else {
+                startActivity(new Intent(this, ChooseAccountActivity.class));
             }
         } else {
-            startActivity(new Intent(this, ChooseAccountActivity.class));
+            Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override
     public void getExtraSpin(View view) {
-        if (extraSpinAvailable) {
-            Intent intent = new Intent(this, ExtraSpinActivity.class);
-            intent.putExtra(Constants.PLACE_KEY, place.getId());
-            intent.putExtra(Spin.class.getCanonicalName(), spin);
-            startActivity(intent);
+        if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+            if (extraSpinAvailable) {
+                Intent intent = new Intent(this, ExtraSpinActivity.class);
+                intent.putExtra(Constants.PLACE_KEY, place.getId());
+                intent.putExtra(Spin.class.getCanonicalName(), spin);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+            }
         } else {
-            Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
         }
+
     }
 }

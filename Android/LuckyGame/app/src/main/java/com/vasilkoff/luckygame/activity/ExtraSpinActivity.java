@@ -47,7 +47,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         intent.putExtra(Company.class.getCanonicalName(), company);
         intent.putExtra(Gift.class.getCanonicalName(), gifts);
         intent.putExtra("extraSpinAvailable", false);
-        intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.EXTRA_SPIN_TYPE);
+        intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_EXTRA);
         startActivity(intent);
         finish();
     }

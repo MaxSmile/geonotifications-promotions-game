@@ -50,9 +50,6 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         Spin spin = spins.get(position);
-        TypedArray ta = context.getResources().obtainTypedArray(R.array.spin_type);
-        spin.setStatusIcon(ta.getResourceId(spin.getStatus(), 0));
-        ta.recycle();
         holder.bind(spin, places.get(spin.getPlaceKey()), companies.get(spin.getCompanyKey()));
     }
 

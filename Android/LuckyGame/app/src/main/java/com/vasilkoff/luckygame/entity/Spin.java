@@ -1,5 +1,6 @@
 package com.vasilkoff.luckygame.entity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,13 +15,14 @@ public class Spin implements Parcelable {
     private String companyKey;
     private String placeKey;
     private int status;
-    private int statusIcon;
+    private Drawable statusIcon;
     private String timeLeft;
+    private String statusString;
 
     public Spin() {
     }
 
-    public Spin(String id, long dateStart, long dateFinish, String companyKey, String placeKey, int status, int statusIcon, String timeLeft) {
+    public Spin(String id, long dateStart, long dateFinish, String companyKey, String placeKey, int status, Drawable statusIcon, String timeLeft, String statusString) {
         this.id = id;
         this.dateStart = dateStart;
         this.dateFinish = dateFinish;
@@ -29,6 +31,7 @@ public class Spin implements Parcelable {
         this.status = status;
         this.statusIcon = statusIcon;
         this.timeLeft = timeLeft;
+        this.statusString = statusString;
     }
 
     protected Spin(Parcel in) {
@@ -38,8 +41,8 @@ public class Spin implements Parcelable {
         companyKey = in.readString();
         placeKey = in.readString();
         status = in.readInt();
-        statusIcon = in.readInt();
         timeLeft = in.readString();
+        statusString = in.readString();
     }
 
     public static final Creator<Spin> CREATOR = new Creator<Spin>() {
@@ -102,11 +105,11 @@ public class Spin implements Parcelable {
         this.status = status;
     }
 
-    public int getStatusIcon() {
+    public Drawable getStatusIcon() {
         return statusIcon;
     }
 
-    public void setStatusIcon(int statusIcon) {
+    public void setStatusIcon(Drawable statusIcon) {
         this.statusIcon = statusIcon;
     }
 
@@ -116,6 +119,14 @@ public class Spin implements Parcelable {
 
     public void setTimeLeft(String timeLeft) {
         this.timeLeft = timeLeft;
+    }
+
+    public String getStatusString() {
+        return statusString;
+    }
+
+    public void setStatusString(String statusString) {
+        this.statusString = statusString;
     }
 
     @Override
@@ -131,7 +142,7 @@ public class Spin implements Parcelable {
         dest.writeString(companyKey);
         dest.writeString(placeKey);
         dest.writeInt(status);
-        dest.writeInt(statusIcon);
         dest.writeString(timeLeft);
+        dest.writeString(statusString);
     }
 }

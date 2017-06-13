@@ -31,13 +31,17 @@ import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
+import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.entity.UsedSpin;
 import com.vasilkoff.luckygame.entity.User;
+import com.vasilkoff.luckygame.util.DateFormat;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,16 +61,18 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     static User user;
 
-    private static final String TAG = "SignInActivity";
+    private static final String G_TAG = "SignInActivity";
 
     public Company company;
     public Place place;
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
     public boolean result;
+    public static final String TAG = "myTest";
 
 
 
     public static boolean showPopUpLogin = true;
+
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -125,7 +131,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Log.d(G_TAG, "onConnectionFailed:" + connectionResult);
     }
 
     void getFacebookUserInfo() {
@@ -205,6 +211,121 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
                     }
                 });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void resultSpins(ArrayList<Spin> spins,HashMap<String, Place> places, HashMap<String, Company> companies) {
+
+    }
+
+    public void getSpins() {
+        Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<Spin> spins = new ArrayList<Spin>();
+                final HashMap<String, Place> places = new HashMap<String, Place>();
+                final HashMap<String, Company> companies = new HashMap<String, Company>();
+
+                final String[] spinType = getResources().getStringArray(R.array.spin_type);
+
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    final long spinCount = dataSnapshot.getChildrenCount();
+                    final Spin spin = data.getValue(Spin.class);
+
+                    if (spin.getDateStart() <= System.currentTimeMillis()) {
+                        spin.setStatus(Constants.SPIN_STATUS_ACTIVE);
+                    } else {
+                        spin.setStatus(Constants.SPIN_STATUS_COMING);
+                    }
+
+                    spin.setTimeLeft(DateFormat.getDiff(spin.getDateFinish()));
+
+                    Constants.DB_PLACE.child(spin.getPlaceKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            final Place spinPlace = dataSnapshot.getValue(Place.class);
+                            spinPlace.setTypeName(Constants.COMPANY_TYPE_NAMES[spinPlace.getType()]);
+                            places.put(spinPlace.getId(), spinPlace);
+                            if (user != null) {
+                                long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
+                                Constants.DB_USER.child(user.getId()).child("place").child(spinPlace.getId())
+                                        .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        boolean spinAvailable = true;
+                                        boolean extraSpinAvailable = true;
+                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                            UsedSpin usedSpin = data.getValue(UsedSpin.class);
+                                            if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
+                                                spinAvailable = false;
+                                            }
+
+                                            if (usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
+                                                extraSpinAvailable = false;
+                                            }
+                                        }
+
+                                        if (!spinAvailable && extraSpinAvailable) {
+                                            spin.setStatus(Constants.SPIN_STATUS_EXTRA_AVAILABLE);
+                                        }
+                                        TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
+                                        spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
+                                        spin.setStatusString(spinType[spin.getStatus()]);
+                                        spins.add(spin);
+                                        spinIcon.recycle();
+
+                                        if (places.size() == spinCount) {
+                                            getCompanies(spins, places, companies, spinCount, spinPlace);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            } else {
+                                TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
+                                spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
+                                spin.setStatusString(spinType[spin.getStatus()]);
+                                spins.add(spin);
+                                spinIcon.recycle();
+                                getCompanies(spins, places, companies, spinCount, spinPlace);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getCompanies(final ArrayList<Spin> spins, final HashMap<String,
+            Place> places, final HashMap<String, Company> companies,final long spinCount, final Place place) {
+        Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Company company = dataSnapshot.getValue(Company.class);
+                companies.put(dataSnapshot.getKey(), company);
+
+                if (companies.size() == spinCount)
+                    resultSpins(spins, places, companies);
             }
 
             @Override

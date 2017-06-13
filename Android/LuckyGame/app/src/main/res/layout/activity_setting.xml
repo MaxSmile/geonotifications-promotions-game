@@ -25,7 +25,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:background="@null"
-                android:src="@drawable/back"
+                android:src="@drawable/back_blue"
                 android:onClick="@{handler::back}"
                 android:padding="10dp"/>
             <TextView

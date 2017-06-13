@@ -25,6 +25,8 @@
     <string name="near_me">Near me</string>
     <string name="filters">Filters</string>
     <string name="spin_active">Active Spin</string>
+    <string name="spin_is_coming">Spin is coming</string>
+    <string name="spin_plus">+1 Spin</string>
     <string name="e_shops">E-Shops</string>
     <string name="all">All</string>
     <string name="food">Food</string>
@@ -105,4 +107,6 @@
     <string name="game_get_extra_spins">Get an extra spin</string>
     <string name="redeemed">Redeemed:</string>
     <string name="wait_for_update_data">Wait for update data</string>
+    <string name="empty_category">This category is empty</string>
+    <string name="spin_coming_message">Not available, spin is coming</string>
 </resources>

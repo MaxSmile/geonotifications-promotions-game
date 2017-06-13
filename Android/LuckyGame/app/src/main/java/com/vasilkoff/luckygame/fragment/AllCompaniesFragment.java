@@ -3,18 +3,11 @@ package com.vasilkoff.luckygame.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.adapter.AllCompanyListAdapter;
-import com.vasilkoff.luckygame.entity.Company;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Kusenko on 27.02.2017.
@@ -32,4 +25,6 @@ public class AllCompaniesFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
+
+
 }

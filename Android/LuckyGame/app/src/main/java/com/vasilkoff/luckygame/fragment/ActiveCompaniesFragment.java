@@ -25,6 +25,7 @@ import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by Kusenko on 27.02.2017.
@@ -33,7 +34,6 @@ import java.util.HashMap;
 public class ActiveCompaniesFragment extends Fragment {
 
     private RecyclerView companiesList;
-    private int count;
     private DataBridge dataBridge;
 
     @Override
@@ -55,62 +55,18 @@ public class ActiveCompaniesFragment extends Fragment {
         companiesList = (RecyclerView) getActivity().findViewById(R.id.activeCompaniesList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
-        updateData();
     }
 
-
-
-    private void updateData() {
-        Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final ArrayList<Spin> spins = new ArrayList<Spin>();
-                final HashMap<String, Place> places = new HashMap<String, Place>();
-                final HashMap<String, Company> companies = new HashMap<String, Company>();
-                count = 0;
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    Spin spin = data.getValue(Spin.class);
-                    if (spin.getDateStart() <= System.currentTimeMillis()) {
-                        spin.setStatus(Constants.SPIN_STATUS_ACTIVE);
-                        spin.setTimeLeft(DateFormat.getDiff(spin.getDateFinish()));
-                        spins.add(spin);
-                        count++;
-                        Constants.DB_PLACE.child(spin.getPlaceKey()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Place place = dataSnapshot.getValue(Place.class);
-                                place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
-                                places.put(place.getId(), place);
-                                Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Company company = dataSnapshot.getValue(Company.class);
-                                        companies.put(dataSnapshot.getKey(), company);
-
-                                        dataBridge.activeSpins(count);
-                                        companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
+    public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+        Iterator<Spin> i = spins.iterator();
+        while (i.hasNext()) {
+            Spin spin = i.next();
+            if (spin.getStatus() != Constants.SPIN_STATUS_ACTIVE) {
+                places.remove(spin.getPlaceKey());
+                i.remove();
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
+        dataBridge.activeSpins(spins.size());
+        companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
     }
 }
