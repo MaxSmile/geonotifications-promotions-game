@@ -50,6 +50,15 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="NetworkButtonText">
+        <item name="android:textColor">@color/networkButtonText</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

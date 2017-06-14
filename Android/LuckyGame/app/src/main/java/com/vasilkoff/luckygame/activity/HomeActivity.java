@@ -62,6 +62,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        checkNetwork();
 
         logo = (ImageView) findViewById(R.id.homeLogo);
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
@@ -175,6 +176,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     @Override
     protected void onResume() {
         super.onResume();
+
         if (showPopUpLogin && !checkLogin()) {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));

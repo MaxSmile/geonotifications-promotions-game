@@ -23,6 +23,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="f3381de560e52052038ffb42a852d4b4df492896" />
 
         <activity
             android:name=".activity.HomeActivity"
@@ -75,14 +78,17 @@
         <activity
             android:name=".activity.TermsConditionsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp"/>
+            android:theme="@style/AppTheme.PopUp" />
+        <activity
+            android:name=".activity.NetworkActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUp"
+            android:noHistory="true"
+            android:launchMode="singleTop"/>
 
         <service android:name=".service.LocationService" />
 
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="f3381de560e52052038ffb42a852d4b4df492896" />
     </application>
 
 </manifest>

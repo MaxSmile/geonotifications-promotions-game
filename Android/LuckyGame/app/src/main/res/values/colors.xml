@@ -42,5 +42,7 @@
     <color name="gameText">#ffffff</color>
     <color name="gameSubText">#d1d2d4</color>
     <color name="couponRedeemed">#76c222</color>
+    <color name="networkButtonText">#ffffff</color>
+    <color name="line">#cacaca</color>
 
 </resources>

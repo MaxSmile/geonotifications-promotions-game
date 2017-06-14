@@ -30,6 +30,7 @@ public class FilteredCompanyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtered_company);
+        checkNetwork();
         type = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, -1);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filtered_company);
         binding.setHandler(this);

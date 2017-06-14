@@ -1,5 +1,6 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -35,6 +36,7 @@ import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
 import com.vasilkoff.luckygame.entity.User;
 import com.vasilkoff.luckygame.util.DateFormat;
+import com.vasilkoff.luckygame.util.NetworkState;
 
 
 import org.json.JSONException;
@@ -128,6 +130,15 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
             );
         }
     }
+
+    public void checkNetwork() {
+        if (!NetworkState.isOnline()) {
+            startActivity(new Intent(this, NetworkActivity.class));
+        }
+    }
+
+
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

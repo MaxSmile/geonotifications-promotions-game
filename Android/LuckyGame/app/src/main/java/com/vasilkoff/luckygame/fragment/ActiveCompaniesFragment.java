@@ -23,6 +23,7 @@ import com.vasilkoff.luckygame.entity.Place;
 
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.util.DateFormat;
+import com.vasilkoff.luckygame.util.NetworkState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class ActiveCompaniesFragment extends Fragment {
     private RecyclerView companiesList;
     private DataBridge dataBridge;
     private RelativeLayout preloader;
+    private RelativeLayout networkUnavailable;
 
     @Override
     public void onAttach(Context context) {
@@ -59,10 +61,14 @@ public class ActiveCompaniesFragment extends Fragment {
         companiesList.setLayoutManager(llm);
         preloader = (RelativeLayout) getActivity().findViewById(R.id.preloader);
         preloader.setVisibility(View.VISIBLE);
+        networkUnavailable = (RelativeLayout) getActivity().findViewById(R.id.networkUnavailable);
+        if (!NetworkState.isOnline())
+            networkUnavailable.setVisibility(View.VISIBLE);
     }
 
     public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
         preloader.setVisibility(View.GONE);
+        networkUnavailable.setVisibility(View.GONE);
         Iterator<Spin> i = spins.iterator();
         while (i.hasNext()) {
             Spin spin = i.next();

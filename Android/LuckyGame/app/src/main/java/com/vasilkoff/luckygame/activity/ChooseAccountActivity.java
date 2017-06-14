@@ -31,6 +31,7 @@ public class ChooseAccountActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_account);
+        checkNetwork();
 
         btnGoogle = (Button)findViewById(R.id.btnGoogle);
 
