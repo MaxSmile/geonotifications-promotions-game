@@ -15,57 +15,63 @@
             type="com.vasilkoff.luckygame.binding.handler.BaseHandler" />
         <import type="android.view.View" alias="v"/>
     </data>
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <RelativeLayout
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:background="@null"
-                android:src="@drawable/back_blue"
-                android:onClick="@{handler::back}"
-                android:padding="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@{type}"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:background="@null"
+                    android:src="@drawable/back_blue"
+                    android:onClick="@{handler::back}"
+                    android:padding="10dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/empty_category"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{countResult ? v.GONE : v.VISIBLE}"/>
+                    android:layout_centerVertical="true"
+                    android:text="@{type}"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/filteredCompanyList"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/empty_category"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="@{countResult ? v.GONE : v.VISIBLE}"/>
+                </RelativeLayout>
 
-    </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/filteredCompanyList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
+
+        </LinearLayout>
+        <include layout="@layout/preloader"/>
+    </FrameLayout>
+
 </layout>
 

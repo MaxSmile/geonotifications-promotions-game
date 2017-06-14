@@ -4,6 +4,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
@@ -22,6 +24,7 @@ public class FilteredCompanyActivity extends BaseActivity {
     private int type;
     private RecyclerView companiesList;
     private ActivityFilteredCompanyBinding binding;
+    private RelativeLayout preloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +47,20 @@ public class FilteredCompanyActivity extends BaseActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         companiesList.setLayoutManager(llm);
 
-
+        preloader = (RelativeLayout) findViewById(R.id.preloader);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        preloader.setVisibility(View.VISIBLE);
         getSpins();
     }
 
     @Override
     public void resultSpins(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
         super.resultSpins(spins, places, companies);
+        preloader.setVisibility(View.GONE);
         if (type >= 0) {
             Iterator<Spin> i = spins.iterator();
             while (i.hasNext()) {

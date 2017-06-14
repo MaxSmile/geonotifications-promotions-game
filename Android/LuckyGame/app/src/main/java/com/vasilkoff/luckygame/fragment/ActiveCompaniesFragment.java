@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +36,7 @@ public class ActiveCompaniesFragment extends Fragment {
 
     private RecyclerView companiesList;
     private DataBridge dataBridge;
+    private RelativeLayout preloader;
 
     @Override
     public void onAttach(Context context) {
@@ -55,9 +57,12 @@ public class ActiveCompaniesFragment extends Fragment {
         companiesList = (RecyclerView) getActivity().findViewById(R.id.activeCompaniesList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
+        preloader = (RelativeLayout) getActivity().findViewById(R.id.preloader);
+        preloader.setVisibility(View.VISIBLE);
     }
 
     public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+        preloader.setVisibility(View.GONE);
         Iterator<Spin> i = spins.iterator();
         while (i.hasNext()) {
             Spin spin = i.next();
