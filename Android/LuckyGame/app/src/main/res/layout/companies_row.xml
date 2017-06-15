@@ -14,6 +14,7 @@
         <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.CompanyRowHandler"/>
+        <import type="android.view.View" alias="v"/>
     </data>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -103,7 +104,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginLeft="20dp"
-                        android:layout_gravity="center_vertical">
+                        android:layout_gravity="center_vertical"
+                        android:visibility="@{spin.status == 1  ? v.GONE : v.VISIBLE}">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

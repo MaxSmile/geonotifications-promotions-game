@@ -1,9 +1,11 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.databinding.ActivityInfoBinding;
 
 public class InfoActivity extends BaseActivity {
 
@@ -13,6 +15,11 @@ public class InfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+        ActivityInfoBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_info);
+        binding.setHandler(this);
+        binding.setTitle(getIntent().getStringExtra("title"));
+
         webView = (WebView)findViewById(R.id.infoWeb);
         String html = getIntent().getStringExtra("info");
         String mime = "text/html";

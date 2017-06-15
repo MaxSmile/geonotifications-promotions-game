@@ -161,8 +161,6 @@ public class LocationService extends Service {
 
     public class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
-            Log.i("Test", "Service: location Latitude = " + location.getLatitude());
-            Log.i("Test", "Service: location Longitude = " + location.getLongitude());
         }
         public void onStatusChanged(String s, int i, Bundle b) {
         }

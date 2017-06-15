@@ -8,4 +8,9 @@ import android.view.View;
 
 public interface DetailsHandler extends GameHandler {
     public void goToPlay(View view);
+    public void call(View view);
+    public void info(View view);
+    public void web(View view);
+    public void directions(View view);
+    public void moreInfo(View view);
 }

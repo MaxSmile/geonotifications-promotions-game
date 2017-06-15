@@ -29,6 +29,9 @@ public class Place implements Parcelable {
     private String info;
     private String url;
     private List<String> gallery;
+    private String tel;
+    private String about;
+    private String aboutMore;
 
     public Place() {
 
@@ -67,6 +70,9 @@ public class Place implements Parcelable {
         info = in.readString();
         url = in.readString();
         gallery = in.createStringArrayList();
+        tel = in.readString();
+        about = in.readString();
+        aboutMore = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -225,6 +231,30 @@ public class Place implements Parcelable {
         this.gallery = gallery;
     }
 
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getAboutMore() {
+        return aboutMore;
+    }
+
+    public void setAboutMore(String aboutMore) {
+        this.aboutMore = aboutMore;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -250,5 +280,8 @@ public class Place implements Parcelable {
         dest.writeString(info);
         dest.writeString(url);
         dest.writeStringList(gallery);
+        dest.writeString(tel);
+        dest.writeString(about);
+        dest.writeString(aboutMore);
     }
 }

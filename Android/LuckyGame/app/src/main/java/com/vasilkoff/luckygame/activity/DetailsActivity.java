@@ -1,12 +1,19 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,6 +33,8 @@ import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.util.List;
 
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
@@ -40,6 +49,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private RotateAnimation rotateAnim;
     private ImageView detailsBtnPlay;
     private SliderLayout slider;
+    private ExpandableLayout expandableLayout;
+    private ImageView detailsArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +68,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
         getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
 
-        detailsBtnPlay = (ImageView)findViewById(R.id.detailsBtnPlay);
+        detailsBtnPlay = (ImageView) findViewById(R.id.detailsBtnPlay);
+        detailsArrow = (ImageView)findViewById(R.id.detailsArrow);
         rotateAnim = new RotateAnimation(0f, 360,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnim.setInterpolator(new LinearInterpolator());
@@ -65,11 +77,15 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         rotateAnim.setRepeatMode(Animation.RESTART);
         rotateAnim.setDuration(2000);
 
+        slider = (SliderLayout) findViewById(R.id.detailsSlider);
+        expandableLayout
+                = (ExpandableLayout) findViewById(R.id.expandableLayout);
+        expandableLayout.collapse();
 
     }
 
     private void initSlider() {
-        slider = (SliderLayout)findViewById(R.id.detailsSlider);
+        slider.removeAllSliders();
         List<String> gallery = place.getGallery();
         if (gallery.size() > 0) {
             for (int i = 0; i < gallery.size(); i++) {
@@ -127,10 +143,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
                 }
             });
-        } else {
-            detailsBtnPlay.startAnimation(rotateAnim);
         }
-
     }
 
     @Override
@@ -153,21 +166,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     public void onClickDetails(View view) {
         switch (view.getId()) {
-            case R.id.companyDetailsCall:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.companyDetailsInfo:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-                break;
             case R.id.companyDetailsDirections:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.companyDetailsWeb:
                 Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
-
 
     @Override
     public void showGifts(View view) {
@@ -182,6 +185,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void goToPlay(View view) {
+        checkNetwork();
         if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
             if (user != null) {
                 if (checkResult()) {
@@ -205,6 +209,61 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void startCall() {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + place.getTel()));
+        startActivity(callIntent);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startCall();
+        }
+    }
+
+    @Override
+    public void call(View view) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 100);
+            }
+        } else {
+            startCall();
+        }
+    }
+
+    @Override
+    public void info(View view) {
+        Intent intent = new Intent(this, InfoActivity.class);
+        intent.putExtra("info", place.getInfo());
+        intent.putExtra("title", place.getName());
+        startActivity(intent);
+    }
+
+    @Override
+    public void web(View view) {
+        startActivity( new Intent( Intent.ACTION_VIEW, Uri.parse(place.getUrl())));
+    }
+
+    @Override
+    public void directions(View view) {
+
+    }
+
+    @Override
+    public void moreInfo(View view) {
+        expandableLayout.toggle();
+        if (expandableLayout.isExpanded()) {
+            detailsArrow.setImageResource(R.drawable.arrow_down);
+        } else {
+            detailsArrow.setImageResource(R.drawable.arrow);
+        }
     }
 
     @Override

@@ -44,5 +44,6 @@
     <color name="couponRedeemed">#76c222</color>
     <color name="networkButtonText">#ffffff</color>
     <color name="line">#cacaca</color>
+    <color name="moreInfoBg">#ffffff</color>
 
 </resources>
