@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.databinding.ActivityMapsBinding;
 import com.vasilkoff.luckygame.direction.DirectionFinder;
 import com.vasilkoff.luckygame.direction.DirectionFinderListener;
 import com.vasilkoff.luckygame.direction.Route;

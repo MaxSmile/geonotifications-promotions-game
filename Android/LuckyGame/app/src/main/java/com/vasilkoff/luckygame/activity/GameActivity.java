@@ -293,15 +293,15 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         couponCodeBuilder.append(String.valueOf(System.currentTimeMillis()).substring(0, 10));
         String couponCode = couponCodeBuilder.toString();
 
-        int status = Constants.COUPON_STATUS_ACTIVE;
+        int lock = Constants.COUPON_UNLOCK;
         long lockTime = System.currentTimeMillis() + gift.getTimeLock();
 
         if (!social && lockTime > System.currentTimeMillis()) {
-            status = Constants.COUPON_STATUS_LOCK;
+            lock = Constants.COUPON_LOCK;
         }
 
         Coupon coupon = new Coupon(
-                status,
+                Constants.COUPON_STATUS_ACTIVE,
                 couponCode,
                 place.getCompanyKey(),
                 gift.getId(),
@@ -310,11 +310,12 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 user.getId(),
                 System.currentTimeMillis(),
                 gift.getDateFinish(),
-                lockTime
+                lockTime,
+                lock
         );
 
         CouponExtension couponExtension = new CouponExtension(
-                status,
+                Constants.COUPON_STATUS_ACTIVE,
                 couponCode,
                 place.getCompanyKey(),
                 gift.getId(),
@@ -330,7 +331,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 place.getType(),
                 place.getTypeName(),
                 place.getGeoLat(),
-                place.getGeoLon()
+                place.getGeoLon(),
+                lock
         );
 
 

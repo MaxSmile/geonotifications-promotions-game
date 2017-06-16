@@ -34,6 +34,7 @@ public class CouponExtension implements Parcelable {
     private String distanceString;
     private double geoLat;
     private double geoLon;
+    private int locked;
 
 
     public CouponExtension() {
@@ -42,7 +43,7 @@ public class CouponExtension implements Parcelable {
     public CouponExtension(int status, String code, String companyKey, String giftKey, String placeKey,
                            String description, String creator, long creation, long expired, long locks,
                            String companyName, String placeName, String logo, long type, String typeString,
-                           double geoLat, double geoLon) {
+                           double geoLat, double geoLon, int locked) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
@@ -60,7 +61,9 @@ public class CouponExtension implements Parcelable {
         this.typeString = typeString;
         this.geoLat = geoLat;
         this.geoLon = geoLon;
+        this.locked = locked;
     }
+
 
     protected CouponExtension(Parcel in) {
         status = in.readInt();
@@ -88,6 +91,7 @@ public class CouponExtension implements Parcelable {
         distanceString = in.readString();
         geoLat = in.readDouble();
         geoLon = in.readDouble();
+        locked = in.readInt();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -101,6 +105,41 @@ public class CouponExtension implements Parcelable {
             return new CouponExtension[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(status);
+        dest.writeString(code);
+        dest.writeString(companyKey);
+        dest.writeString(giftKey);
+        dest.writeString(placeKey);
+        dest.writeString(description);
+        dest.writeString(creator);
+        dest.writeLong(creation);
+        dest.writeLong(expired);
+        dest.writeLong(locks);
+        dest.writeLong(redeemed);
+        dest.writeString(redeemUser);
+        dest.writeString(companyName);
+        dest.writeString(placeName);
+        dest.writeString(logo);
+        dest.writeLong(type);
+        dest.writeString(lockDiff);
+        dest.writeString(expiredDiff);
+        dest.writeInt(statusIcon);
+        dest.writeString(typeString);
+        dest.writeString(redeemedString);
+        dest.writeDouble(distance);
+        dest.writeString(distanceString);
+        dest.writeDouble(geoLat);
+        dest.writeDouble(geoLon);
+        dest.writeInt(locked);
+    }
 
     public int getStatus() {
         return status;
@@ -302,37 +341,11 @@ public class CouponExtension implements Parcelable {
         this.geoLon = geoLon;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getLocked() {
+        return locked;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(status);
-        dest.writeString(code);
-        dest.writeString(companyKey);
-        dest.writeString(giftKey);
-        dest.writeString(placeKey);
-        dest.writeString(description);
-        dest.writeString(creator);
-        dest.writeLong(creation);
-        dest.writeLong(expired);
-        dest.writeLong(locks);
-        dest.writeLong(redeemed);
-        dest.writeString(redeemUser);
-        dest.writeString(companyName);
-        dest.writeString(placeName);
-        dest.writeString(logo);
-        dest.writeLong(type);
-        dest.writeString(lockDiff);
-        dest.writeString(expiredDiff);
-        dest.writeInt(statusIcon);
-        dest.writeString(typeString);
-        dest.writeString(redeemedString);
-        dest.writeDouble(distance);
-        dest.writeString(distanceString);
-        dest.writeDouble(geoLat);
-        dest.writeDouble(geoLon);
+    public void setLocked(int locked) {
+        this.locked = locked;
     }
 }

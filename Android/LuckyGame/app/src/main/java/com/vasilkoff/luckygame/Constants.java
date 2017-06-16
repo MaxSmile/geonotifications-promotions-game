@@ -29,6 +29,9 @@ public class Constants {
     public static final int COUPON_STATUS_REDEEMED = 1;
     public static final int COUPON_STATUS_EXPIRED = 2;
 
+    public static final int COUPON_LOCK = 0;
+    public static final int COUPON_UNLOCK = 1;
+
     public static final int SPIN_STATUS_ACTIVE = 0;
     public static final int SPIN_STATUS_COMING = 1;
     public static final int SPIN_STATUS_EXTRA_AVAILABLE = 2;

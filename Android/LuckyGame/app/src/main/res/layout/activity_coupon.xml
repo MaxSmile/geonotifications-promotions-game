@@ -193,7 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/icons8_lock_filled"
-                        android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+                        android:visibility="@{coupon.lockDiff == null || coupon.status == 0 ? v.GONE : v.VISIBLE}"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
                         android:text="@string/locks"
                         android:textColor="@color/colorCouponRulesTitle"
                         android:textSize="18sp"
-                        android:visibility="@{coupon.lockDiff == null || coupon.status > 0 ? v.GONE : v.VISIBLE}"/>
+                        android:visibility="@{coupon.lockDiff == null || coupon.status == 0 ? v.GONE : v.VISIBLE}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

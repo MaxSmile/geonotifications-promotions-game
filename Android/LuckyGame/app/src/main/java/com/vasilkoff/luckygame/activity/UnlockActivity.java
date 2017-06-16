@@ -34,7 +34,10 @@ public class UnlockActivity extends BaseFacebookActivity {
 
     @Override
     protected void socialSuccess() {
+        Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_ACTIVE);
         Constants.DB_COUPON.child(coupon.getCode()).child("locks").setValue(System.currentTimeMillis());
+        Constants.DB_COUPON.child(coupon.getCode()).child("locked").setValue(Constants.COUPON_UNLOCK);
+
         onBackPressed();
     }
 }

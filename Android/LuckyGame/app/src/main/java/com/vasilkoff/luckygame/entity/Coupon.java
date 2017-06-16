@@ -18,11 +18,12 @@ public class Coupon{
     private long locks;
     private long redeemed;
     private String redeemUser;
+    private int locked;
 
     public Coupon() {
     }
 
-    public Coupon(int status, String code, String companyKey, String giftKey, String placeKey, String description, String creator, long creation, long expired, long locks) {
+    public Coupon(int status, String code, String companyKey, String giftKey, String placeKey, String description, String creator, long creation, long expired, long locks, int locked) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
@@ -33,6 +34,7 @@ public class Coupon{
         this.creation = creation;
         this.expired = expired;
         this.locks = locks;
+        this.locked = locked;
     }
 
     public int getStatus() {
@@ -129,5 +131,13 @@ public class Coupon{
 
     public void setRedeemUser(String redeemUser) {
         this.redeemUser = redeemUser;
+    }
+
+    public int getLocked() {
+        return locked;
+    }
+
+    public void setLocked(int locked) {
+        this.locked = locked;
     }
 }

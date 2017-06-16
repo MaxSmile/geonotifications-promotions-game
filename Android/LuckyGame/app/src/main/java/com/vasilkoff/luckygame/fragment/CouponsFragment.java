@@ -83,8 +83,10 @@ public class CouponsFragment extends Fragment {
                 if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
                     if (coupon.getExpired() < System.currentTimeMillis()) {
                         coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
-                    } else if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK && coupon.getLocks() < System.currentTimeMillis()) {
-                        coupon.setStatus(Constants.COUPON_STATUS_ACTIVE);
+                    } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE && coupon.getLocks() < System.currentTimeMillis()
+                            && coupon.getLocked() == Constants.COUPON_LOCK) {
+                        coupon.setStatus(Constants.COUPON_STATUS_LOCK);
+                        Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_LOCK);
                     }
                 }
 

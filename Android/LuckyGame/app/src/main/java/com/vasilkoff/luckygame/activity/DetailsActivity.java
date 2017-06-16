@@ -233,10 +233,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void info(View view) {
-        Intent intent = new Intent(this, InfoActivity.class);
+        /*Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra("info", place.getInfo());
         intent.putExtra("title", place.getName());
-        startActivity(intent);
+        startActivity(intent);*/
+        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
     }
 
     @Override
