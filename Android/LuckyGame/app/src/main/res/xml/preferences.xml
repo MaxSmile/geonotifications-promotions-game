@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/near_me_category">
+        <EditTextPreference
+            android:title="@string/near_me_title"
+            android:key="nearMeRadius"
+            android:numeric="integer"
+            android:inputType="number"
+            android:defaultValue="100"/>
+    </PreferenceCategory>
+</PreferenceScreen>

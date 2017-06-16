@@ -85,12 +85,14 @@
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.NetworkActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp"
+            android:launchMode="singleTop"
             android:noHistory="true"
-            android:launchMode="singleTop"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUp" />
         <activity
-            android:name=".activity.MapsActivity"/>
+            android:name=".activity.MapsActivity" />
+        <activity
+            android:name=".activity.PreferencesActivity"/>
 
         <service android:name=".service.LocationService" />
 

@@ -51,6 +51,11 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
     }
 
     @Override
+    public void settings(View view) {
+        startActivity(new Intent(this, PreferencesActivity.class));
+    }
+
+    @Override
     public void clear(View view) {
         if (user != null) {
             Constants.DB_USER.child(user.getId()).getRef().removeValue();

@@ -79,7 +79,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         activeCompaniesFragment = new ActiveCompaniesFragment();
-        couponsFragment = new CouponsFragment();
         allCompaniesFragment = new AllCompaniesFragment();
 
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -205,7 +204,8 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         if (!CurrentLocation.check) {
             CurrentLocation.check = true;
             activeCompaniesFragment.updateData(filterNearMe);
-            couponsFragment.updateData();
+            if (couponsFragment != null)
+                couponsFragment.updateData();
         }
     }
 
@@ -264,6 +264,10 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                 case 1:
                     return activeCompaniesFragment;
                 case 2:
+                    couponsFragment = new CouponsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("filterNearMe", filterNearMe);
+                    couponsFragment.setArguments(bundle);
                     return couponsFragment;
             }
             return null;
@@ -323,7 +327,10 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                         textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
                     }
                     getSpins();
-                    couponsFragment.refreshList(filterNearMe);
+                    if (couponsFragment != null) {
+                        couponsFragment.refreshList(filterNearMe);
+                    }
+
                 } else {
                     Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
                 }

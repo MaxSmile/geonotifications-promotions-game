@@ -118,4 +118,7 @@
     <string name="please_wait">Please wait</string>
     <string name="finding_direction">Finding direction</string>
     <string name="unknown_location">Unknown your current location</string>
+    <string name="near_me_category">Filter near me</string>
+    <string name="near_me_title">Set radius in meters</string>
+
 </resources>

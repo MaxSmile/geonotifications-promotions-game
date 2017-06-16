@@ -19,6 +19,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 
@@ -108,7 +109,7 @@ public class ActiveCompaniesFragment extends Fragment {
                 Iterator<Spin> j = spins.iterator();
                 while (j.hasNext()) {
                     Spin spin = j.next();
-                    if (places.get(spin.getPlaceKey()).getDistance() > 144336) {
+                    if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
                         places.remove(spin.getPlaceKey());
                         j.remove();
                     }

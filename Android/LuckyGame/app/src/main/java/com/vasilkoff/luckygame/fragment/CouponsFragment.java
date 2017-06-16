@@ -18,6 +18,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CouponListAdapter;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
@@ -53,7 +54,8 @@ public class CouponsFragment extends Fragment {
         couponsList = (RecyclerView) getActivity().findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         couponsList.setLayoutManager(llm);
-        refreshList(nearMe);
+        refreshList(getArguments().getBoolean("filterNearMe"));
+
     }
 
     public void refreshList(boolean nearMe) {
@@ -105,7 +107,7 @@ public class CouponsFragment extends Fragment {
                 Iterator<CouponExtension> j = coupons.iterator();
                 while (j.hasNext()) {
                     CouponExtension coupon = j.next();
-                    if (coupon.getDistance() > 144336) {
+                    if (coupon.getDistance() > Properties.getNearMeRadius()) {
                         j.remove();
                     }
                 }

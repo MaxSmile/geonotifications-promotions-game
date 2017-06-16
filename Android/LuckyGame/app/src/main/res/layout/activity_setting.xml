@@ -40,22 +40,41 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="@{handler::logout}">
-            <TextView
+            android:orientation="vertical"
+            android:padding="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{handler::settings}"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:onClick="@{handler::logout}"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{user != null ? @string/logout : @string/login}"
+                    android:textColor="@color/logout"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{user != null ? @string/logout : @string/login}"
-                android:padding="5dp"
-                android:textColor="@color/logout"
-                android:textSize="20sp"/>
+                android:text="Clear"
+                android:layout_gravity="center_horizontal"
+                android:onClick="@{handler::clear}"/>
         </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clear"
-            android:layout_gravity="center_horizontal"
-            android:onClick="@{handler::clear}"/>
+
+
 
     </LinearLayout>
 </layout>
