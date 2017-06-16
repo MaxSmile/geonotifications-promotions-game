@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
@@ -164,14 +165,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         initSlider();
     }
 
-    public void onClickDetails(View view) {
-        switch (view.getId()) {
-            case R.id.companyDetailsDirections:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
     @Override
     public void showGifts(View view) {
         if (gifts.size() > 0) {
@@ -253,7 +246,14 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void directions(View view) {
-
+        if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+            String destination = place.getGeoLat() + "," + place.getGeoLon();
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.putExtra("destination", destination);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

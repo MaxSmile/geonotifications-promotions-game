@@ -27,6 +27,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f3381de560e52052038ffb42a852d4b4df492896" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".activity.HomeActivity"
@@ -86,6 +89,8 @@
             android:theme="@style/AppTheme.PopUp"
             android:noHistory="true"
             android:launchMode="singleTop"/>
+        <activity
+            android:name=".activity.MapsActivity"/>
 
         <service android:name=".service.LocationService" />
 

@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.HomeActivity;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -43,7 +44,7 @@ public class LocationService extends Service {
 
     private int requestCode = 100;
     private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATE = 10; // in Meters
-    private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000; // in Milliseconds
+    private static final long MINIMUM_TIME_BETWEEN_UPDATE = 5000; // in Milliseconds
 
     private static final long POINT_RADIUS = 1000; // in Meters
     private static final long PROX_ALERT_EXPIRATION = -1;
@@ -161,6 +162,9 @@ public class LocationService extends Service {
 
     public class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
+            CurrentLocation.lat = location.getLatitude();
+            CurrentLocation.lon = location.getLongitude();
+            CurrentLocation.provider = location.getProvider();
         }
         public void onStatusChanged(String s, int i, Bundle b) {
         }

@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -12,6 +13,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.SettingHandler;
 import com.vasilkoff.luckygame.databinding.ActivitySettingBinding;
@@ -29,6 +31,13 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
         binding.setUser(user);
         binding.setHandler(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String loc = CurrentLocation.lat + "/" + CurrentLocation.provider;
+        ((TextView)findViewById(R.id.location)).setText(loc);
     }
 
     @Override
