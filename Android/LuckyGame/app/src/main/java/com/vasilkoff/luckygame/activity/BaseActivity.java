@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -36,6 +37,7 @@ import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
 import com.vasilkoff.luckygame.entity.User;
 import com.vasilkoff.luckygame.util.DateFormat;
+import com.vasilkoff.luckygame.util.LocationDistance;
 import com.vasilkoff.luckygame.util.NetworkState;
 
 
@@ -185,6 +187,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                 place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
                 TypedArray iconArray = getResources().obtainTypedArray(R.array.company_type_icons);
                 place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
+                if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                            place.getGeoLat(), place.getGeoLon()));
+                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                            place.getGeoLat(), place.getGeoLon()));
+                }
                 iconArray.recycle();
                 Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
                     @Override

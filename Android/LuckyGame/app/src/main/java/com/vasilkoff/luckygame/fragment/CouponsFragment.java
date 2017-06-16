@@ -1,6 +1,7 @@
 package com.vasilkoff.luckygame.fragment;
 
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,14 +15,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CouponListAdapter;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Place;
+import com.vasilkoff.luckygame.util.DateFormat;
+import com.vasilkoff.luckygame.util.LocationDistance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,6 +58,50 @@ public class CouponsFragment extends Fragment {
         getCoupons();
     }
 
+    public void updateData() {
+        if (coupons != null) {
+            TypedArray ta = getResources().obtainTypedArray(R.array.coupon_type);
+            for (int i = 0; i < coupons.size(); i++) {
+                CouponExtension coupon = coupons.get(i);
+
+                if (CurrentLocation.lat != 0) {
+                    if (coupon.getGeoLat() != 0 && coupon.getGeoLon() != 0) {
+                        coupon.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                                coupon.getGeoLat(), coupon.getGeoLon()));
+                        coupon.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                                coupon.getGeoLat(), coupon.getGeoLon()));
+                    }
+                }
+
+                coupon.setTypeString(Constants.COMPANY_TYPE_NAMES[(int)coupon.getType()]);
+
+                if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
+                    if (coupon.getExpired() < System.currentTimeMillis()) {
+                        coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
+                    } else if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK && coupon.getLocks() < System.currentTimeMillis()) {
+                        coupon.setStatus(Constants.COUPON_STATUS_ACTIVE);
+                    }
+                }
+
+                String locks = DateFormat.getDiff(coupon.getLocks());
+                if (locks != null)
+                    coupon.setLockDiff(locks);
+
+                String expire = DateFormat.getDiff(coupon.getExpired());
+                if (expire != null)
+                    coupon.setExpiredDiff(expire);
+
+                if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
+                    coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
+                }
+                coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
+            }
+            ta.recycle();
+            couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+        }
+
+    }
+
     private void getCoupons() {
         couponsCode = DBHelper.getInstance(getContext()).getCoupons();
         coupons = new ArrayList<CouponExtension>();
@@ -68,6 +117,8 @@ public class CouponsFragment extends Fragment {
                                 Place place = dataSnapshot.getValue(Place.class);
                                 coupon.setPlaceName(place.getName());
                                 coupon.setType(place.getType());
+                                coupon.setGeoLat(place.getGeoLat());
+                                coupon.setGeoLon(place.getGeoLon());
                                 Constants.DB_COMPANY.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -75,7 +126,7 @@ public class CouponsFragment extends Fragment {
                                         coupon.setCompanyName(company.getName());
                                         coupon.setLogo(company.getLogo());
                                         coupons.add(coupon);
-                                        couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+                                        updateData();
                                     }
 
                                     @Override

@@ -20,12 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.CouponHandler;
 import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.util.DateFormat;
+import com.vasilkoff.luckygame.util.LocationDistance;
 
 import java.io.IOException;
 
@@ -57,7 +59,14 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
         if (expire != null)
             coupon.setExpiredDiff(expire);
 
-        coupon.setDistance(getString(R.string.distance));
+        if (CurrentLocation.lat != 0) {
+            if (coupon.getGeoLat() != 0 && coupon.getGeoLon() != 0) {
+                coupon.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                        coupon.getGeoLat(), coupon.getGeoLon()));
+                coupon.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                        coupon.getGeoLat(), coupon.getGeoLon()));
+            }
+        }
 
         ActivityCouponBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_coupon);
         binding.setCoupon(coupon);
@@ -95,42 +104,6 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
         }
         super.onDestroy();
     }
-
-    /* private void redeem(CouponDB coupon) {
-        dbHelper.setInactive(coupon.getCode());
-        couponCode.setVisibility(View.VISIBLE);
-        buttonRedeem.setVisibility(View.GONE);
-
-        Map<String, String> redeemCoupon = new HashMap<String, String>();
-        redeemCoupon.put("date", String.valueOf(System.currentTimeMillis()));
-        redeemCoupon.put("code", coupon.getCode());
-        redeemCoupon.put("name", coupon.getName());
-
-        if (objectFacebook != null) {
-            try {
-                redeemCoupon.put("userId", objectFacebook.getString("id"));
-                redeemCoupon.put("userName", objectFacebook.getString("name"));
-                redeemCoupon.put("userType", "facebook");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (accountGoogle != null) {
-            redeemCoupon.put("userId", accountGoogle.getId());
-            redeemCoupon.put("userName", accountGoogle.getDisplayName());
-            redeemCoupon.put("userType", "google");
-        }
-
-
-        DB_COUPON
-                .child(coupon.getCompany())
-                .child(String.valueOf(System.currentTimeMillis()))
-                .setValue(redeemCoupon);
-
-        *//*startActivity(new Intent(this, HomeActivity.class));
-        finish();*//*
-    }*/
 
     private void redeem() {
         Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
@@ -194,13 +167,17 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
 
     @Override
     public void redeem(View view) {
-        if (coupon.getStatus() == 0) {
-            Intent intent = new Intent(this, UnlockActivity.class);
-            intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
-            startActivity(intent);
-            finish();
+        if (!checkLogin()) {
+            startActivity(new Intent(this, ChooseAccountActivity.class));
         } else {
-            showPopUp();
+            if (coupon.getStatus() == 0) {
+                Intent intent = new Intent(this, UnlockActivity.class);
+                intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+                startActivity(intent);
+                finish();
+            } else {
+                showPopUp();
+            }
         }
     }
 

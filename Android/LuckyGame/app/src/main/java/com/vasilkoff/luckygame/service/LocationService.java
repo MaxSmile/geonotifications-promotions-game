@@ -27,7 +27,10 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.HomeActivity;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
+import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.receiver.ProximityIntentReceiver;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,6 +168,7 @@ public class LocationService extends Service {
             CurrentLocation.lat = location.getLatitude();
             CurrentLocation.lon = location.getLongitude();
             CurrentLocation.provider = location.getProvider();
+            EventBus.getDefault().postSticky(new Events.UpdateLocation());
         }
         public void onStatusChanged(String s, int i, Bundle b) {
         }

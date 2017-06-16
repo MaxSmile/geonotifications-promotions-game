@@ -29,14 +29,20 @@ public class CouponExtension implements Parcelable {
     private String expiredDiff;
     private int statusIcon;
     private String typeString;
-    private String distance;
     private String redeemedString;
+    private double distance;
+    private String distanceString;
+    private double geoLat;
+    private double geoLon;
 
 
     public CouponExtension() {
     }
 
-    public CouponExtension(int status, String code, String companyKey, String giftKey, String placeKey, String description, String creator, long creation, long expired, long locks, String companyName, String placeName, String logo, long type, String typeString) {
+    public CouponExtension(int status, String code, String companyKey, String giftKey, String placeKey,
+                           String description, String creator, long creation, long expired, long locks,
+                           String companyName, String placeName, String logo, long type, String typeString,
+                           double geoLat, double geoLon) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
@@ -52,6 +58,8 @@ public class CouponExtension implements Parcelable {
         this.logo = logo;
         this.type = type;
         this.typeString = typeString;
+        this.geoLat = geoLat;
+        this.geoLon = geoLon;
     }
 
     protected CouponExtension(Parcel in) {
@@ -75,8 +83,11 @@ public class CouponExtension implements Parcelable {
         expiredDiff = in.readString();
         statusIcon = in.readInt();
         typeString = in.readString();
-        distance = in.readString();
         redeemedString = in.readString();
+        distance = in.readDouble();
+        distanceString = in.readString();
+        geoLat = in.readDouble();
+        geoLon = in.readDouble();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -251,20 +262,44 @@ public class CouponExtension implements Parcelable {
         this.typeString = typeString;
     }
 
-    public String getDistance() {
-        return distance;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
-    }
-
     public String getRedeemedString() {
         return redeemedString;
     }
 
     public void setRedeemedString(String redeemedString) {
         this.redeemedString = redeemedString;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public String getDistanceString() {
+        return distanceString;
+    }
+
+    public void setDistanceString(String distanceString) {
+        this.distanceString = distanceString;
+    }
+
+    public double getGeoLat() {
+        return geoLat;
+    }
+
+    public void setGeoLat(double geoLat) {
+        this.geoLat = geoLat;
+    }
+
+    public double getGeoLon() {
+        return geoLon;
+    }
+
+    public void setGeoLon(double geoLon) {
+        this.geoLon = geoLon;
     }
 
     @Override
@@ -294,7 +329,10 @@ public class CouponExtension implements Parcelable {
         dest.writeString(expiredDiff);
         dest.writeInt(statusIcon);
         dest.writeString(typeString);
-        dest.writeString(distance);
         dest.writeString(redeemedString);
+        dest.writeDouble(distance);
+        dest.writeString(distanceString);
+        dest.writeDouble(geoLat);
+        dest.writeDouble(geoLon);
     }
 }

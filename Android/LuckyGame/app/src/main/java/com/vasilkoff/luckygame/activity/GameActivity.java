@@ -307,7 +307,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 gift.getId(),
                 place.getId(),
                 gift.getDescription(),
-                "userId",
+                user.getId(),
                 System.currentTimeMillis(),
                 gift.getDateFinish(),
                 lockTime
@@ -320,7 +320,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 gift.getId(),
                 place.getId(),
                 gift.getDescription(),
-                "userId",
+                user.getId(),
                 System.currentTimeMillis(),
                 gift.getDateFinish(),
                 lockTime,
@@ -328,7 +328,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 place.getName(),
                 company.getLogo(),
                 place.getType(),
-                place.getTypeName()
+                place.getTypeName(),
+                place.getGeoLat(),
+                place.getGeoLon()
         );
 
 

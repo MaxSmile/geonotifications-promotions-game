@@ -205,7 +205,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorDetailsTextInfo"
                             android:textSize="15sp"
-                            android:text="@string/distance"/>
+                            android:text="@{place.distanceString}"/>
                     </LinearLayout>
                     <FrameLayout
                         android:layout_width="0dp"

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 
@@ -19,6 +20,7 @@ import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 
 import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.util.LocationDistance;
 
 import java.util.ArrayList;
 import java.util.HashMap;

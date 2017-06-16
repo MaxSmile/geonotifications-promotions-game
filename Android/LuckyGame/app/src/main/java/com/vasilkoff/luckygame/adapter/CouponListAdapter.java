@@ -42,35 +42,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        CouponExtension coupon = couponsList.get(position);
-
-        coupon.setDistance(context.getString(R.string.distance));
-        coupon.setTypeString(Constants.COMPANY_TYPE_NAMES[(int)coupon.getType()]);
-
-        if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
-            if (coupon.getExpired() < System.currentTimeMillis()) {
-                coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
-            } else if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK && coupon.getLocks() < System.currentTimeMillis()) {
-                coupon.setStatus(Constants.COUPON_STATUS_ACTIVE);
-            }
-        }
-
-        String locks = DateFormat.getDiff(coupon.getLocks());
-        if (locks != null)
-            coupon.setLockDiff(locks);
-
-        String expire = DateFormat.getDiff(coupon.getExpired());
-        if (expire != null)
-            coupon.setExpiredDiff(expire);
-
-        if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
-            TypedArray ta = context.getResources().obtainTypedArray(R.array.coupon_type);
-            coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
-            ta.recycle();
-        }
-        coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
-
-        holder.bind(coupon);
+        holder.bind(couponsList.get(position));
     }
 
     @Override

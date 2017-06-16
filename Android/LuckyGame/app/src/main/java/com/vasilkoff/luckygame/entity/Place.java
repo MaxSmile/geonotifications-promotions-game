@@ -32,6 +32,8 @@ public class Place implements Parcelable {
     private String tel;
     private String about;
     private String aboutMore;
+    private double distance;
+    private String distanceString;
 
     public Place() {
 
@@ -73,6 +75,8 @@ public class Place implements Parcelable {
         tel = in.readString();
         about = in.readString();
         aboutMore = in.readString();
+        distance = in.readDouble();
+        distanceString = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -255,6 +259,22 @@ public class Place implements Parcelable {
         this.aboutMore = aboutMore;
     }
 
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public String getDistanceString() {
+        return distanceString;
+    }
+
+    public void setDistanceString(String distanceString) {
+        this.distanceString = distanceString;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -283,5 +303,7 @@ public class Place implements Parcelable {
         dest.writeString(tel);
         dest.writeString(about);
         dest.writeString(aboutMore);
+        dest.writeDouble(distance);
+        dest.writeString(distanceString);
     }
 }
