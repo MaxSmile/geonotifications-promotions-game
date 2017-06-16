@@ -27,6 +27,7 @@ import com.vasilkoff.luckygame.util.LocationDistance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,6 +39,7 @@ public class CouponsFragment extends Fragment {
     private RecyclerView couponsList;
     private List<CouponExtension> coupons;
     private List<String> couponsCode;
+    private boolean nearMe;
 
     @Nullable
     @Override
@@ -51,10 +53,11 @@ public class CouponsFragment extends Fragment {
         couponsList = (RecyclerView) getActivity().findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         couponsList.setLayoutManager(llm);
-        refreshList();
+        refreshList(nearMe);
     }
 
-    public void refreshList() {
+    public void refreshList(boolean nearMe) {
+        this.nearMe = nearMe;
         getCoupons();
     }
 
@@ -97,6 +100,17 @@ public class CouponsFragment extends Fragment {
                 coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
             }
             ta.recycle();
+
+            if (nearMe) {
+                Iterator<CouponExtension> j = coupons.iterator();
+                while (j.hasNext()) {
+                    CouponExtension coupon = j.next();
+                    if (coupon.getDistance() > 144336) {
+                        j.remove();
+                    }
+                }
+            }
+
             couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
         }
 

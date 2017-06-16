@@ -9,7 +9,7 @@ public class LocationDistance {
     public static String getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
         double calcDistance = calculateDistance(latitude1, longitude1, latitude2, longitude2);
         if (calcDistance >= 1000) {
-            return String.format("%.2f", calcDistance) + "km";
+            return String.format("%.2f", calcDistance/1000) + "km";
         } else {
             return calcDistance + "m";
         }

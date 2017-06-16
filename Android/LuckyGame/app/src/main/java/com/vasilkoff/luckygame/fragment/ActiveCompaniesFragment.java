@@ -72,26 +72,17 @@ public class ActiveCompaniesFragment extends Fragment {
             networkUnavailable.setVisibility(View.VISIBLE);
     }
 
-    public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+    public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies, boolean nearMe) {
         this.spins = spins;
         this.places = places;
         this.companies = companies;
         preloader.setVisibility(View.GONE);
         networkUnavailable.setVisibility(View.GONE);
-        updateData();
+        updateData(nearMe);
     }
 
-    public void updateData() {
-        if (spins != null) {
-            Iterator<Spin> i = spins.iterator();
-            while (i.hasNext()) {
-                Spin spin = i.next();
-                if (spin.getStatus() != Constants.SPIN_STATUS_ACTIVE) {
-                    places.remove(spin.getPlaceKey());
-                    i.remove();
-                }
-            }
-
+    public void updateData(boolean nearMe) {
+        if (spins != null ) {
             if (CurrentLocation.lat != 0) {
                 for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
                     Place place = spinPlace.getValue();
@@ -104,9 +95,28 @@ public class ActiveCompaniesFragment extends Fragment {
                 }
             }
 
+            Iterator<Spin> i = spins.iterator();
+            while (i.hasNext()) {
+                Spin spin = i.next();
+                if (spin.getStatus() != Constants.SPIN_STATUS_ACTIVE) {
+                    places.remove(spin.getPlaceKey());
+                    i.remove();
+                }
+            }
+
+            if (nearMe) {
+                Iterator<Spin> j = spins.iterator();
+                while (j.hasNext()) {
+                    Spin spin = j.next();
+                    if (places.get(spin.getPlaceKey()).getDistance() > 144336) {
+                        places.remove(spin.getPlaceKey());
+                        j.remove();
+                    }
+                }
+            }
+
             dataBridge.activeSpins(spins.size());
             companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
         }
-
     }
 }

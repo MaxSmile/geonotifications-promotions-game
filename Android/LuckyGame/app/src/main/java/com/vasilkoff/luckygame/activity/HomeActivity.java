@@ -60,6 +60,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     private AppBarLayout appBarLayout;
     private ImageView logo;
     private ImageView logoSmall;
+    private boolean filterNearMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +174,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     @Override
     public void resultSpins(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
         super.resultSpins(spins, places, companies);
-        activeCompaniesFragment.refreshList(spins, places, companies);
+        activeCompaniesFragment.refreshList(spins, places, companies, filterNearMe);
     }
 
     @Override
@@ -203,7 +204,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
         if (!CurrentLocation.check) {
             CurrentLocation.check = true;
-            activeCompaniesFragment.updateData();
+            activeCompaniesFragment.updateData(filterNearMe);
             couponsFragment.updateData();
         }
     }
@@ -308,6 +309,25 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         switch (view.getId()) {
             case R.id.homeSetting:
                 startActivity(new Intent(this, SettingActivity.class));
+                break;
+            case R.id.homeNearMe:
+                if (CurrentLocation.lat != 0 ) {
+                    filterNearMe = !filterNearMe;
+                    TextView textView = (TextView)findViewById(R.id.nearMeText);
+                    ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
+                    if (filterNearMe) {
+                        imageView.setImageResource(R.drawable.marker_icon_active);
+                        textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+                    } else {
+                        imageView.setImageResource(R.drawable.marker_icon);
+                        textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+                    }
+                    getSpins();
+                    couponsFragment.refreshList(filterNearMe);
+                } else {
+                    Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+                }
+
                 break;
             case R.id.companyAll:
                 goToCategory(-1);

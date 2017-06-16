@@ -36,8 +36,6 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
     @Override
     protected void onResume() {
         super.onResume();
-        String loc = CurrentLocation.lat + "/" + CurrentLocation.provider;
-        ((TextView)findViewById(R.id.location)).setText(loc);
     }
 
     @Override

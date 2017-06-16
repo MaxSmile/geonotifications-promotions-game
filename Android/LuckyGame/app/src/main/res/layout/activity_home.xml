@@ -95,10 +95,12 @@
                 android:gravity="center"
                 android:onClick="onHomeClick">
                 <ImageView
+                    android:id="@+id/nearMeImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/marker_icon"/>
                 <TextView
+                    android:id="@+id/nearMeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/near_me"
