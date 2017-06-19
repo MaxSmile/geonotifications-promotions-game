@@ -121,5 +121,10 @@
     <string name="near_me_category">Filter near me</string>
     <string name="near_me_title">Set radius in meters</string>
     <string name="spin_empty">You don\'t have spin for this place</string>
+    <string name="send_title">Sent to friends</string>
+    <string name="send_text">Send this coupon to your friends and the <b>first</b> who redeem it can have it</string>
+    <string name="send_btn">Send</string>
+    <string name="send_chooser_title">Send with</string>
+    <string name="send_coupon_text">Coupon code for SpinDeals: %s</string>
 
 </resources>

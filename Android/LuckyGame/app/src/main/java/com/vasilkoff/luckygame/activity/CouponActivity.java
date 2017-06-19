@@ -150,7 +150,9 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
 
     @Override
     public void send(View view) {
-        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, SendCouponActivity.class);
+        intent.putExtra("couponCode", String.format(getString(R.string.send_coupon_text), coupon.getCode()));
+        startActivity(intent);
     }
 
     @Override

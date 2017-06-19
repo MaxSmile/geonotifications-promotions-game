@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.CouponActivity;
+import com.vasilkoff.luckygame.activity.SendCouponActivity;
 import com.vasilkoff.luckygame.activity.UnlockActivity;
 import com.vasilkoff.luckygame.binding.handler.CouponsRowHandler;
 import com.vasilkoff.luckygame.databinding.CouponsRowBinding;
@@ -77,7 +78,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
 
         @Override
         public void send(View view) {
-            Toast.makeText(context, R.string.next_version, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, SendCouponActivity.class);
+            intent.putExtra("couponCode", String.format(context.getString(R.string.send_coupon_text), coupon.getCode()));
+            context.startActivity(intent);
         }
 
         @Override

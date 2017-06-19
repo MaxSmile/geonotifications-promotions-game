@@ -92,11 +92,15 @@
         <activity
             android:name=".activity.MapsActivity" />
         <activity
-            android:name=".activity.PreferencesActivity"/>
+            android:name=".activity.PreferencesActivity" />
+        <activity
+            android:name=".activity.SendCouponActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.PopUp"/>
+
 
         <service android:name=".service.LocationService" />
-
-
     </application>
 
 </manifest>
