@@ -120,5 +120,6 @@
     <string name="unknown_location">Unknown your current location</string>
     <string name="near_me_category">Filter near me</string>
     <string name="near_me_title">Set radius in meters</string>
+    <string name="spin_empty">You don\'t have spin for this place</string>
 
 </resources>

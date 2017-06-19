@@ -28,8 +28,8 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
         Boolean entering = intent.getBooleanExtra(key, false);
 
         if (entering) {
-            Place place = DBHelper.getInstance(context).getPlace(intent.getStringExtra(Place.class.getCanonicalName()));
-            long lastNotification = DBHelper.getInstance(context).getTimeNotification(intent.getStringExtra(Place.class.getCanonicalName()));
+            Place place = DBHelper.getInstance(context).getPlace(intent.getStringExtra(Constants.PLACE_KEY));
+            long lastNotification = DBHelper.getInstance(context).getTimeNotification(intent.getStringExtra(Constants.PLACE_KEY));
             if (lastNotification > 0) {
                 if ((System.currentTimeMillis() - lastNotification) > place.getGeoTimeFrequency()) {
                     sentNotification(context, intent, place);

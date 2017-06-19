@@ -70,6 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public Company company;
     public Place place;
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
+    public Spin spinByPlace;
+
     public boolean result;
     public static final String TAG = "myTest";
 
@@ -194,6 +196,23 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                             place.getGeoLat(), place.getGeoLon()));
                 }
                 iconArray.recycle();
+                Constants.DB_SPIN.orderByChild("placeKey").equalTo(place.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            final Spin spin = data.getValue(Spin.class);
+
+                            if (spin.getDateStart() <= System.currentTimeMillis() && spin.getDateFinish() >= System.currentTimeMillis()) {
+                                spinByPlace = spin;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -239,7 +258,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         });
     }
 
-    public void resultSpins(ArrayList<Spin> spins,HashMap<String, Place> places, HashMap<String, Company> companies) {
+    public void resultSpins(HashMap<String, Spin> mapSpins,HashMap<String, Place> places, HashMap<String, Company> companies) {
 
     }
 
@@ -247,7 +266,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final ArrayList<Spin> spins = new ArrayList<Spin>();
+                final HashMap<String, Spin> spins = new HashMap<String, Spin>();
                 final HashMap<String, Place> places = new HashMap<String, Place>();
                 final HashMap<String, Company> companies = new HashMap<String, Company>();
 
@@ -296,7 +315,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                         TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
                                         spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
                                         spin.setStatusString(spinType[spin.getStatus()]);
-                                        spins.add(spin);
+                                        spins.put(spin.getId(), spin);
                                         spinIcon.recycle();
 
                                         if (places.size() == spinCount) {
@@ -313,7 +332,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                 TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
                                 spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
                                 spin.setStatusString(spinType[spin.getStatus()]);
-                                spins.add(spin);
+                                spins.put(spin.getId(), spin);
                                 spinIcon.recycle();
                                 getCompanies(spins, places, companies, spinCount, spinPlace);
                             }
@@ -335,7 +354,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         });
     }
 
-    private void getCompanies(final ArrayList<Spin> spins, final HashMap<String,
+    private void getCompanies(final HashMap<String, Spin> spins, final HashMap<String,
             Place> places, final HashMap<String, Company> companies,final long spinCount, final Place place) {
         Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
             @Override

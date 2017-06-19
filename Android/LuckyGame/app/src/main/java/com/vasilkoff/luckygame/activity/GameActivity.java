@@ -427,6 +427,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         Constants.DB_USER.child(user.getId()).child("userInfo").setValue(user);
         Constants.DB_USER.child(user.getId()).child("place").child(place.getId())
                 .child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
+
     }
 
     @Override
@@ -434,11 +435,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         sp.release();
         sp = null;
         super.onDestroy();
-    }
-
-    private void emptySpin() {
-        sp.play(soundIdLose, 1, 1, 0, 0, 1);
-        Toast.makeText(GameActivity.this, R.string.empty_spin, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -467,7 +463,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            while (flag) {
+                            while (flag && gameAvailable) {
                                 count+=2;
                                 if (count >= 100) {
                                     count = 1;
@@ -490,8 +486,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                     flag = false;
                     if (gameAvailable) {
                         StartSpinner();
-                    } else {
-                        emptySpin();
                     }
                     gameAvailable = false;
                     return true;

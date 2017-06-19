@@ -7,6 +7,7 @@
             android:key="nearMeRadius"
             android:numeric="integer"
             android:inputType="number"
+            android:maxLength="9"
             android:defaultValue="100"/>
     </PreferenceCategory>
 </PreferenceScreen>

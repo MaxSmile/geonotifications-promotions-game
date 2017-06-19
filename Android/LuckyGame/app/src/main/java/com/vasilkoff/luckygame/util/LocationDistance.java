@@ -11,7 +11,7 @@ public class LocationDistance {
         if (calcDistance >= 1000) {
             return String.format("%.2f", calcDistance/1000) + "km";
         } else {
-            return calcDistance + "m";
+            return (int)calcDistance + "m";
         }
     }
 

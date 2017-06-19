@@ -23,6 +23,7 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.direction.DirectionFinder;
 import com.vasilkoff.luckygame.direction.DirectionFinderListener;
 import com.vasilkoff.luckygame.direction.Route;
+import com.vasilkoff.luckygame.util.NetworkState;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -50,12 +51,14 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback, Di
                 onBackPressed();
             }
         });
+        checkNetwork();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sendRequest(CurrentLocation.lat + "," + CurrentLocation.lon, getIntent().getStringExtra("destination"));
+        if (NetworkState.isOnline())
+            sendRequest(CurrentLocation.lat + "," + CurrentLocation.lon, getIntent().getStringExtra("destination"));
     }
 
     @Override

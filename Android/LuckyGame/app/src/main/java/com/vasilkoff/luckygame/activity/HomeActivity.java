@@ -171,8 +171,8 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     }
 
     @Override
-    public void resultSpins(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
-        super.resultSpins(spins, places, companies);
+    public void resultSpins(HashMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+        ArrayList<Spin> spins = new ArrayList<Spin>(mapSpins.values());
         activeCompaniesFragment.refreshList(spins, places, companies, filterNearMe);
     }
 

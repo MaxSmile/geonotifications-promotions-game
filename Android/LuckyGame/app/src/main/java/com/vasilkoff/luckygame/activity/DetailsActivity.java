@@ -52,6 +52,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private SliderLayout slider;
     private ExpandableLayout expandableLayout;
     private ImageView detailsArrow;
+    private boolean geoNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         result = false;
 
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
+        geoNotification = getIntent().getBooleanExtra("geoNotification", false);
 
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setSpin(spin);
@@ -114,7 +116,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void checkSpinAvailable() {
-        if (user != null) {
+        if (user != null && (spin != null || geoNotification)) {
             long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
             Constants.DB_USER.child(user.getId()).child("place").child(place.getId())
                     .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
@@ -132,7 +134,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             extraSpinAvailable = false;
                         }
                     }
-                    if (spinAvailable && gifts.size() > 0) {
+                    if ((spinAvailable || geoNotification) && gifts.size() > 0) {
                         detailsBtnPlay.startAnimation(rotateAnim);
                     } else {
                         detailsBtnPlay.clearAnimation();
@@ -160,9 +162,27 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
+        if (spinByPlace != null && spin == null) {
+            spin = spinByPlace;
+            System.out.println(TAG + "spinByPlace=" + spinByPlace.getId());
+        } else {
+            System.out.println(TAG + "spinByPlace---");
+        }
+
         checkSpinAvailable();
         result = true;
         initSlider();
+    }
+
+    @Override
+    public void back(View view) {
+        if (isTaskRoot()) {
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        } else {
+            onBackPressed();
+        }
+
     }
 
     @Override
@@ -179,29 +199,45 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void goToPlay(View view) {
         checkNetwork();
-        if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
-            if (user != null) {
-                if (checkResult()) {
-                    if (spinAvailable || getIntent().getBooleanExtra("geoNotification", false)) {
-                        Intent intent = new Intent(this, GameActivity.class);
-                        intent.putExtra(Place.class.getCanonicalName(), place);
-                        intent.putExtra(Spin.class.getCanonicalName(), spin);
-                        intent.putExtra(Company.class.getCanonicalName(), company);
-                        intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                        intent.putExtra("extraSpinAvailable", extraSpinAvailable);
-                        intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_NORMAL);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
-                    }
-                }
+        if (spin != null) {
+            if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+                startGame();
             } else {
-                startActivity(new Intent(this, ChooseAccountActivity.class));
+                Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+            }
+        } else if (geoNotification){
+            startGame();
+        } else {
+            Toast.makeText(this, R.string.spin_empty, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void startGame() {
+        if (user != null) {
+            if (checkResult() && gifts.size() > 0) {
+                if (spinAvailable || geoNotification) {
+                    Intent intent = new Intent(this, GameActivity.class);
+                    intent.putExtra(Place.class.getCanonicalName(), place);
+                    intent.putExtra(Spin.class.getCanonicalName(), spin);
+                    intent.putExtra(Company.class.getCanonicalName(), company);
+                    intent.putExtra(Gift.class.getCanonicalName(), gifts);
+
+                    int type = Constants.SPIN_TYPE_NORMAL;
+                    if (geoNotification || spin == null) {
+                        extraSpinAvailable = false;
+                        type = Constants.SPIN_TYPE_EXTRA;
+                        geoNotification = false;
+                    }
+                    intent.putExtra("extraSpinAvailable", extraSpinAvailable);
+                    intent.putExtra(Constants.SPIN_TYPE_KEY, type);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+                }
             }
         } else {
-            Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, ChooseAccountActivity.class));
         }
-
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -269,18 +305,23 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void getExtraSpin(View view) {
-        if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
-            if (extraSpinAvailable) {
-                Intent intent = new Intent(this, ExtraSpinActivity.class);
-                intent.putExtra(Constants.PLACE_KEY, place.getId());
-                intent.putExtra(Spin.class.getCanonicalName(), spin);
-                startActivity(intent);
+        if (spin != null) {
+            if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+                if (extraSpinAvailable) {
+                    Intent intent = new Intent(this, ExtraSpinActivity.class);
+                    intent.putExtra(Constants.PLACE_KEY, place.getId());
+                    intent.putExtra(Spin.class.getCanonicalName(), spin);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                }
             } else {
-                Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.spin_empty, Toast.LENGTH_LONG).show();
         }
+
 
     }
 }
