@@ -27,6 +27,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
@@ -64,6 +65,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
         geoNotification = getIntent().getBooleanExtra("geoNotification", false);
+
 
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setSpin(spin);
@@ -154,19 +156,21 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         super.onResume();
         if (result) {
             checkSpinAvailable();
+            favorites = DBHelper.getInstance(this).checkFavorites(place);
+            binding.setFavorites(favorites);
         }
     }
 
     @Override
     public void resultDataByPlace() {
+        favorites = DBHelper.getInstance(this).checkFavorites(place);
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
+        binding.setFavorites(favorites);
+
         if (spinByPlace != null && spin == null) {
             spin = spinByPlace;
-            System.out.println(TAG + "spinByPlace=" + spinByPlace.getId());
-        } else {
-            System.out.println(TAG + "spinByPlace---");
         }
 
         checkSpinAvailable();
@@ -269,11 +273,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void info(View view) {
-        /*Intent intent = new Intent(this, InfoActivity.class);
+        Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra("info", place.getInfo());
         intent.putExtra("title", place.getName());
-        startActivity(intent);*/
-        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
     @Override
@@ -301,6 +304,12 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         } else {
             detailsArrow.setImageResource(R.drawable.arrow);
         }
+    }
+
+    @Override
+    public void favorites(View view) {
+        super.favorites(view);
+        binding.setFavorites(favorites);
     }
 
     @Override

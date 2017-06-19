@@ -83,7 +83,7 @@ public class ActiveCompaniesFragment extends Fragment {
     }
 
     public void updateData(boolean nearMe) {
-        if (spins != null ) {
+        if (spins != null && (spins.size() > 0 && spins.size() == places.size())) {
             if (CurrentLocation.lat != 0) {
                 for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
                     Place place = spinPlace.getValue();

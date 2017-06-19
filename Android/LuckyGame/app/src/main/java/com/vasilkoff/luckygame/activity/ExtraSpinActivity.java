@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityExtraSpinBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
@@ -34,6 +36,8 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
     @Override
     public void resultDataByPlace() {
         super.resultDataByPlace();
+        favorites = DBHelper.getInstance(this).checkFavorites(place);
+        binding.setFavorites(favorites);
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setSpin(spin);
@@ -50,5 +54,11 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_EXTRA);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void favorites(View view) {
+        super.favorites(view);
+        binding.setFavorites(favorites);
     }
 }

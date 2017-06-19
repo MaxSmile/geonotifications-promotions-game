@@ -9,4 +9,5 @@ import android.view.View;
 public interface BaseHandler {
 
     public void back(View view);
+    public void favorites(View view);
 }

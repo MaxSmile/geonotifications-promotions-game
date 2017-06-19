@@ -11,6 +11,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityFilteredCompanyBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class FilteredCompanyActivity extends BaseActivity {
@@ -42,7 +44,7 @@ public class FilteredCompanyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtered_company);
         checkNetwork();
-        type = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, -1);
+        type = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, Constants.CATEGORY_ALL);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filtered_company);
         binding.setHandler(this);
         binding.setCountResult(true);
@@ -73,21 +75,32 @@ public class FilteredCompanyActivity extends BaseActivity {
     public void resultSpins(HashMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
         ArrayList<Spin> spins = new ArrayList<Spin>(mapSpins.values());
         preloader.setVisibility(View.GONE);
-        if (type >= 0) {
-            Iterator<Spin> i = spins.iterator();
-            while (i.hasNext()) {
-                Spin spin = i.next();
-                if (places.get(spin.getPlaceKey()).getType() != type) {
-                    places.remove(spin.getPlaceKey());
-                    i.remove();
+        if (spins.size() > 0 && spins.size() == places.size()) {
+            HashMap<String, String> list = DBHelper.getInstance(this).getFavorites();
+            if (type >= 0) {
+                Iterator<Spin> i = spins.iterator();
+                while (i.hasNext()) {
+                    Spin spin = i.next();
+                    if (type == Constants.CATEGORY_FAVORITES && list.size() > 0) {
+                        if (list.get(spin.getPlaceKey()) == null) {
+                            places.remove(spin.getPlaceKey());
+                            i.remove();
+                        }
+                    } else {
+                        if (places.get(spin.getPlaceKey()).getType() != type) {
+                            places.remove(spin.getPlaceKey());
+                            i.remove();
+                        }
+                    }
                 }
             }
+
+            this.spins = spins;
+            this.places = places;
+            this.companies = companies;
+            updateData();
         }
 
-        this.spins = spins;
-        this.places = places;
-        this.companies = companies;
-        updateData();
     }
 
     private void updateData() {

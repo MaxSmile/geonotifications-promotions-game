@@ -32,6 +32,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.GameHandler;
 import com.vasilkoff.luckygame.common.MyRotateAnimation;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityGameBinding;
 import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
@@ -73,7 +74,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
     private String winKey;
     private Company company;
-    private Place place;
     private Spin spin;
     private HashMap<String, Gift> gifts;
     private boolean social = false;
@@ -88,6 +88,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private float lastRotation = 0;
 
     private boolean gameAvailable = true;
+    private ActivityGameBinding binding;
+    private ImageView losePopUpFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +100,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
         gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
+        favorites = DBHelper.getInstance(this).checkFavorites(place);
 
-        ActivityGameBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
         binding.setSpin(spin);
+        binding.setFavorites(favorites);
         binding.setHandler(this);
 
         parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
@@ -371,15 +375,25 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 getExtra();
             }
         });
-        ((LinearLayout) view.findViewById(R.id.losePopUpNotify)).setOnClickListener(new View.OnClickListener() {
+
+        losePopUpFavorites = (ImageView)view.findViewById(R.id.losePopUpFavorites);
+        losePopUpFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
-                Toast.makeText(GameActivity.this, R.string.next_version, Toast.LENGTH_SHORT).show();
+                favorites(v);
             }
         });
+        setImage();
 
         popupWindow.showAtLocation(parentLayout, Gravity.CENTER,0, 0);
+    }
+
+    private void setImage() {
+        if (favorites) {
+            losePopUpFavorites.setImageResource(R.drawable.favourites_red_filled);
+        } else {
+            losePopUpFavorites.setImageResource(R.drawable.favourites_red);
+        }
     }
 
     public void getExtra() {
@@ -449,6 +463,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     @Override
     public void getExtraSpin(View view) {
         getExtra();
+    }
+
+    @Override
+    public void favorites(View view) {
+        super.favorites(view);
+        binding.setFavorites(favorites);
+        if (losePopUpFavorites != null)
+            setImage();
     }
 
     private class PowerTouchListener implements View.OnTouchListener {

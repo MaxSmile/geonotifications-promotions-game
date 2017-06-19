@@ -7,7 +7,7 @@ import android.view.View;
  */
 
 public interface CompanyRowHandler {
-
     public void showCoupons(View view);
     public void getSpin(View view);
+    public void favorites(View view);
 }

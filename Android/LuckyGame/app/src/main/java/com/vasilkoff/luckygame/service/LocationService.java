@@ -113,11 +113,27 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && STOP_LOCATION_SERVICE.equals(intent.getAction())) {
+            if (pendingIntents != null) {
+                for (int i = 0; i < pendingIntents.size(); i++) {
+                    locationManager.removeProximityAlert(pendingIntents.get(i));
+                }
+                pendingIntents = new ArrayList<PendingIntent>();
+            }
             stopSelf();
             return START_NOT_STICKY;
         }
+        if (pendingIntents != null) {
+            for (int i = 0; i < pendingIntents.size(); i++) {
+                locationManager.removeProximityAlert(pendingIntents.get(i));
+            }
+            pendingIntents = new ArrayList<PendingIntent>();
+            loadPlaces();
+        } else {
+            loadPlaces();
+        }
 
-        loadPlaces();
+
+
         return START_STICKY;
     }
 

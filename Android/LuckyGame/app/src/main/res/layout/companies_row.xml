@@ -12,6 +12,9 @@
             name="company"
             type="com.vasilkoff.luckygame.entity.Company" />
         <variable
+            name="favorites"
+            type="Boolean" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.CompanyRowHandler"/>
         <import type="android.view.View" alias="v"/>
@@ -62,12 +65,13 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:onClick="@{handler::favorites}"
+                    android:padding="15dp">
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:src="@drawable/heart"
+                        android:src="@{favorites ? @drawable/favourites_red_filled : @drawable/favourites_red}"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true" />
                 </RelativeLayout>
@@ -123,7 +127,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_alignParentEnd="true">
+                    android:layout_alignParentEnd="true"
+                    android:paddingRight="15dp">
                     <TextView
                         android:id="@+id/textCountPromo"
                         android:layout_width="wrap_content"

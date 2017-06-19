@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -26,9 +27,19 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String key = LocationManager.KEY_PROXIMITY_ENTERING;
         Boolean entering = intent.getBooleanExtra(key, false);
+        System.out.println("myTest ---------------------------------------");
+        System.out.println("myTest entering=" + entering);
+        System.out.println("myTest Constants.PLACE_KEY=" + intent.getStringExtra(Constants.PLACE_KEY));
 
         if (entering) {
+
             Place place = DBHelper.getInstance(context).getPlace(intent.getStringExtra(Constants.PLACE_KEY));
+            System.out.println("myTest placegetId=" + place.getId());
+            System.out.println("myTest placegetGeoLat=" + place.getGeoLat());
+            System.out.println("myTest placegetGeoLon=" + place.getGeoLon());
+            System.out.println("myTest CurrentLocation.lat=" + CurrentLocation.lat);
+            System.out.println("myTest CurrentLocation.lon=" + CurrentLocation.lon);
+
             long lastNotification = DBHelper.getInstance(context).getTimeNotification(intent.getStringExtra(Constants.PLACE_KEY));
             if (lastNotification > 0) {
                 if ((System.currentTimeMillis() - lastNotification) > place.getGeoTimeFrequency()) {

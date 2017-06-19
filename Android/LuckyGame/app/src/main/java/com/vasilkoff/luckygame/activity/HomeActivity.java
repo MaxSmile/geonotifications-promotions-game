@@ -83,7 +83,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-       /* mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+     /*   mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -92,8 +92,8 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
-                    case 1:
-                        activeCompaniesFragment.refreshList();
+                    case 2:
+                        couponsFragment.refreshList(filterNearMe);
                         break;
                 }
             }
@@ -337,28 +337,31 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
                 break;
             case R.id.companyAll:
-                goToCategory(-1);
+                goToCategory(Constants.CATEGORY_ALL);
                 break;
             case R.id.companyFood:
-                goToCategory(0);
+                goToCategory(Constants.CATEGORY_FOOD);
                 break;
             case R.id.companyNightlife:
-                goToCategory(1);
+                goToCategory(Constants.CATEGORY_NIGHTLIFE);
                 break;
             case R.id.companyCoffee:
-                goToCategory(2);
+                goToCategory(Constants.CATEGORY_COFFE);
                 break;
             case R.id.companyEvents:
-                goToCategory(3);
+                goToCategory(Constants.CATEGORY_EVENTS);
                 break;
             case R.id.companyShops:
-                goToCategory(4);
+                goToCategory(Constants.CATEGORY_SHOPS);
                 break;
             case R.id.companyServices:
-                goToCategory(5);
+                goToCategory(Constants.CATEGORY_SERVICES);
                 break;
             case R.id.companyEShops:
-                goToCategory(6);
+                goToCategory(Constants.CATEGORY_E_SHOPS);
+                break;
+            case R.id.companyFavorites:
+                goToCategory(Constants.CATEGORY_FAVORITES);
                 break;
             default:
                 Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();

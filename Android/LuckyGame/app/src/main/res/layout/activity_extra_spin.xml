@@ -14,6 +14,9 @@
             name="spin"
             type="com.vasilkoff.luckygame.entity.Spin"/>
         <variable
+            name="favorites"
+            type="Boolean" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.ExtraHandler"/>
         <import type="android.view.View" alias="v"/>
@@ -116,14 +119,14 @@
                 bind:handler = "@{handler}"/>
 
             <LinearLayout
-                android:id="@+id/extraSpinNotify"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:background="@color/loseLineBg"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:onClick="@{handler::favorites}">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -135,7 +138,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/favourites_red"/>
+                    android:src="@{favorites ? @drawable/favourites_red_filled : @drawable/favourites_red}"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

@@ -18,6 +18,9 @@
             name="countGift"
             type="Integer" />
         <variable
+            name="favorites"
+            type="Boolean" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.GameHandler" />
         <import type="android.view.View" alias="v"/>
@@ -242,7 +245,8 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="3dp"
-                    android:layout_marginBottom="5dp">
+                    android:layout_marginBottom="5dp"
+                    android:onClick="@{handler::favorites}">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="7"
@@ -255,7 +259,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/favourites_red"/>
+                        android:src="@{favorites ? @drawable/favourites_red_filled : @drawable/favourites_red}"/>
 
                 </LinearLayout>
 

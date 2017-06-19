@@ -13,6 +13,7 @@ import com.vasilkoff.luckygame.entity.Place;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,12 +24,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
+    private static final String TAG = "DBHelper";
+
     private static final String DATABASE_NAME = "data.db";
     private static final String TABLE_COUPONS = "coupons";
     private static final String TABLE_PLACES = "places";
     private static final String TABLE_NOTIFICATION = "notification";
-    private static final String TAG = "DBHelper";
+    private static final String TABLE_FAVORITES = "favorites";
+
 
     private static final String KEY_ID = "_id";
     private static final String KEY_ACTIVE = "active";
@@ -68,6 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createTableCoupons(sqLiteDatabase);
         createTablePlaces(sqLiteDatabase);
         createTableNotification(sqLiteDatabase);
+        createTableFavorites(sqLiteDatabase);
     }
 
     @Override
@@ -75,6 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_COUPONS);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_PLACES);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_FAVORITES);
         onCreate(sqLiteDatabase);
     }
 
@@ -82,6 +88,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_COUPONS + "("
                 + KEY_ID + " integer primary key,"
                 + KEY_CODE + " text"
+                + ")");
+    }
+
+    private void createTableFavorites(SQLiteDatabase db) {
+        db.execSQL("create table " + TABLE_FAVORITES + "("
+                + KEY_ID + " integer primary key,"
+                + KEY_PLACE_KEY  + " text,"
+                + "UNIQUE ("
+                + KEY_PLACE_KEY
+                + ") ON CONFLICT REPLACE"
                 + ")");
     }
 
@@ -211,6 +227,62 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return null;
+    }
+
+    public void saveFavorites(Place place) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_PLACE_KEY, place.getId());
+
+        db.insert(TABLE_FAVORITES, null, contentValues);
+        db.close();
+    }
+
+    public void removeFavorites(Place place) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_FAVORITES, KEY_PLACE_KEY + " = ?", new String[] {place.getId()});
+        db.close();
+    }
+
+    public boolean checkFavorites(Place place) {
+        boolean result = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_FAVORITES,
+                null,
+                KEY_PLACE_KEY + "=?",
+                new String[]{place.getId()},
+                null,
+                null,
+                null);
+
+        if (cursor.moveToFirst()) {
+            result = true;
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return result;
+    }
+
+    public HashMap<String, String> getFavorites() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        HashMap<String, String> favorites = new HashMap<String, String>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FAVORITES, null);
+        if (cursor.moveToFirst()) {
+            do {
+                favorites.put(cursor.getString(1), cursor.getString(1));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return favorites;
     }
 
     public void saveCoupon(Coupon coupon) {

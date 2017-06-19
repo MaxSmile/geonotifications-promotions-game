@@ -15,6 +15,7 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 
 import com.vasilkoff.luckygame.binding.handler.CompanyRowHandler;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.CompaniesRowBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -64,6 +65,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         private CompaniesRowBinding binding;
         private Spin spin;
         private Place place;
+        private boolean favorites;
 
         public Holder(View v) {
             super(v);
@@ -86,6 +88,10 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
             binding.setPlace(place);
             binding.setSpin(spin);
             binding.setHandler(this);
+
+            favorites = DBHelper.getInstance(context).checkFavorites(place);
+            binding.setFavorites(favorites);
+
         }
 
         @Override
@@ -96,6 +102,17 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         @Override
         public void getSpin(View view) {
 
+        }
+
+        @Override
+        public void favorites(View view) {
+            favorites = !favorites;
+            if (favorites) {
+                DBHelper.getInstance(context).saveFavorites(place);
+            } else {
+                DBHelper.getInstance(context).removeFavorites(place);
+            }
+            binding.setFavorites(favorites);
         }
     }
 }

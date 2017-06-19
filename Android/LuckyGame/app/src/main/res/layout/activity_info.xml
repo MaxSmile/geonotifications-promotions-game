@@ -14,35 +14,39 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <RelativeLayout
+        android:paddingBottom="40dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:paddingTop="40dp"
+        android:background="@drawable/shadow_small">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp">
+            android:layout_height="300dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_pop_up"
+            android:padding="10dp"
+            android:layout_gravity="center_vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
+                <WebView
+                    android:id="@+id/infoWeb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/legendClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/cancel"
+                    android:padding="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:onClick="@{handler::back}"/>
+            </RelativeLayout>
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:background="@null"
-                android:src="@drawable/back_blue"
-                android:onClick="@{handler::back}"
-                android:padding="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@{title}"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-        <WebView
-            android:id="@+id/infoWeb"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        </LinearLayout>
+
     </LinearLayout>
 </layout>
 

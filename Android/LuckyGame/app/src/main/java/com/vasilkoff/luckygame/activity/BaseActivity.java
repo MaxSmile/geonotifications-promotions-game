@@ -75,6 +75,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public boolean result;
     public static final String TAG = "myTest";
 
+    public boolean favorites;
+
 
 
     public static boolean showPopUpLogin = true;
@@ -175,6 +177,16 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     @Override
     public void back(View view) {
         onBackPressed();
+    }
+
+    @Override
+    public void favorites(View view) {
+        favorites = !favorites;
+        if (favorites) {
+            DBHelper.getInstance(this).saveFavorites(place);
+        } else {
+            DBHelper.getInstance(this).removeFavorites(place);
+        }
     }
 
     public void resultDataByPlace() {
@@ -309,18 +321,23 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                             }
                                         }
 
-                                        if (!spinAvailable && extraSpinAvailable) {
+                                        if (!spinAvailable) {
                                             spin.setStatus(Constants.SPIN_STATUS_EXTRA_AVAILABLE);
                                         }
+
+
                                         TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
                                         spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
                                         spin.setStatusString(spinType[spin.getStatus()]);
                                         spins.put(spin.getId(), spin);
                                         spinIcon.recycle();
 
-                                        if (places.size() == spinCount) {
-                                            getCompanies(spins, places, companies, spinCount, spinPlace);
-                                        }
+                                   /* if (places.size() == spinCount) {
+                                        getCompanies(spins, places, companies, spinCount, spinPlace);
+                                    }*/
+                                        getCompanies(spins, places, companies, spinCount, spinPlace);
+
+
                                     }
 
                                     @Override
@@ -362,7 +379,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                 Company company = dataSnapshot.getValue(Company.class);
                 companies.put(dataSnapshot.getKey(), company);
 
-                if (companies.size() == spinCount)
+                //if (companies.size() == spinCount)
                     resultSpins(spins, places, companies);
             }
 

@@ -46,4 +46,13 @@ public class Constants {
     public static final int GAME_WIN = 1;
     public static final int GAME_LOSE  = 0;
 
+    public static final int CATEGORY_ALL  = -1;
+    public static final int CATEGORY_FOOD  = 0;
+    public static final int CATEGORY_NIGHTLIFE  = 1;
+    public static final int CATEGORY_COFFE  = 2;
+    public static final int CATEGORY_EVENTS  = 3;
+    public static final int CATEGORY_SHOPS  = 4;
+    public static final int CATEGORY_SERVICES  = 5;
+    public static final int CATEGORY_E_SHOPS  = 6;
+    public static final int CATEGORY_FAVORITES = 7;
 }
