@@ -59,6 +59,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="SettingsList">
+        <item name="android:background">@color/settingsBg1</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">1dp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

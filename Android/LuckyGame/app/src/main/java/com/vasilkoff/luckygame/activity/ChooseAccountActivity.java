@@ -101,7 +101,10 @@ public class ChooseAccountActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.chooseAccountTermsConditions:
-                startActivity(new Intent(this, TermsConditionsActivity.class));
+                Intent intent = new Intent(this, TermsConditionsActivity.class);
+                intent.putExtra("title", getString(R.string.terms_conditions));
+                intent.putExtra("file", getString(R.string.terms_conditions_file));
+                startActivity(intent);
                 break;
         }
     }

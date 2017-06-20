@@ -120,11 +120,28 @@
     <string name="unknown_location">Unknown your current location</string>
     <string name="near_me_category">Filter near me</string>
     <string name="near_me_title">Set radius in meters</string>
+    <string name="sound_category">Sound</string>
+    <string name="sound_game">Turn on/off game sound</string>
+    <string name="notification_category">Notifications</string>
+    <string name="notification_title">Turn on/off geo notifications</string>
     <string name="spin_empty">You don\'t have spin for this place</string>
     <string name="send_title">Sent to friends</string>
     <string name="send_text">Send this coupon to your friends and the <b>first</b> who redeem it can have it</string>
     <string name="send_btn">Send</string>
     <string name="send_chooser_title">Send with</string>
     <string name="send_coupon_text">Coupon code for SpinDeals: %s</string>
+    <string name="terms_conditions">Terms &amp; Conditions</string>
+    <string name="version">Version %s</string>
+    <string name="partner">Partner with us</string>
+    <string name="contact">Contact us</string>
+    <string name="help_improve">Help our app to improve</string>
+    <string name="suggestions_box">Suggestions\nbox</string>
+    <string name="tutorial">Tutorial</string>
+    <string name="visit_our_website">Visit our website</string>
+    <string name="visit_our_facebook">Visit our Facebook page</string>
+    <string name="settings_invite">Invite friends</string>
+    <string name="like_our_app">Like our app</string>
+    <string name="rating_us">Rating us</string>
+    <string name="mail_chooser">Send email:</string>
 
 </resources>

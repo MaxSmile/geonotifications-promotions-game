@@ -14,6 +14,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
 
@@ -31,8 +32,7 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
         System.out.println("myTest entering=" + entering);
         System.out.println("myTest Constants.PLACE_KEY=" + intent.getStringExtra(Constants.PLACE_KEY));
 
-        if (entering) {
-
+        if (entering && Properties.getNotifications()) {
             Place place = DBHelper.getInstance(context).getPlace(intent.getStringExtra(Constants.PLACE_KEY));
             System.out.println("myTest placegetId=" + place.getId());
             System.out.println("myTest placegetGeoLat=" + place.getGeoLat());

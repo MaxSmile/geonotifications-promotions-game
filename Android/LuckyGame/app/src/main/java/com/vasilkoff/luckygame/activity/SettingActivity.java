@@ -1,7 +1,10 @@
 package com.vasilkoff.luckygame.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -31,6 +34,14 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
         binding.setUser(user);
         binding.setHandler(this);
 
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionNumber = pInfo.versionName + "." + pInfo.versionCode;
+            binding.setVersion(String.format(getString(R.string.version), versionNumber));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -54,6 +65,65 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
     public void settings(View view) {
         startActivity(new Intent(this, PreferencesActivity.class));
     }
+
+    @Override
+    public void termsConditions(View view) {
+        Intent intent = new Intent(this, TermsConditionsActivity.class);
+        intent.putExtra("title", getString(R.string.terms_conditions));
+        intent.putExtra("file", getString(R.string.terms_conditions_file));
+        startActivity(intent);
+    }
+
+    @Override
+    public void tutorial(View view) {
+        Intent intent = new Intent(this, TermsConditionsActivity.class);
+        intent.putExtra("title", getString(R.string.tutorial));
+        intent.putExtra("file", getString(R.string.tutorial_file));
+        startActivity(intent);
+    }
+
+    @Override
+    public void visitWebsite(View view) {
+        startActivity( new Intent( Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_url))));
+    }
+
+    @Override
+    public void visitFacebook(View view) {
+        startActivity( new Intent( Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_page_url))));
+    }
+
+    @Override
+    public void invite(View view) {
+        inviteApp();
+    }
+
+    @Override
+    public void rating(View view) {
+        //final String appPackageName = getPackageName();
+        final String appPackageName = "com.vasilkoff.easyvpnfree";
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+
+    @Override
+    public void forPartner(View view) {
+        sendMail(getString(R.string.mail_for_partner));
+    }
+
+    @Override
+    public void forImprove(View view) {
+        sendMail(getString(R.string.mail_for_improve));
+    }
+
+    private void sendMail(String address) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto",address, null));
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.mail_chooser)));
+    }
+
 
     @Override
     public void clear(View view) {

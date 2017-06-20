@@ -23,6 +23,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.CouponHandler;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
@@ -186,7 +187,7 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
 
     @Override
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        if (userPrize) {
+        if (userPrize && Properties.getSoundGame()) {
             sp.play(soundIdWin, 1, 1, 0, 0, 1);
         }
     }

@@ -47,17 +47,6 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
         shareButton = (ShareButton) findViewById(R.id.fb_share_button);
     }
 
-    private boolean checkFb() {
-        if (user == null || user.getType() == Constants.USER_TYPE_GOOGLE) {
-            Intent intent = new Intent(this, ChooseAccountActivity.class);
-            intent.putExtra("fbAction", true);
-            startActivity(intent);
-        } else {
-            return true;
-        }
-        return false;
-    }
-
     protected void socialSuccess() {
 
     }

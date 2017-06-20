@@ -1,22 +1,30 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.databinding.ActivityTermsConditionsBinding;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class TermsConditionsActivity extends AppCompatActivity {
+public class TermsConditionsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms_conditions);
+
+        ActivityTermsConditionsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_terms_conditions);
+        binding.setHandler(this);
+        binding.setTitle(getIntent().getStringExtra("title"));
+
+
         WebView webview = (WebView)this.findViewById(R.id.termsConditions);
         webview.loadDataWithBaseURL("file:///android_asset/", getHtmlFromAsset(), "text/html", "UTF-8", "");
     }
@@ -26,7 +34,7 @@ public class TermsConditionsActivity extends AppCompatActivity {
         StringBuilder builder = new StringBuilder();
         String htmlString = null;
         try {
-            is = getAssets().open("terms_conditions.html");
+            is = getAssets().open(getIntent().getStringExtra("file"));
             if (is != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                 String line;

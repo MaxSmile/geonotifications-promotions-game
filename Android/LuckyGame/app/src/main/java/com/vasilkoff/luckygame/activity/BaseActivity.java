@@ -11,8 +11,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.widget.AppInviteDialog;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -388,5 +392,29 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
             }
         });
+    }
+
+    public boolean checkFb() {
+        if (user == null || user.getType() == Constants.USER_TYPE_GOOGLE) {
+            Intent intent = new Intent(this, ChooseAccountActivity.class);
+            intent.putExtra("fbAction", true);
+            startActivity(intent);
+        } else {
+            return true;
+        }
+        return false;
+    }
+
+    public void inviteApp() {
+        if (checkFb()) {
+            if (AppInviteDialog.canShow()) {
+                AppInviteContent content = new AppInviteContent.Builder()
+                        .setApplinkUrl(getString(R.string.facebook_app_link))
+                        .setPreviewImageUrl(getString(R.string.app_preview_image_url))
+                        .build();
+                AppInviteDialog appInviteDialog = new AppInviteDialog(this);
+                appInviteDialog.show(content);
+            }
+        }
     }
 }

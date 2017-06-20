@@ -32,6 +32,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.GameHandler;
 import com.vasilkoff.luckygame.common.MyRotateAnimation;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityGameBinding;
 import com.vasilkoff.luckygame.entity.Box;
@@ -137,7 +138,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             public boolean handleMessage(Message msg) {
                 float rotation = msg.arg1%30;
                 if (lastRotation > rotation) {
-                    sp.play(soundIdTick, 1, 1, 0, 0, 1);
+                    if (Properties.getSoundGame()) {
+                        sp.play(soundIdTick, 1, 1, 0, 0, 1);
+                    }
                     imagePointer.setRotation(-1*10);
                 } else {
                     imagePointer.setRotation(0);
@@ -423,7 +426,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             createCoupon(gifts.get(winKey));
             setLog(Constants.GAME_WIN);
         } else {
-            sp.play(soundIdLose, 1, 1, 0, 0, 1);
+            if (Properties.getSoundGame()) {
+                sp.play(soundIdLose, 1, 1, 0, 0, 1);
+            }
             gameLose();
             setLog(Constants.GAME_LOSE);
         }

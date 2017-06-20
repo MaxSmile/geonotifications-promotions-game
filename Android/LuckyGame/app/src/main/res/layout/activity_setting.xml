@@ -8,6 +8,9 @@
             name="user"
             type="com.vasilkoff.luckygame.entity.User"/>
         <variable
+            name="version"
+            type="String"/>
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.SettingHandler" />
     </data>
@@ -15,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="30dp">
+        android:paddingTop="30dp"
+        android:background="@color/settingsBg1">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -37,45 +41,140 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </RelativeLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:text="Clear"
+            android:layout_gravity="center_horizontal"
+            android:onClick="@{handler::clear}"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{handler::settings}"
-                android:padding="5dp">
+                android:orientation="vertical"
+                android:background="@color/settingsBg2">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/settings"
-                    android:textSize="20sp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:onClick="@{handler::logout}"
-                android:padding="5dp">
+                    android:onClick="@{handler::settings}"
+                    style="@style/SettingsList"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tutorial"
+                    android:onClick="@{handler::tutorial}"
+                    style="@style/SettingsList"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_invite"
+                    android:onClick="@{handler::invite}"
+                    style="@style/SettingsList"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rating_us"
+                    android:onClick="@{handler::rating}"
+                    style="@style/SettingsList"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/visit_our_website"
+                    android:onClick="@{handler::visitWebsite}"
+                    style="@style/SettingsList"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/visit_our_facebook"
+                    android:onClick="@{handler::visitFacebook}"
+                    style="@style/SettingsList"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/terms_conditions"
+                    android:onClick="@{handler::termsConditions}"
+                    style="@style/SettingsList"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/partner"
+                            android:textStyle="bold"
+                            android:textColor="@color/settingsText"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/contact"
+                            android:background="@drawable/bg_btn_contact"
+                            android:padding="15dp"
+                            android:textColor="@color/settingsBtnText"
+                            android:textSize="16sp"
+                            android:layout_margin="5dp"
+                            android:onClick="@{handler::forPartner}"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/help_improve"
+                            android:textStyle="bold"
+                            android:textColor="@color/settingsText"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/suggestions_box"
+                            android:background="@drawable/suggestion_box"
+                            android:textSize="8sp"
+                            android:textColor="@color/settingsBtnText"
+                            android:textAllCaps="true"
+                            android:layout_margin="5dp"
+                            android:gravity="center"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="15dp"
+                            android:paddingLeft="2dp"
+                            android:paddingRight="2dp"
+                            android:onClick="@{handler::forImprove}"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/settingsBg1"
+                    android:text="@{user != null ? @string/logout : @string/login}"
+                    android:textColor="@color/logout"
+                    android:textSize="20sp"
+                    android:onClick="@{handler::logout}"
+                    android:padding="15dp"
+                    android:gravity="center"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{user != null ? @string/logout : @string/login}"
-                    android:textColor="@color/logout"
-                    android:textSize="20sp"/>
+                    android:text="@{version}"
+                    android:textColor="@color/settingsText"
+                    android:padding="15dp"
+                    android:layout_gravity="center"/>
             </LinearLayout>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Clear"
-                android:layout_gravity="center_horizontal"
-                android:onClick="@{handler::clear}"/>
-        </LinearLayout>
-
-
-
+        </ScrollView>
     </LinearLayout>
 </layout>
 

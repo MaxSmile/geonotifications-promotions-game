@@ -83,8 +83,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TermsConditionsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.NetworkActivity"
             android:launchMode="singleTop"

@@ -10,4 +10,18 @@
             android:maxLength="9"
             android:defaultValue="100"/>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/sound_category">
+        <CheckBoxPreference
+            android:title="@string/sound_game"
+            android:defaultValue="true"
+            android:key="soundGame"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/notification_category">
+        <CheckBoxPreference
+            android:title="@string/notification_title"
+            android:defaultValue="true"
+            android:key="notifications"/>
+    </PreferenceCategory>
 </PreferenceScreen>

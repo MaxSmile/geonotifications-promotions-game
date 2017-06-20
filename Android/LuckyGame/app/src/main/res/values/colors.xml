@@ -45,5 +45,9 @@
     <color name="networkButtonText">#ffffff</color>
     <color name="line">#cacaca</color>
     <color name="moreInfoBg">#ffffff</color>
+    <color name="settingsBg2">#eef1f3</color>
+    <color name="settingsBg1">#ffffff</color>
+    <color name="settingsText">#a6a8a9</color>
+    <color name="settingsBtnText">#ffffff</color>
 
 </resources>
