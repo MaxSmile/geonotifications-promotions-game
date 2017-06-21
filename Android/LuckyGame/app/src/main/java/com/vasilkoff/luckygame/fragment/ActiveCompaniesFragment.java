@@ -19,6 +19,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
+import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -73,51 +74,50 @@ public class ActiveCompaniesFragment extends Fragment {
             networkUnavailable.setVisibility(View.VISIBLE);
     }
 
-    public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies, boolean nearMe) {
-        this.spins = spins;
-        this.places = places;
-        this.companies = companies;
-        preloader.setVisibility(View.GONE);
-        networkUnavailable.setVisibility(View.GONE);
-        updateData(nearMe);
+    public void refreshList(ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+        if (isAdded() && preloader != null) {
+            this.spins = spins;
+            this.places = places;
+            this.companies = companies;
+            preloader.setVisibility(View.GONE);
+            networkUnavailable.setVisibility(View.GONE);
+            updateData();
+        }
     }
 
-    public void updateData(boolean nearMe) {
-        if (spins != null && (spins.size() > 0 && spins.size() == places.size())) {
-            if (CurrentLocation.lat != 0) {
-                for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
-                    Place place = spinPlace.getValue();
-                    if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                        place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                                place.getGeoLat(), place.getGeoLon()));
-                        place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                                place.getGeoLat(), place.getGeoLon()));
-                    }
+    public void updateData() {
+        if (CurrentLocation.lat != 0) {
+            for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
+                Place place = spinPlace.getValue();
+                if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                            place.getGeoLat(), place.getGeoLon()));
+                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                            place.getGeoLat(), place.getGeoLon()));
                 }
             }
-
-            Iterator<Spin> i = spins.iterator();
-            while (i.hasNext()) {
-                Spin spin = i.next();
-                if (spin.getStatus() != Constants.SPIN_STATUS_ACTIVE) {
-                    places.remove(spin.getPlaceKey());
-                    i.remove();
-                }
-            }
-
-            if (nearMe) {
-                Iterator<Spin> j = spins.iterator();
-                while (j.hasNext()) {
-                    Spin spin = j.next();
-                    if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
-                        places.remove(spin.getPlaceKey());
-                        j.remove();
-                    }
-                }
-            }
-
-            dataBridge.activeSpins(spins.size());
-            companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
         }
+
+        Iterator<Spin> i = spins.iterator();
+        while (i.hasNext()) {
+            Spin spin = i.next();
+            if (spin.getStatus() != Constants.SPIN_STATUS_ACTIVE) {
+                i.remove();
+            }
+        }
+
+        if (Filters.nearMe) {
+            Iterator<Spin> j = spins.iterator();
+            while (j.hasNext()) {
+                Spin spin = j.next();
+                if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
+                    j.remove();
+                }
+            }
+        }
+
+        dataBridge.activeSpins(spins.size());
+        companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
+
     }
 }

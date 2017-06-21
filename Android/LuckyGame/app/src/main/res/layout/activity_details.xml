@@ -303,9 +303,10 @@
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@{favorites ? @drawable/favourites_red_filled : @drawable/favourites_red}"
+                            android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
                             android:background="@null"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:onClick="@{handler::favorites}"/>
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -343,7 +344,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/plus_one"
-                            android:layout_alignParentEnd="true" />
+                            android:layout_alignParentEnd="true"
+                            android:onClick="@{handler::getExtraSpin}"/>
                     </RelativeLayout>
                 </LinearLayout>
 

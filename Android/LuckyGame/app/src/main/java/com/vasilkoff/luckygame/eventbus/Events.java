@@ -7,4 +7,6 @@ package com.vasilkoff.luckygame.eventbus;
 public class Events {
     public static class UpdateLocation {
     }
+    public static class UpdateFilter {
+    }
 }

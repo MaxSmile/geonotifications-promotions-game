@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -81,10 +83,11 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public boolean favorites;
 
-
-
     public static boolean showPopUpLogin = true;
 
+    public static List<String> cities;
+    public static Map<String, String> filteredCities;
+    public static SparseBooleanArray checkedCitiesArray;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -279,6 +282,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     }
 
     public void getSpins() {
+        cities = new ArrayList<String>();
         Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -304,6 +308,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             final Place spinPlace = dataSnapshot.getValue(Place.class);
+                            cities.add(spinPlace.getCity());
                             spinPlace.setTypeName(Constants.COMPANY_TYPE_NAMES[spinPlace.getType()]);
                             places.put(spinPlace.getId(), spinPlace);
                             if (user != null) {

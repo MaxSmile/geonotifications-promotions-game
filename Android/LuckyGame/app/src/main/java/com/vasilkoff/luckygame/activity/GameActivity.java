@@ -393,9 +393,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
     private void setImage() {
         if (favorites) {
-            losePopUpFavorites.setImageResource(R.drawable.favourites_red_filled);
+            losePopUpFavorites.setImageResource(R.drawable.heart_filled);
         } else {
-            losePopUpFavorites.setImageResource(R.drawable.favourites_red);
+            losePopUpFavorites.setImageResource(R.drawable.heart);
         }
     }
 

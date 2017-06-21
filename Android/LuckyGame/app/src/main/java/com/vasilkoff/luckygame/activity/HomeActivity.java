@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 
@@ -60,7 +61,10 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     private AppBarLayout appBarLayout;
     private ImageView logo;
     private ImageView logoSmall;
-    private boolean filterNearMe;
+
+    private HashMap<String, Place> places;
+    private HashMap<String, Company> companies;
+    private ArrayList<Spin> spins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         activeCompaniesFragment = new ActiveCompaniesFragment();
+        couponsFragment = new CouponsFragment();
         allCompaniesFragment = new AllCompaniesFragment();
 
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -172,8 +177,18 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
     @Override
     public void resultSpins(HashMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
-        ArrayList<Spin> spins = new ArrayList<Spin>(mapSpins.values());
-        activeCompaniesFragment.refreshList(spins, places, companies, filterNearMe);
+        result = true;
+        this.spins = new ArrayList<Spin>(mapSpins.values());
+        this.places = places;
+        this.companies = companies;
+        refreshSpins();
+    }
+
+    private void refreshSpins() {
+        if (spins != null && (spins.size() > 0 && spins.size() == places.size())) {
+            ArrayList<Spin> newSpins = new ArrayList<Spin>(spins);
+            activeCompaniesFragment.refreshList(newSpins, places, companies);
+        }
     }
 
     @Override
@@ -203,7 +218,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
         if (!CurrentLocation.check) {
             CurrentLocation.check = true;
-            activeCompaniesFragment.updateData(filterNearMe);
+            refreshSpins();
             if (couponsFragment != null)
                 couponsFragment.updateData();
         }
@@ -264,10 +279,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                 case 1:
                     return activeCompaniesFragment;
                 case 2:
-                    couponsFragment = new CouponsFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("filterNearMe", filterNearMe);
-                    couponsFragment.setArguments(bundle);
                     return couponsFragment;
             }
             return null;
@@ -316,26 +327,31 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                 break;
             case R.id.homeNearMe:
                 if (CurrentLocation.lat != 0 ) {
-                    filterNearMe = !filterNearMe;
-                    TextView textView = (TextView)findViewById(R.id.nearMeText);
-                    ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
-                    if (filterNearMe) {
-                        imageView.setImageResource(R.drawable.marker_icon_active);
-                        textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
-                    } else {
-                        imageView.setImageResource(R.drawable.marker_icon);
-                        textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+                    if (checkResult()) {
+                        Filters.nearMe = !Filters.nearMe;
+                        TextView textView = (TextView)findViewById(R.id.nearMeText);
+                        ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
+                        if (Filters.nearMe) {
+                            imageView.setImageResource(R.drawable.marker_icon_active);
+                            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+                        } else {
+                            imageView.setImageResource(R.drawable.marker_icon);
+                            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+                        }
+                        refreshSpins();
+                        if (couponsFragment != null) {
+                            couponsFragment.refreshList();
+                        }
                     }
-                    getSpins();
-                    if (couponsFragment != null) {
-                        couponsFragment.refreshList(filterNearMe);
-                    }
-
                 } else {
                     Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
                 }
 
                 break;
+           /* case R.id.homeFilters:
+                if (checkResult())
+                    startActivity(new Intent(this, FilterActivity.class));
+                break;*/
             case R.id.companyAll:
                 goToCategory(Constants.CATEGORY_ALL);
                 break;

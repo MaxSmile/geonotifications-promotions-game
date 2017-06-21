@@ -138,7 +138,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@{favorites ? @drawable/favourites_red_filled : @drawable/favourites_red}"/>
+                    android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
+                    android:onClick="@{handler::favorites}"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

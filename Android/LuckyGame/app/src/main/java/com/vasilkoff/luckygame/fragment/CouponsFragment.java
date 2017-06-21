@@ -18,6 +18,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CouponListAdapter;
+import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Company;
@@ -39,8 +40,8 @@ public class CouponsFragment extends Fragment {
 
     private RecyclerView couponsList;
     private List<CouponExtension> coupons;
+    private List<CouponExtension> newCoupons;
     private List<String> couponsCode;
-    private boolean nearMe;
 
     @Nullable
     @Override
@@ -54,17 +55,17 @@ public class CouponsFragment extends Fragment {
         couponsList = (RecyclerView) getActivity().findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         couponsList.setLayoutManager(llm);
-        refreshList(getArguments().getBoolean("filterNearMe"));
-
-    }
-
-    public void refreshList(boolean nearMe) {
-        this.nearMe = nearMe;
         getCoupons();
     }
 
+    public void refreshList() {
+        if (newCoupons != null)
+            updateData();
+    }
+
     public void updateData() {
-        if (isAdded()) {
+        if (isAdded() && (newCoupons.size() == couponsCode.size())) {
+            coupons = new ArrayList<CouponExtension>(newCoupons);
             if (coupons != null) {
                 TypedArray ta = getResources().obtainTypedArray(R.array.coupon_type);
                 for (int i = 0; i < coupons.size(); i++) {
@@ -106,7 +107,7 @@ public class CouponsFragment extends Fragment {
                 }
                 ta.recycle();
 
-                if (nearMe) {
+                if (Filters.nearMe) {
                     Iterator<CouponExtension> j = coupons.iterator();
                     while (j.hasNext()) {
                         CouponExtension coupon = j.next();
@@ -124,7 +125,7 @@ public class CouponsFragment extends Fragment {
 
     private void getCoupons() {
         couponsCode = DBHelper.getInstance(getContext()).getCoupons();
-        coupons = new ArrayList<CouponExtension>();
+        newCoupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
             Constants.DB_COUPON.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -145,7 +146,7 @@ public class CouponsFragment extends Fragment {
                                         Company company = dataSnapshot.getValue(Company.class);
                                         coupon.setCompanyName(company.getName());
                                         coupon.setLogo(company.getLogo());
-                                        coupons.add(coupon);
+                                        newCoupons.add(coupon);
                                         updateData();
                                     }
 

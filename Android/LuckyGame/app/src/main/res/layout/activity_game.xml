@@ -236,7 +236,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/plus_one"/>
+                        android:src="@drawable/plus_one"
+                        android:onClick="@{handler::getExtraSpin}"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -259,7 +260,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:src="@{favorites ? @drawable/favourites_red_filled : @drawable/favourites_red}"/>
+                        android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
+                        android:onClick="@{handler::favorites}"/>
 
                 </LinearLayout>
 
