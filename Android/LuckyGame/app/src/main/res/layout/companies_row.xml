@@ -56,15 +56,25 @@
                             android:textColor="@color/colorNameCompany"
                             android:text="@{place.name}"/>
                         <TextView
-                            android:id="@+id/companyDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{place.typeName}"/>
-                        <TextView
-                            android:id="@+id/companyAddress"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{place.distanceString}"/>
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{place.distanceString}"
+                                android:paddingEnd="2dp"
+                                android:visibility="@{place.distanceString != null ? v.VISIBLE : v.GONE}"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{place.city}"/>
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class FilteredCompanyActivity extends BaseActivity {
     private int type;
@@ -72,7 +73,7 @@ public class FilteredCompanyActivity extends BaseActivity {
     }
 
     @Override
-    public void resultSpins(HashMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+    public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
         ArrayList<Spin> spins = new ArrayList<Spin>(mapSpins.values());
         preloader.setVisibility(View.GONE);
         if (spins.size() > 0 && spins.size() == places.size()) {

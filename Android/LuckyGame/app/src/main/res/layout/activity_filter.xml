@@ -11,27 +11,87 @@
     tools:context="com.vasilkoff.luckygame.activity.FilterActivity">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="350dp"
         android:orientation="vertical"
         android:background="@drawable/bg_filter"
-        android:layout_gravity="center_vertical">
-        <ListView
-            android:id="@+id/filterList"
+        android:layout_gravity="center_vertical"
+        android:padding="15dp">
+        <LinearLayout
+            android:id="@+id/filterTopLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/filterBottomLayout">
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+            <ListView
+                android:id="@+id/filterList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="0dp">
+            </ListView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_by_town"
+                android:textSize="18sp"
+                android:textColor="@color/filterText"/>
+
+        </LinearLayout>
+        <ListView
+            android:id="@+id/filterListByCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filterTopLayout"
+            android:layout_above="@+id/filterBottomLayout"
+            android:divider="@null"
+            android:dividerHeight="0dp">
         </ListView>
         <LinearLayout
             android:id="@+id/filterBottomLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_alignParentBottom="true">
-            <Button
-                android:id="@+id/filterApply"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:src="@drawable/line_hr"/>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="apply"/>
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/filterApply"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_apply"
+                    android:background="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@color/filterText"
+                    android:textSize="18sp"/>
+                <Button
+                    android:id="@+id/filterClear"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_clear"
+                    android:background="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@color/filterText"
+                    android:textSize="18sp"/>
+                <Button
+                    android:id="@+id/filterClose"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_close"
+                    android:background="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@color/filterText"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </RelativeLayout>

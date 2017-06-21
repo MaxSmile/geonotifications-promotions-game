@@ -5,15 +5,15 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.SparseBooleanArray;
+
 import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
+
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.share.model.AppInviteContent;
@@ -50,10 +50,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -85,9 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public static boolean showPopUpLogin = true;
 
-    public static List<String> cities;
-    public static Map<String, String> filteredCities;
-    public static SparseBooleanArray checkedCitiesArray;
+    public static TreeMap<String, String> cities;
+
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -277,16 +276,16 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         });
     }
 
-    public void resultSpins(HashMap<String, Spin> mapSpins,HashMap<String, Place> places, HashMap<String, Company> companies) {
+    public void resultSpins(TreeMap<String, Spin> mapSpins,HashMap<String, Place> places, HashMap<String, Company> companies) {
 
     }
 
     public void getSpins() {
-        cities = new ArrayList<String>();
+        cities = new TreeMap<String, String>();
         Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final HashMap<String, Spin> spins = new HashMap<String, Spin>();
+                final TreeMap<String, Spin> spins = new TreeMap<String, Spin>();
                 final HashMap<String, Place> places = new HashMap<String, Place>();
                 final HashMap<String, Company> companies = new HashMap<String, Company>();
 
@@ -308,7 +307,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             final Place spinPlace = dataSnapshot.getValue(Place.class);
-                            cities.add(spinPlace.getCity());
+                            cities.put(spinPlace.getCity(), spinPlace.getCity());
                             spinPlace.setTypeName(Constants.COMPANY_TYPE_NAMES[spinPlace.getType()]);
                             places.put(spinPlace.getId(), spinPlace);
                             if (user != null) {
@@ -338,14 +337,10 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                         TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
                                         spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
                                         spin.setStatusString(spinType[spin.getStatus()]);
-                                        spins.put(spin.getId(), spin);
+                                        spins.put(spinPlace.getName(), spin);
                                         spinIcon.recycle();
 
-                                   /* if (places.size() == spinCount) {
                                         getCompanies(spins, places, companies, spinCount, spinPlace);
-                                    }*/
-                                        getCompanies(spins, places, companies, spinCount, spinPlace);
-
 
                                     }
 
@@ -358,7 +353,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                 TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
                                 spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
                                 spin.setStatusString(spinType[spin.getStatus()]);
-                                spins.put(spin.getId(), spin);
+                                spins.put(spinPlace.getName(), spin);
                                 spinIcon.recycle();
                                 getCompanies(spins, places, companies, spinCount, spinPlace);
                             }
@@ -380,15 +375,13 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         });
     }
 
-    private void getCompanies(final HashMap<String, Spin> spins, final HashMap<String,
+    private void getCompanies(final TreeMap<String, Spin> spins, final HashMap<String,
             Place> places, final HashMap<String, Company> companies,final long spinCount, final Place place) {
         Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Company company = dataSnapshot.getValue(Company.class);
                 companies.put(dataSnapshot.getKey(), company);
-
-                //if (companies.size() == spinCount)
                     resultSpins(spins, places, companies);
             }
 

@@ -12,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
@@ -25,13 +22,13 @@ import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 
 import com.vasilkoff.luckygame.entity.Spin;
-import com.vasilkoff.luckygame.util.DateFormat;
 import com.vasilkoff.luckygame.util.LocationDistance;
 import com.vasilkoff.luckygame.util.NetworkState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Kusenko on 27.02.2017.
@@ -113,6 +110,26 @@ public class ActiveCompaniesFragment extends Fragment {
                 if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
                     j.remove();
                 }
+            }
+        }
+
+        if (Filters.byCity) {
+            Iterator<Spin> iCity = spins.iterator();
+            while (iCity.hasNext()) {
+                Spin spin = iCity.next();
+                if (Filters.filteredCities.get(places.get(spin.getPlaceKey()).getCity()) == null) {
+                    iCity.remove();
+                }
+            }
+        }
+
+        if (Filters.byZA) {
+            if (spins.size() > 0) {
+                List<Spin> sortedSpins = new ArrayList<Spin>();
+                for (int k = spins.size() - 1; k >= 0; k--) {
+                    sortedSpins.add(spins.get(k));
+                }
+                spins = new ArrayList<Spin>(sortedSpins);
             }
         }
 

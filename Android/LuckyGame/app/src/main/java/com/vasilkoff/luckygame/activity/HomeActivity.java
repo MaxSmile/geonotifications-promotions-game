@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class HomeActivity extends BaseActivity implements DataBridge {
 
@@ -66,6 +67,10 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     private HashMap<String, Company> companies;
     private ArrayList<Spin> spins;
 
+
+    private boolean fromFilter;
+    private TextView filterCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +79,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         logo = (ImageView) findViewById(R.id.homeLogo);
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
+        filterCount = (TextView)findViewById(R.id.filterCount);
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
@@ -88,26 +94,6 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-     /*   mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 2:
-                        couponsFragment.refreshList(filterNearMe);
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });*/
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -176,7 +162,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
     }
 
     @Override
-    public void resultSpins(HashMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+    public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
         result = true;
         this.spins = new ArrayList<Spin>(mapSpins.values());
         this.places = places;
@@ -211,7 +197,30 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
-        getSpins();
+
+        if (!fromFilter) {
+            getSpins();
+        }
+
+        fromFilter = false;
+
+        if (Filters.count > 0) {
+            filterCount.setText(String.valueOf(Filters.count));
+            filterCount.setVisibility(View.VISIBLE);
+        } else {
+            filterCount.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == Filters.FILTER_CODE) {
+            fromFilter = true;
+            if (resultCode == RESULT_OK)
+                filterData();
+        }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -320,6 +329,13 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         }
     }
 
+    private void filterData() {
+        refreshSpins();
+        if (couponsFragment != null) {
+            couponsFragment.refreshList();
+        }
+    }
+
     public void onHomeClick(View view) {
         switch (view.getId()) {
             case R.id.homeSetting:
@@ -338,20 +354,19 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                             imageView.setImageResource(R.drawable.marker_icon);
                             textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
                         }
-                        refreshSpins();
-                        if (couponsFragment != null) {
-                            couponsFragment.refreshList();
-                        }
+
+                        filterData();
                     }
                 } else {
                     Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
                 }
 
                 break;
-           /* case R.id.homeFilters:
+            case R.id.homeFilters:
                 if (checkResult())
-                    startActivity(new Intent(this, FilterActivity.class));
-                break;*/
+                    //startActivity(new Intent(this, FilterActivity.class));
+                startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+                break;
             case R.id.companyAll:
                 goToCategory(Constants.CATEGORY_ALL);
                 break;

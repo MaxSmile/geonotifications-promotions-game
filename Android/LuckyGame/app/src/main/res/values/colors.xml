@@ -49,5 +49,6 @@
     <color name="settingsBg1">#ffffff</color>
     <color name="settingsText">#a6a8a9</color>
     <color name="settingsBtnText">#ffffff</color>
+    <color name="filterText">#ffffff</color>
 
 </resources>

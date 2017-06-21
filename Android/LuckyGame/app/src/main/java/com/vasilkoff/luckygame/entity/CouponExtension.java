@@ -35,6 +35,7 @@ public class CouponExtension implements Parcelable {
     private double geoLat;
     private double geoLon;
     private int locked;
+    private String city;
 
 
     public CouponExtension() {
@@ -92,6 +93,7 @@ public class CouponExtension implements Parcelable {
         geoLat = in.readDouble();
         geoLon = in.readDouble();
         locked = in.readInt();
+        city = in.readString();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -105,41 +107,6 @@ public class CouponExtension implements Parcelable {
             return new CouponExtension[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(status);
-        dest.writeString(code);
-        dest.writeString(companyKey);
-        dest.writeString(giftKey);
-        dest.writeString(placeKey);
-        dest.writeString(description);
-        dest.writeString(creator);
-        dest.writeLong(creation);
-        dest.writeLong(expired);
-        dest.writeLong(locks);
-        dest.writeLong(redeemed);
-        dest.writeString(redeemUser);
-        dest.writeString(companyName);
-        dest.writeString(placeName);
-        dest.writeString(logo);
-        dest.writeLong(type);
-        dest.writeString(lockDiff);
-        dest.writeString(expiredDiff);
-        dest.writeInt(statusIcon);
-        dest.writeString(typeString);
-        dest.writeString(redeemedString);
-        dest.writeDouble(distance);
-        dest.writeString(distanceString);
-        dest.writeDouble(geoLat);
-        dest.writeDouble(geoLon);
-        dest.writeInt(locked);
-    }
 
     public int getStatus() {
         return status;
@@ -347,5 +314,49 @@ public class CouponExtension implements Parcelable {
 
     public void setLocked(int locked) {
         this.locked = locked;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(status);
+        dest.writeString(code);
+        dest.writeString(companyKey);
+        dest.writeString(giftKey);
+        dest.writeString(placeKey);
+        dest.writeString(description);
+        dest.writeString(creator);
+        dest.writeLong(creation);
+        dest.writeLong(expired);
+        dest.writeLong(locks);
+        dest.writeLong(redeemed);
+        dest.writeString(redeemUser);
+        dest.writeString(companyName);
+        dest.writeString(placeName);
+        dest.writeString(logo);
+        dest.writeLong(type);
+        dest.writeString(lockDiff);
+        dest.writeString(expiredDiff);
+        dest.writeInt(statusIcon);
+        dest.writeString(typeString);
+        dest.writeString(redeemedString);
+        dest.writeDouble(distance);
+        dest.writeString(distanceString);
+        dest.writeDouble(geoLat);
+        dest.writeDouble(geoLon);
+        dest.writeInt(locked);
+        dest.writeString(city);
     }
 }

@@ -143,5 +143,10 @@
     <string name="like_our_app">Like our app</string>
     <string name="rating_us">Rating us</string>
     <string name="mail_chooser">Send email:</string>
+    <string name="filter_by_town"><u>By town</u></string>
+    <string name="filter_za">Z-A</string>
+    <string name="filter_apply">Apply</string>
+    <string name="filter_clear">Clear</string>
+    <string name="filter_close">Close</string>
 
 </resources>

@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by Kusenko on 27.02.2017.
@@ -40,7 +41,7 @@ public class CouponsFragment extends Fragment {
 
     private RecyclerView couponsList;
     private List<CouponExtension> coupons;
-    private List<CouponExtension> newCoupons;
+    private TreeMap<String, CouponExtension> newCoupons;
     private List<String> couponsCode;
 
     @Nullable
@@ -65,67 +66,87 @@ public class CouponsFragment extends Fragment {
 
     public void updateData() {
         if (isAdded() && (newCoupons.size() == couponsCode.size())) {
-            coupons = new ArrayList<CouponExtension>(newCoupons);
-            if (coupons != null) {
-                TypedArray ta = getResources().obtainTypedArray(R.array.coupon_type);
-                for (int i = 0; i < coupons.size(); i++) {
-                    CouponExtension coupon = coupons.get(i);
+            coupons = new ArrayList<CouponExtension>(newCoupons.values());
 
-                    if (CurrentLocation.lat != 0) {
-                        if (coupon.getGeoLat() != 0 && coupon.getGeoLon() != 0) {
-                            coupon.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                                    coupon.getGeoLat(), coupon.getGeoLon()));
-                            coupon.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                                    coupon.getGeoLat(), coupon.getGeoLon()));
-                        }
-                    }
+            TypedArray ta = getResources().obtainTypedArray(R.array.coupon_type);
+            for (int i = 0; i < coupons.size(); i++) {
+                CouponExtension coupon = coupons.get(i);
 
-                    coupon.setTypeString(Constants.COMPANY_TYPE_NAMES[(int)coupon.getType()]);
-
-                    if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
-                        if (coupon.getExpired() < System.currentTimeMillis()) {
-                            coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
-                        } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE && coupon.getLocks() < System.currentTimeMillis()
-                                && coupon.getLocked() == Constants.COUPON_LOCK) {
-                            coupon.setStatus(Constants.COUPON_STATUS_LOCK);
-                            Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_LOCK);
-                        }
-                    }
-
-                    String locks = DateFormat.getDiff(coupon.getLocks());
-                    if (locks != null)
-                        coupon.setLockDiff(locks);
-
-                    String expire = DateFormat.getDiff(coupon.getExpired());
-                    if (expire != null)
-                        coupon.setExpiredDiff(expire);
-
-                    if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
-                        coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
-                    }
-                    coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
-                }
-                ta.recycle();
-
-                if (Filters.nearMe) {
-                    Iterator<CouponExtension> j = coupons.iterator();
-                    while (j.hasNext()) {
-                        CouponExtension coupon = j.next();
-                        if (coupon.getDistance() > Properties.getNearMeRadius()) {
-                            j.remove();
-                        }
+                if (CurrentLocation.lat != 0) {
+                    if (coupon.getGeoLat() != 0 && coupon.getGeoLon() != 0) {
+                        coupon.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                                coupon.getGeoLat(), coupon.getGeoLon()));
+                        coupon.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                                coupon.getGeoLat(), coupon.getGeoLon()));
                     }
                 }
 
-                couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+                coupon.setTypeString(Constants.COMPANY_TYPE_NAMES[(int)coupon.getType()]);
+
+                if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
+                    if (coupon.getExpired() < System.currentTimeMillis()) {
+                        coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
+                    } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE && coupon.getLocks() < System.currentTimeMillis()
+                            && coupon.getLocked() == Constants.COUPON_LOCK) {
+                        coupon.setStatus(Constants.COUPON_STATUS_LOCK);
+                        Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_LOCK);
+                    }
+                }
+
+                String locks = DateFormat.getDiff(coupon.getLocks());
+                if (locks != null)
+                    coupon.setLockDiff(locks);
+
+                String expire = DateFormat.getDiff(coupon.getExpired());
+                if (expire != null)
+                    coupon.setExpiredDiff(expire);
+
+                if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
+                    coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
+                }
+                coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
             }
+            ta.recycle();
+
+            if (Filters.nearMe) {
+                Iterator<CouponExtension> j = coupons.iterator();
+                while (j.hasNext()) {
+                    CouponExtension coupon = j.next();
+                    if (coupon.getDistance() > Properties.getNearMeRadius()) {
+                        j.remove();
+                    }
+                }
+            }
+
+            if (Filters.byCity) {
+                Iterator<CouponExtension> iCity = coupons.iterator();
+                while (iCity.hasNext()) {
+                    CouponExtension coupon = iCity.next();
+                    if (Filters.filteredCities.get(coupon.getCity()) == null) {
+                        iCity.remove();
+                    }
+                }
+            }
+
+            if (Filters.byZA) {
+                if (coupons.size() > 0) {
+                    List<CouponExtension> sortedCoupons = new ArrayList<CouponExtension>();
+                    for (int k = coupons.size() - 1; k >= 0; k--) {
+                        sortedCoupons.add(coupons.get(k));
+                    }
+                    coupons = new ArrayList<CouponExtension>(sortedCoupons);
+                }
+            }
+
+            couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+
         }
 
     }
 
     private void getCoupons() {
         couponsCode = DBHelper.getInstance(getContext()).getCoupons();
-        newCoupons = new ArrayList<CouponExtension>();
+        newCoupons = new TreeMap<String, CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
             Constants.DB_COUPON.child(couponsCode.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -140,13 +161,14 @@ public class CouponsFragment extends Fragment {
                                 coupon.setType(place.getType());
                                 coupon.setGeoLat(place.getGeoLat());
                                 coupon.setGeoLon(place.getGeoLon());
+                                coupon.setCity(place.getCity());
                                 Constants.DB_COMPANY.child(coupon.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Company company = dataSnapshot.getValue(Company.class);
                                         coupon.setCompanyName(company.getName());
                                         coupon.setLogo(company.getLogo());
-                                        newCoupons.add(coupon);
+                                        newCoupons.put(coupon.getPlaceName(), coupon);
                                         updateData();
                                     }
 

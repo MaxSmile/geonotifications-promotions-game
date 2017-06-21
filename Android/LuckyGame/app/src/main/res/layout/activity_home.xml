@@ -66,7 +66,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp"
             android:paddingBottom="10dp">
             <LinearLayout
                 android:id="@+id/homeSearch"
@@ -75,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:onClick="onHomeClick">
+                android:onClick="onHomeClick"
+                android:paddingTop="10dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,7 +93,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:onClick="onHomeClick">
+                android:onClick="onHomeClick"
+                android:paddingTop="10dp">
                 <ImageView
                     android:id="@+id/nearMeImage"
                     android:layout_width="wrap_content"
@@ -106,24 +107,39 @@
                     android:text="@string/near_me"
                     style="@style/FiltersText"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/homeFilters"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
+                android:layout_height="match_parent"
                 android:onClick="onHomeClick">
                 <ImageView
+                    android:id="@+id/filterIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/filter"/>
+                    android:src="@drawable/filter"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/filters"
-                    style="@style/FiltersText"/>
-            </LinearLayout>
+                    style="@style/FiltersText"
+                    android:layout_below="@+id/filterIcon"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:id="@+id/filterCount"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:textColor="@color/colorFiltersText"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:background="@drawable/bg_count_green"
+                    android:layout_toEndOf="@+id/filterIcon"
+                    android:layout_marginLeft="-2dp"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
         </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>
