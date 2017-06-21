@@ -1,16 +1,21 @@
 package com.vasilkoff.luckygame.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
+import com.vasilkoff.luckygame.binding.handler.FilteredHandler;
+import com.vasilkoff.luckygame.common.Filters;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityFilteredCompanyBinding;
 import com.vasilkoff.luckygame.entity.Company;
@@ -30,15 +35,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class FilteredCompanyActivity extends BaseActivity {
+public class FilteredCompanyActivity extends BaseActivity implements FilteredHandler {
     private int type;
     private RecyclerView companiesList;
     private ActivityFilteredCompanyBinding binding;
     private RelativeLayout preloader;
 
-    private ArrayList<Spin> spins;
+
+    private ArrayList<Spin> newSpins;
     private HashMap<String, Place> places;
     private HashMap<String, Company> companies;
+    private boolean fromFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class FilteredCompanyActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filtered_company);
         binding.setHandler(this);
         binding.setCountResult(true);
+        binding.setNearMe(Filters.nearMe);
 
         String typeString;
         if (type >= 0) {
@@ -68,35 +76,51 @@ public class FilteredCompanyActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        preloader.setVisibility(View.VISIBLE);
-        getSpins();
+
+        if (!fromFilter) {
+            preloader.setVisibility(View.VISIBLE);
+            getSpins();
+        }
+
+        fromFilter = false;
+
+        binding.setFilterCount(Filters.count);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == Filters.FILTER_CODE) {
+            fromFilter = true;
+            if (resultCode == RESULT_OK)
+                filter();
+        }
     }
 
     @Override
     public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
-        ArrayList<Spin> spins = new ArrayList<Spin>(mapSpins.values());
+        result = true;
+        newSpins = new ArrayList<Spin>(mapSpins.values());
         preloader.setVisibility(View.GONE);
-        if (spins.size() > 0 && spins.size() == places.size()) {
+        if (newSpins.size() > 0 && newSpins.size() == places.size()) {
             HashMap<String, String> list = DBHelper.getInstance(this).getFavorites();
             if (type >= 0) {
-                Iterator<Spin> i = spins.iterator();
+                Iterator<Spin> i = newSpins.iterator();
                 while (i.hasNext()) {
                     Spin spin = i.next();
                     if (type == Constants.CATEGORY_FAVORITES && list.size() > 0) {
                         if (list.get(spin.getPlaceKey()) == null) {
-                            places.remove(spin.getPlaceKey());
                             i.remove();
                         }
                     } else {
                         if (places.get(spin.getPlaceKey()).getType() != type) {
-                            places.remove(spin.getPlaceKey());
                             i.remove();
                         }
                     }
                 }
             }
 
-            this.spins = spins;
             this.places = places;
             this.companies = companies;
             updateData();
@@ -105,7 +129,6 @@ public class FilteredCompanyActivity extends BaseActivity {
     }
 
     private void updateData() {
-        binding.setCountResult(spins.size() > 0);
         if (CurrentLocation.lat != 0) {
             for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
                 Place place = spinPlace.getValue();
@@ -117,6 +140,44 @@ public class FilteredCompanyActivity extends BaseActivity {
                 }
             }
         }
+
+        filter();
+    }
+
+    private void filter() {
+        ArrayList<Spin> spins = new ArrayList<Spin>(newSpins);
+
+        if (Filters.nearMe) {
+            Iterator<Spin> j = spins.iterator();
+            while (j.hasNext()) {
+                Spin spin = j.next();
+                if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
+                    j.remove();
+                }
+            }
+        }
+
+        if (Filters.byCity) {
+            Iterator<Spin> iCity = spins.iterator();
+            while (iCity.hasNext()) {
+                Spin spin = iCity.next();
+                if (Filters.filteredCities.get(places.get(spin.getPlaceKey()).getCity()) == null) {
+                    iCity.remove();
+                }
+            }
+        }
+
+        if (Filters.byZA) {
+            if (spins.size() > 0) {
+                List<Spin> sortedSpins = new ArrayList<Spin>();
+                for (int k = spins.size() - 1; k >= 0; k--) {
+                    sortedSpins.add(spins.get(k));
+                }
+                spins = new ArrayList<Spin>(sortedSpins);
+            }
+        }
+
+        binding.setCountResult(spins.size() > 0);
         companiesList.setAdapter(new CompanyListAdapter(this, spins, places, companies));
     }
 
@@ -138,5 +199,29 @@ public class FilteredCompanyActivity extends BaseActivity {
             CurrentLocation.check = true;
             updateData();
         }
+    }
+
+    @Override
+    public void filterNearMe(View view) {
+        if (CurrentLocation.lat != 0 ) {
+            if (checkResult()) {
+                Filters.nearMe = !Filters.nearMe;
+                binding.setNearMe(Filters.nearMe);
+                filter();
+            }
+        } else {
+            Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void filters(View view) {
+        if (checkResult())
+            startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+    }
+
+    @Override
+    public void search(View view) {
+        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
     }
 }

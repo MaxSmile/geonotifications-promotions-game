@@ -204,6 +204,8 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         fromFilter = false;
 
+        updateNearMeButton();
+
         if (Filters.count > 0) {
             filterCount.setText(String.valueOf(Filters.count));
             filterCount.setVisibility(View.VISIBLE);
@@ -336,6 +338,18 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         }
     }
 
+    private void updateNearMeButton() {
+        TextView textView = (TextView)findViewById(R.id.nearMeText);
+        ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
+        if (Filters.nearMe) {
+            imageView.setImageResource(R.drawable.marker_icon_active);
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+        } else {
+            imageView.setImageResource(R.drawable.marker_icon);
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+        }
+    }
+
     public void onHomeClick(View view) {
         switch (view.getId()) {
             case R.id.homeSetting:
@@ -345,16 +359,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                 if (CurrentLocation.lat != 0 ) {
                     if (checkResult()) {
                         Filters.nearMe = !Filters.nearMe;
-                        TextView textView = (TextView)findViewById(R.id.nearMeText);
-                        ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
-                        if (Filters.nearMe) {
-                            imageView.setImageResource(R.drawable.marker_icon_active);
-                            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
-                        } else {
-                            imageView.setImageResource(R.drawable.marker_icon);
-                            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
-                        }
-
+                        updateNearMeButton();
                         filterData();
                     }
                 } else {
@@ -364,8 +369,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
                 break;
             case R.id.homeFilters:
                 if (checkResult())
-                    //startActivity(new Intent(this, FilterActivity.class));
-                startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+                    startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
                 break;
             case R.id.companyAll:
                 goToCategory(Constants.CATEGORY_ALL);
