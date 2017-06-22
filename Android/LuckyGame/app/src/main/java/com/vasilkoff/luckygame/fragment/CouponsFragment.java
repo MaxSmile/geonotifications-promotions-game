@@ -138,6 +138,16 @@ public class CouponsFragment extends Fragment {
                 }
             }
 
+            if (Filters.search && Filters.searchKeyWord != null && Filters.searchKeyWord.length() > 0) {
+                Iterator<CouponExtension> iSearch = coupons.iterator();
+                while (iSearch.hasNext()) {
+                    CouponExtension coupon = iSearch.next();
+                    if (!coupon.getPlaceName().toLowerCase().contains(Filters.searchKeyWord)) {
+                        iSearch.remove();
+                    }
+                }
+            }
+
             couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
 
         }

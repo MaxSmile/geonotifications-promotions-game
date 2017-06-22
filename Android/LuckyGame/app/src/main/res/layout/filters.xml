@@ -13,6 +13,9 @@
         <variable
             name="filtersCount"
             type="Integer"/>
+        <variable
+            name="showSearch"
+            type="Boolean"/>
         <import type="android.view.View" alias="v"/>
     </data>
     <LinearLayout
@@ -22,9 +25,10 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             android:orientation="horizontal"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:visibility="@{showSearch ? v.GONE : v.VISIBLE}">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -98,11 +102,16 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="65dp"
             android:orientation="horizontal"
             android:layout_gravity="center_vertical"
-            android:padding="10dp">
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:visibility="@{showSearch ? v.VISIBLE : v.GONE}">
             <EditText
+                android:id="@+id/searchEditText"
                 android:layout_width="0dp"
                 android:layout_weight="6"
                 android:layout_height="wrap_content"
@@ -110,6 +119,8 @@
                 android:textColor="@color/searchText"
                 android:textCursorDrawable="@null"
                 android:layout_gravity="center"
+                android:textSize="15sp"
+                android:hint="@string/search_placeholder"
                 android:padding="5dp"
                 android:maxLines="1"/>
             <ImageButton
@@ -119,7 +130,7 @@
                 android:src="@drawable/arrow_down_white"
                 android:background="@null"
                 android:layout_gravity="center"
-                android:onClick="onHomeClick"/>
+                android:onClick="@{handler::hideSearch}"/>
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -127,7 +138,7 @@
                 android:src="@drawable/cancel_round_white"
                 android:background="@null"
                 android:layout_gravity="center"
-                android:onClick="onHomeClick"/>
+                android:onClick="@{handler::offSearch}"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

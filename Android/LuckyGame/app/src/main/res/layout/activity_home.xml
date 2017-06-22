@@ -13,6 +13,9 @@
         <variable
             name="filtersCount"
             type="Integer"/>
+        <variable
+            name="showSearch"
+            type="Boolean"/>
     </data>
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -77,13 +80,13 @@
                 android:src="@drawable/line"
                 android:layout_gravity="center"/>
 
-          <include
+            <include
               layout="@layout/filters"
               app:handler="@{handler}"
               app:filterSearch="@{filterSearch}"
               app:filterNearMe="@{filterNearMe}"
-              app:filtersCount="@{filtersCount}"/>
-
+              app:filtersCount="@{filtersCount}"
+              app:showSearch="@{showSearch}"/>
 
         </android.support.design.widget.AppBarLayout>
         <android.support.v4.view.ViewPager

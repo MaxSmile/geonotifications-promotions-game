@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.vasilkoff.luckygame.activity.FilteredCompanyActivity">
     <data>
         <variable
@@ -11,11 +12,17 @@
             name="countResult"
             type="Boolean"/>
         <variable
-            name="nearMe"
+            name="filterSearch"
             type="Boolean"/>
         <variable
-            name="filterCount"
+            name="filterNearMe"
+            type="Boolean"/>
+        <variable
+            name="filtersCount"
             type="Integer"/>
+        <variable
+            name="showSearch"
+            type="Boolean"/>
         <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.FilteredHandler" />
@@ -63,84 +70,13 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/line"
                     android:layout_gravity="center"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp">
-                    <LinearLayout
-                        android:id="@+id/homeSearch"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:onClick="@{handler::search}"
-                        android:paddingTop="10dp">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/search_icon"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/search"
-                            style="@style/FiltersText"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:onClick="@{handler::filterNearMe}"
-                        android:paddingTop="10dp">
-                        <ImageView
-                            android:id="@+id/nearMeImage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@{nearMe ? @drawable/marker_icon_active : @drawable/marker_icon}"/>
-                        <TextView
-                            android:id="@+id/nearMeText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/near_me"
-                            android:textColor="@{nearMe ? @color/colorTabTextSelected : @color/colorTabText}"
-                            style="@style/FiltersText"/>
-                    </LinearLayout>
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:onClick="@{handler::filters}">
-                        <ImageView
-                            android:id="@+id/filterIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/filter"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="10dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filters"
-                            style="@style/FiltersText"
-                            android:layout_below="@+id/filterIcon"
-                            android:layout_centerHorizontal="true" />
-                        <TextView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:textColor="@color/colorFiltersText"
-                            android:gravity="center"
-                            android:textSize="10sp"
-                            android:background="@drawable/bg_count_green"
-                            android:layout_toEndOf="@+id/filterIcon"
-                            android:layout_marginLeft="-2dp"
-                            android:text="@{String.valueOf(filterCount)}"
-                            android:visibility="@{filterCount > 0 ? v.VISIBLE : v.GONE}"/>
-
-                    </RelativeLayout>
-                </LinearLayout>
+                <include
+                    layout="@layout/filters"
+                    app:handler="@{handler}"
+                    app:filterSearch="@{filterSearch}"
+                    app:filterNearMe="@{filterNearMe}"
+                    app:filtersCount="@{filtersCount}"
+                    app:showSearch="@{showSearch}"/>
             </LinearLayout>
             <FrameLayout
                 android:layout_width="match_parent"

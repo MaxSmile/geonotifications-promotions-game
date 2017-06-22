@@ -5,7 +5,10 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -46,6 +49,8 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     private HashMap<String, Place> places;
     private HashMap<String, Company> companies;
     private boolean fromFilter;
+    private EditText searchEditText;
+    private boolean showSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +61,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filtered_company);
         binding.setHandler(this);
         binding.setCountResult(true);
-        binding.setNearMe(Filters.nearMe);
+
 
         String typeString;
         if (type >= 0) {
@@ -71,6 +76,28 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         companiesList.setLayoutManager(llm);
 
         preloader = (RelativeLayout) findViewById(R.id.preloader);
+        initSearch();
+    }
+
+    private void initSearch() {
+        searchEditText = (EditText)findViewById(R.id.searchEditText);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Filters.searchKeyWord = s.toString();
+                filter();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -83,8 +110,10 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         }
 
         fromFilter = false;
-
-        binding.setFilterCount(Filters.count);
+        binding.setFilterSearch(Filters.search);
+        binding.setFilterNearMe(Filters.nearMe);
+        binding.setFiltersCount(Filters.count);
+        binding.setShowSearch(showSearch);
     }
 
     @Override
@@ -177,6 +206,16 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
             }
         }
 
+        if (Filters.search && Filters.searchKeyWord != null && Filters.searchKeyWord.length() > 0) {
+            Iterator<Spin> iSearch = spins.iterator();
+            while (iSearch.hasNext()) {
+                Spin spin = iSearch.next();
+                if (!places.get(spin.getPlaceKey()).getName().toLowerCase().contains(Filters.searchKeyWord)) {
+                    iSearch.remove();
+                }
+            }
+        }
+
         binding.setCountResult(spins.size() > 0);
         companiesList.setAdapter(new CompanyListAdapter(this, spins, places, companies));
     }
@@ -206,7 +245,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         if (CurrentLocation.lat != 0 ) {
             if (checkResult()) {
                 Filters.nearMe = !Filters.nearMe;
-                binding.setNearMe(Filters.nearMe);
+                binding.setFilterNearMe(Filters.nearMe);
                 filter();
             }
         } else {
@@ -222,6 +261,32 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Override
     public void search(View view) {
-        Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
+        if (checkResult()) {
+            Filters.search = true;
+            showSearch = true;
+            binding.setShowSearch(showSearch);
+            binding.setFilterSearch(Filters.search);
+            searchEditText.setText(Filters.searchKeyWord);
+        }
+    }
+
+    @Override
+    public void hideSearch(View view) {
+        showSearch = false;
+        binding.setShowSearch(showSearch);
+        if (searchEditText.getText().length() == 0) {
+            Filters.search = false;
+            binding.setFilterSearch(Filters.search);
+        }
+    }
+
+    @Override
+    public void offSearch(View view) {
+        Filters.search = false;
+        binding.setFilterSearch(Filters.search);
+        showSearch = false;
+        binding.setShowSearch(showSearch);
+        Filters.searchKeyWord = null;
+        searchEditText.setText(null);
     }
 }

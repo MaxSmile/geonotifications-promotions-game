@@ -24,7 +24,12 @@ public class Properties {
     }
 
     public static int getNearMeRadius(){
-        return Integer.parseInt(getPrefs().getString(NEAR_ME_RADIUS , "100"));
+        String s = getPrefs().getString(NEAR_ME_RADIUS , "100");
+        if (s.isEmpty()) {
+            return 0;
+        }
+
+        return Integer.parseInt(s);
     }
 
     public static boolean getSoundGame(){

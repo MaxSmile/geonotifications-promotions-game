@@ -75,12 +75,10 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private HashMap<String, Company> companies;
     private ArrayList<Spin> spins;
 
-
     private boolean fromFilter;
-    private TextView filterCount;
-    private EditText homeSearchKeyWord;
-    private LinearLayout homeFiltersLayout;
-    private LinearLayout homeSearchLayout;
+    private boolean showSearch;
+    private EditText searchEditText;
+
     private ActivityHomeBinding binding;
 
     @Override
@@ -95,9 +93,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         logo = (ImageView) findViewById(R.id.homeLogo);
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
-        //filterCount = (TextView)findViewById(R.id.filterCount);
-       /* homeFiltersLayout = (LinearLayout)findViewById(R.id.homeFiltersLayout);
-        homeSearchLayout = (LinearLayout)findViewById(R.id.homeSearchLayout);*/
+
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
@@ -175,15 +171,15 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         } catch (NoSuchAlgorithmException e) {
 
         }*/
-        //Filters.searchKeyWord = ((EditText)findViewById(R.id.homeSearchKeyWord)).getText().toString().toLowerCase();
 
-        //initSearch();
+        initSearch();
         updateGeoPlaces();
+
     }
 
-    /*private void initSearch() {
-        homeSearchKeyWord =  (EditText)findViewById(R.id.homeSearchKeyWord);
-        homeSearchKeyWord.addTextChangedListener(new TextWatcher() {
+    private void initSearch() {
+        searchEditText = (EditText)findViewById(R.id.searchEditText);
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -191,7 +187,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Filters.search = true;
                 Filters.searchKeyWord = s.toString();
                 filterData();
             }
@@ -201,7 +196,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
             }
         });
-    }*/
+    }
 
     @Override
     public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
@@ -245,18 +240,11 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }
 
         fromFilter = false;
-
-        //updateNearMeButton();
         binding.setFilterSearch(Filters.search);
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
-
-        /*if (Filters.count > 0) {
-            filterCount.setText(String.valueOf(Filters.count));
-            filterCount.setVisibility(View.VISIBLE);
-        } else {
-            filterCount.setVisibility(View.GONE);
-        }*/
+        binding.setShowSearch(showSearch);
+        searchEditText.setText(Filters.searchKeyWord);
     }
 
     @Override
@@ -342,9 +330,32 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void search(View view) {
-        Filters.search = !Filters.search;
+        if (checkResult()) {
+            Filters.search = true;
+            showSearch = true;
+            binding.setShowSearch(showSearch);
+            binding.setFilterSearch(Filters.search);
+        }
+    }
+
+    @Override
+    public void hideSearch(View view) {
+        showSearch = false;
+        binding.setShowSearch(showSearch);
+        if (searchEditText.getText().length() == 0) {
+            Filters.search = false;
+            binding.setFilterSearch(Filters.search);
+        }
+    }
+
+    @Override
+    public void offSearch(View view) {
+        Filters.search = false;
         binding.setFilterSearch(Filters.search);
-        System.out.println(TAG + " search+");
+        showSearch = false;
+        binding.setShowSearch(showSearch);
+        Filters.searchKeyWord = null;
+        searchEditText.setText(null);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -409,65 +420,11 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }
     }
 
-   /* private void updateNearMeButton() {
-        TextView textView = (TextView)findViewById(R.id.nearMeText);
-        ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
-        if (Filters.nearMe) {
-            imageView.setImageResource(R.drawable.marker_icon_active);
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
-        } else {
-            imageView.setImageResource(R.drawable.marker_icon);
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
-        }
-    }
-
-    private void updateSearchButton() {
-        TextView textView = (TextView)findViewById(R.id.nearMeText);
-        ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
-        if (Filters.search) {
-            imageView.setImageResource(R.drawable.marker_icon_active);
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
-        } else {
-            imageView.setImageResource(R.drawable.marker_icon);
-            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
-        }
-    }*/
-
     public void onHomeClick(View view) {
         switch (view.getId()) {
             case R.id.homeSetting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
-            /*case R.id.homeNearMe:
-                if (CurrentLocation.lat != 0 ) {
-                    if (checkResult()) {
-                        Filters.nearMe = !Filters.nearMe;
-                        updateNearMeButton();
-                        filterData();
-                    }
-                } else {
-                    Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
-                }
-
-                break;
-            case R.id.homeFilters:
-                if (checkResult())
-                    startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
-                break;*/
-          /*  case R.id.homeSearch:
-                Filters.search = !Filters.search;
-                updateSearchButton();
-                *//*if (checkResult())
-                    startActivity(new Intent(this, SearchActivity.class));*//*
-                break;*/
-            /*case R.id.homeSearchStart:
-                Filters.search = true;
-                Filters.searchKeyWord = ((EditText)findViewById(R.id.homeSearchKeyWord)).getText().toString().toLowerCase();
-                filterData();
-                System.out.println(TAG + " searchKeyWord= " + Filters.searchKeyWord);
-                *//*if (checkResult())
-                    startActivity(new Intent(this, SearchActivity.class));*//*
-                break;*/
             case R.id.companyAll:
                 goToCategory(Constants.CATEGORY_ALL);
                 break;
