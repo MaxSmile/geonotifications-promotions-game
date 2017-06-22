@@ -100,6 +100,11 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
+        <activity
+            android:name=".activity.LocationActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUp"/>
 
         <service android:name=".service.LocationService" />
 

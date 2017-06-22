@@ -48,6 +48,7 @@ import com.vasilkoff.luckygame.fragment.AllCompaniesFragment;
 import com.vasilkoff.luckygame.fragment.CouponsFragment;
 import com.vasilkoff.luckygame.fragment.DataBridge;
 import com.vasilkoff.luckygame.service.LocationService;
+import com.vasilkoff.luckygame.util.LocationState;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -299,6 +300,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             }
         } else {
             startService(new Intent(this, LocationService.class));
+            if (!LocationState.isEnabled()) {
+                startActivity(new Intent(this, LocationActivity.class));
+            }
         }
     }
 

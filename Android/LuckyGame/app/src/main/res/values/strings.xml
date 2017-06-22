@@ -149,5 +149,6 @@
     <string name="filter_clear">Clear</string>
     <string name="filter_close">Close</string>
     <string name="search_placeholder">Search by place name</string>
-
+    <string name="gps_title">No Location Found</string>
+    <string name="gps_text">Turn on Locations Services to allow the app to determine your location</string>
 </resources>
