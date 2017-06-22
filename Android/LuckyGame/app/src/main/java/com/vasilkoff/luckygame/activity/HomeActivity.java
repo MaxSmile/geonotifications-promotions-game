@@ -3,6 +3,7 @@ package com.vasilkoff.luckygame.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,10 +16,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
+import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.binding.handler.HomeHandler;
 import com.vasilkoff.luckygame.common.Filters;
+import com.vasilkoff.luckygame.databinding.ActivityHomeBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 
@@ -50,7 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-public class HomeActivity extends BaseActivity implements DataBridge {
+public class HomeActivity extends BaseActivity implements DataBridge, HomeHandler {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -70,16 +78,26 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
     private boolean fromFilter;
     private TextView filterCount;
+    private EditText homeSearchKeyWord;
+    private LinearLayout homeFiltersLayout;
+    private LinearLayout homeSearchLayout;
+    private ActivityHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+        binding.setHandler(this);
+
         checkNetwork();
 
         logo = (ImageView) findViewById(R.id.homeLogo);
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
-        filterCount = (TextView)findViewById(R.id.filterCount);
+        //filterCount = (TextView)findViewById(R.id.filterCount);
+       /* homeFiltersLayout = (LinearLayout)findViewById(R.id.homeFiltersLayout);
+        homeSearchLayout = (LinearLayout)findViewById(R.id.homeSearchLayout);*/
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
@@ -157,9 +175,33 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         } catch (NoSuchAlgorithmException e) {
 
         }*/
+        //Filters.searchKeyWord = ((EditText)findViewById(R.id.homeSearchKeyWord)).getText().toString().toLowerCase();
 
+        //initSearch();
         updateGeoPlaces();
     }
+
+    /*private void initSearch() {
+        homeSearchKeyWord =  (EditText)findViewById(R.id.homeSearchKeyWord);
+        homeSearchKeyWord.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Filters.search = true;
+                Filters.searchKeyWord = s.toString();
+                filterData();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }*/
 
     @Override
     public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
@@ -204,14 +246,17 @@ public class HomeActivity extends BaseActivity implements DataBridge {
 
         fromFilter = false;
 
-        updateNearMeButton();
+        //updateNearMeButton();
+        binding.setFilterSearch(Filters.search);
+        binding.setFilterNearMe(Filters.nearMe);
+        binding.setFiltersCount(Filters.count);
 
-        if (Filters.count > 0) {
+        /*if (Filters.count > 0) {
             filterCount.setText(String.valueOf(Filters.count));
             filterCount.setVisibility(View.VISIBLE);
         } else {
             filterCount.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     @Override
@@ -276,6 +321,32 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         customTabCount.setText(String.valueOf(count));
     }
 
+    @Override
+    public void filterNearMe(View view) {
+        if (CurrentLocation.lat != 0 ) {
+            if (checkResult()) {
+                Filters.nearMe = !Filters.nearMe;
+                binding.setFilterNearMe(Filters.nearMe);
+                filterData();
+            }
+        } else {
+            Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void filters(View view) {
+        if (checkResult())
+            startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+    }
+
+    @Override
+    public void search(View view) {
+        Filters.search = !Filters.search;
+        binding.setFilterSearch(Filters.search);
+        System.out.println(TAG + " search+");
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -338,7 +409,7 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         }
     }
 
-    private void updateNearMeButton() {
+   /* private void updateNearMeButton() {
         TextView textView = (TextView)findViewById(R.id.nearMeText);
         ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
         if (Filters.nearMe) {
@@ -350,12 +421,24 @@ public class HomeActivity extends BaseActivity implements DataBridge {
         }
     }
 
+    private void updateSearchButton() {
+        TextView textView = (TextView)findViewById(R.id.nearMeText);
+        ImageView imageView = (ImageView)findViewById(R.id.nearMeImage);
+        if (Filters.search) {
+            imageView.setImageResource(R.drawable.marker_icon_active);
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
+        } else {
+            imageView.setImageResource(R.drawable.marker_icon);
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabText));
+        }
+    }*/
+
     public void onHomeClick(View view) {
         switch (view.getId()) {
             case R.id.homeSetting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
-            case R.id.homeNearMe:
+            /*case R.id.homeNearMe:
                 if (CurrentLocation.lat != 0 ) {
                     if (checkResult()) {
                         Filters.nearMe = !Filters.nearMe;
@@ -370,7 +453,21 @@ public class HomeActivity extends BaseActivity implements DataBridge {
             case R.id.homeFilters:
                 if (checkResult())
                     startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
-                break;
+                break;*/
+          /*  case R.id.homeSearch:
+                Filters.search = !Filters.search;
+                updateSearchButton();
+                *//*if (checkResult())
+                    startActivity(new Intent(this, SearchActivity.class));*//*
+                break;*/
+            /*case R.id.homeSearchStart:
+                Filters.search = true;
+                Filters.searchKeyWord = ((EditText)findViewById(R.id.homeSearchKeyWord)).getText().toString().toLowerCase();
+                filterData();
+                System.out.println(TAG + " searchKeyWord= " + Filters.searchKeyWord);
+                *//*if (checkResult())
+                    startActivity(new Intent(this, SearchActivity.class));*//*
+                break;*/
             case R.id.companyAll:
                 goToCategory(Constants.CATEGORY_ALL);
                 break;
