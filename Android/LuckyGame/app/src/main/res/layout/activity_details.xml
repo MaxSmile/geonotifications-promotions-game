@@ -215,11 +215,13 @@
                                 android:layout_height="wrap_content"
                                 android:text="@{place.distanceString}"
                                 android:paddingEnd="2dp"
+                                android:textColor="@color/colorDetailsTextInfo"
                                 android:visibility="@{place.distanceString != null ? v.VISIBLE : v.GONE}"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{place.city}"/>
+                                android:text="@{place.city}"
+                                android:textColor="@color/colorDetailsTextInfo"/>
                         </LinearLayout>
                     </LinearLayout>
                     <FrameLayout

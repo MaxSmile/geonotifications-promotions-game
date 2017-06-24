@@ -10,6 +10,8 @@ import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.util.DateFormat;
 import com.vasilkoff.luckygame.util.LocationDistance;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -25,6 +27,11 @@ public class ServiceLayer {
 
     public static List<CouponExtension> getCouponsByPlace(String key) {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByPlace(key);
+        return updateData(coupons);
+    }
+
+    public static List<CouponExtension> getCouponsByCode(String key) {
+        List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByCode(key);
         return updateData(coupons);
     }
 
@@ -69,6 +76,18 @@ public class ServiceLayer {
             coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
         }
         ta.recycle();
+
+        Collections.sort(coupons, new CouponComparator());
         return coupons;
+    }
+
+    private static class CouponComparator implements Comparator<CouponExtension> {
+
+        @Override
+        public int compare(CouponExtension o1, CouponExtension o2) {
+            String name1 = o1.getPlaceName().toLowerCase();
+            String name2 = o2.getPlaceName().toLowerCase();
+            return name1.compareTo(name2);
+        }
     }
 }

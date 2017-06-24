@@ -352,8 +352,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(couponExtension);
 
-        Intent intent = new Intent(this, CouponActivity.class);
-        intent.putExtra(CouponExtension.class.getCanonicalName(), couponExtension);
+        Intent intent = new Intent(this, SlideCouponsActivity.class);
+        intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
         intent.putExtra("userPrize", true);
         startActivity(intent);
         finish();

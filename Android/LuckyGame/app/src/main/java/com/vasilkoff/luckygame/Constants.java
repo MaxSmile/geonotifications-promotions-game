@@ -21,6 +21,7 @@ public class Constants {
     public static final String PLACE_KEY = "placeKey";
     public static final String PLACE_TYPE_KEY = "placeType";
     public static final String SPIN_TYPE_KEY = "spinType";
+    public static final String COUPON_KEY = "couponKey";
 
     public static final String[] COMPANY_TYPE_NAMES = App.getInstance().getResources().getStringArray(R.array.company_type);
 

@@ -120,6 +120,8 @@ public class CouponFragment extends Fragment implements CouponHandler {
 
     private void redeem() {
         coupon.setStatus(Constants.COUPON_STATUS_REDEEMED);
+        coupon.setRedeemed(System.currentTimeMillis());
+        coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
         binding.setCoupon(coupon);
         DBHelper.getInstance(getContext()).saveCoupon(coupon);
         Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);

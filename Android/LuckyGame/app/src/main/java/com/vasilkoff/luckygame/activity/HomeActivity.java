@@ -174,10 +174,16 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         }*/
 
+        loadData();
+
         initSearch();
         updateGeoPlaces();
+    }
+
+    private void loadData() {
         FirebaseData.placeListener();
         FirebaseData.companyListener();
+        FirebaseData.getCoupons();
     }
 
     private void initSearch() {
@@ -262,14 +268,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
-        if (!CurrentLocation.check) {
-            CurrentLocation.check = true;
-            refreshSpins();
-            if (couponsFragment != null)
-                couponsFragment.updateData();
-        }
+        refreshSpins();
     }
 
     private void updateGeoPlaces() {
@@ -422,9 +423,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     private void filterData() {
         refreshSpins();
-        if (couponsFragment != null) {
-            couponsFragment.refreshList();
-        }
+        EventBus.getDefault().post(new Events.UpdateFilter());
     }
 
     public void onHomeClick(View view) {

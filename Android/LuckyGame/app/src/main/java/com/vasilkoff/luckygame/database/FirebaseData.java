@@ -39,6 +39,7 @@ public class FirebaseData {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 getCoupons();
+                System.out.println("myTest placeListener+");
             }
 
             @Override
@@ -68,6 +69,7 @@ public class FirebaseData {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 getCoupons();
+                System.out.println("myTest companyListener+");
             }
 
             @Override
@@ -89,7 +91,7 @@ public class FirebaseData {
 
     public static void getCoupons() {
         final List<String> couponsCode = DBHelper.getInstance(App.getInstance()).getCoupons();
-        final TreeMap<String, CouponExtension> newCoupons = new TreeMap<String, CouponExtension>();
+        final List<CouponExtension> newCoupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
             Constants.DB_COUPON.child(couponsCode.get(i)).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -111,7 +113,7 @@ public class FirebaseData {
                                         Company company = dataSnapshot.getValue(Company.class);
                                         coupon.setCompanyName(company.getName());
                                         coupon.setLogo(company.getLogo());
-                                        newCoupons.put(coupon.getPlaceName(), coupon);
+                                        newCoupons.add(coupon);
 
                                         if (newCoupons.size() > 0 && newCoupons.size() == couponsCode.size()) {
                                             updateCoupons(newCoupons);
@@ -143,10 +145,8 @@ public class FirebaseData {
         }
     }
 
-    private static void updateCoupons(TreeMap<String, CouponExtension> newCoupons) {
-        List<CouponExtension> coupons = new ArrayList<CouponExtension>(newCoupons.values());
+    private static void updateCoupons(List<CouponExtension> coupons) {
         DBHelper.getInstance(App.getInstance()).saveCoupons(coupons);
-
         EventBus.getDefault().post(new Events.UpdateCoupons());
     }
 }

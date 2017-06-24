@@ -10,4 +10,6 @@
     <string name="facebook_page_url">https://www.facebook.com/SpinDealsApp/?ref=aymt_homepage_panel</string>
     <string name="mail_for_partner">sales@spindealsapp.com</string>
     <string name="mail_for_improve">info@spindealsapp.com</string>
+
+    <string name="winning_sound">winning.mp3</string>
 </resources>

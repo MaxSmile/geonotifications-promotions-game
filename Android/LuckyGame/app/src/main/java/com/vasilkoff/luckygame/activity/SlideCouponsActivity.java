@@ -1,6 +1,9 @@
 package com.vasilkoff.luckygame.activity;
 
 
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 
 
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.FirebaseData;
 import com.vasilkoff.luckygame.database.ServiceLayer;
 import com.vasilkoff.luckygame.entity.CouponExtension;
@@ -32,10 +36,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.List;
 
 
-public class SlideCouponsActivity extends BaseActivity {
+public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLoadCompleteListener {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -47,6 +52,10 @@ public class SlideCouponsActivity extends BaseActivity {
     private TextView slideCount;
     private TextView slideCurrent;
     private LinearLayout slidePagination;
+
+    private boolean userPrize = false;
+    private SoundPool sp;
+    private int soundIdWin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +105,29 @@ public class SlideCouponsActivity extends BaseActivity {
                 }
             }
         });
-        FirebaseData.getCoupons();
+
+        userPrize = getIntent().getBooleanExtra("userPrize", false);
+        initSound();
+
+    }
+
+    private void initSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sp = new SoundPool.Builder()
+                    .setMaxStreams(10)
+                    .build();
+        } else {
+            sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        }
+
+        sp.setOnLoadCompleteListener(this);
+
+        try {
+            soundIdWin = sp.load(getAssets().openFd(getString(R.string.winning_sound)), 1);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
     }
 
     private void checkPosition(int position) {
@@ -113,7 +144,14 @@ public class SlideCouponsActivity extends BaseActivity {
     }
 
     private void initFragments() {
-        coupons = ServiceLayer.getCouponsByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+        if (getIntent().getStringExtra(Constants.PLACE_KEY) != null) {
+            coupons = ServiceLayer.getCouponsByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+        }
+
+        if (getIntent().getStringExtra(Constants.COUPON_KEY) != null) {
+            coupons = ServiceLayer.getCouponsByCode(getIntent().getStringExtra(Constants.COUPON_KEY));
+        }
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -144,7 +182,7 @@ public class SlideCouponsActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvents(Events.UpdateCoupons updateCoupons) {
-        System.out.println("myTest UpdateCoupons+");
+        //System.out.println("myTest UpdateCoupons+");
        // updateFragments();
     }
 
@@ -181,6 +219,13 @@ public class SlideCouponsActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+        if (userPrize && Properties.getSoundGame()) {
+            sp.play(soundIdWin, 1, 1, 0, 0, 1);
+        }
     }
 
 

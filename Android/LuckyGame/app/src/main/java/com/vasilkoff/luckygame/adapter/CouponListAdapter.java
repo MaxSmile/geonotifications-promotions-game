@@ -14,6 +14,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.CouponActivity;
 import com.vasilkoff.luckygame.activity.SendCouponActivity;
+import com.vasilkoff.luckygame.activity.SlideCouponsActivity;
 import com.vasilkoff.luckygame.activity.UnlockActivity;
 import com.vasilkoff.luckygame.binding.handler.CouponsRowHandler;
 import com.vasilkoff.luckygame.databinding.CouponsRowBinding;
@@ -62,8 +63,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
                 @Override
                 public void onClick(View v) {
                     if (coupon.getStatus() < Constants.COUPON_STATUS_REDEEMED) {
-                        Intent intent = new Intent(context, CouponActivity.class);
-                        intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+                        Intent intent = new Intent(context, SlideCouponsActivity.class);
+                        intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
                         context.startActivity(intent);
                     }
                 }

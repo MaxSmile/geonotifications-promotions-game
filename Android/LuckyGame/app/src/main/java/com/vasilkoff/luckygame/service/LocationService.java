@@ -184,7 +184,11 @@ public class LocationService extends Service {
             CurrentLocation.lat = location.getLatitude();
             CurrentLocation.lon = location.getLongitude();
             CurrentLocation.provider = location.getProvider();
-            EventBus.getDefault().postSticky(new Events.UpdateLocation());
+
+            if (!CurrentLocation.check) {
+                CurrentLocation.check = true;
+                EventBus.getDefault().post(new Events.UpdateLocation());
+            }
         }
         public void onStatusChanged(String s, int i, Bundle b) {
         }

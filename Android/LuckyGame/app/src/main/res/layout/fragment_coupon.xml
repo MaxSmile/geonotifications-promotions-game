@@ -296,6 +296,7 @@
                         android:onClick="@{handler::redeem}"
                         android:visibility="@{coupon.status > 0 ? v.GONE : v.VISIBLE}"
                         style="?android:attr/borderlessButtonStyle"/>
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -312,6 +313,29 @@
                         android:textColor="@color/colorCouponShareText"
                         android:onClick="@{handler::send}"
                         android:visibility="@{coupon.status == -1 ? v.VISIBLE : v.GONE}"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:visibility="@{coupon.status != 1 ? v.GONE : v.VISIBLE}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/redeemed"
+                        android:textColor="@color/couponRedeemed"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/couponRedeemed"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:text="@{coupon.redeemedString}"
+                        android:paddingLeft="5dp"/>
                 </LinearLayout>
             </LinearLayout>
 
