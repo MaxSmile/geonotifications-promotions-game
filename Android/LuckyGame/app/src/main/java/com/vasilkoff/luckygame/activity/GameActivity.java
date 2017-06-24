@@ -91,6 +91,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private boolean gameAvailable = true;
     private ActivityGameBinding binding;
     private ImageView losePopUpFavorites;
+    private int countCoupons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +103,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
         favorites = DBHelper.getInstance(this).checkFavorites(place);
+        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
+        binding.setCountCoupons(countCoupons);
         binding.setSpin(spin);
         binding.setFavorites(favorites);
         binding.setHandler(this);
@@ -339,12 +343,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 place.getTypeName(),
                 place.getGeoLat(),
                 place.getGeoLon(),
-                lock
+                lock,
+                0,
+                place.getCity()
         );
 
 
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
-        dbHelper.saveCoupon(coupon);
+        dbHelper.saveCoupon(couponExtension);
 
         Intent intent = new Intent(this, CouponActivity.class);
         intent.putExtra(CouponExtension.class.getCanonicalName(), couponExtension);
@@ -468,6 +474,15 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     @Override
     public void getExtraSpin(View view) {
         getExtra();
+    }
+
+    @Override
+    public void showCoupons(View view) {
+        if (countCoupons > 0) {
+            Intent intent = new Intent(this, SlideCouponsActivity.class);
+            intent.putExtra(Constants.PLACE_KEY, place.getId());
+            startActivity(intent);
+        }
     }
 
     @Override

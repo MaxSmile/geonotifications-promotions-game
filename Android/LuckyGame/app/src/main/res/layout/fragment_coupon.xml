@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.vasilkoff.luckygame.activity.CouponActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="coupon"
@@ -19,8 +17,8 @@
         android:paddingBottom="40dp"
         android:paddingLeft="35dp"
         android:paddingRight="35dp"
-        android:paddingTop="40dp"
-        android:background="@drawable/shadow_big"
+        android:paddingTop="10dp"
+
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,10 +76,21 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{coupon.typeString}"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{coupon.distanceString}"/>
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{coupon.distanceString}"
+                                android:paddingEnd="2dp"
+                                android:visibility="@{coupon.distanceString != null ? v.VISIBLE : v.GONE}"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{coupon.city}"/>
+                        </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
@@ -193,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/icons8_lock_filled"
-                        android:visibility="@{coupon.lockDiff == null || coupon.status == 0 ? v.GONE : v.VISIBLE}"/>
+                        android:visibility="@{coupon.lockDiff != null &amp;&amp; coupon.status == -1 ? v.VISIBLE: v.GONE}"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -212,7 +221,7 @@
                         android:text="@string/locks"
                         android:textColor="@color/colorCouponRulesTitle"
                         android:textSize="18sp"
-                        android:visibility="@{coupon.lockDiff == null || coupon.status == 0 ? v.GONE : v.VISIBLE}"/>
+                        android:visibility="@{coupon.lockDiff != null &amp;&amp; coupon.status == -1 ? v.VISIBLE: v.GONE}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -285,6 +294,7 @@
                         android:textColor="@color/colorRedeemText"
                         android:textSize="20sp"
                         android:onClick="@{handler::redeem}"
+                        android:visibility="@{coupon.status > 0 ? v.GONE : v.VISIBLE}"
                         style="?android:attr/borderlessButtonStyle"/>
                 </LinearLayout>
                 <LinearLayout

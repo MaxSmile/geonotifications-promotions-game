@@ -8,7 +8,6 @@ import android.view.View;
 
 public interface CouponHandler extends BaseHandler {
     public void send(View view);
-    public void unlock(View view);
     public void more(View view);
     public void redeem(View view);
 }

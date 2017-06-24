@@ -14,6 +14,7 @@ import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
 
+import com.vasilkoff.luckygame.activity.SlideCouponsActivity;
 import com.vasilkoff.luckygame.binding.handler.CompanyRowHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.CompaniesRowBinding;
@@ -66,6 +67,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         private Spin spin;
         private Place place;
         private boolean favorites;
+        private int countCoupons;
 
         public Holder(View v) {
             super(v);
@@ -91,12 +93,17 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
             favorites = DBHelper.getInstance(context).checkFavorites(place);
             binding.setFavorites(favorites);
-
+            countCoupons = DBHelper.getInstance(context).getCouponsByPlace(place.getId()).size();
+            binding.setCountCoupons(countCoupons);
         }
 
         @Override
         public void showCoupons(View view) {
-
+            if (countCoupons > 0) {
+                Intent intent = new Intent(context, SlideCouponsActivity.class);
+                intent.putExtra(Constants.PLACE_KEY, place.getId());
+                context.startActivity(intent);
+            }
         }
 
         @Override

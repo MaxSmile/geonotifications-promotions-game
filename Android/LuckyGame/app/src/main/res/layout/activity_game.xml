@@ -18,6 +18,9 @@
             name="countGift"
             type="Integer" />
         <variable
+            name="countCoupons"
+            type="Integer" />
+        <variable
             name="favorites"
             type="Boolean" />
         <variable
@@ -327,12 +330,13 @@
                     <RelativeLayout
                         android:id="@+id/gameShowDetailsCoupons"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:onClick="@{handler::showCoupons}">
                         <ImageView
                             android:id="@+id/gameCoupons"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/cutting_coupon_big"
+                            android:src="@{countCoupons > 0 ? @drawable/cutting_coupon_big : @drawable/cutting_coupon_white}"
                             android:layout_centerHorizontal="true"
                             android:paddingTop="10dp"/>
                         <TextView
@@ -346,8 +350,9 @@
                             android:textSize="12sp"
                             android:background="@drawable/bg_count_blue"
                             android:padding="1dp"
-                            android:text="7"
-                            android:layout_toEndOf="@+id/gameCoupons" />
+                            android:text="@{String.valueOf(countCoupons)}"
+                            android:layout_toEndOf="@+id/gameCoupons"
+                            android:visibility="@{countCoupons > 0  ? v.VISIBLE : v.GONE}"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -355,7 +360,7 @@
                             android:textSize="10sp"
                             android:layout_below="@+id/gameCoupons"
                             android:layout_centerHorizontal="true"
-                            android:textColor="@color/giftTextActive"/>
+                            android:textColor="@{countCoupons > 0 ? @color/giftTextActive : @color/giftGameText}"/>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

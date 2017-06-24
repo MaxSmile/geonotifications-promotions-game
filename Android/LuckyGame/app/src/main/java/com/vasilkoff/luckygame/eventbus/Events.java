@@ -9,4 +9,6 @@ public class Events {
     }
     public static class UpdateFilter {
     }
+    public static class UpdateCoupons {
+    }
 }

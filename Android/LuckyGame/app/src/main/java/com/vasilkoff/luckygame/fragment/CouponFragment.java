@@ -1,13 +1,10 @@
-package com.vasilkoff.luckygame.activity;
+package com.vasilkoff.luckygame.fragment;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
-
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,41 +14,47 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.activity.ChooseAccountActivity;
+import com.vasilkoff.luckygame.activity.DetailsActivity;
+import com.vasilkoff.luckygame.activity.SendCouponActivity;
+import com.vasilkoff.luckygame.activity.UnlockActivity;
 import com.vasilkoff.luckygame.binding.handler.CouponHandler;
-import com.vasilkoff.luckygame.common.Properties;
-import com.vasilkoff.luckygame.databinding.ActivityCouponBinding;
-
+import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.databinding.FragmentCouponBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.util.DateFormat;
 import com.vasilkoff.luckygame.util.LocationDistance;
 
-import java.io.IOException;
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
+/**
+ * Created by Kvm on 22.06.2017.
+ */
 
-public class CouponActivity extends BaseActivity implements SoundPool.OnLoadCompleteListener, CouponHandler{
+public class CouponFragment extends Fragment implements CouponHandler {
 
     private CouponExtension coupon;
     private PopupWindow popupWindow;
     private LinearLayout parentLayout;
-    private boolean userPrize = false;
-    private SoundPool sp;
-    private int soundIdWin;
+    private FragmentCouponBinding binding;
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coupon);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_coupon, container, false);
+        View view = binding.getRoot();
+        coupon = getArguments().getParcelable("coupon");
+        updateData();
+        return view;
+    }
 
-        coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
-        userPrize = getIntent().getBooleanExtra("userPrize", false);
-        initSound();
-
+    private void updateData() {
         String locks = DateFormat.getDiff(coupon.getLocks());
         if (locks != null)
             coupon.setLockDiff(locks);
@@ -69,47 +72,59 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
             }
         }
 
-        ActivityCouponBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_coupon);
         binding.setCoupon(coupon);
         binding.setHandler(this);
-
-        parentLayout = (LinearLayout) findViewById(R.id.couponParentLayout);
-
-
-    }
-
-    private void initSound() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sp = new SoundPool.Builder()
-                    .setMaxStreams(10)
-                    .build();
-        } else {
-            sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        }
-
-        sp.setOnLoadCompleteListener(this);
-
-        try {
-            soundIdWin = sp.load(getAssets().openFd("winning.mp3"), 1);
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
     }
 
     @Override
-    protected void onDestroy() {
-        if (sp != null) {
-            sp.release();
-            sp = null;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        parentLayout = (LinearLayout) getActivity().findViewById(R.id.couponParentLayout);
+    }
+
+    @Override
+    public void back(View view) {
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void favorites(View view) {
+
+    }
+
+
+    @Override
+    public void send(View view) {
+        Intent intent = new Intent(getContext(), SendCouponActivity.class);
+        intent.putExtra("couponCode", String.format(getString(R.string.send_coupon_text), coupon.getCode()));
+        startActivity(intent);
+    }
+
+    @Override
+    public void more(View view) {
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra(Constants.PLACE_KEY, coupon.getPlaceKey());
+        startActivity(intent);
+    }
+
+    @Override
+    public void redeem(View view) {
+        if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK) {
+            Intent intent = new Intent(getContext(), UnlockActivity.class);
+            intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+            startActivity(intent);
+        } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE){
+            showPopUp();
         }
-        super.onDestroy();
     }
 
     private void redeem() {
+        coupon.setStatus(Constants.COUPON_STATUS_REDEEMED);
+        binding.setCoupon(coupon);
+        DBHelper.getInstance(getContext()).saveCoupon(coupon);
         Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
         Constants.DB_COUPON.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
-        onBackPressed();
+
     }
 
     private void showPopUp() {
@@ -146,44 +161,5 @@ public class CouponActivity extends BaseActivity implements SoundPool.OnLoadComp
         });
 
         popupWindow.showAtLocation(parentLayout, Gravity.CENTER,0, 0);
-    }
-
-
-    @Override
-    public void send(View view) {
-        Intent intent = new Intent(this, SendCouponActivity.class);
-        intent.putExtra("couponCode", String.format(getString(R.string.send_coupon_text), coupon.getCode()));
-        startActivity(intent);
-    }
-
-    @Override
-    public void more(View view) {
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra(Constants.PLACE_KEY, coupon.getPlaceKey());
-        startActivity(intent);
-    }
-
-    @Override
-    public void redeem(View view) {
-        if (!checkLogin()) {
-            startActivity(new Intent(this, ChooseAccountActivity.class));
-        } else {
-            if (coupon.getStatus() == 0) {
-                Intent intent = new Intent(this, UnlockActivity.class);
-                intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
-                startActivity(intent);
-                finish();
-            } else {
-                showPopUp();
-            }
-        }
-    }
-
-
-    @Override
-    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        if (userPrize && Properties.getSoundGame()) {
-            sp.play(soundIdWin, 1, 1, 0, 0, 1);
-        }
     }
 }

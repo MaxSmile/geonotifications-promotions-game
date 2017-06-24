@@ -54,6 +54,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private ExpandableLayout expandableLayout;
     private ImageView detailsArrow;
     private boolean geoNotification;
+    private int countCoupons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +159,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             checkSpinAvailable();
             favorites = DBHelper.getInstance(this).checkFavorites(place);
             binding.setFavorites(favorites);
+            countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+            binding.setCountCoupons(countCoupons);
         }
+
     }
 
     @Override
@@ -168,6 +172,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         binding.setPlace(place);
         binding.setCountGift(gifts.size());
         binding.setFavorites(favorites);
+        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+        binding.setCountCoupons(countCoupons);
 
         if (spinByPlace != null && spin == null) {
             spin = spinByPlace;
@@ -332,5 +338,14 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         }
 
 
+    }
+
+    @Override
+    public void showCoupons(View view) {
+        if (countCoupons > 0) {
+            Intent intent = new Intent(this, SlideCouponsActivity.class);
+            intent.putExtra(Constants.PLACE_KEY, place.getId());
+            startActivity(intent);
+        }
     }
 }

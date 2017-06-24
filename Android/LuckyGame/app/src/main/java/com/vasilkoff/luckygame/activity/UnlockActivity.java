@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityUnlockBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 
@@ -37,6 +38,10 @@ public class UnlockActivity extends BaseFacebookActivity {
         Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_ACTIVE);
         Constants.DB_COUPON.child(coupon.getCode()).child("locks").setValue(System.currentTimeMillis());
         Constants.DB_COUPON.child(coupon.getCode()).child("locked").setValue(Constants.COUPON_UNLOCK);
+        coupon.setStatus(Constants.COUPON_STATUS_ACTIVE);
+        coupon.setLocks(System.currentTimeMillis());
+        coupon.setLocked(Constants.COUPON_UNLOCK);
+        DBHelper.getInstance(this).saveCoupon(coupon);
 
         onBackPressed();
     }

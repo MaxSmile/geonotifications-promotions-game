@@ -37,6 +37,7 @@ import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.HomeHandler;
 import com.vasilkoff.luckygame.common.Filters;
+import com.vasilkoff.luckygame.database.FirebaseData;
 import com.vasilkoff.luckygame.databinding.ActivityHomeBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -175,7 +176,8 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         initSearch();
         updateGeoPlaces();
-
+        FirebaseData.placeListener();
+        FirebaseData.companyListener();
     }
 
     private void initSearch() {
@@ -238,6 +240,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         if (!fromFilter) {
             getSpins();
+
         }
 
         fromFilter = false;
@@ -467,6 +470,4 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         intent.putExtra(Constants.PLACE_TYPE_KEY, type);
         startActivity(intent);
     }
-
-
 }

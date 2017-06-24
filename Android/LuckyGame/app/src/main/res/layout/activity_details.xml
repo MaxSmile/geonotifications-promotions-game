@@ -21,6 +21,9 @@
             name="favorites"
             type="Boolean" />
         <variable
+            name="countCoupons"
+            type="Integer" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.DetailsHandler" />
         <import type="android.view.View" alias="v"/>
@@ -203,12 +206,21 @@
                             android:textColor="@color/colorDetailsTextInfo"
                             android:textSize="15sp"
                             android:text="@{place.typeName}"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorDetailsTextInfo"
-                            android:textSize="15sp"
-                            android:text="@{place.distanceString}"/>
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{place.distanceString}"
+                                android:paddingEnd="2dp"
+                                android:visibility="@{place.distanceString != null ? v.VISIBLE : v.GONE}"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{place.city}"/>
+                        </LinearLayout>
                     </LinearLayout>
                     <FrameLayout
                         android:layout_width="0dp"
@@ -457,12 +469,13 @@
                 <RelativeLayout
                     android:id="@+id/companyShowDetailsCoupons"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:onClick="@{handler::showCoupons}">
                     <ImageView
                         android:id="@+id/companyDetailsCoupons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/cutting_coupon_big"
+                        android:src="@{countCoupons > 0 ? @drawable/cutting_coupon_big : @drawable/cutting_coupon_grey}"
                         android:layout_centerHorizontal="true"
                         android:paddingTop="10dp"/>
                     <TextView
@@ -476,8 +489,9 @@
                         android:textSize="12sp"
                         android:background="@drawable/bg_count_blue"
                         android:padding="1dp"
-                        android:text="2"
-                        android:layout_toEndOf="@+id/companyDetailsCoupons" />
+                        android:text="@{String.valueOf(countCoupons)}"
+                        android:layout_toEndOf="@+id/companyDetailsCoupons"
+                        android:visibility="@{countCoupons > 0  ? v.VISIBLE : v.GONE}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -485,7 +499,7 @@
                         android:textSize="10sp"
                         android:layout_below="@+id/companyDetailsCoupons"
                         android:layout_centerHorizontal="true"
-                        android:textColor="@color/giftTextActive"/>
+                        android:textColor="@{countCoupons > 0 ? @color/giftTextActive : @color/giftDetailsText}"/>
                 </RelativeLayout>
             </LinearLayout>
 

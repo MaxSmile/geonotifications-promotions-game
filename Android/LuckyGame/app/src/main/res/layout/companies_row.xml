@@ -15,6 +15,9 @@
             name="favorites"
             type="Boolean" />
         <variable
+            name="countCoupons"
+            type="Integer" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.CompanyRowHandler"/>
         <import type="android.view.View" alias="v"/>
@@ -144,12 +147,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1">
-                    <ImageView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/cutting_coupon"
+                        android:text="@{String.valueOf(countCoupons)}"
+                        android:visibility="@{countCoupons > 0  ? v.VISIBLE : v.GONE}"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/showCoupons"
+                        android:layout_marginEnd="-5dp"/>
+                    <ImageView
+                        android:id="@+id/showCoupons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@{countCoupons > 0 ? @drawable/cutting_coupon : @drawable/cutting_coupon_grey_small}"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
+                        android:onClick="@{handler::showCoupons}"
                         android:padding="10dp"/>
                 </RelativeLayout>
             </LinearLayout>

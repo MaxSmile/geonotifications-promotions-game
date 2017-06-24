@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.vasilkoff.luckygame.entity.Coupon;
 import com.vasilkoff.luckygame.entity.CouponDB;
+import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Place;
 
 
@@ -24,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -54,6 +55,27 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_GEO_TIME_FREQUENCY = "frequency";
     private static final String KEY_GEO_RADIUS = "radius";
     private static final String KEY_LAST_NOTIFICATION = "lastNotification";
+
+    private static final String KEY_COUPON_STATUS = "status";
+    private static final String KEY_COUPON_CODE = "code";
+    private static final String KEY_COUPON_COMPANY_KEY = "companyKey";
+    private static final String KEY_COUPON_GIFT_KEY = "giftKey";
+    private static final String KEY_COUPON_PLACE_KEY = "placeKey";
+    private static final String KEY_COUPON_DESCRIPTION = "description";
+    private static final String KEY_COUPON_CREATOR = "creator";
+    private static final String KEY_COUPON_CREATION = "creation";
+    private static final String KEY_COUPON_EXPIRED = "expired";
+    private static final String KEY_COUPON_LOCKS = "locks";
+    private static final String KEY_COUPON_COMPANY_NAME = "companyName";
+    private static final String KEY_COUPON_PLACE_NAME = "placeName";
+    private static final String KEY_COUPON_LOGO = "logo";
+    private static final String KEY_COUPON_TYPE = "type";
+    private static final String KEY_COUPON_TYPE_STRING = "typeString";
+    private static final String KEY_COUPON_GEO_LAT = "geoLat";
+    private static final String KEY_COUPON_GEO_LON = "geoLon";
+    private static final String KEY_COUPON_LOCKED = "locked";
+    private static final String KEY_COUPON_REDEEMED = "redeemed";
+    private static final String KEY_COUPON_CITY = "city";
 
     public static synchronized DBHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -87,7 +109,29 @@ public class DBHelper extends SQLiteOpenHelper {
     private void createTableCoupons(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_COUPONS + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_CODE + " text"
+                + KEY_COUPON_STATUS + " INTEGER,"
+                + KEY_COUPON_CODE + " text,"
+                + KEY_COUPON_COMPANY_KEY + " text,"
+                + KEY_COUPON_GIFT_KEY + " text,"
+                + KEY_COUPON_PLACE_KEY + " text,"
+                + KEY_COUPON_DESCRIPTION + " text,"
+                + KEY_COUPON_CREATOR + " text,"
+                + KEY_COUPON_CREATION + " INTEGER,"
+                + KEY_COUPON_EXPIRED + " INTEGER,"
+                + KEY_COUPON_LOCKS + " INTEGER,"
+                + KEY_COUPON_COMPANY_NAME + " text,"
+                + KEY_COUPON_PLACE_NAME + " text,"
+                + KEY_COUPON_LOGO + " text,"
+                + KEY_COUPON_TYPE + " INTEGER,"
+                + KEY_COUPON_TYPE_STRING + " text,"
+                + KEY_COUPON_GEO_LAT + " REAL,"
+                + KEY_COUPON_GEO_LON + " REAL,"
+                + KEY_COUPON_LOCKED + " INTEGER,"
+                + KEY_COUPON_REDEEMED + " INTEGER,"
+                + KEY_COUPON_CITY + " text,"
+                + "UNIQUE ("
+                + KEY_COUPON_CODE
+                + ") ON CONFLICT REPLACE"
                 + ")");
     }
 
@@ -285,22 +329,53 @@ public class DBHelper extends SQLiteOpenHelper {
         return favorites;
     }
 
-    public void saveCoupon(Coupon coupon) {
+    public void saveCoupon(CouponExtension coupon) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_CODE, coupon.getCode());
-
-        db.insert(TABLE_COUPONS, null, contentValues);
+        saveCouponExtension(coupon,db);
         db.close();
     }
 
-    public List<String> getCoupons() {
+    public void saveCoupons(List<CouponExtension> coupons) {
         SQLiteDatabase db = this.getWritableDatabase();
-        List<String> coupons = new ArrayList<String>();
+        for (int i = 0; i < coupons.size(); i++) {
+            saveCouponExtension(coupons.get(i),db);
+        }
+        db.close();
+    }
+
+    private void saveCouponExtension(CouponExtension coupon,SQLiteDatabase db) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_COUPON_STATUS, coupon.getStatus());
+        contentValues.put(KEY_COUPON_CODE, coupon.getCode());
+        contentValues.put(KEY_COUPON_COMPANY_KEY, coupon.getCompanyKey());
+        contentValues.put(KEY_COUPON_GIFT_KEY, coupon.getGiftKey());
+        contentValues.put(KEY_COUPON_PLACE_KEY , coupon.getPlaceKey());
+        contentValues.put(KEY_COUPON_DESCRIPTION, coupon.getDescription());
+        contentValues.put(KEY_COUPON_CREATOR, coupon.getCreator());
+        contentValues.put(KEY_COUPON_CREATION, coupon.getCreation());
+        contentValues.put(KEY_COUPON_EXPIRED, coupon.getExpired());
+        contentValues.put(KEY_COUPON_LOCKS, coupon.getLocks());
+        contentValues.put(KEY_COUPON_COMPANY_NAME, coupon.getCompanyName());
+        contentValues.put(KEY_COUPON_PLACE_NAME, coupon.getPlaceName());
+        contentValues.put(KEY_COUPON_LOGO, coupon.getLogo());
+        contentValues.put(KEY_COUPON_TYPE, coupon.getType());
+        contentValues.put(KEY_COUPON_TYPE_STRING, coupon.getTypeString());
+        contentValues.put(KEY_COUPON_GEO_LAT, coupon.getGeoLat());
+        contentValues.put(KEY_COUPON_GEO_LON, coupon.getGeoLon());
+        contentValues.put(KEY_COUPON_LOCKED, coupon.getLocked());
+        contentValues.put(KEY_COUPON_REDEEMED, coupon.getRedeemed());
+        contentValues.put(KEY_COUPON_CITY, coupon.getCity());
+
+        db.insert(TABLE_COUPONS, null, contentValues);
+    }
+
+    public List<CouponExtension> getCouponsExtension() {
+        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COUPONS, null);
         if (cursor.moveToFirst()) {
             do {
-                coupons.add(cursor.getString(1));
+                coupons.add(parseCouponExtension(cursor));
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -312,28 +387,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return coupons;
     }
 
-    public void setInactive(String code) {
+    public List<CouponExtension> getCouponsByPlace(String placeKey) {
+        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_ACTIVE, 0);
-        db.update(TABLE_COUPONS, values, KEY_CODE + " = ?", new String[] {code});
-
-        db.close();
-    }
-
-    public List<CouponDB> getCouponsList() {
-        List<CouponDB> couponsList = new ArrayList<CouponDB>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_COUPONS
-                + " WHERE "
-                + KEY_ACTIVE
-                + " > 0"
-                , null);
-
+        Cursor cursor = db.query(TABLE_COUPONS,
+                null,
+                KEY_COUPON_PLACE_KEY + "=?",
+                new String[]{placeKey},
+                null,
+                null,
+                null);
         if (cursor.moveToFirst()) {
             do {
-                couponsList.add(parseCoupon(cursor));
+                coupons.add(parseCouponExtension(cursor));
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -342,17 +408,49 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return couponsList;
+        return coupons;
     }
 
-    private CouponDB parseCoupon(Cursor cursor) {
-        return new CouponDB(
-                cursor.getInt(1) > 0,
+    public List<String> getCoupons() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<String> coupons = new ArrayList<String>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COUPONS, null);
+        if (cursor.moveToFirst()) {
+            do {
+                coupons.add(cursor.getString(2));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return coupons;
+    }
+
+    private CouponExtension parseCouponExtension(Cursor cursor) {
+        return new CouponExtension(
+                cursor.getInt(1),
                 cursor.getString(2),
                 cursor.getString(3),
                 cursor.getString(4),
                 cursor.getString(5),
-                cursor.getString(6)
+                cursor.getString(6),
+                cursor.getString(7),
+                cursor.getLong(8),
+                cursor.getLong(9),
+                cursor.getLong(10),
+                cursor.getString(11),
+                cursor.getString(12),
+                cursor.getString(13),
+                cursor.getInt(14),
+                cursor.getString(15),
+                cursor.getDouble(16),
+                cursor.getDouble(17),
+                cursor.getInt(18),
+                cursor.getLong(19),
+                cursor.getString(20)
         );
     }
 

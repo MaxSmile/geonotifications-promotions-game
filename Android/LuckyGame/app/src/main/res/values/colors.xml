@@ -52,5 +52,7 @@
     <color name="filterText">#ffffff</color>
     <color name="categoryTitle">#ffffff</color>
     <color name="searchText">#ffffff</color>
+    <color name="paginationText">#237cd4</color>
+    <color name="paginationTextCurrent">#ffffff</color>
 
 </resources>

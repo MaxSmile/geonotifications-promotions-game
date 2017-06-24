@@ -65,7 +65,8 @@ public class CouponsFragment extends Fragment {
     }
 
     public void updateData() {
-        if (isAdded() && (newCoupons.size() == couponsCode.size())) {
+        //if (isAdded() && (newCoupons.size() == couponsCode.size())) {
+        if (isAdded()) {
             coupons = new ArrayList<CouponExtension>(newCoupons.values());
 
             TypedArray ta = getResources().obtainTypedArray(R.array.coupon_type);

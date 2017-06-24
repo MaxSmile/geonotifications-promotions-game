@@ -44,7 +44,7 @@ public class CouponExtension implements Parcelable {
     public CouponExtension(int status, String code, String companyKey, String giftKey, String placeKey,
                            String description, String creator, long creation, long expired, long locks,
                            String companyName, String placeName, String logo, long type, String typeString,
-                           double geoLat, double geoLon, int locked) {
+                           double geoLat, double geoLon, int locked, long redeemed, String city) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
@@ -63,6 +63,8 @@ public class CouponExtension implements Parcelable {
         this.geoLat = geoLat;
         this.geoLon = geoLon;
         this.locked = locked;
+        this.redeemed = redeemed;
+        this.city = city;
     }
 
 
