@@ -2,24 +2,20 @@ package com.vasilkoff.luckygame.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
-import com.vasilkoff.luckygame.activity.CouponActivity;
 import com.vasilkoff.luckygame.activity.SendCouponActivity;
 import com.vasilkoff.luckygame.activity.SlideCouponsActivity;
 import com.vasilkoff.luckygame.activity.UnlockActivity;
 import com.vasilkoff.luckygame.binding.handler.CouponsRowHandler;
 import com.vasilkoff.luckygame.databinding.CouponsRowBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
-import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.util.List;
 

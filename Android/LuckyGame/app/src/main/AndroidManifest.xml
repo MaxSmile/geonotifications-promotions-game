@@ -50,10 +50,6 @@
             android:name=".activity.ListCouponsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CouponActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp" />
-        <activity
             android:name=".activity.InfoActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"

@@ -15,17 +15,9 @@ public class Gift implements Parcelable {
     private String companyKey;
     private String description;
     private long timeLock;
+    private String rules;
 
     public Gift() {
-    }
-
-    public Gift(String id, long dateStart, long dateFinish, String companyKey, String description, long timeLock) {
-        this.id = id;
-        this.dateStart = dateStart;
-        this.dateFinish = dateFinish;
-        this.companyKey = companyKey;
-        this.description = description;
-        this.timeLock = timeLock;
     }
 
     protected Gift(Parcel in) {
@@ -35,6 +27,7 @@ public class Gift implements Parcelable {
         companyKey = in.readString();
         description = in.readString();
         timeLock = in.readLong();
+        rules = in.readString();
     }
 
     public static final Creator<Gift> CREATOR = new Creator<Gift>() {
@@ -97,6 +90,14 @@ public class Gift implements Parcelable {
         this.timeLock = timeLock;
     }
 
+    public String getRules() {
+        return rules;
+    }
+
+    public void setRules(String rules) {
+        this.rules = rules;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -110,5 +111,6 @@ public class Gift implements Parcelable {
         dest.writeString(companyKey);
         dest.writeString(description);
         dest.writeLong(timeLock);
+        dest.writeString(rules);
     }
 }

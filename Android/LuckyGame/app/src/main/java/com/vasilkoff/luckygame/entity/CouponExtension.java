@@ -36,6 +36,7 @@ public class CouponExtension implements Parcelable {
     private double geoLon;
     private int locked;
     private String city;
+    private String rules;
 
 
     public CouponExtension() {
@@ -44,7 +45,7 @@ public class CouponExtension implements Parcelable {
     public CouponExtension(int status, String code, String companyKey, String giftKey, String placeKey,
                            String description, String creator, long creation, long expired, long locks,
                            String companyName, String placeName, String logo, long type, String typeString,
-                           double geoLat, double geoLon, int locked, long redeemed, String city) {
+                           double geoLat, double geoLon, int locked, long redeemed, String city, String rules) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
@@ -65,8 +66,8 @@ public class CouponExtension implements Parcelable {
         this.locked = locked;
         this.redeemed = redeemed;
         this.city = city;
+        this.rules = rules;
     }
-
 
     protected CouponExtension(Parcel in) {
         status = in.readInt();
@@ -96,6 +97,7 @@ public class CouponExtension implements Parcelable {
         geoLon = in.readDouble();
         locked = in.readInt();
         city = in.readString();
+        rules = in.readString();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -326,6 +328,14 @@ public class CouponExtension implements Parcelable {
         this.city = city;
     }
 
+    public String getRules() {
+        return rules;
+    }
+
+    public void setRules(String rules) {
+        this.rules = rules;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -360,5 +370,6 @@ public class CouponExtension implements Parcelable {
         dest.writeDouble(geoLon);
         dest.writeInt(locked);
         dest.writeString(city);
+        dest.writeString(rules);
     }
 }

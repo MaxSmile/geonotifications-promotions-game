@@ -12,6 +12,7 @@ import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
+import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.util.DateFormat;
@@ -39,7 +40,6 @@ public class FirebaseData {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 getCoupons();
-                System.out.println("myTest placeListener+");
             }
 
             @Override
@@ -69,7 +69,6 @@ public class FirebaseData {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 getCoupons();
-                System.out.println("myTest companyListener+");
             }
 
             @Override
@@ -113,11 +112,25 @@ public class FirebaseData {
                                         Company company = dataSnapshot.getValue(Company.class);
                                         coupon.setCompanyName(company.getName());
                                         coupon.setLogo(company.getLogo());
-                                        newCoupons.add(coupon);
+                                        Constants.DB_GIFT.child(coupon.getGiftKey()).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                Gift gift = dataSnapshot.getValue(Gift.class);
+                                                coupon.setRules(gift.getRules());
+                                                coupon.setDescription(gift.getDescription());
+                                                newCoupons.add(coupon);
 
-                                        if (newCoupons.size() > 0 && newCoupons.size() == couponsCode.size()) {
-                                            updateCoupons(newCoupons);
-                                        }
+                                                if (newCoupons.size() > 0 && newCoupons.size() == couponsCode.size()) {
+                                                    updateCoupons(newCoupons);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
                                     }
 
                                     @Override

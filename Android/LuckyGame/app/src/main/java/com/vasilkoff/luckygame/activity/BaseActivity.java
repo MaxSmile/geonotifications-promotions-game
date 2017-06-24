@@ -236,30 +236,45 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         company = dataSnapshot.getValue(Company.class);
                         final List<Box> boxes = place.getBox();
-                        if (boxes != null) {
-                            for (int i = 0; i < boxes.size(); i++) {
-                                Box box = boxes.get(i);
-                                Constants.DB_GIFT.child(box.getGift()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Gift gift = dataSnapshot.getValue(Gift.class);
-                                        if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
-                                            gifts.put(gift.getId(), gift);
+                        String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
+                        Constants.DB_LIMIT.child(company.getId()).child(limitKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                long countLimit = 0;
+                                if (dataSnapshot.exists()) {
+                                    countLimit = dataSnapshot.getValue(Long.class);
+                                }
+                                if (boxes != null && countLimit < company.getLimitGifts()) {
+                                    for (int i = 0; i < boxes.size(); i++) {
+                                        Box box = boxes.get(i);
+                                        Constants.DB_GIFT.child(box.getGift()).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                Gift gift = dataSnapshot.getValue(Gift.class);
+                                                if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
+                                                    gifts.put(gift.getId(), gift);
 
-                                        if (gifts.size() == boxes.size()) {
-                                            resultDataByPlace();
-                                        }
+                                                if (gifts.size() == boxes.size()) {
+                                                    resultDataByPlace();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
                                     }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
+                                } else {
+                                    resultDataByPlace();
+                                }
                             }
-                        } else {
-                            resultDataByPlace();
-                        }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override

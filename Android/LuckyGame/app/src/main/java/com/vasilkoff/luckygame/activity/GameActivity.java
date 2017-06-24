@@ -28,6 +28,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.GameHandler;
@@ -43,6 +46,7 @@ import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
+import com.vasilkoff.luckygame.util.DateFormat;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -345,18 +349,38 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 place.getGeoLon(),
                 lock,
                 0,
-                place.getCity()
+                place.getCity(),
+                gift.getRules()
         );
 
 
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(couponExtension);
+        setLimit();
 
         Intent intent = new Intent(this, SlideCouponsActivity.class);
         intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
         intent.putExtra("userPrize", true);
         startActivity(intent);
         finish();
+    }
+
+    private void setLimit() {
+        final String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
+        Constants.DB_LIMIT.child(company.getId()).child(limitKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long countLimit = 1;
+                if (dataSnapshot.exists()) {
+                    countLimit = dataSnapshot.getValue(Long.class) + 1;
+                }
+                Constants.DB_LIMIT.child(company.getId()).child(limitKey).setValue(countLimit);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void gameLose() {

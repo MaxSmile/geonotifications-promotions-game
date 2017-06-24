@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.vasilkoff.luckygame.entity.Coupon;
-import com.vasilkoff.luckygame.entity.CouponDB;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Place;
 
@@ -25,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -76,6 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_COUPON_LOCKED = "locked";
     private static final String KEY_COUPON_REDEEMED = "redeemed";
     private static final String KEY_COUPON_CITY = "city";
+    private static final String KEY_COUPON_RULES = "rules";
 
     public static synchronized DBHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -129,6 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_COUPON_LOCKED + " INTEGER,"
                 + KEY_COUPON_REDEEMED + " INTEGER,"
                 + KEY_COUPON_CITY + " text,"
+                + KEY_COUPON_RULES + " text,"
                 + "UNIQUE ("
                 + KEY_COUPON_CODE
                 + ") ON CONFLICT REPLACE"
@@ -365,6 +365,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_COUPON_LOCKED, coupon.getLocked());
         contentValues.put(KEY_COUPON_REDEEMED, coupon.getRedeemed());
         contentValues.put(KEY_COUPON_CITY, coupon.getCity());
+        contentValues.put(KEY_COUPON_RULES, coupon.getRules());
 
         db.insert(TABLE_COUPONS, null, contentValues);
     }
@@ -474,7 +475,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getDouble(17),
                 cursor.getInt(18),
                 cursor.getLong(19),
-                cursor.getString(20)
+                cursor.getString(20),
+                cursor.getString(21)
         );
     }
 

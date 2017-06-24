@@ -15,6 +15,7 @@ public class Company implements Parcelable {
     private String logo;
     private String facebookUrl;
     private int type;
+    private long limitGifts;
 
     public Company() {
     }
@@ -26,6 +27,7 @@ public class Company implements Parcelable {
         logo = in.readString();
         facebookUrl = in.readString();
         type = in.readInt();
+        limitGifts = in.readLong();
     }
 
     public static final Creator<Company> CREATOR = new Creator<Company>() {
@@ -88,6 +90,14 @@ public class Company implements Parcelable {
         this.type = type;
     }
 
+    public long getLimitGifts() {
+        return limitGifts;
+    }
+
+    public void setLimitGifts(long limitGifts) {
+        this.limitGifts = limitGifts;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -101,5 +111,6 @@ public class Company implements Parcelable {
         dest.writeString(logo);
         dest.writeString(facebookUrl);
         dest.writeInt(type);
+        dest.writeLong(limitGifts);
     }
 }

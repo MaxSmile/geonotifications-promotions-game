@@ -22,6 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 
@@ -31,6 +34,7 @@ import com.vasilkoff.luckygame.database.ServiceLayer;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.fragment.CouponFragment;
+import com.vasilkoff.luckygame.util.DateFormat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
