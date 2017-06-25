@@ -78,8 +78,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private ArrayList<Spin> spins;
 
     private boolean fromFilter;
-    private boolean showSearch;
-    private EditText searchEditText;
 
     private ActivityHomeBinding binding;
 
@@ -175,8 +173,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }*/
 
         loadData();
-
-        initSearch();
         updateGeoPlaces();
     }
 
@@ -184,27 +180,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         FirebaseData.placeListener();
         FirebaseData.companyListener();
         FirebaseData.getCoupons();
-    }
-
-    private void initSearch() {
-        searchEditText = (EditText)findViewById(R.id.searchEditText);
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Filters.searchKeyWord = s.toString();
-                filterData();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     @Override
@@ -250,11 +225,8 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }
 
         fromFilter = false;
-        binding.setFilterSearch(Filters.search);
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
-        binding.setShowSearch(showSearch);
-        searchEditText.setText(Filters.searchKeyWord);
     }
 
     @Override
@@ -339,31 +311,13 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     @Override
     public void search(View view) {
         if (checkResult()) {
-            Filters.search = true;
-            showSearch = true;
-            binding.setShowSearch(showSearch);
-            binding.setFilterSearch(Filters.search);
+            startActivity(new Intent(this, SearchActivity.class));
         }
     }
 
     @Override
-    public void hideSearch(View view) {
-        showSearch = false;
-        binding.setShowSearch(showSearch);
-        if (searchEditText.getText().length() == 0) {
-            Filters.search = false;
-            binding.setFilterSearch(Filters.search);
-        }
-    }
-
-    @Override
-    public void offSearch(View view) {
-        Filters.search = false;
-        binding.setFilterSearch(Filters.search);
-        showSearch = false;
-        binding.setShowSearch(showSearch);
-        Filters.searchKeyWord = null;
-        searchEditText.setText(null);
+    public void settings(View view) {
+        startActivity(new Intent(this, SettingActivity.class));
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -424,49 +378,5 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private void filterData() {
         refreshSpins();
         EventBus.getDefault().post(new Events.UpdateFilter());
-    }
-
-    public void onHomeClick(View view) {
-        switch (view.getId()) {
-            case R.id.homeSetting:
-                startActivity(new Intent(this, SettingActivity.class));
-                break;
-            case R.id.companyAll:
-                goToCategory(Constants.CATEGORY_ALL);
-                break;
-            case R.id.companyFood:
-                goToCategory(Constants.CATEGORY_FOOD);
-                break;
-            case R.id.companyNightlife:
-                goToCategory(Constants.CATEGORY_NIGHTLIFE);
-                break;
-            case R.id.companyCoffee:
-                goToCategory(Constants.CATEGORY_COFFE);
-                break;
-            case R.id.companyEvents:
-                goToCategory(Constants.CATEGORY_EVENTS);
-                break;
-            case R.id.companyShops:
-                goToCategory(Constants.CATEGORY_SHOPS);
-                break;
-            case R.id.companyServices:
-                goToCategory(Constants.CATEGORY_SERVICES);
-                break;
-            case R.id.companyEShops:
-                goToCategory(Constants.CATEGORY_E_SHOPS);
-                break;
-            case R.id.companyFavorites:
-                goToCategory(Constants.CATEGORY_FAVORITES);
-                break;
-            default:
-                Toast.makeText(this, R.string.next_version, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private void goToCategory(int type) {
-        Intent intent = new Intent(this, FilteredCompanyActivity.class);
-        intent.putExtra(Constants.PLACE_TYPE_KEY, type);
-        startActivity(intent);
     }
 }

@@ -7,6 +7,5 @@ import android.view.View;
  */
 
 public interface SearchHandler extends BaseHandler {
-    public void search(View view);
-    public void test(View view, String arg);
+    public void clear(View view);
 }

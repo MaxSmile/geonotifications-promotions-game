@@ -134,9 +134,10 @@
     <string name="filter_apply">Apply</string>
     <string name="filter_clear">Clear</string>
     <string name="filter_close">Close</string>
-    <string name="search_placeholder">Search by place name</string>
+    <string name="search_placeholder">Search by place name/keyword</string>
     <string name="gps_title">No Location Found</string>
     <string name="gps_text">Turn on Locations Services to allow the app to determine your location</string>
     <string name="title_activity_slide_coupons">SlideCouponsActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="search_empty">Your search returned no results</string>
 </resources>

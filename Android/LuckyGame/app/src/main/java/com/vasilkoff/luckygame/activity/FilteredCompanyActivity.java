@@ -49,8 +49,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     private HashMap<String, Place> places;
     private HashMap<String, Company> companies;
     private boolean fromFilter;
-    private EditText searchEditText;
-    private boolean showSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,29 +74,10 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         companiesList.setLayoutManager(llm);
 
         preloader = (RelativeLayout) findViewById(R.id.preloader);
-        initSearch();
+
     }
 
-    private void initSearch() {
-        searchEditText = (EditText)findViewById(R.id.searchEditText);
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Filters.searchKeyWord = s.toString();
-                filter();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
 
     @Override
     protected void onResume() {
@@ -110,10 +89,8 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         }
 
         fromFilter = false;
-        binding.setFilterSearch(Filters.search);
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
-        binding.setShowSearch(showSearch);
     }
 
     @Override
@@ -206,16 +183,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
             }
         }
 
-        if (Filters.search && Filters.searchKeyWord != null && Filters.searchKeyWord.length() > 0) {
-            Iterator<Spin> iSearch = spins.iterator();
-            while (iSearch.hasNext()) {
-                Spin spin = iSearch.next();
-                if (!places.get(spin.getPlaceKey()).getName().toLowerCase().contains(Filters.searchKeyWord)) {
-                    iSearch.remove();
-                }
-            }
-        }
-
         binding.setCountResult(spins.size() > 0);
         companiesList.setAdapter(new CompanyListAdapter(this, spins, places, companies));
     }
@@ -261,32 +228,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Override
     public void search(View view) {
-        if (checkResult()) {
-            Filters.search = true;
-            showSearch = true;
-            binding.setShowSearch(showSearch);
-            binding.setFilterSearch(Filters.search);
-            searchEditText.setText(Filters.searchKeyWord);
-        }
+        startActivity(new Intent(this, SearchActivity.class));
     }
 
-    @Override
-    public void hideSearch(View view) {
-        showSearch = false;
-        binding.setShowSearch(showSearch);
-        if (searchEditText.getText().length() == 0) {
-            Filters.search = false;
-            binding.setFilterSearch(Filters.search);
-        }
-    }
-
-    @Override
-    public void offSearch(View view) {
-        Filters.search = false;
-        binding.setFilterSearch(Filters.search);
-        showSearch = false;
-        binding.setShowSearch(showSearch);
-        Filters.searchKeyWord = null;
-        searchEditText.setText(null);
-    }
 }

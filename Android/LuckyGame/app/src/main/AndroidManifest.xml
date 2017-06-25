@@ -104,7 +104,10 @@
         <activity
             android:name=".activity.SlideCouponsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp"/>
+            android:theme="@style/AppTheme.PopUp" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".service.LocationService" />
 

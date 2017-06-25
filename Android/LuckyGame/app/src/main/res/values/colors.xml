@@ -54,5 +54,6 @@
     <color name="searchText">#ffffff</color>
     <color name="paginationText">#237cd4</color>
     <color name="paginationTextCurrent">#ffffff</color>
+    <color name="searchPlaceholder">#b3b0af</color>
 
 </resources>

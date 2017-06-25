@@ -10,7 +10,4 @@ public interface FiltersHandler extends BaseHandler {
     public void filterNearMe(View view);
     public void filters(View view);
     public void search(View view);
-    public void hideSearch(View view);
-    public void offSearch(View view);
-
 }

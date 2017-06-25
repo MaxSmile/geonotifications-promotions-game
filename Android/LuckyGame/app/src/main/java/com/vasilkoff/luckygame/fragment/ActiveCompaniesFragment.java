@@ -133,16 +133,6 @@ public class ActiveCompaniesFragment extends Fragment {
             }
         }
 
-        if (Filters.search && Filters.searchKeyWord != null && Filters.searchKeyWord.length() > 0) {
-            Iterator<Spin> iSearch = spins.iterator();
-            while (iSearch.hasNext()) {
-                Spin spin = iSearch.next();
-                if (!places.get(spin.getPlaceKey()).getName().toLowerCase().contains(Filters.searchKeyWord)) {
-                    iSearch.remove();
-                }
-            }
-        }
-
         dataBridge.activeSpins(spins.size());
         companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));
 
