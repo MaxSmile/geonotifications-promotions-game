@@ -45,7 +45,6 @@ public class InputCouponActivity extends BaseActivity implements InputCouponHand
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCheckCoupon(Events.CheckCoupons checkCoupons) {
-        System.out.println(TAG + " checkCoupons=" + checkCoupons.isExist());
         binding.setResult(true);
         binding.setCouponCheck(checkCoupons.isExist());
         if (checkCoupons.isExist()) {

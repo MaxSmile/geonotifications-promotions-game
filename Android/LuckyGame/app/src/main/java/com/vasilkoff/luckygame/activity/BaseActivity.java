@@ -50,7 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -75,7 +75,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public Company company;
     public Place place;
+
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
+
     public Spin spinByPlace;
 
     public boolean result;
@@ -236,23 +238,38 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         company = dataSnapshot.getValue(Company.class);
                         final List<Box> boxes = place.getBox();
-                        String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
-                        Constants.DB_LIMIT.child(company.getId()).child(limitKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                long countLimit = 0;
-                                if (dataSnapshot.exists()) {
-                                    countLimit = dataSnapshot.getValue(Long.class);
-                                }
-                                if (boxes != null && countLimit < company.getLimitGifts()) {
-                                    for (int i = 0; i < boxes.size(); i++) {
-                                        Box box = boxes.get(i);
-                                        Constants.DB_GIFT.child(box.getGift()).addValueEventListener(new ValueEventListener() {
+                        if (boxes != null) {
+                            for (int i = 0; i < boxes.size(); i++) {
+                                Box box = boxes.get(i);
+                                Constants.DB_GIFT.child(box.getGift()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        final Gift gift = dataSnapshot.getValue(Gift.class);
+                                        String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
+                                        Constants.DB_LIMIT.child(company.getId()).child(limitKey).child(gift.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                Gift gift = dataSnapshot.getValue(Gift.class);
-                                                if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis())
-                                                    gifts.put(gift.getId(), gift);
+                                                if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis()) {
+                                                    gift.setActive(true);
+                                                    long countLimit = 0;
+                                                    if (dataSnapshot.exists()) {
+                                                        countLimit = dataSnapshot.getValue(Long.class);
+                                                    }
+                                                    long countAvailable = gift.getLimitGifts() - countLimit;
+
+                                                    if (countAvailable > 0) {
+                                                        gift.setActive(true);
+                                                    } else {
+                                                        gift.setActive(false);
+                                                        countAvailable = 0;
+                                                    }
+                                                    gift.setCountAvailable(countAvailable);
+
+                                                } else {
+                                                    gift.setActive(false);
+                                                }
+
+                                                gifts.put(gift.getId(), gift);
 
                                                 if (gifts.size() == boxes.size()) {
                                                     resultDataByPlace();
@@ -264,17 +281,19 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
                                             }
                                         });
+
                                     }
-                                } else {
-                                    resultDataByPlace();
-                                }
-                            }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
+                                    }
+                                });
                             }
-                        });
+                        } else {
+                            resultDataByPlace();
+                        }
+
                     }
 
                     @Override

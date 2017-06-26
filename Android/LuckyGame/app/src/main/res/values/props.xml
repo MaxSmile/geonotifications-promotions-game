@@ -12,4 +12,6 @@
     <string name="mail_for_improve">info@spindealsapp.com</string>
 
     <string name="winning_sound">winning.mp3</string>
+    <string name="loser_sound">loser.wav</string>
+    <string name="tick_sound">tick.mp3</string>
 </resources>

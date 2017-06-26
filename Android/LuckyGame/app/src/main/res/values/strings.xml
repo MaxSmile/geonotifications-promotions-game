@@ -138,4 +138,6 @@
     <string name="add_coupon_title">Add coupon</string>
     <string name="add_coupon_button">Add</string>
     <string name="add_coupon_code_wrong">Wrong coupon code</string>
+    <string name="gifts_left">%d gifts left</string>
+    <string name="gifts_over">Sorry, all gifts are over.</string>
 </resources>

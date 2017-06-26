@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -113,7 +114,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
         binding.setPlace(place);
-        binding.setCountGift(gifts.size());
+        binding.setCountGift(place.getBox().size());
         binding.setCountCoupons(countCoupons);
         binding.setSpin(spin);
         binding.setFavorites(favorites);
@@ -173,8 +174,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         }
 
         try {
-            soundIdLose = sp.load(getAssets().openFd("loser.wav"), 1);
-            soundIdTick = sp.load(getAssets().openFd("tick.mp3"), 1);
+            soundIdLose = sp.load(getAssets().openFd(getString(R.string.loser_sound)), 1);
+            soundIdTick = sp.load(getAssets().openFd(getString(R.string.tick_sound)), 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -356,7 +357,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(couponExtension);
-        setLimit();
+        setLimit(coupon);
 
         Intent intent = new Intent(this, SlideCouponsActivity.class);
         intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
@@ -365,16 +366,16 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         finish();
     }
 
-    private void setLimit() {
+    private void setLimit(final Coupon coupon) {
         final String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
-        Constants.DB_LIMIT.child(company.getId()).child(limitKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        Constants.DB_LIMIT.child(company.getId()).child(limitKey).child(coupon.getGiftKey()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long countLimit = 1;
                 if (dataSnapshot.exists()) {
                     countLimit = dataSnapshot.getValue(Long.class) + 1;
                 }
-                Constants.DB_LIMIT.child(company.getId()).child(limitKey).setValue(countLimit);
+                Constants.DB_LIMIT.child(company.getId()).child(limitKey).child(coupon.getGiftKey()).setValue(countLimit);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

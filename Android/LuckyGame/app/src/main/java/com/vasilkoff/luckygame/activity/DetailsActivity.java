@@ -29,6 +29,7 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
+import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
@@ -37,6 +38,7 @@ import com.vasilkoff.luckygame.entity.UsedSpin;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
@@ -67,12 +69,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
         geoNotification = getIntent().getBooleanExtra("geoNotification", false);
 
-
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setSpin(spin);
         binding.setHandler(this);
-
-        getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
 
         detailsBtnPlay = (ImageView) findViewById(R.id.detailsBtnPlay);
         detailsArrow = (ImageView)findViewById(R.id.detailsArrow);
@@ -137,7 +136,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             extraSpinAvailable = false;
                         }
                     }
-                    if ((spinAvailable || geoNotification) && gifts.size() > 0) {
+                    if ((spinAvailable || geoNotification) && place.getBox().size() > 0) {
                         detailsBtnPlay.startAnimation(rotateAnim);
                     } else {
                         detailsBtnPlay.clearAnimation();
@@ -155,6 +154,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     protected void onResume() {
         super.onResume();
+        System.out.println(TAG + " onResume+ ");
+        getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
         if (result) {
             checkSpinAvailable();
             favorites = DBHelper.getInstance(this).checkFavorites(place);
@@ -162,7 +163,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
             binding.setCountCoupons(countCoupons);
         }
-
     }
 
     @Override
@@ -170,7 +170,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         favorites = DBHelper.getInstance(this).checkFavorites(place);
         binding.setCompany(company);
         binding.setPlace(place);
-        binding.setCountGift(gifts.size());
         binding.setFavorites(favorites);
         countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
         binding.setCountCoupons(countCoupons);
@@ -182,6 +181,17 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         checkSpinAvailable();
         result = true;
         initSlider();
+        List<Box> boxes = place.getBox();
+        Iterator<Box> iterator = boxes.iterator();
+        while (iterator.hasNext()) {
+            Box box = iterator.next();
+            if (!gifts.get(box.getGift()).isActive()) {
+                iterator.remove();
+            }
+        }
+        System.out.println(TAG + " result+ ");
+
+        binding.setCountGift(boxes.size());
     }
 
     @Override
@@ -197,7 +207,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void showGifts(View view) {
-        if (gifts.size() > 0) {
+        if (place.getBox().size() > 0) {
             Intent intent = new Intent(this, LegendActivity.class);
             intent.putExtra(Place.class.getCanonicalName(), place);
             intent.putExtra(Company.class.getCanonicalName(), company);
@@ -208,23 +218,27 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void goToPlay(View view) {
-        checkNetwork();
-        if (spin != null) {
-            if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+        if (place.getBox().size() > 0) {
+            checkNetwork();
+            if (spin != null) {
+                if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+                    startGame();
+                } else {
+                    Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                }
+            } else if (geoNotification){
                 startGame();
             } else {
-                Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.spin_empty, Toast.LENGTH_LONG).show();
             }
-        } else if (geoNotification){
-            startGame();
         } else {
-            Toast.makeText(this, R.string.spin_empty, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
         }
     }
 
     private void startGame() {
         if (user != null) {
-            if (checkResult() && gifts.size() > 0) {
+            if (checkResult()) {
                 if (spinAvailable || geoNotification) {
                     Intent intent = new Intent(this, GameActivity.class);
                     intent.putExtra(Place.class.getCanonicalName(), place);

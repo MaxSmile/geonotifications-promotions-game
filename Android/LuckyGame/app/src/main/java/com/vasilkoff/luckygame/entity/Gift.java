@@ -16,6 +16,9 @@ public class Gift implements Parcelable {
     private String description;
     private long timeLock;
     private String rules;
+    private long limitGifts;
+    private long countAvailable;
+    private boolean active;
 
     public Gift() {
     }
@@ -28,6 +31,9 @@ public class Gift implements Parcelable {
         description = in.readString();
         timeLock = in.readLong();
         rules = in.readString();
+        limitGifts = in.readLong();
+        countAvailable = in.readLong();
+        active = in.readByte() != 0;
     }
 
     public static final Creator<Gift> CREATOR = new Creator<Gift>() {
@@ -98,6 +104,30 @@ public class Gift implements Parcelable {
         this.rules = rules;
     }
 
+    public long getLimitGifts() {
+        return limitGifts;
+    }
+
+    public void setLimitGifts(long limitGifts) {
+        this.limitGifts = limitGifts;
+    }
+
+    public long getCountAvailable() {
+        return countAvailable;
+    }
+
+    public void setCountAvailable(long countAvailable) {
+        this.countAvailable = countAvailable;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -112,5 +142,8 @@ public class Gift implements Parcelable {
         dest.writeString(description);
         dest.writeLong(timeLock);
         dest.writeString(rules);
+        dest.writeLong(limitGifts);
+        dest.writeLong(countAvailable);
+        dest.writeByte((byte) (active ? 1 : 0));
     }
 }

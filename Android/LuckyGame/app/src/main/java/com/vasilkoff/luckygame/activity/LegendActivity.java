@@ -53,17 +53,23 @@ public class LegendActivity extends BaseActivity {
 
             Gift gift = gifts.get(box.getGift());
 
-
             LinearLayout rowLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.gift_row, null);
             ((ImageView) rowLayout.findViewById(R.id.legendRowImg))
                     .setImageResource(images.getResourceId(box.getColor(), -1));
             ((TextView)rowLayout.findViewById(R.id.legendRowText))
                     .setText(gift.getDescription());
 
-            String dateFinish = String.format(getResources().getString(R.string.finish_on),
-                    DateFormat.getDate("dd/MM/yyyy", gift.getDateFinish()));
+            String subText;
+            if (gift.getCountAvailable() < 70) {
+                subText = String.format(getResources().getString(R.string.gifts_left),
+                        gift.getCountAvailable());
+            } else {
+                subText = String.format(getResources().getString(R.string.finish_on),
+                        DateFormat.getDate("dd/MM/yyyy", gift.getDateFinish()));
+            }
+
             ((TextView)rowLayout.findViewById(R.id.legendRowSubText))
-                    .setText(dateFinish);
+                    .setText(subText);
             containerLayout.addView(rowLayout);
 
 
