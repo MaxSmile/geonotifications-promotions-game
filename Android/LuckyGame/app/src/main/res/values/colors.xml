@@ -55,5 +55,7 @@
     <color name="paginationText">#237cd4</color>
     <color name="paginationTextCurrent">#ffffff</color>
     <color name="searchPlaceholder">#b3b0af</color>
+    <color name="wrongCode">#D82F44</color>
+    <color name="addCouponEdit">#808080</color>
 
 </resources>

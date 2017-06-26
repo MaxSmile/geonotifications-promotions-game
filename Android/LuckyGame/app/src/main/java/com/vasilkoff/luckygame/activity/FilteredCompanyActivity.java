@@ -3,6 +3,7 @@ package com.vasilkoff.luckygame.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -58,6 +59,8 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         type = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, Constants.CATEGORY_ALL);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filtered_company);
         binding.setHandler(this);
+        binding.setBack(getResources().getIdentifier("back", "drawable", getPackageName()));
+        binding.setColorTitle(ContextCompat.getColor(this, R.color.categoryTitle));
         binding.setCountResult(true);
 
 

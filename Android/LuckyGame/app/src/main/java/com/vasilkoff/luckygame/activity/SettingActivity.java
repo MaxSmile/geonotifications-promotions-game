@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,9 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
 
         ActivitySettingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
         binding.setUser(user);
+        binding.setTitle(getString(R.string.setting_title));
+        binding.setBack(getResources().getIdentifier("back_blue", "drawable", getPackageName()));
+        binding.setColorTitle(ContextCompat.getColor(this, android.R.color.tab_indicator_text));
         binding.setHandler(this);
 
         try {
@@ -116,6 +120,11 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
     @Override
     public void forImprove(View view) {
         sendMail(getString(R.string.mail_for_improve));
+    }
+
+    @Override
+    public void addCoupon(View view) {
+        startActivity(new Intent(this, InputCouponActivity.class));
     }
 
     private void sendMail(String address) {

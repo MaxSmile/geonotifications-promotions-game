@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="title"
+            type="String"/>
+        <variable
+            name="colorTitle"
+            type="Integer"/>
+        <variable
+            name="back"
+            type="Integer"/>
+        <variable
+            name="code"
+            type="String"/>
+        <variable
+            name="couponCheck"
+            type="Boolean"/>
+        <variable
+            name="result"
+            type="Boolean"/>
+        <variable
+            name="handler"
+            type="com.vasilkoff.luckygame.binding.handler.InputCouponHandler" />
+        <import type="android.view.View" alias="v"/>
+    </data>
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.vasilkoff.luckygame.activity.InputCouponActivity"
+        android:background="@color/settingsBg1">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{result ? v.VISIBLE : v.GONE}">
+            <include
+                layout="@layout/header"
+                app:handler="@{handler}"
+                app:title="@{title}"
+                app:back="@{back}"
+                app:colorTitle="@{colorTitle}"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="13dp"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="@string/add_coupon_code_wrong"
+                    android:textColor="@color/wrongCode"
+                    android:textStyle="bold"
+                    android:visibility="@{couponCheck ? v.GONE : v.VISIBLE}"/>
+                <EditText
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/addCouponEdit"
+                    android:textStyle="bold"
+                    android:textCursorDrawable="@null"
+                    android:text="@={code}"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_coupon_button"
+                    android:textSize="19sp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textColor="@color/networkButtonText"
+                    android:background="@drawable/bg_btn_send"
+                    android:layout_margin="10dp"
+                    android:onClick="@{handler::add}"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+        <include layout="@layout/preloader"/>
+    </FrameLayout>
+</layout>
+

@@ -88,8 +88,40 @@ public class FirebaseData {
         });
     }
 
+    public static void checkCouponsByCode(final String code) {
+        if (code != null) {
+            Constants.DB_COUPON.child(code.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        getCouponsByCode(code);
+                        EventBus.getDefault().post(new Events.CheckCoupons(true));
+                    } else {
+                        EventBus.getDefault().post(new Events.CheckCoupons(false));
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        } else {
+            EventBus.getDefault().post(new Events.CheckCoupons(false));
+        }
+    }
+
+    private static void getCouponsByCode(String code) {
+        List<String> couponsCode = new ArrayList<String>();
+        couponsCode.add(code);
+        getCouponsList(couponsCode);
+    }
+
     public static void getCoupons() {
-        final List<String> couponsCode = DBHelper.getInstance(App.getInstance()).getCoupons();
+        getCouponsList(DBHelper.getInstance(App.getInstance()).getCoupons());
+    }
+
+    private static void getCouponsList(final List<String> couponsCode) {
         final List<CouponExtension> newCoupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
             Constants.DB_COUPON.child(couponsCode.get(i)).addValueEventListener(new ValueEventListener() {

@@ -310,9 +310,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void search(View view) {
-        if (checkResult()) {
-            startActivity(new Intent(this, SearchActivity.class));
-        }
+        startActivity(new Intent(this, SearchActivity.class));
     }
 
     @Override

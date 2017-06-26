@@ -8,6 +8,15 @@
             name="countResult"
             type="Boolean"/>
         <variable
+            name="showBg"
+            type="Boolean"/>
+        <variable
+            name="back"
+            type="Integer"/>
+        <variable
+            name="colorTitle"
+            type="Integer"/>
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.SearchHandler"/>
         <import type="android.view.View" alias="v"/>
@@ -31,7 +40,9 @@
                 <include
                     layout="@layout/header"
                     app:handler="@{handler}"
-                    app:title="@{title}"/>
+                    app:title="@{title}"
+                    app:colorTitle="@{colorTitle}"
+                    app:back="@{back}"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
@@ -73,6 +84,13 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/search_big_icon"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="@{showBg ? v.VISIBLE : v.GONE}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

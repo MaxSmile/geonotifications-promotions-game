@@ -15,6 +15,12 @@
             name="filterNearMe"
             type="Boolean"/>
         <variable
+            name="back"
+            type="Integer"/>
+        <variable
+            name="colorTitle"
+            type="Integer"/>
+        <variable
             name="filtersCount"
             type="Integer"/>
         <variable
@@ -37,7 +43,9 @@
                 <include
                     layout="@layout/header"
                     app:handler="@{handler}"
-                    app:title="@{type}"/>
+                    app:title="@{type}"
+                    app:back="@{back}"
+                    app:colorTitle="@{colorTitle}"/>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

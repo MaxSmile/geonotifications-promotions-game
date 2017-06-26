@@ -2,6 +2,7 @@ package com.vasilkoff.luckygame.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -47,6 +48,9 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
         binding.setTitle(getString(R.string.search));
         binding.setHandler(this);
         binding.setCountResult(true);
+        binding.setShowBg(true);
+        binding.setBack(getResources().getIdentifier("back", "drawable", getPackageName()));
+        binding.setColorTitle(ContextCompat.getColor(this, R.color.categoryTitle));
         initSearch();
         preloader = (RelativeLayout) findViewById(R.id.preloader);
 
@@ -140,8 +144,10 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
         ArrayList<Spin> spinsResult = new ArrayList<Spin>(spinsSearch.values());
         if (keyword.length() > 0) {
             binding.setCountResult(spinsResult.size() > 0);
+            binding.setShowBg(false);
         } else {
             binding.setCountResult(true);
+            binding.setShowBg(true);
         }
 
         companiesList.setAdapter(new CompanyListAdapter(this, spinsResult, places, companies));

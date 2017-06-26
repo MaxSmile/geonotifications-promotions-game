@@ -5,10 +5,25 @@ package com.vasilkoff.luckygame.eventbus;
  */
 
 public class Events {
+
     public static class UpdateLocation {
     }
+
     public static class UpdateFilter {
     }
+
     public static class UpdateCoupons {
+    }
+
+    public static class CheckCoupons {
+        private boolean exist;
+
+        public CheckCoupons(boolean exist) {
+            this.exist = exist;
+        }
+
+        public boolean isExist() {
+            return exist;
+        }
     }
 }

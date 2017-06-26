@@ -30,11 +30,6 @@
     <string name="game_title">Press, hold and release SPIN button</string>
     <string name="congrats">Congrats!</string>
     <string name="rules_conditions_title">Rules &amp; Conditions</string>
-    <string name="rules_conditions">
-        - Show to cashier before you redeem
-        \n- Lorem ipsum dolor sit amet, consectetur
-        \n- Lorem ipsum dolor sit amet, consectetur
-    </string>
     <string name="locks">Locks in:</string>
     <string name="expires">Expires in:</string>
     <string name="share_coupon">Share\ncoupon</string>
@@ -140,4 +135,7 @@
     <string name="title_activity_slide_coupons">SlideCouponsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="search_empty">Your search returned no results</string>
+    <string name="add_coupon_title">Add coupon</string>
+    <string name="add_coupon_button">Add</string>
+    <string name="add_coupon_code_wrong">Wrong coupon code</string>
 </resources>

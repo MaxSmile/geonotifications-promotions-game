@@ -5,6 +5,12 @@
             name="title"
             type="String"/>
         <variable
+            name="back"
+            type="Integer"/>
+        <variable
+            name="colorTitle"
+            type="Integer"/>
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.BaseHandler"/>
     </data>
@@ -20,7 +26,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:background="@null"
-            android:src="@drawable/back"
+            android:src="@{back}"
             android:onClick="@{handler::back}"
             android:padding="10dp"/>
         <TextView
@@ -28,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/categoryTitle"
+            android:textColor="@{colorTitle}"
             android:text="@{title}"
             android:textSize="25sp"
             android:textStyle="bold" />
