@@ -51,4 +51,11 @@
         <item>@string/spin_is_coming</item>
         <item>@string/spin_plus</item>
     </string-array>
+    <integer-array name="tutorial">
+        <item>@drawable/stage1</item>
+        <item>@drawable/stage2</item>
+        <item>@drawable/stage3</item>
+        <item>@drawable/stage4</item>
+        <item>@drawable/stage5</item>
+    </integer-array>
 </resources>

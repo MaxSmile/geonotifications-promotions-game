@@ -108,10 +108,16 @@
         <activity
             android:name=".activity.SearchActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.InputCouponActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.TutorialActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopUp"/>
 
         <service android:name=".service.LocationService" />
 
-        <activity android:name=".activity.InputCouponActivity"></activity>
     </application>
 
 </manifest>
