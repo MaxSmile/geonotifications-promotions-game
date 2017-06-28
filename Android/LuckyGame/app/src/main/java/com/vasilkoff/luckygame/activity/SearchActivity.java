@@ -16,11 +16,18 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.adapter.CompanyListAdapter;
 import com.vasilkoff.luckygame.binding.handler.SearchHandler;
 
+import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivitySearchBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.util.LocationDistance;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,10 +38,7 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
     private EditText searchEditText;
     private RelativeLayout preloader;
     private RecyclerView companiesList;
-
-    private ArrayList<Spin> newSpins;
-    private HashMap<String, Place> places;
-    private HashMap<String, Company> companies;
+    private ArrayList<Place> newPlaces;
 
     private ActivitySearchBinding binding;
 
@@ -62,21 +66,35 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
     @Override
     protected void onResume() {
         super.onResume();
-        preloader.setVisibility(View.VISIBLE);
-        getSpins();
+        refreshData();
+        //preloader.setVisibility(View.VISIBLE);
+        //getSpins();
     }
 
     @Override
-    public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
-        result = true;
-        newSpins = new ArrayList<Spin>(mapSpins.values());
-        preloader.setVisibility(View.GONE);
-        if (newSpins.size() > 0 && newSpins.size() == places.size()) {
-            this.places = places;
-            this.companies = companies;
-            updateData();
-        }
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onCurrentLocation(Events.UpdateLocation updateLocation) {
+        refreshData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {
+        refreshData();
+    }
+
+    private void refreshData() {
+        newPlaces = PlaceServiceLayer.getPlaces();        ;
     }
 
     @Override
@@ -84,64 +102,49 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
         searchEditText.setText("");
     }
 
-    private void updateData() {
-        if (CurrentLocation.lat != 0) {
-            for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
-                Place place = spinPlace.getValue();
-                if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                }
-            }
-        }
-    }
-
     private void search(String keyword) {
         keyword = keyword.trim().toLowerCase();
-        ArrayList<Spin> spins = new ArrayList<Spin>(newSpins);
-        HashMap<String, Spin> spinsSearch = new HashMap<String, Spin>();
+        HashMap<String, Place> spinsSearch = new HashMap<String, Place>();
 
         if (keyword.length() > 0) {
             String[] arraySearch = keyword.split("\\s++", -1);
 
             for (int i = 0; i < arraySearch.length; i++) {
-                for (int j = 0; j < spins.size(); j++) {
-                    Spin spin = spins.get(j);
+                for (int j = 0; j < newPlaces.size(); j++) {
+                    Place place = newPlaces.get(j);
 
-                    if (places.get(spin.getPlaceKey()).getName().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getName().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
 
-                    if (places.get(spin.getPlaceKey()).getCity().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getCity().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
 
-                    if (places.get(spin.getPlaceKey()).getTypeName().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getTypeName().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
 
-                    if (places.get(spin.getPlaceKey()).getAddress().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getAddress().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
 
-                    if (places.get(spin.getPlaceKey()).getTel().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getTel().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
 
-                    if (places.get(spin.getPlaceKey()).getAbout().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getAbout().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
 
-                    if (places.get(spin.getPlaceKey()).getAboutMore().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(spin.getPlaceKey(), spin);
+                    if (place.getAboutMore().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
                     }
                 }
             }
         }
 
-        ArrayList<Spin> spinsResult = new ArrayList<Spin>(spinsSearch.values());
+        ArrayList<Place> spinsResult = new ArrayList<Place>(spinsSearch.values());
         if (keyword.length() > 0) {
             binding.setCountResult(spinsResult.size() > 0);
             binding.setShowBg(false);
@@ -150,7 +153,7 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
             binding.setShowBg(true);
         }
 
-        companiesList.setAdapter(new CompanyListAdapter(this, spinsResult, places, companies));
+        companiesList.setAdapter(new CompanyListAdapter(this, spinsResult, DBHelper.getInstance(this).getCompanies()));
     }
 
     private void initSearch() {

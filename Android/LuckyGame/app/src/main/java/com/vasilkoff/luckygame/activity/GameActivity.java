@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.GameHandler;
 import com.vasilkoff.luckygame.common.MyRotateAnimation;
@@ -323,7 +324,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 gift.getId(),
                 place.getId(),
                 gift.getDescription(),
-                user.getId(),
+                CurrentUser.user.getId(),
                 System.currentTimeMillis(),
                 gift.getDateFinish(),
                 lockTime,
@@ -337,7 +338,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 gift.getId(),
                 place.getId(),
                 gift.getDescription(),
-                user.getId(),
+                CurrentUser.user.getId(),
                 System.currentTimeMillis(),
                 gift.getDateFinish(),
                 lockTime,
@@ -474,8 +475,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private void setLog(int result) {
         UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), getIntent().getIntExtra(Constants.SPIN_TYPE_KEY, 1), result);
 
-        Constants.DB_USER.child(user.getId()).child("userInfo").setValue(user);
-        Constants.DB_USER.child(user.getId()).child("place").child(place.getId())
+        Constants.DB_USER.child(CurrentUser.user.getId()).child("userInfo").setValue(CurrentUser.user);
+        Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
                 .child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
 
     }

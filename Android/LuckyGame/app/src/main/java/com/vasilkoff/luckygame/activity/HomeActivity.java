@@ -38,6 +38,7 @@ import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.HomeHandler;
 import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.database.FirebaseData;
+import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivityHomeBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -173,13 +174,15 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }*/
 
         loadData();
-        updateGeoPlaces();
     }
 
     private void loadData() {
         FirebaseData.placeListener();
         FirebaseData.companyListener();
+        FirebaseData.spinListener();
         FirebaseData.getCoupons();
+        FirebaseData.getPlaces();
+        startGeoService();
     }
 
     @Override
@@ -188,31 +191,12 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         this.spins = new ArrayList<Spin>(mapSpins.values());
         this.places = places;
         this.companies = companies;
-        refreshSpins();
-    }
-
-    private void refreshSpins() {
-        if (spins != null && (spins.size() > 0 && spins.size() == places.size())) {
-            ArrayList<Spin> newSpins = new ArrayList<Spin>(spins);
-            activeCompaniesFragment.refreshList(newSpins, places, companies);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
 
         if (showPopUpLogin && !checkLogin()) {
             showPopUpLogin = false;
@@ -240,33 +224,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCurrentLocation(Events.UpdateLocation updateLocation) {
-        refreshSpins();
-    }
-
-    private void updateGeoPlaces() {
-        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Place> placeList = new ArrayList<Place>();
-                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
-                    Place place = dataPlace.getValue(Place.class);
-                    if (place.getGeoTimeStart() < System.currentTimeMillis() && place.getGeoTimeFinish() > System.currentTimeMillis()) {
-                        placeList.add(place);
-                    }
-                }
-                dbHelper.savePlaces(placeList);
-                startGeoService();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     private void startGeoService() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -292,11 +249,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     @Override
     public void filterNearMe(View view) {
         if (CurrentLocation.lat != 0 ) {
-            if (checkResult()) {
                 Filters.nearMe = !Filters.nearMe;
                 binding.setFilterNearMe(Filters.nearMe);
                 filterData();
-            }
         } else {
             Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
         }
@@ -304,8 +259,8 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void filters(View view) {
-        if (checkResult())
-            startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+        //if (checkResult())
+        startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
     }
 
     @Override
@@ -374,7 +329,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     }
 
     private void filterData() {
-        refreshSpins();
         EventBus.getDefault().post(new Events.UpdateFilter());
     }
 }

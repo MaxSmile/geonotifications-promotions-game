@@ -15,6 +15,9 @@ public class Events {
     public static class UpdateCoupons {
     }
 
+    public static class UpdatePlaces {
+    }
+
     public static class CheckCoupons {
         private boolean exist;
 

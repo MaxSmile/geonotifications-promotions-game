@@ -1,28 +1,29 @@
 package com.vasilkoff.luckygame.database;
 
-import android.content.res.TypedArray;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.App;
 import com.vasilkoff.luckygame.Constants;
+
 import com.vasilkoff.luckygame.CurrentLocation;
-import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
+
+import com.vasilkoff.luckygame.entity.Spin;
+import com.vasilkoff.luckygame.entity.UsedSpin;
 import com.vasilkoff.luckygame.eventbus.Events;
-import com.vasilkoff.luckygame.util.DateFormat;
 import com.vasilkoff.luckygame.util.LocationDistance;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * Created by Kvm on 23.06.2017.
@@ -30,26 +31,19 @@ import java.util.TreeMap;
 
 public class FirebaseData {
 
+    private static boolean initSpin;
+    private static boolean initPlace;
+    private static boolean initCompany;
+
     public static void placeListener() {
-        Constants.DB_PLACE.addChildEventListener(new ChildEventListener() {
+
+        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                getCoupons();
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (initPlace) {
+                    getCoupons();
+                }
+                initPlace = true;
             }
 
             @Override
@@ -60,25 +54,20 @@ public class FirebaseData {
     }
 
     public static void companyListener() {
-        Constants.DB_COMPANY.addChildEventListener(new ChildEventListener() {
+        final ArrayList<Company> companies = new ArrayList<Company>();
+        Constants.DB_COMPANY.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (initCompany) {
+                    getPlaces();
+                }
+                initCompany = true;
 
-            }
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    companies.add(data.getValue(Company.class));
+                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                getCoupons();
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
             }
 
             @Override
@@ -86,6 +75,24 @@ public class FirebaseData {
 
             }
         });
+    }
+
+    public static void spinListener() {
+        Constants.DB_SPIN.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (initSpin) {
+                    getPlaces();
+                }
+                initSpin = true;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     public static void checkCouponsByCode(final String code) {
@@ -193,5 +200,108 @@ public class FirebaseData {
     private static void updateCoupons(List<CouponExtension> coupons) {
         DBHelper.getInstance(App.getInstance()).saveCoupons(coupons);
         EventBus.getDefault().post(new Events.UpdateCoupons());
+    }
+
+    public static void getPlaces() {
+        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<Place> places = new ArrayList<Place>();
+                final long count = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
+                    final Place place = dataPlace.getValue(Place.class);
+                    Constants.DB_SPIN.orderByChild("placeKey").equalTo(place.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getChildrenCount() == 0) {
+                                addPlace(places, place, count);
+                            }
+
+                            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                final Spin spin = data.getValue(Spin.class);
+                                place.setSpinFinish(spin.getDateFinish());
+                                if (spin.getDateStart() <= System.currentTimeMillis() && spin.getDateFinish() >= System.currentTimeMillis()) {
+                                    if (CurrentUser.user != null) {
+                                        long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
+                                        Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
+                                                .orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                boolean spinAvailable = true;
+                                                boolean extraSpinAvailable = true;
+                                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                    UsedSpin usedSpin = data.getValue(UsedSpin.class);
+                                                    if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
+                                                        spinAvailable = false;
+                                                    }
+
+                                                    if (usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
+                                                        extraSpinAvailable = false;
+                                                    }
+                                                }
+                                                place.setSpinAvailable(spinAvailable);
+                                                place.setExtraSpinAvailable(extraSpinAvailable);
+
+                                                addPlace(places, place, count);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    } else {
+                                        place.setSpinAvailable(true);
+                                    }
+                                }
+                                addPlace(places, place, count);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void addPlace(ArrayList<Place> places, Place place, long count) {
+        places.add(place);
+        if (count == places.size()) {
+            updatePlaces(places);
+        }
+    }
+
+    private static void updatePlaces(ArrayList<Place> places) {
+        HashMap<String, Place> oldPlaces = DBHelper.getInstance(App.getInstance()).getPlaces();
+        for (int i = 0; i < places.size(); i++) {
+            Place place = places.get(i);
+            place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
+
+            if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+                place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                        place.getGeoLat(), place.getGeoLon()));
+                place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                        place.getGeoLat(), place.getGeoLon()));
+            }
+
+            Place oldPlace = oldPlaces.get(place.getId());
+            if (oldPlace != null) {
+                place.setFavorites(oldPlace.isFavorites());
+            }
+
+        }
+        if (DBHelper.getInstance(App.getInstance()).savePlaces(places)) {
+            System.out.println("myTest updatePlace+++++++");
+            EventBus.getDefault().post(new Events.UpdatePlaces());
+        }
     }
 }

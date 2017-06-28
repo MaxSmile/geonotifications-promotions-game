@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.common.Filters;
+import com.vasilkoff.luckygame.database.DBHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class FilterActivity extends BaseActivity {
         filterListByCity = (ListView)findViewById(R.id.filterListByCity);
         filterListByCity.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        citiesList = new ArrayList<String>(cities.values());
+        citiesList = DBHelper.getInstance(this).getCities();
         arrayAdapter = new ArrayAdapter<String>(
                 this, R.layout.my_simple_list_item_multiple_choice, citiesList);
 

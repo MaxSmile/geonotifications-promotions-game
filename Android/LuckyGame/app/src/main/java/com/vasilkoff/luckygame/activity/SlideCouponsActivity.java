@@ -22,19 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 
 import com.vasilkoff.luckygame.common.Properties;
-import com.vasilkoff.luckygame.database.FirebaseData;
-import com.vasilkoff.luckygame.database.ServiceLayer;
+import com.vasilkoff.luckygame.database.CouponServiceLayer;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.fragment.CouponFragment;
-import com.vasilkoff.luckygame.util.DateFormat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -149,11 +144,11 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
 
     private void initFragments() {
         if (getIntent().getStringExtra(Constants.PLACE_KEY) != null) {
-            coupons = ServiceLayer.getCouponsByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+            coupons = CouponServiceLayer.getCouponsByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
         }
 
         if (getIntent().getStringExtra(Constants.COUPON_KEY) != null) {
-            coupons = ServiceLayer.getCouponsByCode(getIntent().getStringExtra(Constants.COUPON_KEY));
+            coupons = CouponServiceLayer.getCouponsByCode(getIntent().getStringExtra(Constants.COUPON_KEY));
         }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -168,7 +163,7 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
     }
 
     /*private void updateFragments() {
-        coupons = ServiceLayer.getCoupons();
+        coupons = CouponServiceLayer.getCoupons();
         System.out.println("myTest name---------- = " + coupons.get(0).getPlaceName());
         System.out.println("myTest size = " + coupons.size());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

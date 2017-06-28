@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -118,9 +119,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void checkSpinAvailable() {
-        if (user != null && (spin != null || geoNotification)) {
+        if (CurrentUser.user != null && (spin != null || geoNotification)) {
             long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
-            Constants.DB_USER.child(user.getId()).child("place").child(place.getId())
+            Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
                     .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -154,7 +155,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println(TAG + " onResume+ ");
         getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
         if (result) {
             checkSpinAvailable();
@@ -189,7 +189,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 iterator.remove();
             }
         }
-        System.out.println(TAG + " result+ ");
 
         binding.setCountGift(boxes.size());
     }
@@ -237,7 +236,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void startGame() {
-        if (user != null) {
+        if (CurrentUser.user != null) {
             if (checkResult()) {
                 if (spinAvailable || geoNotification) {
                     Intent intent = new Intent(this, GameActivity.class);

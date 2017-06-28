@@ -21,6 +21,7 @@ import com.vasilkoff.luckygame.binding.handler.FilteredHandler;
 import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivityFilteredCompanyBinding;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
@@ -45,11 +46,8 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     private ActivityFilteredCompanyBinding binding;
     private RelativeLayout preloader;
 
-
-    private ArrayList<Spin> newSpins;
-    private HashMap<String, Place> places;
-    private HashMap<String, Company> companies;
     private boolean fromFilter;
+    private ArrayList<Place> newPlaces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +85,36 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         super.onResume();
 
         if (!fromFilter) {
-            preloader.setVisibility(View.VISIBLE);
-            getSpins();
+            //preloader.setVisibility(View.VISIBLE);
+            refreshData();
         }
 
         fromFilter = false;
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
+    }
+
+    private void refreshData() {
+        newPlaces = PlaceServiceLayer.getPlaces();
+        removeOtherCategory();
+        filter();
+    }
+
+    private void removeOtherCategory() {
+        if (type >= 0) {
+            Iterator<Place> i = newPlaces.iterator();
+            while (i.hasNext()) {
+                if (type == Constants.CATEGORY_FAVORITES) {
+                    if (!i.next().isFavorites()) {
+                        i.remove();
+                    }
+                } else {
+                    if (i.next().getType() != type) {
+                        i.remove();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -107,87 +128,39 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         }
     }
 
-    @Override
-    public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
-        result = true;
-        newSpins = new ArrayList<Spin>(mapSpins.values());
-        preloader.setVisibility(View.GONE);
-        if (newSpins.size() > 0 && newSpins.size() == places.size()) {
-            HashMap<String, String> list = DBHelper.getInstance(this).getFavorites();
-            if (type >= 0) {
-                Iterator<Spin> i = newSpins.iterator();
-                while (i.hasNext()) {
-                    Spin spin = i.next();
-                    if (type == Constants.CATEGORY_FAVORITES && list.size() > 0) {
-                        if (list.get(spin.getPlaceKey()) == null) {
-                            i.remove();
-                        }
-                    } else {
-                        if (places.get(spin.getPlaceKey()).getType() != type) {
-                            i.remove();
-                        }
-                    }
-                }
-            }
-
-            this.places = places;
-            this.companies = companies;
-            updateData();
-        }
-
-    }
-
-    private void updateData() {
-        if (CurrentLocation.lat != 0) {
-            for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
-                Place place = spinPlace.getValue();
-                if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                }
-            }
-        }
-
-        filter();
-    }
-
     private void filter() {
-        ArrayList<Spin> spins = new ArrayList<Spin>(newSpins);
+        ArrayList<Place> places = new ArrayList<Place>(newPlaces);
 
         if (Filters.nearMe) {
-            Iterator<Spin> j = spins.iterator();
-            while (j.hasNext()) {
-                Spin spin = j.next();
-                if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
-                    j.remove();
+            Iterator<Place> iNearMe = places.iterator();
+            while (iNearMe.hasNext()) {
+                if (iNearMe.next().getDistance() > Properties.getNearMeRadius()) {
+                    iNearMe.remove();
                 }
             }
         }
 
         if (Filters.byCity) {
-            Iterator<Spin> iCity = spins.iterator();
+            Iterator<Place> iCity = places.iterator();
             while (iCity.hasNext()) {
-                Spin spin = iCity.next();
-                if (Filters.filteredCities.get(places.get(spin.getPlaceKey()).getCity()) == null) {
+                if (Filters.filteredCities.get(iCity.next().getCity()) == null) {
                     iCity.remove();
                 }
             }
         }
 
         if (Filters.byZA) {
-            if (spins.size() > 0) {
-                List<Spin> sortedSpins = new ArrayList<Spin>();
-                for (int k = spins.size() - 1; k >= 0; k--) {
-                    sortedSpins.add(spins.get(k));
+            if (places.size() > 0) {
+                List<Place> sortedPlaces = new ArrayList<Place>();
+                for (int k = places.size() - 1; k >= 0; k--) {
+                    sortedPlaces.add(places.get(k));
                 }
-                spins = new ArrayList<Spin>(sortedSpins);
+                places = new ArrayList<Place>(sortedPlaces);
             }
         }
 
-        binding.setCountResult(spins.size() > 0);
-        companiesList.setAdapter(new CompanyListAdapter(this, spins, places, companies));
+        binding.setCountResult(places.size() > 0);
+        companiesList.setAdapter(new CompanyListAdapter(this, places, DBHelper.getInstance(this).getCompanies()));
     }
 
     @Override
@@ -204,20 +177,20 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
-        if (!CurrentLocation.check) {
-            CurrentLocation.check = true;
-            updateData();
-        }
+        refreshData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {
+        refreshData();
     }
 
     @Override
     public void filterNearMe(View view) {
         if (CurrentLocation.lat != 0 ) {
-            if (checkResult()) {
-                Filters.nearMe = !Filters.nearMe;
-                binding.setFilterNearMe(Filters.nearMe);
-                filter();
-            }
+            Filters.nearMe = !Filters.nearMe;
+            binding.setFilterNearMe(Filters.nearMe);
+            filter();
         } else {
             Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
         }
@@ -225,8 +198,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Override
     public void filters(View view) {
-        if (checkResult())
-            startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+         startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
     }
 
     @Override

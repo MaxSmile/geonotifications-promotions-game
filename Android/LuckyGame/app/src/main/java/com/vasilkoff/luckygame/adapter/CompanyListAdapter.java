@@ -33,16 +33,14 @@ import java.util.HashMap;
 
 public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.Holder>{
     private Context context;
-    private ArrayList<Spin> spins = new ArrayList<Spin>();
-    private HashMap<String, Place> places = new HashMap<String, Place>();
-    private HashMap<String, Company> companies = new HashMap<String, Company>();
+    private ArrayList<Place> places;
+    private HashMap<String, Company> companies;
 
 
-    public CompanyListAdapter(Context context, ArrayList<Spin> spins, HashMap<String, Place> places, HashMap<String, Company> companies) {
+    public CompanyListAdapter(Context context, ArrayList<Place> places, HashMap<String, Company> companies) {
         this.context = context;
         this.companies = companies;
         this.places = places;
-        this.spins = spins;
     }
 
     @Override
@@ -53,20 +51,18 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        Spin spin = spins.get(position);
-        holder.bind(spin, places.get(spin.getPlaceKey()), companies.get(spin.getCompanyKey()));
+        Place place = places.get(position);
+        holder.bind(place, companies.get(place.getCompanyKey()));
     }
 
     @Override
     public int getItemCount() {
-        return spins.size();
+        return places.size();
     }
 
     class Holder extends RecyclerView.ViewHolder implements CompanyRowHandler {
         private CompaniesRowBinding binding;
-        private Spin spin;
         private Place place;
-        private boolean favorites;
         private int countCoupons;
 
         public Holder(View v) {
@@ -77,22 +73,18 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
                 public void onClick(View v) {
                     Intent intent = new Intent(context, DetailsActivity.class);
                     intent.putExtra(Constants.PLACE_KEY, place.getId());
-                    intent.putExtra(Spin.class.getCanonicalName(), spin);
+                    //intent.putExtra(Spin.class.getCanonicalName(), spin);
                     context.startActivity(intent);
                 }
             });
         }
 
-        public void bind(Spin spin, Place place, Company company) {
-            this.spin = spin;
+        public void bind(Place place, Company company) {
             this.place = place;
             binding.setCompany(company);
             binding.setPlace(place);
-            binding.setSpin(spin);
             binding.setHandler(this);
 
-            favorites = DBHelper.getInstance(context).checkFavorites(place);
-            binding.setFavorites(favorites);
             countCoupons = DBHelper.getInstance(context).getCouponsByPlace(place.getId()).size();
             binding.setCountCoupons(countCoupons);
         }
@@ -113,13 +105,9 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
         @Override
         public void favorites(View view) {
-            favorites = !favorites;
-            if (favorites) {
-                DBHelper.getInstance(context).saveFavorites(place);
-            } else {
-                DBHelper.getInstance(context).removeFavorites(place);
-            }
-            binding.setFavorites(favorites);
+            place.setFavorites(!place.isFavorites());
+            binding.setPlace(place);
+            DBHelper.getInstance(context).updatePlace(place);
         }
     }
 }

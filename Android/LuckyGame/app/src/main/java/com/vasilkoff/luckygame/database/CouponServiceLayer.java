@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Kvm on 23.06.2017.
  */
 
-public class ServiceLayer {
+public class CouponServiceLayer {
 
     public static List<CouponExtension> getCoupons() {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsExtension();

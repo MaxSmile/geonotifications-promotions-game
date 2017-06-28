@@ -1,5 +1,6 @@
 package com.vasilkoff.luckygame.entity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -35,12 +36,25 @@ public class Place implements Parcelable {
     private double distance;
     private String distanceString;
     private String city;
+    private boolean spinAvailable;
+    private boolean extraSpinAvailable;
+    private boolean favorites;
+    private long spinFinish;
+    private int spinStatus;
+    private Drawable spinStatusIcon;
+    private String spinTimeLeft;
+    private String spinStatusString;
 
     public Place() {
 
     }
 
-    public Place(String id, String address, String name, String companyKey, double geoLat, double geoLon, int geoRadius, String geoMessage, long geoTimeStart, long geoTimeFinish, long geoTimeFrequency) {
+    public Place(String id, String address, String name, String companyKey, double geoLat,
+                 double geoLon, int geoRadius, String geoMessage, long geoTimeStart,
+                 long geoTimeFinish, long geoTimeFrequency, int type, String typeName,
+                 int typeIcon, String info, String url, String tel, String about, String aboutMore,
+                 double distance, String distanceString, String city, boolean spinAvailable,
+                 boolean extraSpinAvailable, boolean favorites, long spinFinish) {
         this.id = id;
         this.address = address;
         this.name = name;
@@ -52,6 +66,21 @@ public class Place implements Parcelable {
         this.geoTimeStart = geoTimeStart;
         this.geoTimeFinish = geoTimeFinish;
         this.geoTimeFrequency = geoTimeFrequency;
+        this.type = type;
+        this.typeName = typeName;
+        this.typeIcon = typeIcon;
+        this.info = info;
+        this.url = url;
+        this.tel = tel;
+        this.about = about;
+        this.aboutMore = aboutMore;
+        this.distance = distance;
+        this.distanceString = distanceString;
+        this.city = city;
+        this.spinAvailable = spinAvailable;
+        this.extraSpinAvailable = extraSpinAvailable;
+        this.favorites = favorites;
+        this.spinFinish = spinFinish;
     }
 
     protected Place(Parcel in) {
@@ -79,6 +108,13 @@ public class Place implements Parcelable {
         distance = in.readDouble();
         distanceString = in.readString();
         city = in.readString();
+        spinAvailable = in.readByte() != 0;
+        extraSpinAvailable = in.readByte() != 0;
+        favorites = in.readByte() != 0;
+        spinFinish = in.readLong();
+        spinStatus = in.readInt();
+        spinTimeLeft = in.readString();
+        spinStatusString = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -285,6 +321,70 @@ public class Place implements Parcelable {
         this.city = city;
     }
 
+    public boolean isSpinAvailable() {
+        return spinAvailable;
+    }
+
+    public void setSpinAvailable(boolean spinAvailable) {
+        this.spinAvailable = spinAvailable;
+    }
+
+    public boolean isExtraSpinAvailable() {
+        return extraSpinAvailable;
+    }
+
+    public void setExtraSpinAvailable(boolean extraSpinAvailable) {
+        this.extraSpinAvailable = extraSpinAvailable;
+    }
+
+    public boolean isFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(boolean favorites) {
+        this.favorites = favorites;
+    }
+
+    public long getSpinFinish() {
+        return spinFinish;
+    }
+
+    public void setSpinFinish(long spinFinish) {
+        this.spinFinish = spinFinish;
+    }
+
+    public int getSpinStatus() {
+        return spinStatus;
+    }
+
+    public void setSpinStatus(int spinStatus) {
+        this.spinStatus = spinStatus;
+    }
+
+    public Drawable getSpinStatusIcon() {
+        return spinStatusIcon;
+    }
+
+    public void setSpinStatusIcon(Drawable spinStatusIcon) {
+        this.spinStatusIcon = spinStatusIcon;
+    }
+
+    public String getSpinTimeLeft() {
+        return spinTimeLeft;
+    }
+
+    public void setSpinTimeLeft(String spinTimeLeft) {
+        this.spinTimeLeft = spinTimeLeft;
+    }
+
+    public String getSpinStatusString() {
+        return spinStatusString;
+    }
+
+    public void setSpinStatusString(String spinStatusString) {
+        this.spinStatusString = spinStatusString;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -316,5 +416,12 @@ public class Place implements Parcelable {
         dest.writeDouble(distance);
         dest.writeString(distanceString);
         dest.writeString(city);
+        dest.writeByte((byte) (spinAvailable ? 1 : 0));
+        dest.writeByte((byte) (extraSpinAvailable ? 1 : 0));
+        dest.writeByte((byte) (favorites ? 1 : 0));
+        dest.writeLong(spinFinish);
+        dest.writeInt(spinStatus);
+        dest.writeString(spinTimeLeft);
+        dest.writeString(spinStatusString);
     }
 }

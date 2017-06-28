@@ -15,7 +15,7 @@ import com.vasilkoff.luckygame.adapter.CouponListAdapter;
 import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.common.Properties;
 
-import com.vasilkoff.luckygame.database.ServiceLayer;
+import com.vasilkoff.luckygame.database.CouponServiceLayer;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
 
@@ -89,7 +89,7 @@ public class CouponsFragment extends Fragment {
     }
 
     private void refreshList() {
-        coupons = ServiceLayer.getCoupons();
+        coupons = CouponServiceLayer.getCoupons();
         if (coupons != null)
             filterData();
     }

@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.vasilkoff.luckygame.App;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
@@ -29,6 +30,7 @@ import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.receiver.ProximityIntentReceiver;
+import com.vasilkoff.luckygame.util.LocationDistance;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -146,12 +148,13 @@ public class LocationService extends Service {
     }
 
     private void loadPlaces() {
-        ArrayList<Place> uniquePlaces = DBHelper.getInstance(this).getPlacesList();
-        for (int i = 0; i < uniquePlaces.size(); i++) {
-            Place place = uniquePlaces.get(i);
-            addProximityAlert(place.getGeoLat(), place.getGeoLon(), place.getId(), place.getGeoRadius());
+        ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
+        for (int i = 0; i < places.size(); i++) {
+            Place place = places.get(i);
+            if (place.getGeoTimeStart() < System.currentTimeMillis() && place.getGeoTimeFinish() > System.currentTimeMillis()) {
+                addProximityAlert(place.getGeoLat(), place.getGeoLon(), place.getId(), place.getGeoRadius());
+            }
         }
-
     }
 
     private void addProximityAlert(double latitude, double longitude, String id, int pointRadius) {
@@ -187,7 +190,20 @@ public class LocationService extends Service {
 
             if (!CurrentLocation.check) {
                 CurrentLocation.check = true;
-                EventBus.getDefault().post(new Events.UpdateLocation());
+                ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
+                for (int i = 0; i < places.size(); i++) {
+                    Place place = places.get(i);
+                    if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+                        place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                                place.getGeoLat(), place.getGeoLon()));
+                        place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                                place.getGeoLat(), place.getGeoLon()));
+                    }
+                }
+
+                if (DBHelper.getInstance(App.getInstance()).savePlaces(places)) {
+                    EventBus.getDefault().post(new Events.UpdateLocation());
+                }
             }
         }
         public void onStatusChanged(String s, int i, Bundle b) {

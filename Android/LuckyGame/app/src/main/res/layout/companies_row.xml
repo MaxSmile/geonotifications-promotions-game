@@ -3,17 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="spin"
-            type="com.vasilkoff.luckygame.entity.Spin" />
-        <variable
             name="place"
             type="com.vasilkoff.luckygame.entity.Place" />
         <variable
             name="company"
             type="com.vasilkoff.luckygame.entity.Company" />
-        <variable
-            name="favorites"
-            type="Boolean" />
         <variable
             name="countCoupons"
             type="Integer" />
@@ -21,6 +15,7 @@
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.CompanyRowHandler"/>
         <import type="android.view.View" alias="v"/>
+        <import type="com.vasilkoff.luckygame.Constants"/>
     </data>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -96,12 +91,12 @@
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
-                            android:src="@{spin.statusIcon}"
+                            android:src="@{place.spinStatusIcon}"
                             android:layout_marginEnd="2dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{spin.statusString}"/>
+                            android:text="@{place.spinStatusString}"/>
 
                     </LinearLayout>
                     <LinearLayout
@@ -110,7 +105,7 @@
                         android:orientation="horizontal"
                         android:layout_marginLeft="20dp"
                         android:layout_gravity="center_vertical"
-                        android:visibility="@{spin.status == 1  ? v.GONE : v.VISIBLE}">
+                        android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -120,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
                             android:layout_marginLeft="2dp"
-                            android:text="@{spin.timeLeft}"/>
+                            android:text="@{place.spinTimeLeft}"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -137,7 +132,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
+                        android:src="@{place.favorites ? @drawable/heart_filled : @drawable/heart}"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:onClick="@{handler::favorites}"

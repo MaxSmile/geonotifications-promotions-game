@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.SettingHandler;
 import com.vasilkoff.luckygame.databinding.ActivitySettingBinding;
@@ -32,7 +33,7 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
         setContentView(R.layout.activity_setting);
 
         ActivitySettingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
-        binding.setUser(user);
+        binding.setUser(CurrentUser.user);
         binding.setTitle(getString(R.string.setting_title));
         binding.setBack(getResources().getIdentifier("back_blue", "drawable", getPackageName()));
         binding.setColorTitle(ContextCompat.getColor(this, android.R.color.tab_indicator_text));
@@ -55,10 +56,10 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
 
     @Override
     public void logout(View view) {
-        if (user != null) {
+        if (CurrentUser.user != null) {
             LoginManager.getInstance().logOut();
             logoutGoogle();
-            user = null;
+            CurrentUser.user = null;
         }
 
         startActivity(new Intent(this, ChooseAccountActivity.class));
@@ -137,8 +138,8 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
 
     @Override
     public void clear(View view) {
-        if (user != null) {
-            Constants.DB_USER.child(user.getId()).getRef().removeValue();
+        if (CurrentUser.user != null) {
+            Constants.DB_USER.child(CurrentUser.user.getId()).getRef().removeValue();
         } else {
             Toast.makeText(this, "Unknown user, need login", Toast.LENGTH_SHORT).show();
         }

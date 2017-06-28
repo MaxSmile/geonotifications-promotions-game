@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -68,8 +69,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     static GoogleApiClient mGoogleApiClient;
     static GoogleSignInAccount accountGoogle;
     static JSONObject objectFacebook;
-
-    static User user;
 
     private static final String G_TAG = "SignInActivity";
 
@@ -137,11 +136,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             accountGoogle = result.getSignInAccount();
-            user = new User(
+            CurrentUser.user = new User(
                     accountGoogle.getId(),
                     accountGoogle.getDisplayName(),
                     Constants.USER_TYPE_GOOGLE
             );
+
         }
     }
 
@@ -166,13 +166,15 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         objectFacebook = object;
-                        try {
-                            user = new User(
-                                    objectFacebook.getString("id"),
-                                    objectFacebook.getString("name"),
-                                    Constants.USER_TYPE_FACEBOOK);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (objectFacebook != null) {
+                            try {
+                                CurrentUser.user = new User(
+                                        objectFacebook.getString("id"),
+                                        objectFacebook.getString("name"),
+                                        Constants.USER_TYPE_FACEBOOK);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });
@@ -316,7 +318,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public void getSpins() {
         cities = new TreeMap<String, String>();
-        Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
+       /* Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final TreeMap<String, Spin> spins = new TreeMap<String, Spin>();
@@ -344,9 +346,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                             cities.put(spinPlace.getCity(), spinPlace.getCity());
                             spinPlace.setTypeName(Constants.COMPANY_TYPE_NAMES[spinPlace.getType()]);
                             places.put(spinPlace.getId(), spinPlace);
-                            if (user != null) {
+                            if (CurrentUser.user != null) {
                                 long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
-                                Constants.DB_USER.child(user.getId()).child("place").child(spinPlace.getId())
+                                Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(spinPlace.getId())
                                         .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -406,7 +408,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     private void getCompanies(final TreeMap<String, Spin> spins, final HashMap<String,
@@ -427,7 +429,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     }
 
     public boolean checkFb() {
-        if (user == null || user.getType() == Constants.USER_TYPE_GOOGLE) {
+        if (CurrentUser.user == null || CurrentUser.user.getType() == Constants.USER_TYPE_GOOGLE) {
             Intent intent = new Intent(this, ChooseAccountActivity.class);
             intent.putExtra("fbAction", true);
             startActivity(intent);
