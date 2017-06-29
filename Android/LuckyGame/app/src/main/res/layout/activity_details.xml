@@ -18,6 +18,9 @@
             name="countCoupons"
             type="Integer" />
         <variable
+            name="other"
+            type="Boolean" />
+        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.DetailsHandler" />
         <import type="android.view.View" alias="v"/>
@@ -234,6 +237,43 @@
                     </FrameLayout>
 
                 </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/moreInfoBg"
+                    android:onClick="@{handler::showOther}"
+                    android:visibility="@{other ? v.VISIBLE : v.GONE}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/other_places"
+                        android:textColor="@color/colorDetailsTextInfo"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"/>
+                    <ImageView
+                        android:id="@+id/detailsArrowOther"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/arrow"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="25dp"/>
+                </RelativeLayout>
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expandableLayoutOther"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorDetailsTextInfoBg">
+                    <ListView
+                        android:id="@+id/detailsOtherPlaces"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"/>
+
+                </net.cachapa.expandablelayout.ExpandableLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

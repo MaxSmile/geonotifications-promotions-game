@@ -620,6 +620,32 @@ public class DBHelper extends SQLiteOpenHelper {
         return places;
     }
 
+    public HashMap<String, Place> getOtherPlacesCompany(String companyId, String placeId) {
+        HashMap<String, Place> places = new HashMap<String, Place>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                        + TABLE_PLACES
+                        + " WHERE "
+                        + KEY_PLACE_COMPANY_KEY
+                        + " = ? AND "
+                        + KEY_PLACE_ID
+                        + " <> ?"
+                , new String[] {companyId, placeId});
+
+        if (cursor.moveToFirst()) {
+            do {
+                places.put(cursor.getString(3), parsePlace(cursor));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return places;
+    }
+
     public Place getPlace(String placeId) {
         Place place = new Place();
         SQLiteDatabase db = this.getWritableDatabase();

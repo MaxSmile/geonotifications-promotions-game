@@ -13,5 +13,6 @@ public interface DetailsHandler extends GameHandler {
     public void web(View view);
     public void directions(View view);
     public void moreInfo(View view);
+    public void showOther(View view);
 
 }

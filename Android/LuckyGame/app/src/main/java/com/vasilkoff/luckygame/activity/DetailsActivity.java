@@ -14,7 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -28,6 +31,7 @@ import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
+import com.vasilkoff.luckygame.common.Helper;
 import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.database.GiftServiceLayer;
 import com.vasilkoff.luckygame.database.PlaceServiceLayer;
@@ -47,6 +51,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,9 +64,14 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private ImageView detailsBtnPlay;
     private SliderLayout slider;
     private ExpandableLayout expandableLayout;
+    private ExpandableLayout expandableLayoutOther;
     private ImageView detailsArrow;
+    private ImageView detailsArrowOther;
     private boolean geoNotification;
     private int countCoupons;
+    private HashMap<String, Place> otherPlacesCompany;
+    private ArrayList<String> otherList;
+    private ListView detailsOtherPlaces;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +83,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setHandler(this);
 
+        detailsOtherPlaces = (ListView)findViewById(R.id.detailsOtherPlaces);
+
         detailsBtnPlay = (ImageView) findViewById(R.id.detailsBtnPlay);
         detailsArrow = (ImageView)findViewById(R.id.detailsArrow);
+        detailsArrowOther = (ImageView)findViewById(R.id.detailsArrowOther);
         rotateAnim = new RotateAnimation(0f, 360,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnim.setInterpolator(new LinearInterpolator());
@@ -83,6 +96,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         rotateAnim.setDuration(2000);
 
         slider = (SliderLayout) findViewById(R.id.detailsSlider);
+
+        expandableLayoutOther = (ExpandableLayout) findViewById(R.id.expandableLayoutOther);
+        expandableLayoutOther.collapse();
         expandableLayout = (ExpandableLayout) findViewById(R.id.expandableLayout);
         expandableLayout.collapse();
 
@@ -123,6 +139,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     protected void onResume() {
         super.onResume();
         refreshData();
+
     }
 
     private void refreshData() {
@@ -149,6 +166,28 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         } else {
             detailsBtnPlay.clearAnimation();
         }
+        initOther();
+    }
+
+    private void initOther() {
+        otherPlacesCompany = DBHelper.getInstance(this).getOtherPlacesCompany(place.getCompanyKey(), place.getId());
+        otherList = new ArrayList<String>(otherPlacesCompany.keySet());
+
+        ArrayAdapter arrayFilterAdapter = new ArrayAdapter<String>(
+                this, R.layout.my_simple_list_item_1, otherList);
+        detailsOtherPlaces.setAdapter(arrayFilterAdapter);
+        Helper.getListViewSize(detailsOtherPlaces);
+        detailsOtherPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String placeId = otherPlacesCompany.get(otherList.get(position)).getId();
+                Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
+                intent.putExtra(Constants.PLACE_KEY, placeId );
+                startActivity(intent);
+                finish();
+            }
+        });
+        binding.setOther(otherPlacesCompany.size() > 0);
     }
 
     @Override
@@ -275,6 +314,16 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             detailsArrow.setImageResource(R.drawable.arrow_down);
         } else {
             detailsArrow.setImageResource(R.drawable.arrow);
+        }
+    }
+
+    @Override
+    public void showOther(View view) {
+        expandableLayoutOther.toggle();
+        if (expandableLayoutOther.isExpanded()) {
+            detailsArrowOther.setImageResource(R.drawable.arrow_down);
+        } else {
+            detailsArrowOther.setImageResource(R.drawable.arrow);
         }
     }
 
