@@ -12,14 +12,8 @@
             name="place"
             type="com.vasilkoff.luckygame.entity.Place" />
         <variable
-            name="spin"
-            type="com.vasilkoff.luckygame.entity.Spin" />
-        <variable
             name="countGift"
             type="Integer" />
-        <variable
-            name="favorites"
-            type="Boolean" />
         <variable
             name="countCoupons"
             type="Integer" />
@@ -27,7 +21,7 @@
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.DetailsHandler" />
         <import type="android.view.View" alias="v"/>
-
+        <import type="com.vasilkoff.luckygame.Constants"/>
     </data>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -317,7 +311,7 @@
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
+                            android:src="@{place.favorites ? @drawable/heart_filled : @drawable/heart}"
                             android:background="@null"
                             android:layout_alignParentEnd="true"
                             android:onClick="@{handler::favorites}"/>
@@ -449,17 +443,17 @@
                     android:textColor="@color/colorDetailsTitle"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{spin.status == 0 ? v.VISIBLE : v.GONE}"/>
+                    android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{spin.timeLeft}"
+                    android:text="@{place.spinTimeLeft}"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorDetailsTextInfo"
                     android:layout_below="@+id/detailsBtnPlay"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{spin.status == 1  ? v.GONE : v.VISIBLE}"/>
+                    android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}"/>
             </RelativeLayout>
 
             <LinearLayout

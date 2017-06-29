@@ -20,6 +20,8 @@ import com.facebook.share.widget.ShareButton;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.ExtraHandler;
+import com.vasilkoff.luckygame.entity.Company;
+import com.vasilkoff.luckygame.entity.Place;
 
 /**
  * Created by Kvm on 07.06.2017.
@@ -31,8 +33,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
     private LikeView likeView;
     private ShareButton shareButton;
 
-    @Override
-    public void resultDataByPlace() {
+    public void initData() {
         callbackManager = CallbackManager.Factory.create();
         init();
     }

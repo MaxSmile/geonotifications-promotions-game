@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.vasilkoff.luckygame.R;
+import com.vasilkoff.luckygame.database.FirebaseData;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +66,7 @@ public class ChooseAccountActivity extends BaseActivity {
     }
 
     private void showLoginSuccessMessage() {
+        FirebaseData.getPlaces();
         onBackPressed();
     }
 

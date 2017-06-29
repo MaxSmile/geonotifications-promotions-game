@@ -40,10 +40,12 @@ public class Place implements Parcelable {
     private boolean extraSpinAvailable;
     private boolean favorites;
     private long spinFinish;
+    private long spinStart;
     private int spinStatus;
     private Drawable spinStatusIcon;
     private String spinTimeLeft;
     private String spinStatusString;
+
 
     public Place() {
 
@@ -54,7 +56,7 @@ public class Place implements Parcelable {
                  long geoTimeFinish, long geoTimeFrequency, int type, String typeName,
                  int typeIcon, String info, String url, String tel, String about, String aboutMore,
                  double distance, String distanceString, String city, boolean spinAvailable,
-                 boolean extraSpinAvailable, boolean favorites, long spinFinish) {
+                 boolean extraSpinAvailable, boolean favorites, long spinFinish, long spinStart) {
         this.id = id;
         this.address = address;
         this.name = name;
@@ -81,6 +83,7 @@ public class Place implements Parcelable {
         this.extraSpinAvailable = extraSpinAvailable;
         this.favorites = favorites;
         this.spinFinish = spinFinish;
+        this.spinStart = spinStart;
     }
 
     protected Place(Parcel in) {
@@ -112,6 +115,7 @@ public class Place implements Parcelable {
         extraSpinAvailable = in.readByte() != 0;
         favorites = in.readByte() != 0;
         spinFinish = in.readLong();
+        spinStart = in.readLong();
         spinStatus = in.readInt();
         spinTimeLeft = in.readString();
         spinStatusString = in.readString();
@@ -353,6 +357,14 @@ public class Place implements Parcelable {
         this.spinFinish = spinFinish;
     }
 
+    public long getSpinStart() {
+        return spinStart;
+    }
+
+    public void setSpinStart(long spinStart) {
+        this.spinStart = spinStart;
+    }
+
     public int getSpinStatus() {
         return spinStatus;
     }
@@ -420,6 +432,7 @@ public class Place implements Parcelable {
         dest.writeByte((byte) (extraSpinAvailable ? 1 : 0));
         dest.writeByte((byte) (favorites ? 1 : 0));
         dest.writeLong(spinFinish);
+        dest.writeLong(spinStart);
         dest.writeInt(spinStatus);
         dest.writeString(spinTimeLeft);
         dest.writeString(spinStatusString);

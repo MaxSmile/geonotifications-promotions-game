@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
+import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.eventbus.Events;
 
@@ -36,9 +38,29 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_PLACES = "places";
     private static final String TABLE_NOTIFICATION = "notification";
     private static final String TABLE_COMPANIES = "companies";
+    private static final String TABLE_GALLERY = "gallery";
+    private static final String TABLE_BOX = "box";
+    private static final String TABLE_GIFT = "gift";
 
+
+
+    private static final String KEY_GIFT_ID = "id";
+    private static final String KEY_GIFT_DATE_START = "dateStart";
+    private static final String KEY_GIFT_DATE_FINISH = "dateFinish";
+    private static final String KEY_GIFT_DESCRIPTION = "description";
+    private static final String KEY_GIFT_TIME_LOCK = "timeLock";
+    private static final String KEY_GIFT_RULES = "rules";
+    private static final String KEY_GIFT_LIMIT_GIFTS = "limitGifts";
+    private static final String KEY_GIFT_COUNT_AVAILABLE = "countAvailable";
+    private static final String KEY_GIFT_ACTIVE = "active";
+
+    private static final String KEY_BOX_COLOR = "color";
+    private static final String KEY_BOX_COUNT = "count";
+    private static final String KEY_BOX_GIFT = "gift";
 
     private static final String KEY_ID = "_id";
+    private static final String KEY_GALLERY_URL = "galleryUrl";
+
     private static final String KEY_LAST_NOTIFICATION = "lastNotification";
 
     private static final String KEY_PLACE_ID = "id";
@@ -67,6 +89,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_PLACE_EXTRA_SPIN_AVAILABLE = "extraSpinAvailable";
     private static final String KEY_PLACE_FAVORITES = "favorites";
     private static final String KEY_PLACE_SPIN_FINISH = "spinFinish";
+    private static final String KEY_PLACE_SPIN_START = "spinStart";
 
     private static final String KEY_COUPON_STATUS = "status";
     private static final String KEY_COUPON_CODE = "code";
@@ -90,7 +113,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_COUPON_CITY = "city";
     private static final String KEY_COUPON_RULES = "rules";
 
-    private static final String KEY_COMPANY_ID = "id";
+    private static final String KEY_COMPANY_ID = "companyId";
     private static final String KEY_COMPANY_NAME = "name";
     private static final String KEY_COMPANY_INFO = "info";
     private static final String KEY_COMPANY_LOGO = "logo";
@@ -117,6 +140,9 @@ public class DBHelper extends SQLiteOpenHelper {
         createTablePlaces(sqLiteDatabase);
         createTableNotification(sqLiteDatabase);
         createTableCompanies(sqLiteDatabase);
+        createTableGallery(sqLiteDatabase);
+        createTableBox(sqLiteDatabase);
+        createTableGift(sqLiteDatabase);
     }
 
     @Override
@@ -125,7 +151,44 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_PLACES);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_COMPANIES);
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_GALLERY);
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_GIFT);
         onCreate(sqLiteDatabase);
+    }
+
+    private void createTableGift(SQLiteDatabase db) {
+        db.execSQL("create table " + TABLE_GIFT + "("
+                + KEY_ID + " integer primary key,"
+                + KEY_GIFT_ID  + " text,"
+                + KEY_GIFT_DATE_START + " INTEGER,"
+                + KEY_GIFT_DATE_FINISH + " INTEGER,"
+                + KEY_COMPANY_ID + " text,"
+                + KEY_GIFT_DESCRIPTION + " text,"
+                + KEY_GIFT_TIME_LOCK + " INTEGER,"
+                + KEY_GIFT_RULES + " text,"
+                + KEY_GIFT_LIMIT_GIFTS + " INTEGER,"
+                + KEY_GIFT_COUNT_AVAILABLE + " INTEGER,"
+                + KEY_GIFT_ACTIVE + " INTEGER"
+                + ")");
+    }
+
+    private void createTableBox(SQLiteDatabase db) {
+        db.execSQL("create table " + TABLE_BOX + "("
+                + KEY_ID + " integer primary key,"
+                + KEY_PLACE_ID  + " text,"
+                + KEY_BOX_COLOR + " INTEGER,"
+                + KEY_BOX_COUNT + " INTEGER,"
+                + KEY_BOX_GIFT+ " text"
+                + ")");
+    }
+
+    private void createTableGallery(SQLiteDatabase db) {
+        db.execSQL("create table " + TABLE_GALLERY + "("
+                + KEY_ID + " integer primary key,"
+                + KEY_PLACE_ID  + " text,"
+                + KEY_GALLERY_URL + " text"
+                + ")");
     }
 
     private void createTableCompanies(SQLiteDatabase db) {
@@ -214,6 +277,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACE_EXTRA_SPIN_AVAILABLE + " INTEGER,"
                 + KEY_PLACE_FAVORITES + " INTEGER,"
                 + KEY_PLACE_SPIN_FINISH + " INTEGER,"
+                + KEY_PLACE_SPIN_START + " INTEGER,"
                 + "UNIQUE ("
                 + KEY_PLACE_ID
                 + ") ON CONFLICT REPLACE"
@@ -254,6 +318,62 @@ public class DBHelper extends SQLiteOpenHelper {
         return 0;
     }
 
+    public boolean saveGifts(ArrayList<Gift> gifts) {
+        long rowInserted = -1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_GIFT, null, null);
+
+            for (Gift gift: gifts) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KEY_GIFT_ID, gift.getId());
+                contentValues.put(KEY_GIFT_DATE_START, gift.getDateStart());
+                contentValues.put(KEY_GIFT_DATE_FINISH, gift.getDateFinish());
+                contentValues.put(KEY_COMPANY_ID, gift.getCompanyKey());
+                contentValues.put(KEY_GIFT_DESCRIPTION, gift.getDescription());
+                contentValues.put(KEY_GIFT_TIME_LOCK, gift.getTimeLock());
+                contentValues.put(KEY_GIFT_RULES, gift.getRules());
+                contentValues.put(KEY_GIFT_LIMIT_GIFTS, gift.getLimitGifts());
+                contentValues.put(KEY_GIFT_COUNT_AVAILABLE, gift.getCountAvailable());
+                contentValues.put(KEY_GIFT_ACTIVE, gift.isActive() ? 1 : 0);
+
+                rowInserted = db.insert(TABLE_GIFT, null, contentValues);
+            }
+
+            if (rowInserted > -1) {
+                db.setTransactionSuccessful();
+            }
+        } finally {
+            db.endTransaction();
+        }
+        db.close();
+
+        return rowInserted > -1;
+    }
+
+    public HashMap<String, Gift> getGifts(String companyId) {
+        HashMap<String, Gift> gifts = new HashMap<String, Gift>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                        + TABLE_GIFT
+                        + " WHERE "
+                        + KEY_COMPANY_ID
+                        + " = ?"
+                , new String[] {companyId});
+        if (cursor.moveToFirst()) {
+            do {
+                gifts.put(cursor.getString(1), parseGift(cursor));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+        return gifts;
+    }
+
     public boolean saveCompanies(ArrayList<Company> companies) {
         long rowInserted = -1;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -284,6 +404,29 @@ public class DBHelper extends SQLiteOpenHelper {
         return rowInserted > -1;
     }
 
+    public Company getCompany(String id) {
+        Company company = new Company();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                        + TABLE_COMPANIES
+                        + " WHERE "
+                        + KEY_COMPANY_ID
+                        + " = ?"
+                , new String[] {id});
+        if (cursor.moveToFirst()) {
+            do {
+                company = parseCompany(cursor);
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return company;
+    }
+
 
     public HashMap<String, Company> getCompanies() {
         HashMap<String, Company> companies = new HashMap<String, Company>();
@@ -305,43 +448,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return companies;
     }
 
-    public boolean savePlaces(ArrayList<Place> places) {
+    public boolean updatePlaces(ArrayList<Place> places) {
         long rowInserted = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
-            db.delete(TABLE_PLACES, null, null);
-
             for (Place place : places) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(KEY_PLACE_ID, place.getId());
-                contentValues.put(KEY_PLACE_ADDRESS, place.getAddress());
-                contentValues.put(KEY_PLACE_NAME, place.getName());
-                contentValues.put(KEY_PLACE_COMPANY_KEY, place.getCompanyKey());
-                contentValues.put(KEY_PLACE_GEO_LAT, place.getGeoLat());
-                contentValues.put(KEY_PLACE_GEO_LON, place.getGeoLon());
-                contentValues.put(KEY_PLACE_GEO_RADIUS, place.getGeoRadius());
-                contentValues.put(KEY_PLACE_GEO_MESSAGE, place.getGeoMessage());
-                contentValues.put(KEY_PLACE_GEO_TIME_START, place.getGeoTimeStart());
-                contentValues.put(KEY_PLACE_GEO_TIME_FINISH, place.getGeoTimeFinish());
-                contentValues.put(KEY_PLACE_GEO_TIME_FREQUENCY, place.getGeoTimeFrequency());
-                contentValues.put(KEY_PLACE_TYPE, place.getType());
-                contentValues.put(KEY_PLACE_TYPE_NAME, place.getTypeName());
-                contentValues.put(KEY_PLACE_TYPE_ICON, place.getTypeIcon());
-                contentValues.put(KEY_PLACE_INFO, place.getInfo());
-                contentValues.put(KEY_PLACE_URL, place.getUrl());
-                contentValues.put(KEY_PLACE_TEL, place.getTel());
-                contentValues.put(KEY_PLACE_ABOUT, place.getAbout());
-                contentValues.put(KEY_PLACE_ABOUT_MORE, place.getAboutMore());
-                contentValues.put(KEY_PLACE_DISTANCE, place.getDistance());
-                contentValues.put(KEY_PLACE_DISTANCE_STRING, place.getDistanceString());
-                contentValues.put(KEY_PLACE_CITY, place.getCity());
-                contentValues.put(KEY_PLACE_SPIN_AVAILABLE, place.isSpinAvailable() ? 1 : 0);
-                contentValues.put(KEY_PLACE_EXTRA_SPIN_AVAILABLE, place.isExtraSpinAvailable() ? 1 : 0);
-                contentValues.put(KEY_PLACE_FAVORITES, place.isFavorites() ? 1 : 0);
-                contentValues.put(KEY_PLACE_SPIN_FINISH, place.getSpinFinish());
-
-                rowInserted = db.insert(TABLE_PLACES, null, contentValues);
+                ContentValues values = new ContentValues();
+                values.put(KEY_PLACE_DISTANCE, place.getDistance());
+                values.put(KEY_PLACE_DISTANCE_STRING, place.getDistanceString());
+                rowInserted = db.update(TABLE_PLACES, values, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
             }
 
             if (rowInserted > -1) {
@@ -353,6 +469,86 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return rowInserted > -1;
+    }
+
+    public boolean savePlaces(ArrayList<Place> places) {
+        long rowInserted = -1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_PLACES, null, null);
+            db.delete(TABLE_GALLERY, null, null);
+            db.delete(TABLE_BOX, null, null);
+
+            for (Place place : places) {
+                ContentValues contentValues = getPlaceValues(place);
+                rowInserted = db.insert(TABLE_PLACES, null, contentValues);
+
+                if (rowInserted > -1) {
+                    List<String> gallery = place.getGallery();
+                    for (int i = 0; i < gallery.size(); i++) {
+                        ContentValues galleryValues = new ContentValues();
+                        galleryValues.put(KEY_PLACE_ID, place.getId());
+                        galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
+                        rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
+                    }
+                }
+
+                if (rowInserted > -1) {
+                    List<Box> box = place.getBox();
+                    for (int i = 0; i < box.size(); i++) {
+                        ContentValues boxValues = new ContentValues();
+                        boxValues.put(KEY_PLACE_ID, place.getId());
+                        boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
+                        boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
+                        boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
+                        rowInserted = db.insert(TABLE_BOX, null, boxValues);
+                    }
+                }
+            }
+
+            if (rowInserted > -1) {
+                db.setTransactionSuccessful();
+            }
+        } finally {
+            db.endTransaction();
+        }
+        db.close();
+
+        return rowInserted > -1;
+    }
+
+    private ContentValues getPlaceValues(Place place) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_PLACE_ID, place.getId());
+        contentValues.put(KEY_PLACE_ADDRESS, place.getAddress());
+        contentValues.put(KEY_PLACE_NAME, place.getName());
+        contentValues.put(KEY_PLACE_COMPANY_KEY, place.getCompanyKey());
+        contentValues.put(KEY_PLACE_GEO_LAT, place.getGeoLat());
+        contentValues.put(KEY_PLACE_GEO_LON, place.getGeoLon());
+        contentValues.put(KEY_PLACE_GEO_RADIUS, place.getGeoRadius());
+        contentValues.put(KEY_PLACE_GEO_MESSAGE, place.getGeoMessage());
+        contentValues.put(KEY_PLACE_GEO_TIME_START, place.getGeoTimeStart());
+        contentValues.put(KEY_PLACE_GEO_TIME_FINISH, place.getGeoTimeFinish());
+        contentValues.put(KEY_PLACE_GEO_TIME_FREQUENCY, place.getGeoTimeFrequency());
+        contentValues.put(KEY_PLACE_TYPE, place.getType());
+        contentValues.put(KEY_PLACE_TYPE_NAME, place.getTypeName());
+        contentValues.put(KEY_PLACE_TYPE_ICON, place.getTypeIcon());
+        contentValues.put(KEY_PLACE_INFO, place.getInfo());
+        contentValues.put(KEY_PLACE_URL, place.getUrl());
+        contentValues.put(KEY_PLACE_TEL, place.getTel());
+        contentValues.put(KEY_PLACE_ABOUT, place.getAbout());
+        contentValues.put(KEY_PLACE_ABOUT_MORE, place.getAboutMore());
+        contentValues.put(KEY_PLACE_DISTANCE, place.getDistance());
+        contentValues.put(KEY_PLACE_DISTANCE_STRING, place.getDistanceString());
+        contentValues.put(KEY_PLACE_CITY, place.getCity());
+        contentValues.put(KEY_PLACE_SPIN_AVAILABLE, place.isSpinAvailable() ? 1 : 0);
+        contentValues.put(KEY_PLACE_EXTRA_SPIN_AVAILABLE, place.isExtraSpinAvailable() ? 1 : 0);
+        contentValues.put(KEY_PLACE_FAVORITES, place.isFavorites() ? 1 : 0);
+        contentValues.put(KEY_PLACE_SPIN_FINISH, place.getSpinFinish());
+        contentValues.put(KEY_PLACE_SPIN_START, place.getSpinStart());
+
+        return contentValues;
     }
 
     public List<String> getCities() {
@@ -425,6 +621,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Place getPlace(String placeId) {
+        Place place = new Place();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_PLACES
@@ -435,7 +632,36 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                return parsePlace(cursor);
+                place = parsePlace(cursor);
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        if (place.getId() != null) {
+            place.setGallery(getGallery(place.getId()));
+            place.setBox(getBox(place.getId()));
+        }
+
+        cursor.close();
+        db.close();
+
+        return place;
+    }
+
+    private List<Box> getBox(String placeId) {
+        List<Box> box = new ArrayList<Box>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                        + TABLE_BOX
+                        + " WHERE "
+                        + KEY_PLACE_ID
+                        + " = ?"
+                , new String[] {placeId});
+
+        if (cursor.moveToFirst()) {
+            do {
+                box.add(parseBox(cursor));
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -444,48 +670,38 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return null;
+        return box;
     }
 
-    public void saveFavorites(Place place) {
+    private List<String> getGallery(String placeId) {
+        List<String> gallery = new ArrayList<String>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                        + TABLE_GALLERY
+                        + " WHERE "
+                        + KEY_PLACE_ID
+                        + " = ?"
+                , new String[] {placeId});
 
-    }
+        if (cursor.moveToFirst()) {
+            do {
+                gallery.add(cursor.getString(2));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
 
-    public void removeFavorites(Place place) {
+        cursor.close();
+        db.close();
 
-    }
-
-    public boolean checkFavorites(Place place) {
-        return false;
+        return gallery;
     }
 
     public void updatePlace(Place place) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_PLACE_FAVORITES, place.isFavorites() ? 1 : 0);
-        db.update(TABLE_PLACES, values, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
+        ContentValues contentValues = getPlaceValues(place);
+        db.update(TABLE_PLACES, contentValues, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
         db.close();
-    }
-
-
-
-    public HashMap<String, String> getFavorites() {
-       /* SQLiteDatabase db = this.getWritableDatabase();
-        HashMap<String, String> favorites = new HashMap<String, String>();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FAVORITES, null);
-        if (cursor.moveToFirst()) {
-            do {
-                favorites.put(cursor.getString(1), cursor.getString(1));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        db.close();
-
-        return favorites;*/
-       return null;
     }
 
     public void saveCoupon(CouponExtension coupon) {
@@ -613,6 +829,29 @@ public class DBHelper extends SQLiteOpenHelper {
         return coupons;
     }
 
+    private Gift parseGift(Cursor cursor) {
+        return new Gift(
+                cursor.getString(1),
+                cursor.getLong(2),
+                cursor.getLong(3),
+                cursor.getString(4),
+                cursor.getString(5),
+                cursor.getLong(6),
+                cursor.getString(7),
+                cursor.getLong(8),
+                cursor.getLong(9),
+                cursor.getInt(10) > 0
+        );
+    }
+
+    private Box parseBox(Cursor cursor) {
+        return new Box(
+                cursor.getInt(2),
+                cursor.getInt(3),
+                cursor.getString(4)
+        );
+    }
+
     private Company parseCompany(Cursor cursor) {
         return new Company(
                 cursor.getString(1),
@@ -677,7 +916,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getInt(23) > 0,
                 cursor.getInt(24) > 0,
                 cursor.getInt(25) > 0,
-                cursor.getLong(26)
+                cursor.getLong(26),
+                cursor.getLong(27)
         );
     }
 }

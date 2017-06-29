@@ -21,16 +21,11 @@ public class UnlockActivity extends BaseFacebookActivity {
 
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
         binding = DataBindingUtil.setContentView(this, R.layout.activity_unlock);
-        getDataByPlace(coupon.getPlaceKey());
-
-    }
-
-    @Override
-    public void resultDataByPlace() {
-        super.resultDataByPlace();
+        company = DBHelper.getInstance(this).getCompany(coupon.getCompanyKey());
         binding.setCompany(company);
         binding.setCoupon(coupon);
         binding.setHandler(this);
+        initData();
     }
 
     @Override

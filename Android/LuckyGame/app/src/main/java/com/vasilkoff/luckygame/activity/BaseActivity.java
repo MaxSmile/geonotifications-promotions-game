@@ -35,6 +35,7 @@ import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.BaseHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.database.FirebaseData;
 import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Gift;
@@ -72,17 +73,13 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     private static final String G_TAG = "SignInActivity";
 
-    public Company company;
     public Place place;
-
+    public Company company;
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
 
-    public Spin spinByPlace;
 
     public boolean result;
     public static final String TAG = "myTest";
-
-    public boolean favorites;
 
     public static boolean showPopUpLogin = true;
 
@@ -109,6 +106,18 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    public void loadData() {
+        FirebaseData.getCoupons();
+        FirebaseData.getPlaces();
+        FirebaseData.getGift();
+    }
+
+    public void setListeners() {
+        FirebaseData.placeListener();
+        FirebaseData.companyListener();
+        FirebaseData.spinListener();
     }
 
     boolean checkLogin() {
@@ -151,9 +160,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
-
-
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(G_TAG, "onConnectionFailed:" + connectionResult);
@@ -191,241 +197,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     @Override
     public void favorites(View view) {
-        favorites = !favorites;
-        if (favorites) {
-            DBHelper.getInstance(this).saveFavorites(place);
-        } else {
-            DBHelper.getInstance(this).removeFavorites(place);
-        }
-    }
-
-    public void resultDataByPlace() {
-
-    }
-
-    public void getDataByPlace(String placeKey) {
-        Constants.DB_PLACE.child(placeKey).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                place = dataSnapshot.getValue(Place.class);
-                place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
-                TypedArray iconArray = getResources().obtainTypedArray(R.array.company_type_icons);
-                place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
-                if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                }
-                iconArray.recycle();
-                Constants.DB_SPIN.orderByChild("placeKey").equalTo(place.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            final Spin spin = data.getValue(Spin.class);
-
-                            if (spin.getDateStart() <= System.currentTimeMillis() && spin.getDateFinish() >= System.currentTimeMillis()) {
-                                spinByPlace = spin;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        company = dataSnapshot.getValue(Company.class);
-                        final List<Box> boxes = place.getBox();
-                        if (boxes != null) {
-                            for (int i = 0; i < boxes.size(); i++) {
-                                Box box = boxes.get(i);
-                                Constants.DB_GIFT.child(box.getGift()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        final Gift gift = dataSnapshot.getValue(Gift.class);
-                                        String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
-                                        Constants.DB_LIMIT.child(company.getId()).child(limitKey).child(gift.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis()) {
-                                                    gift.setActive(true);
-                                                    long countLimit = 0;
-                                                    if (dataSnapshot.exists()) {
-                                                        countLimit = dataSnapshot.getValue(Long.class);
-                                                    }
-                                                    long countAvailable = gift.getLimitGifts() - countLimit;
-
-                                                    if (countAvailable > 0) {
-                                                        gift.setActive(true);
-                                                    } else {
-                                                        gift.setActive(false);
-                                                        countAvailable = 0;
-                                                    }
-                                                    gift.setCountAvailable(countAvailable);
-
-                                                } else {
-                                                    gift.setActive(false);
-                                                }
-
-                                                gifts.put(gift.getId(), gift);
-
-                                                if (gifts.size() == boxes.size()) {
-                                                    resultDataByPlace();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-                        } else {
-                            resultDataByPlace();
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void resultSpins(TreeMap<String, Spin> mapSpins,HashMap<String, Place> places, HashMap<String, Company> companies) {
-
-    }
-
-    public void getSpins() {
-        cities = new TreeMap<String, String>();
-       /* Constants.DB_SPIN.orderByChild("dateFinish").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final TreeMap<String, Spin> spins = new TreeMap<String, Spin>();
-                final HashMap<String, Place> places = new HashMap<String, Place>();
-                final HashMap<String, Company> companies = new HashMap<String, Company>();
-
-                final String[] spinType = getResources().getStringArray(R.array.spin_type);
-
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    final long spinCount = dataSnapshot.getChildrenCount();
-                    final Spin spin = data.getValue(Spin.class);
-
-                    if (spin.getDateStart() <= System.currentTimeMillis()) {
-                        spin.setStatus(Constants.SPIN_STATUS_ACTIVE);
-                    } else {
-                        spin.setStatus(Constants.SPIN_STATUS_COMING);
-                    }
-
-                    spin.setTimeLeft(DateFormat.getDiff(spin.getDateFinish()));
-
-                    Constants.DB_PLACE.child(spin.getPlaceKey()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            final Place spinPlace = dataSnapshot.getValue(Place.class);
-                            cities.put(spinPlace.getCity(), spinPlace.getCity());
-                            spinPlace.setTypeName(Constants.COMPANY_TYPE_NAMES[spinPlace.getType()]);
-                            places.put(spinPlace.getId(), spinPlace);
-                            if (CurrentUser.user != null) {
-                                long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
-                                Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(spinPlace.getId())
-                                        .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        boolean spinAvailable = true;
-                                        boolean extraSpinAvailable = true;
-                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                            UsedSpin usedSpin = data.getValue(UsedSpin.class);
-                                            if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
-                                                spinAvailable = false;
-                                            }
-
-                                            if (usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
-                                                extraSpinAvailable = false;
-                                            }
-                                        }
-
-                                        if (!spinAvailable) {
-                                            spin.setStatus(Constants.SPIN_STATUS_EXTRA_AVAILABLE);
-                                        }
-
-
-                                        TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
-                                        spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
-                                        spin.setStatusString(spinType[spin.getStatus()]);
-                                        spins.put(spinPlace.getName(), spin);
-                                        spinIcon.recycle();
-
-                                        getCompanies(spins, places, companies, spinCount, spinPlace);
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            } else {
-                                TypedArray spinIcon = getResources().obtainTypedArray(R.array.spin_type_icon);
-                                spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
-                                spin.setStatusString(spinType[spin.getStatus()]);
-                                spins.put(spinPlace.getName(), spin);
-                                spinIcon.recycle();
-                                getCompanies(spins, places, companies, spinCount, spinPlace);
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-    }
-
-    private void getCompanies(final TreeMap<String, Spin> spins, final HashMap<String,
-            Place> places, final HashMap<String, Company> companies,final long spinCount, final Place place) {
-        Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Company company = dataSnapshot.getValue(Company.class);
-                companies.put(dataSnapshot.getKey(), company);
-                    resultSpins(spins, places, companies);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        place.setFavorites(!place.isFavorites());
+        DBHelper.getInstance(this).updatePlace(place);
     }
 
     public boolean checkFb() {

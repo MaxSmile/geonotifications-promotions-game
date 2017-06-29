@@ -80,8 +80,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private ImageView pointerImageView;
 
     private String winKey;
-    private Company company;
-    private Spin spin;
+
     private HashMap<String, Gift> gifts;
     private boolean social = false;
 
@@ -107,18 +106,15 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
         gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
-        spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
-        favorites = DBHelper.getInstance(this).checkFavorites(place);
-        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
 
+        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setCountGift(place.getBox().size());
         binding.setCountCoupons(countCoupons);
-        binding.setSpin(spin);
-        binding.setFavorites(favorites);
+
         binding.setHandler(this);
 
         parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
@@ -424,7 +420,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     }
 
     private void setImage() {
-        if (favorites) {
+        if (place.isFavorites()) {
             losePopUpFavorites.setImageResource(R.drawable.heart_filled);
         } else {
             losePopUpFavorites.setImageResource(R.drawable.heart);
@@ -432,10 +428,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     }
 
     public void getExtra() {
-        if (getIntent().getBooleanExtra("extraSpinAvailable", false)) {
+        if (place.isExtraSpinAvailable()) {
             Intent intent = new Intent(this, ExtraSpinActivity.class);
             intent.putExtra(Constants.PLACE_KEY, place.getId());
-            intent.putExtra(Spin.class.getCanonicalName(), spin);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
@@ -473,12 +468,18 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     }
 
     private void setLog(int result) {
-        UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), getIntent().getIntExtra(Constants.SPIN_TYPE_KEY, 1), result);
+        int typeSpin = getIntent().getIntExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_EXTRA);
+        UsedSpin usedSpin = new UsedSpin(System.currentTimeMillis(), typeSpin , result);
 
         Constants.DB_USER.child(CurrentUser.user.getId()).child("userInfo").setValue(CurrentUser.user);
         Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
                 .child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
-
+        if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
+            place.setExtraSpinAvailable(false);
+        } else {
+            place.setSpinAvailable(false);
+        }
+        DBHelper.getInstance(this).updatePlace(place);
     }
 
     @Override
@@ -506,7 +507,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     public void showCoupons(View view) {
         if (countCoupons > 0) {
             Intent intent = new Intent(this, SlideCouponsActivity.class);
-            intent.putExtra(Constants.PLACE_KEY, place.getId());
+            intent.putExtra(Place.class.getCanonicalName(), place);
+            intent.putExtra(Company.class.getCanonicalName(), company);
+            intent.putExtra(Gift.class.getCanonicalName(), gifts);
             startActivity(intent);
         }
     }
@@ -514,7 +517,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     @Override
     public void favorites(View view) {
         super.favorites(view);
-        binding.setFavorites(favorites);
+        binding.setPlace(place);
         if (losePopUpFavorites != null)
             setImage();
     }

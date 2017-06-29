@@ -11,12 +11,6 @@
             name="place"
             type="com.vasilkoff.luckygame.entity.Place"/>
         <variable
-            name="spin"
-            type="com.vasilkoff.luckygame.entity.Spin"/>
-        <variable
-            name="favorites"
-            type="Boolean" />
-        <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.ExtraHandler"/>
         <import type="android.view.View" alias="v"/>
@@ -138,7 +132,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
+                    android:src="@{place.favorites ? @drawable/heart_filled : @drawable/heart}"
                     android:onClick="@{handler::favorites}"/>
             </LinearLayout>
             <LinearLayout
@@ -193,7 +187,7 @@
                 android:paddingLeft="5dp"
                 android:textColor="@color/colorUnlockExpired"
                 android:textSize="16sp"
-                android:text="@{spin.timeLeft}"/>
+                android:text="@{place.spinTimeLeft}"/>
 
         </LinearLayout>
 

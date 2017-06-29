@@ -17,40 +17,34 @@ import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 
+import java.util.HashMap;
+
 
 public class ExtraSpinActivity extends BaseFacebookActivity {
 
     private ActivityExtraSpinBinding binding;
-    private Spin spin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extra_spin);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_extra_spin);
-        spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
-        getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
-    }
-
-    @Override
-    public void resultDataByPlace() {
-        super.resultDataByPlace();
-        favorites = DBHelper.getInstance(this).checkFavorites(place);
-        binding.setFavorites(favorites);
+        place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
+        company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
+        gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
         binding.setCompany(company);
         binding.setPlace(place);
-        binding.setSpin(spin);
         binding.setHandler(this);
+        initData();
     }
 
     @Override
     protected void socialSuccess() {
         Intent intent = new Intent(this, GameActivity.class);
+        place.setExtraSpinAvailable(false);
         intent.putExtra(Place.class.getCanonicalName(), place);
         intent.putExtra(Company.class.getCanonicalName(), company);
         intent.putExtra(Gift.class.getCanonicalName(), gifts);
-        intent.putExtra("extraSpinAvailable", false);
         intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_EXTRA);
         startActivity(intent);
         finish();
@@ -59,6 +53,6 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
     @Override
     public void favorites(View view) {
         super.favorites(view);
-        binding.setFavorites(favorites);
+        binding.setPlace(place);
     }
 }

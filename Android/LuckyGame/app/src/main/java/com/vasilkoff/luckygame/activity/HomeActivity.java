@@ -73,13 +73,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private AppBarLayout appBarLayout;
     private ImageView logo;
     private ImageView logoSmall;
-
-    private HashMap<String, Place> places;
-    private HashMap<String, Company> companies;
-    private ArrayList<Spin> spins;
-
-    private boolean fromFilter;
-
     private ActivityHomeBinding binding;
 
     @Override
@@ -173,42 +166,20 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         }*/
 
-        loadData();
-    }
-
-    private void loadData() {
-        FirebaseData.placeListener();
-        FirebaseData.companyListener();
-        FirebaseData.spinListener();
-        FirebaseData.getCoupons();
-        FirebaseData.getPlaces();
+        setListeners();
         startGeoService();
-    }
-
-    @Override
-    public void resultSpins(TreeMap<String, Spin> mapSpins, HashMap<String, Place> places, HashMap<String, Company> companies) {
-        result = true;
-        this.spins = new ArrayList<Spin>(mapSpins.values());
-        this.places = places;
-        this.companies = companies;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadData();
 
         if (showPopUpLogin && !checkLogin()) {
             showPopUpLogin = false;
             startActivity(new Intent(this, ChooseAccountActivity.class));
         }
 
-        if (!fromFilter) {
-            getSpins();
-
-        }
-
-        fromFilter = false;
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
     }
@@ -218,7 +189,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == Filters.FILTER_CODE) {
-            fromFilter = true;
             if (resultCode == RESULT_OK)
                 filterData();
         }
@@ -259,7 +229,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void filters(View view) {
-        //if (checkResult())
         startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
     }
 

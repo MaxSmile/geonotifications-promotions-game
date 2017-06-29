@@ -29,6 +29,8 @@ import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.DetailsHandler;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.database.GiftServiceLayer;
+import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivityDetailsBinding;
 import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
@@ -36,20 +38,22 @@ import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
+import com.vasilkoff.luckygame.eventbus.Events;
+import com.vasilkoff.luckygame.util.NetworkState;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
-    private Spin spin;
     private ActivityDetailsBinding binding;
-
-
-    private boolean spinAvailable;
-    private boolean extraSpinAvailable;
 
     private RotateAnimation rotateAnim;
     private ImageView detailsBtnPlay;
@@ -63,15 +67,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        checkNetwork();
 
-        result = false;
-
-        spin = getIntent().getParcelableExtra(Spin.class.getCanonicalName());
         geoNotification = getIntent().getBooleanExtra("geoNotification", false);
 
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
-        binding.setSpin(spin);
         binding.setHandler(this);
 
         detailsBtnPlay = (ImageView) findViewById(R.id.detailsBtnPlay);
@@ -84,10 +83,12 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         rotateAnim.setDuration(2000);
 
         slider = (SliderLayout) findViewById(R.id.detailsSlider);
-        expandableLayout
-                = (ExpandableLayout) findViewById(R.id.expandableLayout);
+        expandableLayout = (ExpandableLayout) findViewById(R.id.expandableLayout);
         expandableLayout.collapse();
 
+        if (isTaskRoot()) {
+            loadData();
+        }
     }
 
     private void initSlider() {
@@ -118,69 +119,15 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         super.onDestroy();
     }
 
-    private void checkSpinAvailable() {
-        if (CurrentUser.user != null && (spin != null || geoNotification)) {
-            long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
-            Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
-                    .orderByChild("time").startAt(timeShift).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    spinAvailable = true;
-                    extraSpinAvailable = true;
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        UsedSpin usedSpin = data.getValue(UsedSpin.class);
-                        if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
-                            spinAvailable = false;
-                        }
-
-                        if (usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
-                            extraSpinAvailable = false;
-                        }
-                    }
-                    if ((spinAvailable || geoNotification) && place.getBox().size() > 0) {
-                        detailsBtnPlay.startAnimation(rotateAnim);
-                    } else {
-                        detailsBtnPlay.clearAnimation();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        getDataByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
-        if (result) {
-            checkSpinAvailable();
-            favorites = DBHelper.getInstance(this).checkFavorites(place);
-            binding.setFavorites(favorites);
-            countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
-            binding.setCountCoupons(countCoupons);
-        }
+        refreshData();
     }
 
-    @Override
-    public void resultDataByPlace() {
-        favorites = DBHelper.getInstance(this).checkFavorites(place);
-        binding.setCompany(company);
-        binding.setPlace(place);
-        binding.setFavorites(favorites);
-        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
-        binding.setCountCoupons(countCoupons);
-
-        if (spinByPlace != null && spin == null) {
-            spin = spinByPlace;
-        }
-
-        checkSpinAvailable();
-        result = true;
-        initSlider();
+    private void refreshData() {
+        place = PlaceServiceLayer.getPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+        gifts = GiftServiceLayer.getGifts(place);
         List<Box> boxes = place.getBox();
         Iterator<Box> iterator = boxes.iterator();
         while (iterator.hasNext()) {
@@ -191,6 +138,17 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         }
 
         binding.setCountGift(boxes.size());
+        initSlider();
+        company = DBHelper.getInstance(this).getCompany(place.getCompanyKey());
+        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+        binding.setCountCoupons(countCoupons);
+        binding.setPlace(place);
+        binding.setCompany(company);
+        if ((place.isSpinAvailable() || geoNotification) && place.getBox().size() > 0) {
+            detailsBtnPlay.startAnimation(rotateAnim);
+        } else {
+            detailsBtnPlay.clearAnimation();
+        }
     }
 
     @Override
@@ -217,46 +175,41 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void goToPlay(View view) {
-        if (place.getBox().size() > 0) {
-            checkNetwork();
-            if (spin != null) {
-                if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
+        if (NetworkState.isOnline()) {
+            if (place.getBox().size() > 0) {
+                checkNetwork();
+                if (place.getSpinStatus() != Constants.SPIN_STATUS_COMING || geoNotification) {
                     startGame();
                 } else {
                     Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
                 }
-            } else if (geoNotification){
-                startGame();
             } else {
-                Toast.makeText(this, R.string.spin_empty, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, NetworkActivity.class));
         }
+
     }
 
     private void startGame() {
         if (CurrentUser.user != null) {
-            if (checkResult()) {
-                if (spinAvailable || geoNotification) {
-                    Intent intent = new Intent(this, GameActivity.class);
-                    intent.putExtra(Place.class.getCanonicalName(), place);
-                    intent.putExtra(Spin.class.getCanonicalName(), spin);
-                    intent.putExtra(Company.class.getCanonicalName(), company);
-                    intent.putExtra(Gift.class.getCanonicalName(), gifts);
+            if (place.isSpinAvailable() || geoNotification) {
+                Intent intent = new Intent(this, GameActivity.class);
+                intent.putExtra(Company.class.getCanonicalName(), company);
+                intent.putExtra(Gift.class.getCanonicalName(), gifts);
 
-                    int type = Constants.SPIN_TYPE_NORMAL;
-                    if (geoNotification || spin == null) {
-                        extraSpinAvailable = false;
-                        type = Constants.SPIN_TYPE_EXTRA;
-                        geoNotification = false;
-                    }
-                    intent.putExtra("extraSpinAvailable", extraSpinAvailable);
-                    intent.putExtra(Constants.SPIN_TYPE_KEY, type);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+                int type = Constants.SPIN_TYPE_NORMAL;
+                if (geoNotification) {
+                    place.setExtraSpinAvailable(false);
+                    type = Constants.SPIN_TYPE_EXTRA;
+                    geoNotification = false;
                 }
+                intent.putExtra(Constants.SPIN_TYPE_KEY, type);
+                intent.putExtra(Place.class.getCanonicalName(), place);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
             }
         } else {
             startActivity(new Intent(this, ChooseAccountActivity.class));
@@ -328,29 +281,32 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void favorites(View view) {
         super.favorites(view);
-        binding.setFavorites(favorites);
+        binding.setPlace(place);
     }
 
     @Override
     public void getExtraSpin(View view) {
-        if (spin != null) {
-            if (spin.getStatus() != Constants.SPIN_STATUS_COMING) {
-                if (extraSpinAvailable) {
-                    Intent intent = new Intent(this, ExtraSpinActivity.class);
-                    intent.putExtra(Constants.PLACE_KEY, place.getId());
-                    intent.putExtra(Spin.class.getCanonicalName(), spin);
-                    startActivity(intent);
+        if (NetworkState.isOnline()) {
+            if (CurrentUser.user != null) {
+                if (place.getSpinStatus() != Constants.SPIN_STATUS_COMING) {
+                    if (place.isExtraSpinAvailable()) {
+                        Intent intent = new Intent(this, ExtraSpinActivity.class);
+                        intent.putExtra(Place.class.getCanonicalName(), place);
+                        intent.putExtra(Company.class.getCanonicalName(), company);
+                        intent.putExtra(Gift.class.getCanonicalName(), gifts);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, ChooseAccountActivity.class));
             }
         } else {
-            Toast.makeText(this, R.string.spin_empty, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, NetworkActivity.class));
         }
-
-
     }
 
     @Override
@@ -360,5 +316,22 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             intent.putExtra(Constants.PLACE_KEY, place.getId());
             startActivity(intent);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {
+        refreshData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

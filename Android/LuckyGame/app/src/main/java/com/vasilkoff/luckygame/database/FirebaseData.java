@@ -1,5 +1,7 @@
 package com.vasilkoff.luckygame.database;
 
+import android.content.res.TypedArray;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -9,6 +11,7 @@ import com.vasilkoff.luckygame.Constants;
 
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.CurrentUser;
+import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Gift;
@@ -17,6 +20,7 @@ import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
 import com.vasilkoff.luckygame.eventbus.Events;
+import com.vasilkoff.luckygame.util.DateFormat;
 import com.vasilkoff.luckygame.util.LocationDistance;
 
 import org.greenrobot.eventbus.EventBus;
@@ -229,6 +233,7 @@ public class FirebaseData {
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 boolean spinAvailable = true;
                                                 boolean extraSpinAvailable = true;
+
                                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                                                     UsedSpin usedSpin = data.getValue(UsedSpin.class);
                                                     if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
@@ -239,6 +244,7 @@ public class FirebaseData {
                                                         extraSpinAvailable = false;
                                                     }
                                                 }
+
                                                 place.setSpinAvailable(spinAvailable);
                                                 place.setExtraSpinAvailable(extraSpinAvailable);
 
@@ -252,9 +258,12 @@ public class FirebaseData {
                                         });
                                     } else {
                                         place.setSpinAvailable(true);
+                                        addPlace(places, place, count);
                                     }
+                                } else {
+                                    addPlace(places, place, count);
                                 }
-                                addPlace(places, place, count);
+
                             }
                         }
 
@@ -276,32 +285,62 @@ public class FirebaseData {
     private static void addPlace(ArrayList<Place> places, Place place, long count) {
         places.add(place);
         if (count == places.size()) {
-            updatePlaces(places);
+            PlaceServiceLayer.updatePlaces(places);
         }
     }
 
-    private static void updatePlaces(ArrayList<Place> places) {
-        HashMap<String, Place> oldPlaces = DBHelper.getInstance(App.getInstance()).getPlaces();
-        for (int i = 0; i < places.size(); i++) {
-            Place place = places.get(i);
-            place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
 
-            if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                        place.getGeoLat(), place.getGeoLon()));
-                place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                        place.getGeoLat(), place.getGeoLon()));
+    public static void getGift() {
+        Constants.DB_GIFT.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<Gift> gifts = new ArrayList<Gift>();
+                final long count = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataGift : dataSnapshot.getChildren()) {
+                    final Gift gift = dataGift.getValue(Gift.class);
+                    String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
+                    Constants.DB_LIMIT.child(gift.getCompanyKey()).child(limitKey).child(gift.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis()) {
+                                gift.setActive(true);
+                                long countLimit = 0;
+                                if (dataSnapshot.exists()) {
+                                    countLimit = dataSnapshot.getValue(Long.class);
+                                }
+                                long countAvailable = gift.getLimitGifts() - countLimit;
+
+                                if (countAvailable > 0) {
+                                    gift.setActive(true);
+                                } else {
+                                    gift.setActive(false);
+                                    countAvailable = 0;
+                                }
+                                gift.setCountAvailable(countAvailable);
+
+                            } else {
+                                gift.setActive(false);
+                            }
+
+                            gifts.add(gift);
+
+                            if (gifts.size() == count) {
+                                DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
             }
 
-            Place oldPlace = oldPlaces.get(place.getId());
-            if (oldPlace != null) {
-                place.setFavorites(oldPlace.isFavorites());
-            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        }
-        if (DBHelper.getInstance(App.getInstance()).savePlaces(places)) {
-            System.out.println("myTest updatePlace+++++++");
-            EventBus.getDefault().post(new Events.UpdatePlaces());
-        }
+            }
+        });
     }
 }

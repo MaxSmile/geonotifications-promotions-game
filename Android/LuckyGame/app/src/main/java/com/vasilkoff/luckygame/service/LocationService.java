@@ -201,7 +201,7 @@ public class LocationService extends Service {
                     }
                 }
 
-                if (DBHelper.getInstance(App.getInstance()).savePlaces(places)) {
+                if (DBHelper.getInstance(App.getInstance()).updatePlaces(places)) {
                     EventBus.getDefault().post(new Events.UpdateLocation());
                 }
             }

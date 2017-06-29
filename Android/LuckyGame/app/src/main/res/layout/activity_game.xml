@@ -12,17 +12,11 @@
             name="place"
             type="com.vasilkoff.luckygame.entity.Place" />
         <variable
-            name="spin"
-            type="com.vasilkoff.luckygame.entity.Spin" />
-        <variable
             name="countGift"
             type="Integer" />
         <variable
             name="countCoupons"
             type="Integer" />
-        <variable
-            name="favorites"
-            type="Boolean" />
         <variable
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.GameHandler" />
@@ -191,8 +185,7 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="3dp"
-                    android:layout_margin="0dp"
-                    android:visibility="@{spin != null ? v.VISIBLE : v.GONE}">
+                    android:layout_margin="0dp">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="3"
@@ -206,7 +199,7 @@
                         android:layout_weight="5"
                         android:layout_height="wrap_content"
                         android:paddingLeft="2dp"
-                        android:text="@{spin.timeLeft}"
+                        android:text="@{place.spinTimeLeft}"
                         android:textColor="@color/gameSubText"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
@@ -263,7 +256,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:src="@{favorites ? @drawable/heart_filled : @drawable/heart}"
+                        android:src="@{place.favorites ? @drawable/heart_filled : @drawable/heart}"
                         android:onClick="@{handler::favorites}"/>
 
                 </LinearLayout>

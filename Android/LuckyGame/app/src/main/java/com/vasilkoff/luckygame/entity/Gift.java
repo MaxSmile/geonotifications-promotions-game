@@ -23,6 +23,19 @@ public class Gift implements Parcelable {
     public Gift() {
     }
 
+    public Gift(String id, long dateStart, long dateFinish, String companyKey, String description, long timeLock, String rules, long limitGifts, long countAvailable, boolean active) {
+        this.id = id;
+        this.dateStart = dateStart;
+        this.dateFinish = dateFinish;
+        this.companyKey = companyKey;
+        this.description = description;
+        this.timeLock = timeLock;
+        this.rules = rules;
+        this.limitGifts = limitGifts;
+        this.countAvailable = countAvailable;
+        this.active = active;
+    }
+
     protected Gift(Parcel in) {
         id = in.readString();
         dateStart = in.readLong();
