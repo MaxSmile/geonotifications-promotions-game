@@ -27,6 +27,8 @@ import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.CurrentUser;
