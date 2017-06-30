@@ -28,9 +28,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f3381de560e52052038ffb42a852d4b4df492896" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".activity.HomeActivity"
@@ -85,7 +82,6 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
-        <activity android:name=".activity.MapsActivity" />
         <activity android:name=".activity.PreferencesActivity" />
         <activity
             android:name=".activity.SendCouponActivity"

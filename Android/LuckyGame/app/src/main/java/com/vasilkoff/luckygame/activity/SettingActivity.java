@@ -81,10 +81,6 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
 
     @Override
     public void tutorial(View view) {
-      /*  Intent intent = new Intent(this, TermsConditionsActivity.class);
-        intent.putExtra("title", getString(R.string.tutorial));
-        intent.putExtra("file", getString(R.string.tutorial_file));
-        startActivity(intent);*/
         startActivity(new Intent(this, TutorialActivity.class));
     }
 
