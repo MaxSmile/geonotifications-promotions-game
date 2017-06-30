@@ -47,7 +47,10 @@ import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.entity.Spin;
 import com.vasilkoff.luckygame.entity.UsedSpin;
+import com.vasilkoff.luckygame.eventbus.Events;
 import com.vasilkoff.luckygame.util.DateFormat;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -480,6 +483,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             place.setSpinAvailable(false);
         }
         DBHelper.getInstance(this).updatePlace(place);
+        EventBus.getDefault().postSticky(new Events.UpdateSpinAvailable());
+
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.vasilkoff.luckygame.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
@@ -105,6 +106,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         if (isTaskRoot()) {
             loadData();
         }
+        refreshData();
     }
 
     private void initSlider() {
@@ -138,8 +140,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     protected void onResume() {
         super.onResume();
-        refreshData();
-
     }
 
     private void refreshData() {
@@ -284,6 +284,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void info(View view) {
+        place.setInfoChecked(true);
+        binding.setPlace(place);
+        DBHelper.getInstance(this).updatePlace(place);
+
         Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra("info", place.getInfo());
         intent.putExtra("title", place.getName());
@@ -369,6 +373,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {
+        refreshData();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onUpdateSpinAvailable(Events.UpdateSpinAvailable updateSpinAvailable) {
         refreshData();
     }
 

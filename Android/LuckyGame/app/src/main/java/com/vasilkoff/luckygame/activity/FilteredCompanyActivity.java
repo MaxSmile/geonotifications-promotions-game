@@ -53,7 +53,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtered_company);
-        checkNetwork();
+        //checkNetwork();
         type = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, Constants.CATEGORY_ALL);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_filtered_company);
         binding.setHandler(this);

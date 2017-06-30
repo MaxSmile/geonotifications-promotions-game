@@ -45,6 +45,8 @@ public class Place implements Parcelable {
     private Drawable spinStatusIcon;
     private String spinTimeLeft;
     private String spinStatusString;
+    private long infoTimestamp;
+    private boolean infoChecked;
 
 
     public Place() {
@@ -56,7 +58,8 @@ public class Place implements Parcelable {
                  long geoTimeFinish, long geoTimeFrequency, int type, String typeName,
                  int typeIcon, String info, String url, String tel, String about, String aboutMore,
                  double distance, String distanceString, String city, boolean spinAvailable,
-                 boolean extraSpinAvailable, boolean favorites, long spinFinish, long spinStart) {
+                 boolean extraSpinAvailable, boolean favorites, long spinFinish, long spinStart,
+                 long infoTimestamp, boolean infoChecked) {
         this.id = id;
         this.address = address;
         this.name = name;
@@ -84,6 +87,8 @@ public class Place implements Parcelable {
         this.favorites = favorites;
         this.spinFinish = spinFinish;
         this.spinStart = spinStart;
+        this.infoTimestamp = infoTimestamp;
+        this.infoChecked = infoChecked;
     }
 
     protected Place(Parcel in) {
@@ -119,6 +124,8 @@ public class Place implements Parcelable {
         spinStatus = in.readInt();
         spinTimeLeft = in.readString();
         spinStatusString = in.readString();
+        infoTimestamp = in.readLong();
+        infoChecked = in.readByte() != 0;
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -397,6 +404,22 @@ public class Place implements Parcelable {
         this.spinStatusString = spinStatusString;
     }
 
+    public long getInfoTimestamp() {
+        return infoTimestamp;
+    }
+
+    public void setInfoTimestamp(long infoTimestamp) {
+        this.infoTimestamp = infoTimestamp;
+    }
+
+    public boolean isInfoChecked() {
+        return infoChecked;
+    }
+
+    public void setInfoChecked(boolean infoChecked) {
+        this.infoChecked = infoChecked;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -436,5 +459,7 @@ public class Place implements Parcelable {
         dest.writeInt(spinStatus);
         dest.writeString(spinTimeLeft);
         dest.writeString(spinStatusString);
+        dest.writeLong(infoTimestamp);
+        dest.writeByte((byte) (infoChecked ? 1 : 0));
     }
 }

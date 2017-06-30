@@ -106,6 +106,11 @@ public class PlaceServiceLayer {
             Place oldPlace = oldPlaces.get(place.getId());
             if (oldPlace != null) {
                 place.setFavorites(oldPlace.isFavorites());
+                if (place.getInfoTimestamp() != oldPlace.getInfoTimestamp()) {
+                    place.setInfoChecked(false);
+                } else {
+                    place.setInfoChecked(oldPlace.isInfoChecked());
+                }
             }
 
         }

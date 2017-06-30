@@ -120,6 +120,19 @@
                             android:text="@string/info"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"/>
+                        <TextView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/bg_badge"
+                            android:gravity="center"
+                            android:textColor="@color/colorDetailsTitle"
+                            android:text="1"
+                            android:textStyle="bold"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:visibility="@{place.infoChecked ? v.GONE : v.VISIBLE}"/>
 
                     </RelativeLayout>
                     <RelativeLayout

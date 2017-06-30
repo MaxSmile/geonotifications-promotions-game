@@ -90,6 +90,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_PLACE_FAVORITES = "favorites";
     private static final String KEY_PLACE_SPIN_FINISH = "spinFinish";
     private static final String KEY_PLACE_SPIN_START = "spinStart";
+    private static final String KEY_PLACE_INFO_TIMESTAMP = "infoTimestamp";
+    private static final String KEY_PLACE_INFO_CHECKED = "infoChecked";
 
     private static final String KEY_COUPON_STATUS = "status";
     private static final String KEY_COUPON_CODE = "code";
@@ -278,6 +280,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACE_FAVORITES + " INTEGER,"
                 + KEY_PLACE_SPIN_FINISH + " INTEGER,"
                 + KEY_PLACE_SPIN_START + " INTEGER,"
+                + KEY_PLACE_INFO_TIMESTAMP + " INTEGER,"
+                + KEY_PLACE_INFO_CHECKED + " INTEGER,"
                 + "UNIQUE ("
                 + KEY_PLACE_ID
                 + ") ON CONFLICT REPLACE"
@@ -547,6 +551,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_PLACE_FAVORITES, place.isFavorites() ? 1 : 0);
         contentValues.put(KEY_PLACE_SPIN_FINISH, place.getSpinFinish());
         contentValues.put(KEY_PLACE_SPIN_START, place.getSpinStart());
+        contentValues.put(KEY_PLACE_INFO_TIMESTAMP, place.getInfoTimestamp());
+        contentValues.put(KEY_PLACE_INFO_CHECKED, place.isInfoChecked() ? 1 : 0);
 
         return contentValues;
     }
@@ -943,7 +949,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getInt(24) > 0,
                 cursor.getInt(25) > 0,
                 cursor.getLong(26),
-                cursor.getLong(27)
+                cursor.getLong(27),
+                cursor.getLong(28),
+                cursor.getInt(29) > 0
         );
     }
 }
