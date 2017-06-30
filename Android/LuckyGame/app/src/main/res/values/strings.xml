@@ -141,4 +141,5 @@
     <string name="gifts_left">%d gifts left</string>
     <string name="gifts_over">Sorry, all gifts are over.</string>
     <string name="other_places">Other places this company</string>
+    <string name="select_maps_app">Select your maps app</string>
 </resources>

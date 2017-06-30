@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
@@ -303,13 +304,21 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void directions(View view) {
-        if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-            String destination = place.getGeoLat() + "," + place.getGeoLon();
-            Intent intent = new Intent(this, MapsActivity.class);
-            intent.putExtra("destination", destination);
-            startActivity(intent);
+        if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0 && NetworkState.isOnline()) {
+
+            String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
+                    + place.getGeoLat() + ","
+                    + place.getGeoLon() + "&daddr="
+                    + CurrentLocation.lat +","
+                    + CurrentLocation.lon;
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+            startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
+
         } else {
-            Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+            String uri = String.format(Locale.getDefault(), "geo:%f,%f", place.getGeoLat(), place.getGeoLon());
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
+            //Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
         }
     }
 
