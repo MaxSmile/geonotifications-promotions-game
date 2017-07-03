@@ -35,6 +35,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setHandler(this);
+        name = place.getName();
         initData();
     }
 

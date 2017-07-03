@@ -512,9 +512,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     public void showCoupons(View view) {
         if (countCoupons > 0) {
             Intent intent = new Intent(this, SlideCouponsActivity.class);
-            intent.putExtra(Place.class.getCanonicalName(), place);
-            intent.putExtra(Company.class.getCanonicalName(), company);
-            intent.putExtra(Gift.class.getCanonicalName(), gifts);
+            intent.putExtra(Constants.PLACE_KEY, place.getId());
             startActivity(intent);
         }
     }

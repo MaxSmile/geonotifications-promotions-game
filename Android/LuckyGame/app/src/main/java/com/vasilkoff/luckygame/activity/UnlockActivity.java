@@ -25,6 +25,7 @@ public class UnlockActivity extends BaseFacebookActivity {
         binding.setCompany(company);
         binding.setCoupon(coupon);
         binding.setHandler(this);
+        name = coupon.getPlaceName();
         initData();
     }
 

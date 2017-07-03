@@ -32,6 +32,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
     public static CallbackManager callbackManager;
     private LikeView likeView;
     private ShareButton shareButton;
+    public String name;
 
     public void initData() {
         callbackManager = CallbackManager.Factory.create();
@@ -40,9 +41,9 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     private void init() {
         ((TextView)findViewById(R.id.unlockLikeText))
-                .setText(String.format(getString(R.string.unlock_facebook_like), place.getName()));
+                .setText(String.format(getString(R.string.unlock_facebook_like), name));
         ((TextView)findViewById(R.id.unlockCheckInText))
-                .setText(String.format(getString(R.string.unlock_facebook_share), place.getName()));
+                .setText(String.format(getString(R.string.unlock_facebook_share), name));
 
         likeView = (LikeView) findViewById(R.id.likeView);
         shareButton = (ShareButton) findViewById(R.id.fb_share_button);
