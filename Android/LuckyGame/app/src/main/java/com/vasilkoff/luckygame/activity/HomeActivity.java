@@ -37,6 +37,7 @@ import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.HomeHandler;
 import com.vasilkoff.luckygame.common.Filters;
+import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.FirebaseData;
 import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivityHomeBinding;
@@ -82,8 +83,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         binding.setHandler(this);
-
-        checkNetwork();
 
         logo = (ImageView) findViewById(R.id.homeLogo);
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
@@ -166,8 +165,13 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         }*/
 
+        checkNetwork();
         setListeners();
         startGeoService();
+        if (Properties.getShowTutorial()) {
+            Properties.setShowTutorial(false);
+            startActivity(new Intent(this, TutorialActivity.class));
+        }
     }
 
     @Override

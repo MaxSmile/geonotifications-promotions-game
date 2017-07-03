@@ -15,6 +15,7 @@ public class Properties {
     private static final String NEAR_ME_RADIUS = "nearMeRadius";
     private static final String SOUND_GAME = "soundGame";
     private static final String NOTIFICATIONS = "notifications";
+    private static final String SHOW_TUTORIAL = "showTutorial";
 
     private synchronized static SharedPreferences getPrefs(){
         if (prefs == null) {
@@ -30,6 +31,14 @@ public class Properties {
         }
 
         return Integer.parseInt(s);
+    }
+
+    public static boolean getShowTutorial(){
+        return getPrefs().getBoolean(SHOW_TUTORIAL, true);
+    }
+
+    public static void setShowTutorial(boolean show){
+        getPrefs().edit().putBoolean(SHOW_TUTORIAL, show).apply();
     }
 
     public static boolean getSoundGame(){
