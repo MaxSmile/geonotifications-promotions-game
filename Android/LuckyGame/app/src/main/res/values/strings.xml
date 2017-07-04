@@ -142,4 +142,11 @@
     <string name="gifts_over">Sorry, all gifts are over.</string>
     <string name="other_places">Other places this company</string>
     <string name="select_maps_app">Select your maps app</string>
+    <string name="favorites_text1">Favourites still empty</string>
+    <string name="favorites_text2">
+        Gather here all your favourite
+        \ncompanies places and shops
+        \nAND
+        \nget notified when they have Active Spins
+    </string>
 </resources>

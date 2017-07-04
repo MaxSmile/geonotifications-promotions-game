@@ -17,9 +17,11 @@ import android.widget.TextView;
 
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.activity.ChooseAccountActivity;
 import com.vasilkoff.luckygame.activity.DetailsActivity;
+import com.vasilkoff.luckygame.activity.NetworkActivity;
 import com.vasilkoff.luckygame.activity.SendCouponActivity;
 import com.vasilkoff.luckygame.activity.UnlockActivity;
 import com.vasilkoff.luckygame.binding.handler.CouponHandler;
@@ -28,6 +30,7 @@ import com.vasilkoff.luckygame.databinding.FragmentCouponBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.util.DateFormat;
 import com.vasilkoff.luckygame.util.LocationDistance;
+import com.vasilkoff.luckygame.util.NetworkState;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -109,12 +112,20 @@ public class CouponFragment extends Fragment implements CouponHandler {
 
     @Override
     public void redeem(View view) {
-        if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK) {
-            Intent intent = new Intent(getContext(), UnlockActivity.class);
-            intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
-            startActivity(intent);
-        } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE){
-            showPopUp();
+        if (NetworkState.isOnline()) {
+            if (CurrentUser.user != null) {
+                if (coupon.getStatus() == Constants.COUPON_STATUS_LOCK) {
+                    Intent intent = new Intent(getContext(), UnlockActivity.class);
+                    intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
+                    startActivity(intent);
+                } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE) {
+                    showPopUp();
+                }
+            }else {
+                startActivity(new Intent(getActivity(), ChooseAccountActivity.class));
+            }
+        } else {
+            startActivity(new Intent(getActivity(), NetworkActivity.class));
         }
     }
 
@@ -126,7 +137,7 @@ public class CouponFragment extends Fragment implements CouponHandler {
         DBHelper.getInstance(getContext()).saveCoupon(coupon);
         Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
         Constants.DB_COUPON.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
-
+        Constants.DB_COUPON.child(coupon.getCode()).child("redeemUser").setValue(CurrentUser.user.getId());
     }
 
     private void showPopUp() {

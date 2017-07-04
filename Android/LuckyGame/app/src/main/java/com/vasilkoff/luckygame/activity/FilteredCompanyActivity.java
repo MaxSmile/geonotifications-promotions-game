@@ -60,6 +60,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         binding.setBack(getResources().getIdentifier("back", "drawable", getPackageName()));
         binding.setColorTitle(ContextCompat.getColor(this, R.color.categoryTitle));
         binding.setCountResult(true);
+        binding.setFavourites(type == Constants.CATEGORY_FAVORITES);
 
 
         String typeString;
