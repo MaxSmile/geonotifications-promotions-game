@@ -94,5 +94,10 @@
                 android:layout_gravity="center_vertical"
                 style="@style/UnlockActionsText"/>
         </LinearLayout>
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginFbButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 </layout>

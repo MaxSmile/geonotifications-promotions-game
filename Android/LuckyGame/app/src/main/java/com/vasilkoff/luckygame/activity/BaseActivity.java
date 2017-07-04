@@ -201,7 +201,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         DBHelper.getInstance(this).updatePlace(place);
     }
 
-    public boolean checkFb() {
+   /* public boolean checkFb() {
         if (CurrentUser.user == null || CurrentUser.user.getType() == Constants.USER_TYPE_GOOGLE) {
             Intent intent = new Intent(this, ChooseAccountActivity.class);
             intent.putExtra("fbAction", true);
@@ -210,18 +210,16 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
             return true;
         }
         return false;
-    }
+    }*/
 
     public void inviteApp() {
-        if (checkFb()) {
-            if (AppInviteDialog.canShow()) {
-                AppInviteContent content = new AppInviteContent.Builder()
-                        .setApplinkUrl(getString(R.string.facebook_app_link))
-                        .setPreviewImageUrl(getString(R.string.app_preview_image_url))
-                        .build();
-                AppInviteDialog appInviteDialog = new AppInviteDialog(this);
-                appInviteDialog.show(content);
-            }
+        if (AppInviteDialog.canShow()) {
+            AppInviteContent content = new AppInviteContent.Builder()
+                    .setApplinkUrl(getString(R.string.facebook_app_link))
+                    .setPreviewImageUrl(getString(R.string.app_preview_image_url))
+                    .build();
+            AppInviteDialog appInviteDialog = new AppInviteDialog(this);
+            appInviteDialog.show(content);
         }
     }
 }

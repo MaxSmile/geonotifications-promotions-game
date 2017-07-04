@@ -121,7 +121,7 @@ public class CouponFragment extends Fragment implements CouponHandler {
                 } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE) {
                     showPopUp();
                 }
-            }else {
+            } else {
                 startActivity(new Intent(getActivity(), ChooseAccountActivity.class));
             }
         } else {

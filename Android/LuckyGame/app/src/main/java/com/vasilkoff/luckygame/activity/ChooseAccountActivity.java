@@ -36,12 +36,10 @@ public class ChooseAccountActivity extends BaseActivity {
 
         btnGoogle = (Button)findViewById(R.id.btnGoogle);
 
-        if (getIntent().getBooleanExtra("fbAction", false)) {
-            btnGoogle.setVisibility(View.GONE);
-        }
+
 
         callbackManager = CallbackManager.Factory.create();
-        loginFb = (LoginButton)findViewById(R.id.login_button);
+        loginFb = (LoginButton)findViewById(R.id.loginFbButton);
         loginFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -62,7 +60,10 @@ public class ChooseAccountActivity extends BaseActivity {
 
         List<String> permissionNeeds = Arrays.asList("user_friends","email","user_birthday");
         loginFb.setReadPermissions(permissionNeeds);
-
+        if (getIntent().getBooleanExtra("fbAction", false)) {
+            btnGoogle.setVisibility(View.GONE);
+            loginFb.performClick();
+        }
     }
 
     private void showLoginSuccessMessage() {

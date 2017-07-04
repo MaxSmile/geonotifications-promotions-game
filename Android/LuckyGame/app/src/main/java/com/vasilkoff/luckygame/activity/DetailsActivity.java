@@ -219,7 +219,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     public void goToPlay(View view) {
         if (NetworkState.isOnline()) {
             if (place.getBox().size() > 0) {
-                checkNetwork();
                 if (place.getSpinStatus() != Constants.SPIN_STATUS_COMING || geoNotification) {
                     startGame();
                 } else {
@@ -366,7 +365,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
                 }
             } else {
-                startActivity(new Intent(this, ChooseAccountActivity.class));
+                Intent intent = new Intent(this, ChooseAccountActivity.class);
+                startActivity(intent);
             }
         } else {
             startActivity(new Intent(this, NetworkActivity.class));

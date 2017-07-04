@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.facebook.share.Sharer;
 import com.facebook.share.internal.LikeButton;
 import com.facebook.share.model.AppInviteContent;
@@ -17,11 +19,17 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.LikeView;
 import com.facebook.share.widget.ShareButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.vasilkoff.luckygame.Constants;
+import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.ExtraHandler;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.Place;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Kvm on 07.06.2017.
@@ -33,10 +41,39 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
     private LikeView likeView;
     private ShareButton shareButton;
     public String name;
+    private LoginButton loginFb;
+
 
     public void initData() {
         callbackManager = CallbackManager.Factory.create();
+        /*if (CurrentUser.user == null || CurrentUser.user.getType() == Constants.USER_TYPE_GOOGLE) {
+            loginFb();
+        }*/
         init();
+    }
+
+    private void loginFb() {
+        loginFb = (LoginButton)findViewById(R.id.loginFbButton);
+        loginFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                getFacebookUserInfo();
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
+
+        List<String> permissionNeeds = Arrays.asList("user_friends","email","user_birthday");
+        loginFb.setReadPermissions(permissionNeeds);
+        loginFb.performClick();
     }
 
     private void init() {
@@ -55,81 +92,75 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     @Override
     public void like(View view) {
-        if (checkFb()) {
-            if (company.getFacebookUrl() != null) {
-                likeView.setObjectIdAndType(
-                        company.getFacebookUrl(),
-                        LikeView.ObjectType.PAGE);
-                final LikeButton button = (LikeButton) ((ViewGroup) likeView.getChildAt(0)).getChildAt(0);
-                button.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        button.performClick();
-                    }
-                });
-            }
+        if (company.getFacebookUrl() != null) {
+            likeView.setObjectIdAndType(
+                    company.getFacebookUrl(),
+                    LikeView.ObjectType.PAGE);
+            final LikeButton button = (LikeButton) ((ViewGroup) likeView.getChildAt(0)).getChildAt(0);
+            button.post(new Runnable() {
+                @Override
+                public void run() {
+                    button.performClick();
+                }
+            });
         }
     }
 
     @Override
     public void share(View view) {
-        if (checkFb()) {
-            if (place != null) {
-                ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentTitle(place.getName())
-                        .setContentDescription(place.getInfo())
-                        .setContentUrl(Uri.parse(place.getUrl()))
-                        .setImageUrl(Uri.parse(place.getGallery().get(0)))
-                        .build();
-                shareButton.setShareContent(content);
-                shareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
-                    @Override
-                    public void onSuccess(Sharer.Result result) {
-                        socialSuccess();
-                    }
+        if (place != null) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentTitle(place.getName())
+                    .setContentDescription(place.getInfo())
+                    .setContentUrl(Uri.parse(place.getUrl()))
+                    .setImageUrl(Uri.parse(place.getGallery().get(0)))
+                    .build();
+            shareButton.setShareContent(content);
+            shareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+                @Override
+                public void onSuccess(Sharer.Result result) {
+                    socialSuccess();
+                }
 
-                    @Override
-                    public void onCancel() {
+                @Override
+                public void onCancel() {
 
-                    }
+                }
 
-                    @Override
-                    public void onError(FacebookException error) {
+                @Override
+                public void onError(FacebookException error) {
 
-                    }
-                });
-                shareButton.callOnClick();
-            }
+                }
+            });
+            shareButton.callOnClick();
         }
     }
 
     @Override
     public void invite(View view) {
-        if (checkFb()) {
-            if (AppInviteDialog.canShow()) {
-                AppInviteContent content = new AppInviteContent.Builder()
-                        .setApplinkUrl(getString(R.string.facebook_app_link))
-                        .setPreviewImageUrl(getString(R.string.app_preview_image_url))
-                        .build();
-                AppInviteDialog appInviteDialog = new AppInviteDialog(this);
-                appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
-                    @Override
-                    public void onSuccess(AppInviteDialog.Result result) {
-                        socialSuccess();
-                    }
+        if (AppInviteDialog.canShow()) {
+            AppInviteContent content = new AppInviteContent.Builder()
+                    .setApplinkUrl(getString(R.string.facebook_app_link))
+                    .setPreviewImageUrl(getString(R.string.app_preview_image_url))
+                    .build();
+            AppInviteDialog appInviteDialog = new AppInviteDialog(this);
+            appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
+                @Override
+                public void onSuccess(AppInviteDialog.Result result) {
+                    socialSuccess();
+                }
 
-                    @Override
-                    public void onCancel() {
+                @Override
+                public void onCancel() {
 
-                    }
+                }
 
-                    @Override
-                    public void onError(FacebookException error) {
+                @Override
+                public void onError(FacebookException error) {
 
-                    }
-                });
-                appInviteDialog.show(content);
-            }
+                }
+            });
+            appInviteDialog.show(content);
         }
     }
 
@@ -155,6 +186,5 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
         }
         callbackManager.onActivityResult(requestCode, responseCode, intent);
     }
-
 
 }

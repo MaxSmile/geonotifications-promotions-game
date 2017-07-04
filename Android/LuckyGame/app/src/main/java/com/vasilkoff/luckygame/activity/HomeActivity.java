@@ -32,12 +32,14 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.vasilkoff.luckygame.App;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentLocation;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.HomeHandler;
 import com.vasilkoff.luckygame.common.Filters;
 import com.vasilkoff.luckygame.common.Properties;
+import com.vasilkoff.luckygame.database.DBHelper;
 import com.vasilkoff.luckygame.database.FirebaseData;
 import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivityHomeBinding;
@@ -165,7 +167,10 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         }*/
 
-        checkNetwork();
+        if (DBHelper.getInstance(App.getInstance()).getPlaces().size() == 0) {
+            checkNetwork();
+        }
+
         setListeners();
         startGeoService();
         if (Properties.getShowTutorial()) {
