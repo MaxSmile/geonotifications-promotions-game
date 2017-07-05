@@ -818,7 +818,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[]{placeKey},
                 null,
                 null,
-                null);
+                KEY_COUPON_CREATION + " DESC");
         if (cursor.moveToFirst()) {
             do {
                 coupons.add(parseCouponExtension(cursor));

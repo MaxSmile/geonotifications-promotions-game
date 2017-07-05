@@ -22,26 +22,26 @@ public class CouponServiceLayer {
 
     public static List<CouponExtension> getCoupons() {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsExtension();
-        return updateData(coupons);
+        return updateData(coupons, true);
     }
 
     public static List<CouponExtension> getCouponsByPlace(String key) {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByPlace(key);
-        return updateData(coupons);
+        return updateData(coupons, false);
     }
 
     public static List<CouponExtension> getCouponsByCode(String key) {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByCode(key);
-        return updateData(coupons);
+        return updateData(coupons, true);
     }
 
     public static List<CouponExtension> getCouponsByPlaceGift(String giftKey, String placeKey) {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByPlaceGift(giftKey, placeKey);
-        return updateData(coupons);
+        return updateData(coupons, true);
     }
 
 
-    private static List<CouponExtension> updateData(List<CouponExtension> coupons) {
+    private static List<CouponExtension> updateData(List<CouponExtension> coupons, boolean sort) {
         TypedArray ta = App.getInstance().getResources().obtainTypedArray(R.array.coupon_type);
         for (int i = 0; i < coupons.size(); i++) {
             CouponExtension coupon = coupons.get(i);
@@ -85,7 +85,10 @@ public class CouponServiceLayer {
         }
         ta.recycle();
 
-        Collections.sort(coupons, new CouponComparator());
+        if (sort) {
+            Collections.sort(coupons, new CouponComparator());
+        }
+
         return coupons;
     }
 

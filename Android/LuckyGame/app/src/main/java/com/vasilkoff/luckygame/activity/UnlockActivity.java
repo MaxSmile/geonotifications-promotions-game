@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.database.DBHelper;
+import com.vasilkoff.luckygame.database.PlaceServiceLayer;
 import com.vasilkoff.luckygame.databinding.ActivityUnlockBinding;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 
@@ -21,6 +22,7 @@ public class UnlockActivity extends BaseFacebookActivity {
 
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
         binding = DataBindingUtil.setContentView(this, R.layout.activity_unlock);
+        place = PlaceServiceLayer.getPlace(coupon.getPlaceKey());
         company = DBHelper.getInstance(this).getCompany(coupon.getCompanyKey());
         binding.setCompany(company);
         binding.setCoupon(coupon);
