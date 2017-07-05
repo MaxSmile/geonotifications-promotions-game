@@ -363,6 +363,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         Intent intent = new Intent(this, SlideCouponsActivity.class);
         intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
         intent.putExtra("userPrize", true);
+        intent.putExtra("boxColor", "yellow");
         startActivity(intent);
         finish();
     }

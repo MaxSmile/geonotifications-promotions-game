@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 
+import com.vasilkoff.luckygame.common.FasterAnimationsContainer;
 import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.CouponServiceLayer;
 import com.vasilkoff.luckygame.entity.CouponExtension;
@@ -56,6 +58,10 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
     private SoundPool sp;
     private int soundIdWin;
 
+    private FasterAnimationsContainer mFasterAnimationsContainer;
+    private static final int ANIMATION_INTERVAL = 35;
+    private ImageView animationBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +70,7 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
         slideCount = (TextView)findViewById(R.id.slideCount);
         slideCurrent = (TextView)findViewById(R.id.slideCurrent);
         slidePagination = (LinearLayout)findViewById(R.id.slidePagination);
+        animationBox = (ImageView)findViewById(R.id.animationBox);
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -108,6 +115,18 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
         userPrize = getIntent().getBooleanExtra("userPrize", false);
         initSound();
 
+    }
+
+    private void startAnimation(String nameBox)  {
+        animationBox.setVisibility(View.VISIBLE);
+        int[] imageResources = new int[62];
+        for (int i = 0; i < 62; i++) {
+            imageResources[i] = getResources().getIdentifier(nameBox + i, "drawable", getPackageName());
+        }
+
+        mFasterAnimationsContainer = new FasterAnimationsContainer(animationBox);
+        mFasterAnimationsContainer.addAllFrames(imageResources, ANIMATION_INTERVAL);
+        mFasterAnimationsContainer.start();
     }
 
     private void initSound() {
@@ -208,30 +227,17 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_slide_coupons, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
+        if (mFasterAnimationsContainer != null) {
+            mFasterAnimationsContainer.stop();
         }
-
-        return super.onOptionsItemSelected(item);
+        super.onStop();
     }
 
     @Override
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
         if (userPrize && Properties.getSoundGame()) {
             sp.play(soundIdWin, 1, 1, 0, 0, 1);
+            startAnimation(getIntent().getStringExtra("boxColor"));
         }
     }
 
