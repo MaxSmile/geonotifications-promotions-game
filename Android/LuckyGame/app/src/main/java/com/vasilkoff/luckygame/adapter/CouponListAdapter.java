@@ -58,10 +58,17 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (coupon.getStatus() < Constants.COUPON_STATUS_REDEEMED) {
+                    if (coupon.getCouponType() == Constants.COUPON_TYPE_OFFER) {
                         Intent intent = new Intent(context, SlideCouponsActivity.class);
-                        intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
+                        intent.putExtra(Constants.COUPON_GIFT_KEY, coupon.getGiftKey());
+                        intent.putExtra(Constants.PLACE_KEY, coupon.getPlaceKey());
                         context.startActivity(intent);
+                    } else {
+                        if (coupon.getStatus() < Constants.COUPON_STATUS_REDEEMED) {
+                            Intent intent = new Intent(context, SlideCouponsActivity.class);
+                            intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
+                            context.startActivity(intent);
+                        }
                     }
                 }
             });

@@ -35,6 +35,11 @@ public class CouponServiceLayer {
         return updateData(coupons);
     }
 
+    public static List<CouponExtension> getCouponsByPlaceGift(String giftKey, String placeKey) {
+        List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByPlaceGift(giftKey, placeKey);
+        return updateData(coupons);
+    }
+
 
     private static List<CouponExtension> updateData(List<CouponExtension> coupons) {
         TypedArray ta = App.getInstance().getResources().obtainTypedArray(R.array.coupon_type);
@@ -52,28 +57,31 @@ public class CouponServiceLayer {
 
             coupon.setTypeString(Constants.COMPANY_TYPE_NAMES[(int)coupon.getType()]);
 
-            if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
-                if (coupon.getExpired() < System.currentTimeMillis()) {
-                    coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
-                } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE && coupon.getLocks() < System.currentTimeMillis()
-                        && coupon.getLocked() == Constants.COUPON_LOCK) {
-                    coupon.setStatus(Constants.COUPON_STATUS_LOCK);
-                    Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_LOCK);
+            if (coupon.getCouponType() == Constants.COUPON_TYPE_NORMAL) {
+                if (coupon.getStatus() != Constants.COUPON_STATUS_REDEEMED) {
+                    if (coupon.getExpired() < System.currentTimeMillis()) {
+                        coupon.setStatus(Constants.COUPON_STATUS_EXPIRED);
+                    } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE && coupon.getLocks() < System.currentTimeMillis()
+                            && coupon.getLocked() == Constants.COUPON_LOCK) {
+                        coupon.setStatus(Constants.COUPON_STATUS_LOCK);
+                        Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_LOCK);
+                    }
                 }
+
+                String locks = DateFormat.getDiff(coupon.getLocks());
+                if (locks != null)
+                    coupon.setLockDiff(locks);
+
+                String expire = DateFormat.getDiff(coupon.getExpired());
+                if (expire != null)
+                    coupon.setExpiredDiff(expire);
+
+                if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
+                    coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
+                }
+                coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
             }
 
-            String locks = DateFormat.getDiff(coupon.getLocks());
-            if (locks != null)
-                coupon.setLockDiff(locks);
-
-            String expire = DateFormat.getDiff(coupon.getExpired());
-            if (expire != null)
-                coupon.setExpiredDiff(expire);
-
-            if (coupon.getStatus() >= Constants.COUPON_STATUS_LOCK) {
-                coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
-            }
-            coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
         }
         ta.recycle();
 

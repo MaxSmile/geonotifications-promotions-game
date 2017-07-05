@@ -144,12 +144,20 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
 
     private void initFragments() {
         if (getIntent().getStringExtra(Constants.PLACE_KEY) != null) {
-            coupons = CouponServiceLayer.getCouponsByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+            if (getIntent().getStringExtra(Constants.COUPON_GIFT_KEY) != null) {
+                coupons = CouponServiceLayer.getCouponsByPlaceGift(
+                        getIntent().getStringExtra(Constants.COUPON_GIFT_KEY),
+                        getIntent().getStringExtra(Constants.PLACE_KEY));
+            } else {
+                coupons = CouponServiceLayer.getCouponsByPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+            }
         }
 
         if (getIntent().getStringExtra(Constants.COUPON_KEY) != null) {
             coupons = CouponServiceLayer.getCouponsByCode(getIntent().getStringExtra(Constants.COUPON_KEY));
         }
+
+
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.entity.Box;
 import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
@@ -30,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -114,6 +115,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_COUPON_REDEEMED = "redeemed";
     private static final String KEY_COUPON_CITY = "city";
     private static final String KEY_COUPON_RULES = "rules";
+    private static final String KEY_COUPON_COUPON_TYPE = "couponType";
 
     private static final String KEY_COMPANY_ID = "companyId";
     private static final String KEY_COMPANY_NAME = "name";
@@ -233,6 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_COUPON_REDEEMED + " INTEGER,"
                 + KEY_COUPON_CITY + " text,"
                 + KEY_COUPON_RULES + " text,"
+                + KEY_COUPON_COUPON_TYPE + " INTEGER,"
                 + "UNIQUE ("
                 + KEY_COUPON_CODE
                 + ") ON CONFLICT REPLACE"
@@ -742,10 +745,20 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void saveCoupons(List<CouponExtension> coupons) {
+    public void saveCoupons(List<CouponExtension> coupons, boolean offer) {
         SQLiteDatabase db = this.getWritableDatabase();
-        for (int i = 0; i < coupons.size(); i++) {
-            saveCouponExtension(coupons.get(i),db);
+        db.beginTransaction();
+        try {
+            if (offer) {
+                db.delete(TABLE_COUPONS, KEY_COUPON_COUPON_TYPE  + " = ?", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
+            }
+
+            for (int i = 0; i < coupons.size(); i++) {
+                saveCouponExtension(coupons.get(i),db);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
         db.close();
     }
@@ -773,6 +786,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_COUPON_REDEEMED, coupon.getRedeemed());
         contentValues.put(KEY_COUPON_CITY, coupon.getCity());
         contentValues.put(KEY_COUPON_RULES, coupon.getRules());
+        contentValues.put(KEY_COUPON_COUPON_TYPE, coupon.getCouponType());
 
         db.insert(TABLE_COUPONS, null, contentValues);
     }
@@ -819,6 +833,32 @@ public class DBHelper extends SQLiteOpenHelper {
         return coupons;
     }
 
+    public List<CouponExtension> getCouponsByPlaceGift(String giftKey, String placeKey) {
+        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_COUPONS,
+                null,
+                KEY_COUPON_GIFT_KEY + " = ? AND "
+                        + KEY_COUPON_PLACE_KEY
+                        + " = ?",
+                new String[]{giftKey, placeKey},
+                null,
+                null,
+                null);
+        if (cursor.moveToFirst()) {
+            do {
+                coupons.add(parseCouponExtension(cursor));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+
+        return coupons;
+    }
+
     public List<CouponExtension> getCouponsByCode(String couponKey) {
         List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -846,7 +886,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<String> getCoupons() {
         SQLiteDatabase db = this.getWritableDatabase();
         List<String> coupons = new ArrayList<String>();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COUPONS, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + TABLE_COUPONS
+                + " WHERE "
+                + KEY_COUPON_COUPON_TYPE
+                + " <> ?", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
         if (cursor.moveToFirst()) {
             do {
                 coupons.add(cursor.getString(2));
@@ -917,7 +961,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getInt(18),
                 cursor.getLong(19),
                 cursor.getString(20),
-                cursor.getString(21)
+                cursor.getString(21),
+                cursor.getInt(22)
         );
     }
 

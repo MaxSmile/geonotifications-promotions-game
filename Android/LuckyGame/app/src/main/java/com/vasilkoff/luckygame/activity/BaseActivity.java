@@ -112,6 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         FirebaseData.getCoupons();
         FirebaseData.getPlaces();
         FirebaseData.getGift();
+        FirebaseData.getOffer();
     }
 
     public void setListeners() {

@@ -147,4 +147,6 @@
         Gather here all your favourite
         \ncompanies places and shops
     </string>
+    <string name="offer">Offer</string>
+    <string name="share_offer">Share this offer</string>
 </resources>

@@ -10,4 +10,5 @@ public interface CouponHandler extends BaseHandler {
     public void send(View view);
     public void more(View view);
     public void redeem(View view);
+    public void share(View view);
 }

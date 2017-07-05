@@ -9,6 +9,7 @@
             name="handler"
             type="com.vasilkoff.luckygame.binding.handler.CouponHandler"/>
         <import type="android.view.View" alias="v"/>
+        <import type="com.vasilkoff.luckygame.Constants" />
     </data>
     <LinearLayout
         android:id="@+id/couponParentLayout"
@@ -18,8 +19,13 @@
         android:paddingLeft="35dp"
         android:paddingRight="35dp"
         android:paddingTop="10dp"
-
+        android:gravity="center"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.VISIBLE : v.GONE}"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -75,6 +81,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/offer"
+                            android:textColor="@color/colorCouponName"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.VISIBLE : v.GONE}"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="@{coupon.typeString}"/>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -110,25 +124,21 @@
                             android:onClick="@{handler::more}"/>
                     </LinearLayout>
                 </LinearLayout>
-
-
             </LinearLayout>
-
-
-
         </LinearLayout>
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
             android:background="@drawable/rectangle"
-            android:orientation="vertical"
             android:padding="5dp">
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.GONE : v.VISIBLE}"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true">
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="50dp"
@@ -136,7 +146,7 @@
                     android:id="@+id/imageView2"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    />
+                    android:visibility="gone"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -148,15 +158,17 @@
                     android:layout_centerHorizontal="true"
                     />
             </RelativeLayout>
+
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@{coupon.description}"
                 android:textColor="@color/colorCouponCongratsText"
                 android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:text="@{coupon.description}"/>
-        </LinearLayout>
+                android:textStyle="bold" />
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -186,7 +198,8 @@
             android:layout_height="0dp"
             android:layout_weight="4"
             android:background="@drawable/redeem_info_bg"
-            android:paddingBottom="5dp">
+            android:paddingBottom="5dp"
+            android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.GONE : v.VISIBLE}">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -348,7 +361,8 @@
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
             android:gravity="center"
-            android:background="@drawable/coupon_bot_bg">
+            android:background="@drawable/coupon_bot_bg"
+            android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.GONE : v.VISIBLE}">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -365,6 +379,18 @@
                 android:paddingLeft="5dp"
                 android:text="@{coupon.code}"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/coupon_bot_bg"
+            android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.VISIBLE : v.GONE}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.VISIBLE : v.GONE}"/>
     </LinearLayout>
 </layout>
 

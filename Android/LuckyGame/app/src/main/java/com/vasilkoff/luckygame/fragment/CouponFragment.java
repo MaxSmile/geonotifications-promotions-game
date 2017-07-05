@@ -129,6 +129,11 @@ public class CouponFragment extends Fragment implements CouponHandler {
         }
     }
 
+    @Override
+    public void share(View view) {
+
+    }
+
     private void redeem() {
         coupon.setStatus(Constants.COUPON_STATUS_REDEEMED);
         coupon.setRedeemed(System.currentTimeMillis());

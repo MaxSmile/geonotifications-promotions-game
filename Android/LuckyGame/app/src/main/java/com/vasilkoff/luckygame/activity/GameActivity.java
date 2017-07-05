@@ -351,7 +351,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 lock,
                 0,
                 place.getCity(),
-                gift.getRules()
+                gift.getRules(),
+                Constants.COUPON_TYPE_NORMAL
         );
 
 
