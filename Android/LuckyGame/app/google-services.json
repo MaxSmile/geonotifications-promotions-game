@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "826390527227-nqdudtaqedc7p58urvm721f06cu93lrn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vasilkoff.luckygame",
+            "certificate_hash": "dac7778f41fa569d707cdad2e05d3e4f631ef6e5"
+          }
+        },
+        {
           "client_id": "826390527227-j88aql8fhna14ajgnbs32khk7gja59gr.apps.googleusercontent.com",
           "client_type": 3
         }

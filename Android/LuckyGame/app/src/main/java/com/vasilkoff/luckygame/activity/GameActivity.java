@@ -35,6 +35,7 @@ import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.CurrentUser;
 import com.vasilkoff.luckygame.R;
 import com.vasilkoff.luckygame.binding.handler.GameHandler;
+import com.vasilkoff.luckygame.common.FasterAnimationsContainer;
 import com.vasilkoff.luckygame.common.MyRotateAnimation;
 import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.DBHelper;
@@ -90,6 +91,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private SoundPool sp;
     private int soundIdLose;
     private int soundIdTick;
+    private int soundIdWin;
+
     private ImageView imagePointer;
 
     private TimerTask timerTask;
@@ -100,6 +103,12 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private ActivityGameBinding binding;
     private ImageView losePopUpFavorites;
     private int countCoupons;
+
+    private FasterAnimationsContainer mFasterAnimationsContainer;
+    private static final int ANIMATION_INTERVAL = 80;
+    private ImageView animationBox;
+
+    private Coupon coupon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +137,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         progressBar.setProgress(0);
         progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progress));
 
-
+        animationBox = (ImageView)findViewById(R.id.animationBox);
 
         powerButton = (ImageView)findViewById(R.id.powerButton);
         powerButton.setOnTouchListener(new PowerTouchListener());
@@ -176,6 +185,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         try {
             soundIdLose = sp.load(getAssets().openFd(getString(R.string.loser_sound)), 1);
             soundIdTick = sp.load(getAssets().openFd(getString(R.string.tick_sound)), 1);
+            soundIdWin = sp.load(getAssets().openFd(getString(R.string.winning_sound)), 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -316,7 +326,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             lock = Constants.COUPON_LOCK;
         }
 
-        Coupon coupon = new Coupon(
+        coupon = new Coupon(
                 Constants.COUPON_STATUS_ACTIVE,
                 couponCode,
                 place.getCompanyKey(),
@@ -359,14 +369,35 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(couponExtension);
         setLimit(coupon);
+    }
 
+    private void goToCoupon() {
         Intent intent = new Intent(this, SlideCouponsActivity.class);
         intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
-        intent.putExtra("userPrize", true);
-        intent.putExtra("boxColor", "yellow");
         startActivity(intent);
         finish();
     }
+
+    private void startAnimation(String nameBox)  {
+        animationBox.setVisibility(View.VISIBLE);
+        int[] imageResources = new int[62];
+        for (int i = 0; i < 62; i++) {
+            imageResources[i] = getResources().getIdentifier(nameBox + i, "drawable", getPackageName());
+        }
+
+        mFasterAnimationsContainer = new FasterAnimationsContainer(animationBox);
+        mFasterAnimationsContainer.addAllFrames(imageResources, ANIMATION_INTERVAL);
+        mFasterAnimationsContainer.setOnAnimationStoppedListener(new FasterAnimationsContainer.OnAnimationStoppedListener() {
+            @Override
+            public void onAnimationStopped() {
+                goToCoupon();
+            }
+        });
+
+        mFasterAnimationsContainer.start();
+    }
+
+
 
     private void setLimit(final Coupon coupon) {
         final String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
@@ -435,7 +466,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     public void getExtra() {
         if (place.isExtraSpinAvailable()) {
             Intent intent = new Intent(this, ExtraSpinActivity.class);
-            intent.putExtra(Constants.PLACE_KEY, place.getId());
+            intent.putExtra(Place.class.getCanonicalName(), place);
+            intent.putExtra(Company.class.getCanonicalName(), company);
+            intent.putExtra(Gift.class.getCanonicalName(), gifts);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
@@ -457,6 +490,10 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         if (winKey != null) {
             createCoupon(gifts.get(winKey));
             setLog(Constants.GAME_WIN);
+            startAnimation("yellow");
+            if (Properties.getSoundGame()) {
+                sp.play(soundIdWin, 1, 1, 0, 0, 1);
+            }
         } else {
             if (Properties.getSoundGame()) {
                 sp.play(soundIdLose, 1, 1, 0, 0, 1);
@@ -494,6 +531,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         sp.release();
         sp = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        if (mFasterAnimationsContainer != null) {
+            mFasterAnimationsContainer.stop();
+        }
+        super.onStop();
     }
 
     @Override

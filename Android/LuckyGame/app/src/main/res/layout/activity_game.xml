@@ -110,7 +110,7 @@
         </LinearLayout>
         <RelativeLayout
             android:id="@+id/gameWheel"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:minHeight="330dp"
@@ -161,8 +161,12 @@
                     android:src="@drawable/pointer_new"
                     android:layout_centerHorizontal="true"/>
             </RelativeLayout>
-
-
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/animationBox"
+                android:visibility="gone"/>
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/gameFooter"

@@ -139,13 +139,13 @@ public class FasterAnimationsContainer {
     }
 
     private AnimationFrame getNext() {
-        mIndex++;
-        System.out.println("myTest mIndex = " + mIndex);
-        if (mIndex >= mAnimationFrames.size()) {
+        if (mIndex >= mAnimationFrames.size() - 1) {
             imageView.setVisibility(View.GONE);
             stop();
-            return null;
+        } else {
+            mIndex++;
         }
+
         return mAnimationFrames.get(mIndex);
     }
 

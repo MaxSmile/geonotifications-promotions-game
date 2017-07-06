@@ -43,7 +43,7 @@
                 android:layout_gravity="center"/>
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:paddingLeft="10dp">
@@ -58,7 +58,6 @@
                         android:textColor="@color/colorCouponName"
                         android:textStyle="bold"
                         android:textSize="18sp"
-                        android:lines="2"
                         android:text="@{coupon.placeName}"/>
                     <ImageButton
                         android:layout_width="0dp"
@@ -66,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/cancel"
                         android:background="@null"
-                        android:layout_gravity="center"
+                        android:layout_gravity="end"
                         android:onClick="@{handler::back}"/>
                 </LinearLayout>
                 <LinearLayout
@@ -111,7 +110,7 @@
                         android:layout_weight="2"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="end">
                         <TextView
                             android:layout_width="65dp"
                             android:layout_height="wrap_content"
@@ -121,24 +120,24 @@
                             android:background="@drawable/bg_rectangle"
                             android:textColor="@color/colorCouponShareText"
                             android:text="@string/more_about"
-                            android:onClick="@{handler::more}"/>
+                            android:onClick="@{handler::more}"
+                            android:layout_marginTop="15dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
             android:background="@drawable/rectangle"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.GONE : v.VISIBLE}"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
+                android:visibility="@{coupon.couponType == Constants.COUPON_TYPE_OFFER ? v.GONE : v.VISIBLE}">
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="50dp"
@@ -155,24 +154,24 @@
                     android:textSize="32sp"
                     android:textStyle="bold"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    />
+                    android:layout_centerHorizontal="true"/>
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:text="@{coupon.description}"
                 android:textColor="@color/colorCouponCongratsText"
                 android:textSize="25sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="3"
             android:orientation="vertical"
             android:background="@color/colorCouponRulesBg">
             <TextView

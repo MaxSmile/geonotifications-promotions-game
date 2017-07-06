@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLoadCompleteListener {
+public class SlideCouponsActivity extends BaseActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -54,14 +54,6 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
     private TextView slideCurrent;
     private LinearLayout slidePagination;
 
-    private boolean userPrize = false;
-    private SoundPool sp;
-    private int soundIdWin;
-
-    private FasterAnimationsContainer mFasterAnimationsContainer;
-    private static final int ANIMATION_INTERVAL = 35;
-    private ImageView animationBox;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +62,6 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
         slideCount = (TextView)findViewById(R.id.slideCount);
         slideCurrent = (TextView)findViewById(R.id.slideCurrent);
         slidePagination = (LinearLayout)findViewById(R.id.slidePagination);
-        animationBox = (ImageView)findViewById(R.id.animationBox);
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -111,42 +102,9 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
                 }
             }
         });
-
-        userPrize = getIntent().getBooleanExtra("userPrize", false);
-        initSound();
-
     }
 
-    private void startAnimation(String nameBox)  {
-        animationBox.setVisibility(View.VISIBLE);
-        int[] imageResources = new int[62];
-        for (int i = 0; i < 62; i++) {
-            imageResources[i] = getResources().getIdentifier(nameBox + i, "drawable", getPackageName());
-        }
 
-        mFasterAnimationsContainer = new FasterAnimationsContainer(animationBox);
-        mFasterAnimationsContainer.addAllFrames(imageResources, ANIMATION_INTERVAL);
-        mFasterAnimationsContainer.start();
-    }
-
-    private void initSound() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sp = new SoundPool.Builder()
-                    .setMaxStreams(10)
-                    .build();
-        } else {
-            sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        }
-
-        sp.setOnLoadCompleteListener(this);
-
-        try {
-            soundIdWin = sp.load(getAssets().openFd(getString(R.string.winning_sound)), 1);
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-    }
 
     private void checkPosition(int position) {
         if (position == mSectionsPagerAdapter.getCount() - 1) {
@@ -179,6 +137,7 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
 
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager.removeAllViews();
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         if (coupons.size() == 1) {
@@ -208,7 +167,7 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvents(Events.UpdateCoupons updateCoupons) {
-        //System.out.println("myTest UpdateCoupons+");
+        System.out.println("myTest UpdateCoupons+");
        // updateFragments();
     }
 
@@ -227,20 +186,8 @@ public class SlideCouponsActivity extends BaseActivity implements SoundPool.OnLo
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        if (mFasterAnimationsContainer != null) {
-            mFasterAnimationsContainer.stop();
-        }
         super.onStop();
     }
-
-    @Override
-    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        if (userPrize && Properties.getSoundGame()) {
-            sp.play(soundIdWin, 1, 1, 0, 0, 1);
-            startAnimation(getIntent().getStringExtra("boxColor"));
-        }
-    }
-
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 

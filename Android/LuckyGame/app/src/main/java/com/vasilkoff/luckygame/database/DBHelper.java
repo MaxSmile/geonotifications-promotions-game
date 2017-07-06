@@ -794,7 +794,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<CouponExtension> getCouponsExtension() {
         List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COUPONS, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + TABLE_COUPONS
+                + " WHERE "
+                + KEY_COUPON_COUPON_TYPE
+                + " <> ? "
+                + " ORDER BY "
+                + KEY_COUPON_CREATION
+                + " DESC", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
         if (cursor.moveToFirst()) {
             do {
                 coupons.add(parseCouponExtension(cursor));

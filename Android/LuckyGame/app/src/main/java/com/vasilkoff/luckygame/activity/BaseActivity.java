@@ -48,6 +48,7 @@ import com.vasilkoff.luckygame.util.LocationDistance;
 import com.vasilkoff.luckygame.util.NetworkState;
 
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 

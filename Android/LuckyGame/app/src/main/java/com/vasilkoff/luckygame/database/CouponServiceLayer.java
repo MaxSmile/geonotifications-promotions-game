@@ -22,7 +22,7 @@ public class CouponServiceLayer {
 
     public static List<CouponExtension> getCoupons() {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsExtension();
-        return updateData(coupons, true);
+        return updateData(coupons, false);
     }
 
     public static List<CouponExtension> getCouponsByPlace(String key) {

@@ -172,7 +172,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         }
 
         setListeners();
-        startGeoService();
+
         if (Properties.getShowTutorial()) {
             Properties.setShowTutorial(false);
             startActivity(new Intent(this, TutorialActivity.class));
@@ -191,6 +191,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
+        startGeoService();
     }
 
     @Override
