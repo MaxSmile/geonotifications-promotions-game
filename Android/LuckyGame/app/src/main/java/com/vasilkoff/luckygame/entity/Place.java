@@ -47,6 +47,7 @@ public class Place implements Parcelable {
     private String spinStatusString;
     private long infoTimestamp;
     private boolean infoChecked;
+    private String keywords;
 
 
     public Place() {
@@ -59,7 +60,7 @@ public class Place implements Parcelable {
                  int typeIcon, String info, String url, String tel, String about, String aboutMore,
                  double distance, String distanceString, String city, boolean spinAvailable,
                  boolean extraSpinAvailable, boolean favorites, long spinFinish, long spinStart,
-                 long infoTimestamp, boolean infoChecked) {
+                 long infoTimestamp, boolean infoChecked, String keywords) {
         this.id = id;
         this.address = address;
         this.name = name;
@@ -89,6 +90,7 @@ public class Place implements Parcelable {
         this.spinStart = spinStart;
         this.infoTimestamp = infoTimestamp;
         this.infoChecked = infoChecked;
+        this.keywords = keywords;
     }
 
     protected Place(Parcel in) {
@@ -126,6 +128,7 @@ public class Place implements Parcelable {
         spinStatusString = in.readString();
         infoTimestamp = in.readLong();
         infoChecked = in.readByte() != 0;
+        keywords = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -420,6 +423,14 @@ public class Place implements Parcelable {
         this.infoChecked = infoChecked;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -461,5 +472,6 @@ public class Place implements Parcelable {
         dest.writeString(spinStatusString);
         dest.writeLong(infoTimestamp);
         dest.writeByte((byte) (infoChecked ? 1 : 0));
+        dest.writeString(keywords);
     }
 }

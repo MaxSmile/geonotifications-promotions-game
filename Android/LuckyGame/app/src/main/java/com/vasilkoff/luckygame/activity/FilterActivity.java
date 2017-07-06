@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,10 +25,14 @@ public class FilterActivity extends BaseActivity {
 
     private ListView filterListByCity;
     private ListView filterList;
+    private ListView filterListByKeywords;
     private List<String> citiesList;
+    private List<String> keywordsList;
+    private LinearLayout filterLayoutByKeywords;
 
     private ArrayAdapter<String> arrayFilterAdapter;
     private ArrayAdapter<String> arrayAdapter;
+    private ArrayAdapter<String> arrayKeywordsAdapter;
 
     private static int FILTER_INDEX_ZA = 0;
 
@@ -35,6 +40,22 @@ public class FilterActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
+
+        filterLayoutByKeywords = (LinearLayout)findViewById(R.id.filterLayoutByKeywords);
+        filterListByKeywords = (ListView)findViewById(R.id.filterListByKeywords);
+        filterListByKeywords.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        keywordsList = DBHelper.getInstance(this).getKeywords();
+        if (keywordsList.size() > 0) {
+            filterLayoutByKeywords.setVisibility(View.VISIBLE);
+        } else {
+            filterListByKeywords.clearChoices();
+            Filters.byKeywords = false;
+            Filters.count--;
+        }
+        arrayKeywordsAdapter = new ArrayAdapter<String>(
+                this, R.layout.my_simple_list_item_multiple_choice, keywordsList);
+
+        filterListByKeywords.setAdapter(arrayKeywordsAdapter);
 
         filterList = (ListView)findViewById(R.id.filterList);
         filterList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -53,7 +74,7 @@ public class FilterActivity extends BaseActivity {
 
         filterListByCity.setAdapter(arrayAdapter);
 
-        if (Filters.checkedCitiesArray!= null) {
+        if (Filters.checkedCitiesArray != null) {
             for (int i = 0; i < Filters.checkedCitiesArray.size(); i++) {
                 int key = Filters.checkedCitiesArray.keyAt(i);
                 if (Filters.checkedCitiesArray.get(key)) {
@@ -62,7 +83,16 @@ public class FilterActivity extends BaseActivity {
             }
         }
 
-        if (Filters.checkedFiltersArray!= null) {
+        if (Filters.checkedKeywordsArray != null) {
+            for (int i = 0; i < Filters.checkedKeywordsArray.size(); i++) {
+                int key = Filters.checkedKeywordsArray.keyAt(i);
+                if (Filters.checkedKeywordsArray.get(key)) {
+                    filterListByKeywords.setItemChecked(key, true);
+                }
+            }
+        }
+
+        if (Filters.checkedFiltersArray != null) {
             for (int i = 0; i < Filters.checkedFiltersArray.size(); i++) {
                 int key = Filters.checkedFiltersArray.keyAt(i);
                 if (Filters.checkedFiltersArray.get(key)) {
@@ -88,23 +118,42 @@ public class FilterActivity extends BaseActivity {
             public void onClick(View v) {
                 filterListByCity.clearChoices();
                 filterList.clearChoices();
+                filterListByKeywords.clearChoices();
+
                 arrayFilterAdapter.notifyDataSetChanged();
                 arrayAdapter.notifyDataSetChanged();
+                arrayKeywordsAdapter.notifyDataSetChanged();
             }
         });
     }
 
     private void apply() {
+        updateData();
+
+        setResult(RESULT_OK, new Intent());
+        finish();
+    }
+
+    private void updateData() {
         Filters.filteredCities = new HashMap<String, String>();
+        Filters.filteredKeywords = new HashMap<String, String>();
         Filters.count = 0;
         Filters.byZA = false;
         Filters.checkedCitiesArray = filterListByCity.getCheckedItemPositions();
         Filters.checkedFiltersArray = filterList.getCheckedItemPositions();
+        Filters.checkedKeywordsArray = filterListByKeywords.getCheckedItemPositions();
 
         for (int i = 0; i < Filters.checkedCitiesArray.size(); i++) {
             int key = Filters.checkedCitiesArray.keyAt(i);
             if (Filters.checkedCitiesArray.get(key)) {
                 Filters.filteredCities.put(citiesList.get(key), citiesList.get(key));
+            }
+        }
+
+        for (int i = 0; i < Filters.checkedKeywordsArray.size(); i++) {
+            int key = Filters.checkedKeywordsArray.keyAt(i);
+            if (Filters.checkedKeywordsArray.get(key)) {
+                Filters.filteredKeywords.put(keywordsList.get(key).toLowerCase(), keywordsList.get(key));
             }
         }
 
@@ -127,7 +176,12 @@ public class FilterActivity extends BaseActivity {
             Filters.byCity = false;
         }
 
-        setResult(RESULT_OK, new Intent());
-        finish();
+        if (Filters.filteredKeywords.size() > 0) {
+            Filters.count++;
+            Filters.byKeywords = true;
+        } else {
+            Filters.byKeywords = false;
+        }
     }
+
 }

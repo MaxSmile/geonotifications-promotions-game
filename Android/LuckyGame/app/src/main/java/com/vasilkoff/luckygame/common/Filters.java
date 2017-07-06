@@ -13,11 +13,14 @@ public class Filters {
 
     public static boolean nearMe;
     public static boolean byCity;
+    public static boolean byKeywords;
     public static boolean byZA;
 
     public static Map<String, String> filteredCities;
+    public static Map<String, String> filteredKeywords;
     public static SparseBooleanArray checkedCitiesArray;
     public static SparseBooleanArray checkedFiltersArray;
+    public static SparseBooleanArray checkedKeywordsArray;
 
     public static int count;
 }

@@ -36,7 +36,6 @@ import java.util.TreeMap;
 public class SearchActivity extends BaseActivity implements SearchHandler {
 
     private EditText searchEditText;
-    private RelativeLayout preloader;
     private RecyclerView companiesList;
     private ArrayList<Place> newPlaces;
 
@@ -56,7 +55,6 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
         binding.setBack(getResources().getIdentifier("back", "drawable", getPackageName()));
         binding.setColorTitle(ContextCompat.getColor(this, R.color.categoryTitle));
         initSearch();
-        preloader = (RelativeLayout) findViewById(R.id.preloader);
 
         companiesList = (RecyclerView) findViewById(R.id.filteredCompanyList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -67,8 +65,6 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
     protected void onResume() {
         super.onResume();
         refreshData();
-        //preloader.setVisibility(View.VISIBLE);
-        //getSpins();
     }
 
     @Override
@@ -138,6 +134,10 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
                     }
 
                     if (place.getAboutMore().toLowerCase().contains(arraySearch[i])) {
+                        spinsSearch.put(place.getId(), place);
+                    }
+
+                    if (place.getKeywords().toLowerCase().contains(arraySearch[i])) {
                         spinsSearch.put(place.getId(), place);
                     }
                 }

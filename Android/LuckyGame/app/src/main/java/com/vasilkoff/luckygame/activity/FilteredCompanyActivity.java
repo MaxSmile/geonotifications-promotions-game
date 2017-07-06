@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -140,6 +141,23 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
             while (iCity.hasNext()) {
                 if (Filters.filteredCities.get(iCity.next().getCity()) == null) {
                     iCity.remove();
+                }
+            }
+        }
+
+        if (Filters.byKeywords) {
+            Iterator<Place> iKeywords = places.iterator();
+            while (iKeywords.hasNext()) {
+                Place place = iKeywords.next();
+                boolean exist = false;
+                List<String> keywords = Arrays.asList(place.getKeywords().split(";"));
+                for (int i = 0; i < keywords.size(); i++) {
+                    if (Filters.filteredKeywords.get(keywords.get(i).toLowerCase()) != null) {
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    iKeywords.remove();
                 }
             }
         }

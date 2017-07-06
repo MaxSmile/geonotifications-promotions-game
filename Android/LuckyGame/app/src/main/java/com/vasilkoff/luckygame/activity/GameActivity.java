@@ -363,7 +363,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 0,
                 place.getCity(),
                 gift.getRules(),
-                Constants.COUPON_TYPE_NORMAL
+                Constants.COUPON_TYPE_NORMAL,
+                place.getKeywords()
         );
 
         Constants.DB_COUPON.child(couponCode).setValue(coupon);

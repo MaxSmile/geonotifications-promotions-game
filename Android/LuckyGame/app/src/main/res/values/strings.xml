@@ -149,4 +149,5 @@
     </string>
     <string name="offer">Offer</string>
     <string name="share_offer">Share this offer</string>
+    <string name="filter_by_keywords"><u>By keywords</u></string>
 </resources>

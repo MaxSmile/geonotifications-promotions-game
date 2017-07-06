@@ -11,7 +11,7 @@
     tools:context="com.vasilkoff.luckygame.activity.FilterActivity">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="500dp"
         android:orientation="vertical"
         android:background="@drawable/bg_filter"
         android:layout_gravity="center_vertical"
@@ -29,6 +29,27 @@
                 android:divider="@null"
                 android:dividerHeight="0dp">
             </ListView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="vertical"
+                android:id="@+id/filterLayoutByKeywords"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_by_keywords"
+                    android:textSize="18sp"
+                    android:textColor="@color/filterText"/>
+                <ListView
+                    android:id="@+id/filterListByKeywords"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:dividerHeight="0dp">
+                </ListView>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

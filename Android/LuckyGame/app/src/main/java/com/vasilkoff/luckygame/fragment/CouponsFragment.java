@@ -19,6 +19,7 @@ import com.vasilkoff.luckygame.database.CouponServiceLayer;
 
 import com.vasilkoff.luckygame.entity.CouponExtension;
 
+import com.vasilkoff.luckygame.entity.Place;
 import com.vasilkoff.luckygame.eventbus.Events;
 
 
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -112,6 +114,23 @@ public class CouponsFragment extends Fragment {
                 CouponExtension coupon = iCity.next();
                 if (Filters.filteredCities.get(coupon.getCity()) == null) {
                     iCity.remove();
+                }
+            }
+        }
+
+        if (Filters.byKeywords) {
+            Iterator<CouponExtension> iKeywords = coupons.iterator();
+            while (iKeywords.hasNext()) {
+                CouponExtension coupon = iKeywords.next();
+                boolean exist = false;
+                List<String> keywords = Arrays.asList(coupon.getKeywords().split(";"));
+                for (int i = 0; i < keywords.size(); i++) {
+                    if (Filters.filteredKeywords.get(keywords.get(i).toLowerCase()) != null) {
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    iKeywords.remove();
                 }
             }
         }

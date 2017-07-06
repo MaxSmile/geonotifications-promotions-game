@@ -19,6 +19,8 @@ public class Constants {
     public static final DatabaseReference DB_USER = DB_VERSION.child("user");
     public static final DatabaseReference DB_LIMIT = DB_VERSION.child("limit");
     public static final DatabaseReference DB_OFFER = DB_VERSION.child("offer");
+    public static final DatabaseReference DB_SETTINGS = DB_VERSION.child("settings");
+    public static final DatabaseReference DB_KEYWORDS = DB_SETTINGS.child("keywords");
 
     public static final String PLACE_KEY = "placeKey";
     public static final String PLACE_TYPE_KEY = "placeType";

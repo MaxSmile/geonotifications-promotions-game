@@ -13,15 +13,11 @@ import com.vasilkoff.luckygame.entity.Company;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.entity.Gift;
 import com.vasilkoff.luckygame.entity.Place;
-import com.vasilkoff.luckygame.eventbus.Events;
 
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * Created by Kusenko on 14.02.2017.
@@ -31,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -42,8 +38,10 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_GALLERY = "gallery";
     private static final String TABLE_BOX = "box";
     private static final String TABLE_GIFT = "gift";
+    private static final String TABLE_KEYWORDS = "keywords";
 
-
+    private static final String KEY_KEYWORDS_KEYWORD = "keyword";
+    private static final String KEY_KEYWORDS = "keywords";
 
     private static final String KEY_GIFT_ID = "id";
     private static final String KEY_GIFT_DATE_START = "dateStart";
@@ -147,6 +145,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createTableGallery(sqLiteDatabase);
         createTableBox(sqLiteDatabase);
         createTableGift(sqLiteDatabase);
+        createTableKeywords(sqLiteDatabase);
     }
 
     @Override
@@ -158,6 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GALLERY);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GIFT);
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_KEYWORDS);
         onCreate(sqLiteDatabase);
     }
 
@@ -192,6 +192,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_ID + " integer primary key,"
                 + KEY_PLACE_ID  + " text,"
                 + KEY_GALLERY_URL + " text"
+                + ")");
+    }
+
+    private void createTableKeywords(SQLiteDatabase db) {
+        db.execSQL("create table " + TABLE_KEYWORDS + "("
+                + KEY_ID + " integer primary key,"
+                + KEY_KEYWORDS_KEYWORD + " text"
                 + ")");
     }
 
@@ -236,6 +243,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_COUPON_CITY + " text,"
                 + KEY_COUPON_RULES + " text,"
                 + KEY_COUPON_COUPON_TYPE + " INTEGER,"
+                + KEY_KEYWORDS + " text,"
                 + "UNIQUE ("
                 + KEY_COUPON_CODE
                 + ") ON CONFLICT REPLACE"
@@ -285,10 +293,50 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACE_SPIN_START + " INTEGER,"
                 + KEY_PLACE_INFO_TIMESTAMP + " INTEGER,"
                 + KEY_PLACE_INFO_CHECKED + " INTEGER,"
+                + KEY_KEYWORDS + " text,"
                 + "UNIQUE ("
                 + KEY_PLACE_ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
+    }
+
+    public void saveKeywords(ArrayList<String> keywords) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long rowInserted;
+        db.beginTransaction();
+        try {
+            rowInserted = db.delete(TABLE_KEYWORDS, null, null);
+            for (int i = 0; i < keywords.size(); i++) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KEY_KEYWORDS_KEYWORD, keywords.get(i));
+                rowInserted = db.insert(TABLE_KEYWORDS, null, contentValues);
+            }
+
+            if (rowInserted > -1) {
+                db.setTransactionSuccessful();
+            }
+        } finally {
+            db.endTransaction();
+        }
+
+        db.close();
+    }
+
+    public ArrayList<String> getKeywords() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<String> keywords = new ArrayList<String>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_KEYWORDS, null);
+        if (cursor.moveToFirst()) {
+            do {
+                keywords.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+        return keywords;
     }
 
     public void saveTimeNotification(String placeI) {
@@ -556,6 +604,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_PLACE_SPIN_START, place.getSpinStart());
         contentValues.put(KEY_PLACE_INFO_TIMESTAMP, place.getInfoTimestamp());
         contentValues.put(KEY_PLACE_INFO_CHECKED, place.isInfoChecked() ? 1 : 0);
+        contentValues.put(KEY_KEYWORDS, place.getKeywords());
 
         return contentValues;
     }
@@ -787,6 +836,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_COUPON_CITY, coupon.getCity());
         contentValues.put(KEY_COUPON_RULES, coupon.getRules());
         contentValues.put(KEY_COUPON_COUPON_TYPE, coupon.getCouponType());
+        contentValues.put(KEY_KEYWORDS, coupon.getKeywords());
 
         db.insert(TABLE_COUPONS, null, contentValues);
     }
@@ -969,7 +1019,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getLong(19),
                 cursor.getString(20),
                 cursor.getString(21),
-                cursor.getInt(22)
+                cursor.getInt(22),
+                cursor.getString(23)
         );
     }
 
@@ -1003,7 +1054,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getLong(26),
                 cursor.getLong(27),
                 cursor.getLong(28),
-                cursor.getInt(29) > 0
+                cursor.getInt(29) > 0,
+                cursor.getString(30)
         );
     }
 }

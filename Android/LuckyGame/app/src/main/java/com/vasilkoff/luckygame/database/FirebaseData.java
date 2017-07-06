@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.vasilkoff.luckygame.App;
 import com.vasilkoff.luckygame.Constants;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Kvm on 23.06.2017.
@@ -124,6 +126,24 @@ public class FirebaseData {
         }
     }
 
+    public static void getKeywords() {
+        Constants.DB_KEYWORDS.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> keywords = new ArrayList<String>();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    keywords.add(data.getValue(String.class));
+                }
+                DBHelper.getInstance(App.getInstance()).saveKeywords(keywords);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private static void getCouponsByCode(String code) {
         List<String> couponsCode = new ArrayList<String>();
         couponsCode.add(code);
@@ -151,6 +171,7 @@ public class FirebaseData {
                                 coupon.setGeoLat(place.getGeoLat());
                                 coupon.setGeoLon(place.getGeoLon());
                                 coupon.setCity(place.getCity());
+                                coupon.setKeywords(place.getKeywords());
                                 Constants.DB_COMPANY.child(coupon.getCompanyKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {

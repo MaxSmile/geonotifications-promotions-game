@@ -108,6 +108,5 @@
                     android:layout_height="match_parent"/>
             </FrameLayout>
         </LinearLayout>
-        <include layout="@layout/preloader"/>
    </FrameLayout>
 </layout>

@@ -38,6 +38,7 @@ public class CouponExtension implements Parcelable {
     private String city;
     private String rules;
     private int couponType;
+    private String keywords;
 
 
     public CouponExtension() {
@@ -47,7 +48,7 @@ public class CouponExtension implements Parcelable {
                            String description, String creator, long creation, long expired, long locks,
                            String companyName, String placeName, String logo, long type, String typeString,
                            double geoLat, double geoLon, int locked, long redeemed, String city, String rules,
-                           int couponType) {
+                           int couponType, String keywords) {
         this.status = status;
         this.code = code;
         this.companyKey = companyKey;
@@ -70,6 +71,7 @@ public class CouponExtension implements Parcelable {
         this.city = city;
         this.rules = rules;
         this.couponType = couponType;
+        this.keywords = keywords;
     }
 
     protected CouponExtension(Parcel in) {
@@ -102,6 +104,7 @@ public class CouponExtension implements Parcelable {
         city = in.readString();
         rules = in.readString();
         couponType = in.readInt();
+        keywords = in.readString();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -348,6 +351,14 @@ public class CouponExtension implements Parcelable {
         this.couponType = couponType;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -384,5 +395,6 @@ public class CouponExtension implements Parcelable {
         dest.writeString(city);
         dest.writeString(rules);
         dest.writeInt(couponType);
+        dest.writeString(keywords);
     }
 }
