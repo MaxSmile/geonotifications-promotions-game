@@ -1,24 +1,12 @@
 package com.vasilkoff.luckygame.activity;
 
-
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
-
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-
-
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,8 +14,6 @@ import android.widget.TextView;
 import com.vasilkoff.luckygame.Constants;
 import com.vasilkoff.luckygame.R;
 
-import com.vasilkoff.luckygame.common.FasterAnimationsContainer;
-import com.vasilkoff.luckygame.common.Properties;
 import com.vasilkoff.luckygame.database.CouponServiceLayer;
 import com.vasilkoff.luckygame.entity.CouponExtension;
 import com.vasilkoff.luckygame.eventbus.Events;
@@ -37,7 +23,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -133,8 +118,6 @@ public class SlideCouponsActivity extends BaseActivity {
         if (getIntent().getStringExtra(Constants.COUPON_KEY) != null) {
             coupons = CouponServiceLayer.getCouponsByCode(getIntent().getStringExtra(Constants.COUPON_KEY));
         }
-
-
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.removeAllViews();

@@ -21,6 +21,9 @@ public class Events {
     public static class UpdateSpinAvailable {
     }
 
+    public static class AddedCoupon {
+    }
+
     public static class CheckCoupons {
         private boolean exist;
 

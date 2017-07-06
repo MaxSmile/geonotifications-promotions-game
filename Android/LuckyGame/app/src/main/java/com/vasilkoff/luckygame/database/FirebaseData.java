@@ -103,7 +103,7 @@ public class FirebaseData {
 
     public static void checkCouponsByCode(final String code) {
         if (code != null) {
-            Constants.DB_COUPON.child(code.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            Constants.DB_COUPON.child(code).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -127,14 +127,14 @@ public class FirebaseData {
     private static void getCouponsByCode(String code) {
         List<String> couponsCode = new ArrayList<String>();
         couponsCode.add(code);
-        getCouponsList(couponsCode);
+        getCouponsList(couponsCode, true);
     }
 
     public static void getCoupons() {
-        getCouponsList(DBHelper.getInstance(App.getInstance()).getCoupons());
+        getCouponsList(DBHelper.getInstance(App.getInstance()).getCoupons(), false);
     }
 
-    private static void getCouponsList(final List<String> couponsCode) {
+    private static void getCouponsList(final List<String> couponsCode, final boolean addedCoupon) {
         final List<CouponExtension> newCoupons = new ArrayList<CouponExtension>();
         for (int i = 0; i < couponsCode.size(); i++) {
             Constants.DB_COUPON.child(couponsCode.get(i)).addValueEventListener(new ValueEventListener() {
@@ -166,7 +166,7 @@ public class FirebaseData {
                                                 newCoupons.add(coupon);
 
                                                 if (newCoupons.size() > 0 && newCoupons.size() == couponsCode.size()) {
-                                                    updateCoupons(newCoupons);
+                                                    updateCoupons(newCoupons, addedCoupon);
                                                 }
                                             }
 
@@ -203,9 +203,13 @@ public class FirebaseData {
         }
     }
 
-    private static void updateCoupons(List<CouponExtension> coupons) {
+    private static void updateCoupons(List<CouponExtension> coupons, boolean addedCoupon) {
         DBHelper.getInstance(App.getInstance()).saveCoupons(coupons, false);
-        EventBus.getDefault().post(new Events.UpdateCoupons());
+        if (addedCoupon) {
+            EventBus.getDefault().post(new Events.AddedCoupon());
+        } else {
+            EventBus.getDefault().post(new Events.UpdateCoupons());
+        }
     }
 
     public static void getOffer() {

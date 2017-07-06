@@ -50,7 +50,6 @@ public class ActiveCompaniesFragment extends Fragment {
 
     private RecyclerView companiesList;
     private DataBridge dataBridge;
-    private RelativeLayout preloader;
     private RelativeLayout networkUnavailable;
 
     private ArrayList<Place> newPlaces;
@@ -74,8 +73,6 @@ public class ActiveCompaniesFragment extends Fragment {
         companiesList = (RecyclerView) getActivity().findViewById(R.id.activeCompaniesList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
-        preloader = (RelativeLayout) getActivity().findViewById(R.id.preloader);
-       //preloader.setVisibility(View.VISIBLE);
         networkUnavailable = (RelativeLayout) getActivity().findViewById(R.id.networkUnavailable);
     }
 
@@ -162,60 +159,5 @@ public class ActiveCompaniesFragment extends Fragment {
 
         dataBridge.activeSpins(places.size());
         companiesList.setAdapter(new CompanyListAdapter(getContext(), places, DBHelper.getInstance(getActivity()).getCompanies()));
-    }
-
-    public void updateData() {
-        /*if (CurrentLocation.lat != 0) {
-            for (HashMap.Entry <String, Place> spinPlace : places.entrySet()) {
-                Place place = spinPlace.getValue();
-                if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                }
-            }
-        }
-
-        Iterator<Spin> i = spins.iterator();
-        while (i.hasNext()) {
-            Spin spin = i.next();
-            if (spin.getStatus() != Constants.SPIN_STATUS_ACTIVE) {
-                i.remove();
-            }
-        }
-
-        if (Filters.nearMe) {
-            Iterator<Spin> j = spins.iterator();
-            while (j.hasNext()) {
-                Spin spin = j.next();
-                if (places.get(spin.getPlaceKey()).getDistance() > Properties.getNearMeRadius()) {
-                    j.remove();
-                }
-            }
-        }
-
-        if (Filters.byCity) {
-            Iterator<Spin> iCity = spins.iterator();
-            while (iCity.hasNext()) {
-                Spin spin = iCity.next();
-                if (Filters.filteredCities.get(places.get(spin.getPlaceKey()).getCity()) == null) {
-                    iCity.remove();
-                }
-            }
-        }
-
-        if (Filters.byZA) {
-            if (spins.size() > 0) {
-                List<Spin> sortedSpins = new ArrayList<Spin>();
-                for (int k = spins.size() - 1; k >= 0; k--) {
-                    sortedSpins.add(spins.get(k));
-                }
-                spins = new ArrayList<Spin>(sortedSpins);
-            }
-        }
-
-        dataBridge.activeSpins(spins.size());
-        companiesList.setAdapter(new CompanyListAdapter(getContext(), spins, places, companies));*/
     }
 }

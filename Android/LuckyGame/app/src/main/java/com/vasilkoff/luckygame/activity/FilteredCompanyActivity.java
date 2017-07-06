@@ -44,7 +44,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     private int type;
     private RecyclerView companiesList;
     private ActivityFilteredCompanyBinding binding;
-    private RelativeLayout preloader;
 
     private boolean fromFilter;
     private ArrayList<Place> newPlaces;
@@ -73,9 +72,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         companiesList = (RecyclerView) findViewById(R.id.filteredCompanyList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         companiesList.setLayoutManager(llm);
-
-        preloader = (RelativeLayout) findViewById(R.id.preloader);
-
     }
 
 
@@ -85,7 +81,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         super.onResume();
 
         if (!fromFilter) {
-            //preloader.setVisibility(View.VISIBLE);
             refreshData();
         }
 

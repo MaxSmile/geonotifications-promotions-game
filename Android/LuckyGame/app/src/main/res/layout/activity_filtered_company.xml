@@ -120,7 +120,6 @@
             </FrameLayout>
 
         </LinearLayout>
-        <include layout="@layout/preloader"/>
     </FrameLayout>
 
 </layout>

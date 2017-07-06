@@ -34,8 +34,7 @@
         android:background="@color/settingsBg1">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="@{result ? v.VISIBLE : v.GONE}">
+            android:layout_height="match_parent">
             <include
                 layout="@layout/header"
                 app:handler="@{handler}"
@@ -65,7 +64,8 @@
                     android:textColor="@color/addCouponEdit"
                     android:textStyle="bold"
                     android:textCursorDrawable="@null"
-                    android:text="@={code}"/>
+                    android:text="@={code}"
+                    android:lines="1"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -79,10 +79,11 @@
                     android:background="@drawable/bg_btn_send"
                     android:layout_margin="10dp"
                     android:onClick="@{handler::add}"/>
-
             </LinearLayout>
         </RelativeLayout>
-        <include layout="@layout/preloader"/>
+        <include
+            layout="@layout/preloader"
+            app:result="@{result}"/>
     </FrameLayout>
 </layout>
 
