@@ -62,7 +62,8 @@
         <activity
             android:name=".activity.LegendActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp" />
+            android:theme="@style/AppTheme.PopUp"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.UnlockActivity"
             android:screenOrientation="portrait"
@@ -102,7 +103,8 @@
         <activity
             android:name=".activity.SlideCouponsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.PopUp" />
+            android:theme="@style/AppTheme.PopUp"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.SearchActivity"
             android:screenOrientation="portrait" />

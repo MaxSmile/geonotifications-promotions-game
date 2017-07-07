@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="facebook_app_id">136593600254555</string>
-    <string name="facebook_app_link">https://fb.me/137852833461965</string>
-    <string name="app_preview_image_url">https://firebasestorage.googleapis.com/v0/b/lucky-game-e26de.appspot.com/o/logo_icon_new.png?alt=media&amp;token=64948477-d60d-4f60-8a78-7a8f26de6471</string>
-    <string name="terms_conditions_file">terms_conditions.html</string>
-    <string name="website_url">http://www.spindealsapp.com</string>
-    <string name="facebook_page_url">https://www.facebook.com/SpinDealsApp/?ref=aymt_homepage_panel</string>
-    <string name="mail_for_partner">sales@spindealsapp.com</string>
-    <string name="mail_for_improve">info@spindealsapp.com</string>
+    <string name="facebook_app_id" translatable="false">136593600254555</string>
+    <string name="facebook_app_link" translatable="false">https://fb.me/137852833461965</string>
+    <string name="app_preview_image_url" translatable="false">https://firebasestorage.googleapis.com/v0/b/lucky-game-e26de.appspot.com/o/logo_icon_new.png?alt=media&amp;token=64948477-d60d-4f60-8a78-7a8f26de6471</string>
+    <string name="terms_conditions_file" translatable="false">terms_conditions.html</string>
+    <string name="website_url" translatable="false">http://www.spindealsapp.com</string>
+    <string name="facebook_page_url" translatable="false">https://www.facebook.com/SpinDealsApp/?ref=aymt_homepage_panel</string>
+    <string name="mail_for_partner" translatable="false">sales@spindealsapp.com</string>
+    <string name="mail_for_improve" translatable="false">info@spindealsapp.com</string>
 
-    <string name="winning_sound">winning.mp3</string>
-    <string name="loser_sound">loser.wav</string>
-    <string name="tick_sound">tick.mp3</string>
+    <string name="winning_sound" translatable="false">winning.mp3</string>
+    <string name="loser_sound" translatable="false">loser.wav</string>
+    <string name="tick_sound" translatable="false">tick.mp3</string>
 </resources>

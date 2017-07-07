@@ -4,6 +4,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
@@ -120,7 +121,6 @@ public class SlideCouponsActivity extends BaseActivity {
         }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.removeAllViews();
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         if (coupons.size() == 1) {
@@ -131,27 +131,9 @@ public class SlideCouponsActivity extends BaseActivity {
         slideCount.setText(String.valueOf(coupons.size()));
     }
 
-    /*private void updateFragments() {
-        coupons = CouponServiceLayer.getCoupons();
-        System.out.println("myTest name---------- = " + coupons.get(0).getPlaceName());
-        System.out.println("myTest size = " + coupons.size());
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-       *//* for (int i = 0; i <= mSectionsPagerAdapter.getCount(); i++) {
-            CouponFragment couponFragment = (CouponFragment)mSectionsPagerAdapter.getItem(i);
-            System.out.println("myTest name---------- = " + coupons.get(i).getPlaceName());
-            System.out.println("myTest name----------i = " + i);
-            couponFragment.updateFragment(coupons.get(i));
-        }
-        mSectionsPagerAdapter.notifyDataSetChanged();*//*
-    }*/
-
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvents(Events.UpdateCoupons updateCoupons) {
-        System.out.println("myTest UpdateCoupons+");
-       // updateFragments();
+        initFragments();
     }
 
     @Override
@@ -172,7 +154,7 @@ public class SlideCouponsActivity extends BaseActivity {
         super.onStop();
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -184,12 +166,18 @@ public class SlideCouponsActivity extends BaseActivity {
             Bundle args = new Bundle();
             args.putParcelable("coupon", coupons.get(position));
             couponFragment.setArguments(args);
+
             return couponFragment;
         }
 
         @Override
         public int getCount() {
             return coupons.size();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
     }
 }

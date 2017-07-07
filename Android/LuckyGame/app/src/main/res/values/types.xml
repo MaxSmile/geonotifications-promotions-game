@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="company_type">
+    <string-array name="company_type" translatable="false">
         <item>@string/food</item>
         <item>@string/nightlife</item>
         <item>@string/coffee</item>
@@ -20,7 +20,7 @@
         <item>@drawable/e_shop_icon</item>
         <item>@drawable/favourites</item>
     </array>
-    <string-array name="box_name_type">
+    <string-array name="box_name_type" translatable="false">
         <item>green</item>
         <item>yellow</item>
         <item>red</item>
@@ -54,7 +54,7 @@
         <item>@drawable/spin_coming</item>
         <item>@drawable/spin_available</item>
     </integer-array>
-    <string-array name="spin_type">
+    <string-array name="spin_type" translatable="false">
         <item>@string/spin_active</item>
         <item>@string/spin_is_coming</item>
         <item>@string/spin_plus</item>

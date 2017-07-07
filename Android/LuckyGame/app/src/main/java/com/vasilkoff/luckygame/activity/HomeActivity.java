@@ -213,9 +213,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             }
         } else {
             startService(new Intent(this, LocationService.class));
-            if (!LocationState.isEnabled()) {
-                startActivity(new Intent(this, LocationActivity.class));
-            }
         }
     }
 
@@ -228,6 +225,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void filterNearMe(View view) {
+        if (!LocationState.isEnabled()) {
+            startActivity(new Intent(this, LocationActivity.class));
+        }
         if (CurrentLocation.lat != 0 ) {
                 Filters.nearMe = !Filters.nearMe;
                 binding.setFilterNearMe(Filters.nearMe);

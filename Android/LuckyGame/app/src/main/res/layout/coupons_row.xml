@@ -122,7 +122,8 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/open_present_box"/>
+                        android:src="@drawable/open_present_box"
+                        android:layout_gravity="center_vertical"/>
 
                     <TextView
                         android:maxLines="1"
@@ -130,11 +131,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:layout_marginBottom="-3dp"
                         android:textColor="@color/colorCouponPercent"
                         android:textSize="23sp"
                         android:textStyle="bold"
-                        android:text="@{coupon.description}"/>
+                        android:text="@{coupon.description}"
+                        android:layout_gravity="center_vertical"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -157,7 +158,7 @@
                             android:layout_height="30dp"
                             android:background="@drawable/bg_rectangle"
                             android:textColor="@color/colorCouponShareText"
-                            android:text="@string/send_friends"
+                            android:text="@string/sent_friends"
                             android:onClick="@{handler::send}"
                             android:visibility="@{coupon.status == -1 ? v.VISIBLE : v.GONE}"/>
                     </LinearLayout>

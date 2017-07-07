@@ -3,7 +3,7 @@
     <string name="share_title">Share %s and get coupon</string>
     <string name="coupon_redeem">Redeem</string>
     <string name="location_service_stop">Push for stop searching</string>
-    <string name="location_service_text">Search new spin in progress</string>
+    <string name="location_service_text">Search for deals in progress</string>
     <string name="fragment_companies_title">All \nPartners</string>
     <string name="fragment_active_companies_title">Active \nSpins</string>
     <string name="fragment_coupons_title">My \nCoupons</string>
@@ -34,7 +34,7 @@
     <string name="expires">Expires in:</string>
     <string name="share_coupon">Share\ncoupon</string>
     <string name="unlock">Unlock</string>
-    <string name="send_friends">Send to\nfriends</string>
+    <string name="sent_friends">Sent to\nfriends</string>
     <string name="next_version">Coming soon in the next version!</string>
     <string name="login_title">Do you feel lucky today?</string>
     <string name="call">Call</string>
@@ -140,7 +140,7 @@
     <string name="add_coupon_code_wrong">Wrong coupon code</string>
     <string name="gifts_left">%d gifts left</string>
     <string name="gifts_over">Sorry, all gifts are over.</string>
-    <string name="other_places">Other places this company</string>
+    <string name="other_places">Other locations of this company</string>
     <string name="select_maps_app">Select your maps app</string>
     <string name="favorites_text1">Favourites still empty</string>
     <string name="favorites_text2">
