@@ -34,7 +34,7 @@
     <string name="expires">Expires in:</string>
     <string name="share_coupon">Share\ncoupon</string>
     <string name="unlock">Unlock</string>
-    <string name="sent_friends">Sent to\nfriends</string>
+    <string name="send_friends">Send to\nfriends</string>
     <string name="next_version">Coming soon in the next version!</string>
     <string name="login_title">Do you feel lucky today?</string>
     <string name="call">Call</string>
@@ -106,7 +106,7 @@
     <string name="notification_category">Notifications</string>
     <string name="notification_title">Turn on/off geo notifications</string>
     <string name="spin_empty">You don\'t have spin for this place</string>
-    <string name="send_title">Sent to friends</string>
+    <string name="send_title">Send to friends</string>
     <string name="send_text">Send this coupon to your friends and the <b>first</b> who redeem it can have it</string>
     <string name="send_btn">Send</string>
     <string name="send_chooser_title">Send with</string>
@@ -148,6 +148,6 @@
         \ncompanies places and shops
     </string>
     <string name="offer">Offer</string>
-    <string name="share_offer">Share this offer</string>
     <string name="filter_by_keywords"><u>By keywords</u></string>
+    <string name="cheat_message">You already used this</string>
 </resources>

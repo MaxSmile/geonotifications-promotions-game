@@ -34,7 +34,7 @@
     <string name="expires">Λήγει σε:</string>
     <string name="share_coupon">Μοιράσου\nΚουπόνι</string>
     <string name="unlock">Ξεκλείδωμα</string>
-    <string name="sent_friends">Στείλε σε\nφίλους</string>
+    <string name="send_friends">Στείλε σε\nφίλους</string>
     <string name="next_version">Σύντομα θα έρθει στην επόμενη έκδοση!</string>
     <string name="login_title">Νιώθεις τυχερός σήμερα;</string>
     <string name="call">Κλήση</string>
@@ -51,7 +51,7 @@
     <string name="finish_on">Τελειώνει σε %s</string>
     <string name="day">%dΜέρα</string>
     <string name="days">%dΜέρες</string>
-    <string name="time">%1$μω,%2$μλ</string>
+    <string name="time">%1$dω,%2$dλ</string>
     <string name="time_short">%dμ</string>
     <string name="direction_distance">Απόσταση: %s</string>
     <string name="more_about">Περισσότερα\nΣχετικά</string>
@@ -75,7 +75,7 @@
     <string name="lose_text3">Πάρτε ένα επιπλέον spin</string>
     <string name="extra_spin_text1">Έλλειψη spins? Μπορείτε να πάρετε</string>
     <string name="extra_spin_text2">ένα επιπλέον spin</string>
-    <string name="empty_spin">Spin ήδη αδρανή</string>
+    <string name="empty_spin">Spin ανενεργό</string>
     <string name="spin_new_try">Έχετε μια νέα προσπάθεια</string>
     <string name="title_activity_setting">Ρύθμιση δραστηριοτήτων</string>
     <string name="setting_title">Μενού</string>
@@ -129,25 +129,25 @@
     <string name="filter_apply">΄Ισχυει</string>
     <string name="filter_clear">Διαγραφή</string>
     <string name="filter_close">Κλείσιμο</string>
-    <string name="search_placeholder">Αναζήτηση βάσει ονόματος / λέξης-κλειδιού</string>
+    <string name="search_placeholder">Αναζήτηση βάσει ονόματος / λέξεις-κλειδιά</string>
     <string name="gps_title">Δεν βρέθηκε τοποθεσία</string>
     <string name="gps_text">Ενεργοποιήστε τις Υπηρεσίες τοποθεσιών για να επιτρέψετε στην εφαρμογή να προσδιορίσει την τοποθεσία σας</string>
     <string name="title_activity_slide_coupons">Δραστηριότητα κουπονιού διαφάνειας</string>
     <string name="action_settings">Ρυθμίσεις</string>
     <string name="search_empty">Η αναζήτηση δεν επέστρεψε κανένα αποτέλεσμα</string>
-    <string name="add_coupon_title">Add coupon</string>
-    <string name="add_coupon_button">Add</string>
-    <string name="add_coupon_code_wrong">Wrong coupon code</string>
-    <string name="gifts_left">%d gifts left</string>
-    <string name="gifts_over">Sorry, all gifts are over.</string>
-    <string name="other_places">Other places this company</string>
-    <string name="select_maps_app">Select your maps app</string>
-    <string name="favorites_text1">Favourites still empty</string>
+    <string name="add_coupon_title">Προσθήκη κουπονιού</string>
+    <string name="add_coupon_button">Προσθήκη</string>
+    <string name="add_coupon_code_wrong">Λάθος κωδικός κουπονιού</string>
+    <string name="gifts_left">%d Υπολειπόμενα δώρα</string>
+    <string name="gifts_over">Συγγνώμη, όλα τα δώρα έχουν τελειώσει.</string>
+    <string name="other_places">Άλλες τοποθεσίες αυτής της εταιρείας</string>
+    <string name="select_maps_app">Επιλέξτε την εφαρμογή με χάρτες που θέλετε</string>
+    <string name="favorites_text1">Η λίστα με τα αγαπημένα σας είναι ακόμα κενή</string>
     <string name="favorites_text2">
-        Gather here all your favourite
-        \ncompanies places and shops
+       Συγκεντρώστε εδώ όλα τα αγαπημένα σας
+        \nκαταστήματα και εταιρείες 
     </string>
-    <string name="offer">Offer</string>
-    <string name="share_offer">Share this offer</string>
-    <string name="filter_by_keywords"><u>By keywords</u></string>
+    <string name="offer">Προσφορά</string>   
+    <string name="filter_by_keywords"><u>Ανα λέξεις-κλειδιά</u></string>
+    <string name="cheat_message">Το χρησιμοποιήσατε ήδη</string>
 </resources>

@@ -318,7 +318,7 @@
                         android:layout_height="45dp"
                         android:background="@drawable/bg_share"
                         android:gravity="center"
-                        android:text="@string/sent_friends"
+                        android:text="@string/send_friends"
                         android:textSize="10sp"
                         android:textColor="@color/colorCouponShareText"
                         android:onClick="@{handler::send}"

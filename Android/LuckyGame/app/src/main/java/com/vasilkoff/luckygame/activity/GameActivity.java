@@ -109,7 +109,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private ImageView animationBox;
 
     private Coupon coupon;
-    private String color;
+    private int prizeIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,9 +287,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         int degreesPerPrize = 360/numOfPrizes;// size of sector per prize in degrees
 
         float all = mSpinRevolutions + end;
-        int prizeIndex = (int)((all/degreesPerPrize)%numOfPrizes);
+        prizeIndex = (int)((all/degreesPerPrize)%numOfPrizes);
         winKey = prizes[prizeIndex];
-        color = getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]];
 
         final MyRotateAnimation rotateAnim = new MyRotateAnimation(0f, all,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -491,7 +490,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         if (winKey != null) {
             createCoupon(gifts.get(winKey));
             setLog(Constants.GAME_WIN);
-            startAnimation(color);
+            startAnimation(getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]]);
 
             if (Properties.getSoundGame()) {
                 sp.play(soundIdWin, 1, 1, 0, 0, 1);

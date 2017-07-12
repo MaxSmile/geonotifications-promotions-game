@@ -152,7 +152,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         Iterator<Box> iterator = boxes.iterator();
         while (iterator.hasNext()) {
             Box box = iterator.next();
-            if (!gifts.get(box.getGift()).isActive()) {
+            Gift gift = gifts.get(box.getGift());
+            if (gift == null || !gift.isActive()) {
                 iterator.remove();
             }
         }

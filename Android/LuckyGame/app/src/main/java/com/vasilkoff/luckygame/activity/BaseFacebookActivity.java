@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -42,6 +43,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
     private ShareButton shareButton;
     public String name;
     private LoginButton loginFb;
+    private boolean unLike;
 
 
     public void initData() {
@@ -178,8 +180,19 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
                     bundle.getString("completionGesture"); // liked/cancel/unliked
 
                     String result = bundle.getString("completionGesture");
-                    if (result != null && result.equals("like")) {
-                        socialSuccess();
+                    System.out.println(TAG + " result =" + result);
+                    if (result != null) {
+                        if (result.equals("unlike")) {
+                            unLike = true;
+                        }
+                        System.out.println(TAG + " unLike =" + unLike);
+                        if (result.equals("like")) {
+                            if (unLike) {
+                                Toast.makeText(this, R.string.cheat_message, Toast.LENGTH_SHORT).show();
+                            } else {
+                                socialSuccess();
+                            }
+                        }
                     }
                 }
             }

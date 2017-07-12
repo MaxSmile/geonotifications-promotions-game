@@ -101,8 +101,7 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
 
     @Override
     public void rating(View view) {
-        //final String appPackageName = getPackageName();
-        final String appPackageName = "com.vasilkoff.easyvpnfree";
+        final String appPackageName = getPackageName();
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
         } catch (android.content.ActivityNotFoundException anfe) {
