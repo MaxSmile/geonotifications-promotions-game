@@ -3,7 +3,7 @@
     <data>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.BaseHandler"/>
+            type="com.spindealsapp.binding.handler.BaseHandler"/>
     </data>
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shadow_big"
-        tools:context="com.vasilkoff.luckygame.activity.TutorialActivity">
+        tools:context="com.spindealsapp.activity.TutorialActivity">
         <android.support.v4.view.ViewPager
             android:id="@+id/container"
             android:layout_width="match_parent"

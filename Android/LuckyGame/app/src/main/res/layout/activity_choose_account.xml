@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="64dp"
     android:background="@drawable/bg_login"
-    tools:context="com.vasilkoff.luckygame.activity.ChooseAccountActivity">
+    tools:context="com.spindealsapp.activity.ChooseAccountActivity">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

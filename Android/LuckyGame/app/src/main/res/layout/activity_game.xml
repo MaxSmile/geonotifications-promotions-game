@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.vasilkoff.luckygame.activity.GameActivity">
+    tools:context="com.spindealsapp.activity.GameActivity">
     <data>
         <variable
             name="company"
-            type="com.vasilkoff.luckygame.entity.Company" />
+            type="com.spindealsapp.entity.Company" />
         <variable
             name="place"
-            type="com.vasilkoff.luckygame.entity.Place" />
+            type="com.spindealsapp.entity.Place" />
         <variable
             name="countGift"
             type="Integer" />
@@ -19,7 +19,7 @@
             type="Integer" />
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.GameHandler" />
+            type="com.spindealsapp.binding.handler.GameHandler" />
         <import type="android.view.View" alias="v"/>
     </data>
     <android.support.constraint.ConstraintLayout

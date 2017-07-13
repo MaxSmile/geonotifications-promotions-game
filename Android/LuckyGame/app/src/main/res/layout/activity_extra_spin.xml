@@ -2,17 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    tools:context="com.vasilkoff.luckygame.activity.ExtraSpinActivity">
+    tools:context="com.spindealsapp.activity.ExtraSpinActivity">
     <data>
         <variable
             name="company"
-            type="com.vasilkoff.luckygame.entity.Company"/>
+            type="com.spindealsapp.entity.Company"/>
         <variable
             name="place"
-            type="com.vasilkoff.luckygame.entity.Place"/>
+            type="com.spindealsapp.entity.Place"/>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.ExtraHandler"/>
+            type="com.spindealsapp.binding.handler.ExtraHandler"/>
         <import type="android.view.View" alias="v"/>
     </data>
     <LinearLayout

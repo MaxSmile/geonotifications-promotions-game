@@ -3,7 +3,7 @@
     <data>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.FiltersHandler"/>
+            type="com.spindealsapp.binding.handler.FiltersHandler"/>
         <variable
             name="filterNearMe"
             type="Boolean"/>

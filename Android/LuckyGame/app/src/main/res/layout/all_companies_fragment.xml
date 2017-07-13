@@ -3,8 +3,8 @@
     <data>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.AllCompanyHandler"/>
-        <import type="com.vasilkoff.luckygame.Constants"/>
+            type="com.spindealsapp.binding.handler.AllCompanyHandler"/>
+        <import type="com.spindealsapp.Constants"/>
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyAll"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -45,8 +45,8 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/all"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyFood"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -64,8 +64,8 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/food"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyNightlife"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -83,14 +83,14 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/nightlife"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
+                    </com.spindealsapp.common.SquareLinearLayout>
 
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"            >
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyCoffee"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -108,8 +108,8 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/coffee"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyEvents"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -127,8 +127,8 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/events"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyShops"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -146,14 +146,14 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/shops"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
+                    </com.spindealsapp.common.SquareLinearLayout>
 
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"            >
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyServices"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -171,8 +171,8 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/services"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyEShops"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -191,8 +191,8 @@
                             android:paddingTop="5dp"
                             android:text="@string/e_shops"
                             android:gravity="center"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
-                    <com.vasilkoff.luckygame.common.SquareLinearLayout
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyFavorites"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -210,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:text="@string/favorites"/>
-                    </com.vasilkoff.luckygame.common.SquareLinearLayout>
+                    </com.spindealsapp.common.SquareLinearLayout>
 
 
                 </LinearLayout>

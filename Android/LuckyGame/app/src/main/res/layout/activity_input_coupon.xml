@@ -21,7 +21,7 @@
             type="Boolean"/>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.InputCouponHandler" />
+            type="com.spindealsapp.binding.handler.InputCouponHandler" />
         <import type="android.view.View" alias="v"/>
     </data>
     <FrameLayout
@@ -30,7 +30,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.vasilkoff.luckygame.activity.InputCouponActivity"
+        tools:context="com.spindealsapp.activity.InputCouponActivity"
         android:background="@color/settingsBg1">
         <RelativeLayout
             android:layout_width="match_parent"

@@ -2,14 +2,14 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.vasilkoff.luckygame.activity.TermsConditionsActivity">
+    tools:context="com.spindealsapp.activity.TermsConditionsActivity">
     <data>
         <variable
             name="title"
             type="String" />
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.BaseHandler" />
+            type="com.spindealsapp.binding.handler.BaseHandler" />
         <import type="android.view.View" alias="v"/>
     </data>
     <LinearLayout

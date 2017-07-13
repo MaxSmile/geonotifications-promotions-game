@@ -2,11 +2,11 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.vasilkoff.luckygame.activity.SendCouponActivity">
+    tools:context="com.spindealsapp.activity.SendCouponActivity">
     <data>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.SendHandler"/>
+            type="com.spindealsapp.binding.handler.SendHandler"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"

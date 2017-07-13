@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.vasilkoff.luckygame.activity.FilteredCompanyActivity">
+    tools:context="com.spindealsapp.activity.FilteredCompanyActivity">
     <data>
         <variable
             name="type"
@@ -28,7 +28,7 @@
             type="Integer"/>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.FilteredHandler" />
+            type="com.spindealsapp.binding.handler.FilteredHandler" />
         <import type="android.view.View" alias="v"/>
     </data>
     <FrameLayout

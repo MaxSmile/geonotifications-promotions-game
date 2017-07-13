@@ -5,12 +5,12 @@
     <data>
         <variable
             name="coupon"
-            type="com.vasilkoff.luckygame.entity.CouponExtension" />
+            type="com.spindealsapp.entity.CouponExtension" />
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.CouponsRowHandler"/>
+            type="com.spindealsapp.binding.handler.CouponsRowHandler"/>
         <import type="android.view.View" alias="v"/>
-        <import type="com.vasilkoff.luckygame.Constants" />
+        <import type="com.spindealsapp.Constants" />
     </data>
 
     <android.support.v7.widget.CardView

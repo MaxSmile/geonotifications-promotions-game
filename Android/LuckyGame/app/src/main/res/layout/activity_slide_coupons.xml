@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shadow_big"
-    tools:context="com.vasilkoff.luckygame.activity.SlideCouponsActivity">
+    tools:context="com.spindealsapp.activity.SlideCouponsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

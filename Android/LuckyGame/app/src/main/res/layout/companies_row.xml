@@ -4,18 +4,18 @@
     <data>
         <variable
             name="place"
-            type="com.vasilkoff.luckygame.entity.Place" />
+            type="com.spindealsapp.entity.Place" />
         <variable
             name="company"
-            type="com.vasilkoff.luckygame.entity.Company" />
+            type="com.spindealsapp.entity.Company" />
         <variable
             name="countCoupons"
             type="Integer" />
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.CompanyRowHandler"/>
+            type="com.spindealsapp.binding.handler.CompanyRowHandler"/>
         <import type="android.view.View" alias="v"/>
-        <import type="com.vasilkoff.luckygame.Constants"/>
+        <import type="com.spindealsapp.Constants"/>
     </data>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

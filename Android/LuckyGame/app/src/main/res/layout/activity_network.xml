@@ -2,11 +2,11 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.vasilkoff.luckygame.activity.NetworkActivity">
+    tools:context="com.spindealsapp.activity.NetworkActivity">
     <data>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.NetworkHandler"/>
+            type="com.spindealsapp.binding.handler.NetworkHandler"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"

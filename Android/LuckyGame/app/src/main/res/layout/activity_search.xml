@@ -18,7 +18,7 @@
             type="Integer"/>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.SearchHandler"/>
+            type="com.spindealsapp.binding.handler.SearchHandler"/>
         <import type="android.view.View" alias="v"/>
     </data>
     <FrameLayout
@@ -27,7 +27,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.vasilkoff.luckygame.activity.SearchActivity">
+        tools:context="com.spindealsapp.activity.SearchActivity">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

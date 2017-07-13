@@ -4,10 +4,10 @@
     <data>
         <variable
             name="company"
-            type="com.vasilkoff.luckygame.entity.Company"/>
+            type="com.spindealsapp.entity.Company"/>
         <variable
             name="handler"
-            type="com.vasilkoff.luckygame.binding.handler.ExtraHandler"/>
+            type="com.spindealsapp.binding.handler.ExtraHandler"/>
         <import type="android.view.View" alias="v"/>
     </data>
     <LinearLayout
