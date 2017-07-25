@@ -13,13 +13,13 @@
             type="com.spindealsapp.entity.Place" />
         <variable
             name="countGift"
-            type="Integer" />
+            type="int" />
         <variable
             name="countCoupons"
-            type="Integer" />
+            type="int" />
         <variable
             name="other"
-            type="Boolean" />
+            type="boolean" />
         <variable
             name="handler"
             type="com.spindealsapp.binding.handler.DetailsHandler" />

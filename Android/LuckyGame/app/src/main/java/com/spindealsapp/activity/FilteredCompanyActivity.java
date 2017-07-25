@@ -140,7 +140,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
             while (iKeywords.hasNext()) {
                 Place place = iKeywords.next();
                 boolean exist = false;
-                List<String> keywords = Arrays.asList(place.getKeywords().split(";"));
+                List<String> keywords = Arrays.asList(place.getKeywords().split(","));
                 for (int i = 0; i < keywords.size(); i++) {
                     if (Filters.filteredKeywords.get(keywords.get(i).toLowerCase()) != null) {
                         exist = true;

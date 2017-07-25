@@ -29,8 +29,6 @@ public class FirebaseData {
     private static boolean initSpin;
     private static boolean initPlace;
     private static boolean initCompany;
-    private static int countOffer;
-    private static int countPlace;
 
     public static void placeListener() {
 
@@ -227,46 +225,42 @@ public class FirebaseData {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final List<CouponExtension> newCoupons = new ArrayList<CouponExtension>();
-                final long count = dataSnapshot.getChildrenCount();
-                countOffer = 0;
                 for (final DataSnapshot dataOffer : dataSnapshot.getChildren()) {
                     CouponExtension baseCoupon = dataOffer.getValue(CouponExtension.class);
-                    countOffer++;
-                    Constants.DB_PLACE.orderByChild("offer").equalTo(baseCoupon.getGiftKey()).addValueEventListener(new ValueEventListener() {
+                    Constants.DB_PLACE.orderByChild("offer").equalTo(baseCoupon.getGiftKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            countPlace = 0;
-                            final long countLastPlace = dataSnapshot.getChildrenCount();
-                            for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
-                                countPlace++;
-                                final CouponExtension coupon = dataOffer.getValue(CouponExtension.class);
-                                Place place = dataPlace.getValue(Place.class);
-                                coupon.setCouponType(Constants.COUPON_TYPE_OFFER);
-                                coupon.setPlaceName(place.getName());
-                                coupon.setType(place.getType());
-                                coupon.setGeoLat(place.getGeoLat());
-                                coupon.setGeoLon(place.getGeoLon());
-                                coupon.setCity(place.getCity());
-                                coupon.setPlaceKey(place.getId());
-                                Constants.DB_COMPANY.child(place.getCompanyKey()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Company company = dataSnapshot.getValue(Company.class);
-                                        coupon.setCompanyName(company.getName());
-                                        coupon.setLogo(company.getLogo());
-                                        newCoupons.add(coupon);
-
-                                        if (countPlace == countLastPlace && countPlace == countLastPlace) {
+                            if (dataSnapshot.getChildrenCount() > 0) {
+                                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
+                                    final CouponExtension coupon = dataOffer.getValue(CouponExtension.class);
+                                    Place place = dataPlace.getValue(Place.class);
+                                    coupon.setCouponType(Constants.COUPON_TYPE_OFFER);
+                                    coupon.setPlaceName(place.getName());
+                                    coupon.setType(place.getType());
+                                    coupon.setGeoLat(place.getGeoLat());
+                                    coupon.setGeoLon(place.getGeoLon());
+                                    coupon.setCity(place.getCity());
+                                    coupon.setPlaceKey(place.getId());
+                                    Constants.DB_COMPANY.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Company company = dataSnapshot.getValue(Company.class);
+                                            coupon.setCompanyName(company.getName());
+                                            coupon.setLogo(company.getLogo());
+                                            newCoupons.add(coupon);
                                             updateOffer(newCoupons);
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
+                            } else {
+                                updateOffer(newCoupons);
                             }
+
                         }
 
                         @Override

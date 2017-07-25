@@ -116,7 +116,7 @@ public class CouponsFragment extends Fragment {
             while (iKeywords.hasNext()) {
                 CouponExtension coupon = iKeywords.next();
                 boolean exist = false;
-                List<String> keywords = Arrays.asList(coupon.getKeywords().split(";"));
+                List<String> keywords = Arrays.asList(coupon.getKeywords().split(","));
                 for (int i = 0; i < keywords.size(); i++) {
                     if (Filters.filteredKeywords.get(keywords.get(i).toLowerCase()) != null) {
                         exist = true;
