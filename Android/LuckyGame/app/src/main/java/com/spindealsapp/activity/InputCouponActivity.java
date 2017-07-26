@@ -36,7 +36,7 @@ public class InputCouponActivity extends BaseActivity implements InputCouponHand
         binding.setColorTitle(ContextCompat.getColor(this, android.R.color.tab_indicator_text));
         binding.setResult(true);
         binding.setCouponCheck(true);
-        binding.setCode("fr1497963301");
+        binding.setCode("co1499930275");
         binding.setHandler(this);
     }
 

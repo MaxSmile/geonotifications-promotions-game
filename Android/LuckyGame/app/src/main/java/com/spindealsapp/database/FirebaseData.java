@@ -152,46 +152,51 @@ public class FirebaseData {
                         Constants.DB_PLACE.child(coupon.getPlaceKey()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Place place = dataSnapshot.getValue(Place.class);
-                                coupon.setPlaceName(place.getName());
-                                coupon.setType(place.getType());
-                                coupon.setGeoLat(place.getGeoLat());
-                                coupon.setGeoLon(place.getGeoLon());
-                                coupon.setCity(place.getCity());
-                                coupon.setKeywords(place.getKeywords());
-                                Constants.DB_COMPANY.child(coupon.getCompanyKey()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Company company = dataSnapshot.getValue(Company.class);
-                                        coupon.setCompanyName(company.getName());
-                                        coupon.setLogo(company.getLogo());
-                                        Constants.DB_GIFT.child(coupon.getGiftKey()).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                Gift gift = dataSnapshot.getValue(Gift.class);
-                                                coupon.setRules(gift.getRules());
-                                                coupon.setDescription(gift.getDescription());
-                                                newCoupons.add(coupon);
+                                if (dataSnapshot.exists()) {
+                                    Place place = dataSnapshot.getValue(Place.class);
+                                    coupon.setPlaceName(place.getName());
+                                    coupon.setType(place.getType());
+                                    coupon.setGeoLat(place.getGeoLat());
+                                    coupon.setGeoLon(place.getGeoLon());
+                                    coupon.setCity(place.getCity());
+                                    coupon.setKeywords(place.getKeywords());
+                                    Constants.DB_COMPANY.child(coupon.getCompanyKey()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                Company company = dataSnapshot.getValue(Company.class);
+                                                coupon.setCompanyName(company.getName());
+                                                coupon.setLogo(company.getLogo());
+                                                Constants.DB_GIFT.child(coupon.getGiftKey()).addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        if (dataSnapshot.exists()) {
+                                                            Gift gift = dataSnapshot.getValue(Gift.class);
+                                                            coupon.setRules(gift.getRules());
+                                                            coupon.setDescription(gift.getDescription());
+                                                            newCoupons.add(coupon);
 
-                                                if (newCoupons.size() > 0 && newCoupons.size() == couponsCode.size()) {
-                                                    updateCoupons(newCoupons, addedCoupon);
-                                                }
+                                                            //if (newCoupons.size() > 0 && newCoupons.size() == couponsCode.size()) {
+                                                            if (newCoupons.size() > 0) {
+                                                                updateCoupons(newCoupons, addedCoupon);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
                                             }
+                                        }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                            }
-                                        });
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
+                                        }
+                                    });
+                                }
                             }
 
                             @Override
