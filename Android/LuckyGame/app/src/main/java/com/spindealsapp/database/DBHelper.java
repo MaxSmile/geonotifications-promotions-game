@@ -540,23 +540,27 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 if (rowInserted > -1) {
                     List<String> gallery = place.getGallery();
-                    for (int i = 0; i < gallery.size(); i++) {
-                        ContentValues galleryValues = new ContentValues();
-                        galleryValues.put(KEY_PLACE_ID, place.getId());
-                        galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
-                        rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
+                    if (gallery != null) {
+                        for (int i = 0; i < gallery.size(); i++) {
+                            ContentValues galleryValues = new ContentValues();
+                            galleryValues.put(KEY_PLACE_ID, place.getId());
+                            galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
+                            rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
+                        }
                     }
                 }
 
                 if (rowInserted > -1) {
                     List<Box> box = place.getBox();
-                    for (int i = 0; i < box.size(); i++) {
-                        ContentValues boxValues = new ContentValues();
-                        boxValues.put(KEY_PLACE_ID, place.getId());
-                        boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
-                        boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
-                        boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
-                        rowInserted = db.insert(TABLE_BOX, null, boxValues);
+                    if (box != null) {
+                        for (int i = 0; i < box.size(); i++) {
+                            ContentValues boxValues = new ContentValues();
+                            boxValues.put(KEY_PLACE_ID, place.getId());
+                            boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
+                            boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
+                            boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
+                            rowInserted = db.insert(TABLE_BOX, null, boxValues);
+                        }
                     }
                 }
             }
@@ -644,7 +648,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                orderPlaces.put(cursor.getString(4), parsePlace(cursor));
+                Place place = parsePlace(cursor);
+                place.setBox(getBox(place.getId()));
+                orderPlaces.put(cursor.getString(4), place);
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");

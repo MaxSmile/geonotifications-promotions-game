@@ -44,6 +44,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/all"/>
                     </com.spindealsapp.common.SquareLinearLayout>
                     <com.spindealsapp.common.SquareLinearLayout
@@ -63,6 +64,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/food"/>
                     </com.spindealsapp.common.SquareLinearLayout>
                     <com.spindealsapp.common.SquareLinearLayout
@@ -82,6 +84,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/nightlife"/>
                     </com.spindealsapp.common.SquareLinearLayout>
 
@@ -107,6 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/coffee"/>
                     </com.spindealsapp.common.SquareLinearLayout>
                     <com.spindealsapp.common.SquareLinearLayout
@@ -126,6 +130,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/events"/>
                     </com.spindealsapp.common.SquareLinearLayout>
                     <com.spindealsapp.common.SquareLinearLayout
@@ -145,6 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/shops"/>
                     </com.spindealsapp.common.SquareLinearLayout>
 
@@ -170,27 +176,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/services"/>
-                    </com.spindealsapp.common.SquareLinearLayout>
-                    <com.spindealsapp.common.SquareLinearLayout
-                        android:id="@+id/companyEShops"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:background="@drawable/bg"
-                        android:onClick="@{(view)->handler.onItemClicked(view, Constants.CATEGORY_E_SHOPS)}">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/e_shop_icon"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="5dp"
-                            android:text="@string/e_shops"
-                            android:gravity="center"/>
                     </com.spindealsapp.common.SquareLinearLayout>
                     <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyFavorites"
@@ -209,7 +196,28 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="5dp"
+                            android:gravity="center"
                             android:text="@string/favorites"/>
+                    </com.spindealsapp.common.SquareLinearLayout>
+                    <com.spindealsapp.common.SquareLinearLayout
+                        android:id="@+id/companyEShops"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg"
+                        android:onClick="@{(view)->handler.onItemClicked(view, Constants.CATEGORY_E_SHOPS)}">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/plus"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:gravity="center"
+                            android:text="@string/e_shops"/>
                     </com.spindealsapp.common.SquareLinearLayout>
 
 

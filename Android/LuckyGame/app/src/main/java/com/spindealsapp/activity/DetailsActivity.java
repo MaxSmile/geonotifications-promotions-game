@@ -138,30 +138,35 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private void refreshData() {
         place = PlaceServiceLayer.getPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
-        gifts = GiftServiceLayer.getGifts(place);
-        List<Box> boxes = place.getBox();
-        Iterator<Box> iterator = boxes.iterator();
-        while (iterator.hasNext()) {
-            Box box = iterator.next();
-            Gift gift = gifts.get(box.getGift());
-            if (gift == null || !gift.isActive()) {
-                iterator.remove();
+        if (place.getCompanyKey() != null) {
+            gifts = GiftServiceLayer.getGifts(place);
+            List<Box> boxes = place.getBox();
+            Iterator<Box> iterator = boxes.iterator();
+            while (iterator.hasNext()) {
+                Box box = iterator.next();
+                Gift gift = gifts.get(box.getGift());
+                if (gift == null || !gift.isActive()) {
+                    iterator.remove();
+                }
             }
+
+            binding.setCountGift(boxes.size());
+            initSlider();
+            company = DBHelper.getInstance(this).getCompany(place.getCompanyKey());
+            countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+            binding.setCountCoupons(countCoupons);
+            binding.setPlace(place);
+            binding.setCompany(company);
+            if ((place.isSpinAvailable() || geoNotification) && place.getBox().size() > 0) {
+                detailsBtnPlay.startAnimation(rotateAnim);
+            } else {
+                detailsBtnPlay.clearAnimation();
+            }
+            initOther();
+        } else {
+            onBackPressed();
         }
 
-        binding.setCountGift(boxes.size());
-        initSlider();
-        company = DBHelper.getInstance(this).getCompany(place.getCompanyKey());
-        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
-        binding.setCountCoupons(countCoupons);
-        binding.setPlace(place);
-        binding.setCompany(company);
-        if ((place.isSpinAvailable() || geoNotification) && place.getBox().size() > 0) {
-            detailsBtnPlay.startAnimation(rotateAnim);
-        } else {
-            detailsBtnPlay.clearAnimation();
-        }
-        initOther();
     }
 
     private void initOther() {
@@ -278,14 +283,18 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void info(View view) {
-        place.setInfoChecked(true);
-        binding.setPlace(place);
-        DBHelper.getInstance(this).updatePlace(place);
+        if (binding.getPlace().isInfoChecked() || place.getInfoTimestamp() == 0) {
+            Toast.makeText(this, R.string.info_empty_message, Toast.LENGTH_SHORT).show();
+        } else {
+            place.setInfoChecked(true);
+            binding.setPlace(place);
+            DBHelper.getInstance(this).updatePlace(place);
 
-        Intent intent = new Intent(this, InfoActivity.class);
-        intent.putExtra("info", place.getInfo());
-        intent.putExtra("title", place.getName());
-        startActivity(intent);
+            Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra("info", place.getInfo());
+            intent.putExtra("title", place.getName());
+            startActivity(intent);
+        }
     }
 
     @Override

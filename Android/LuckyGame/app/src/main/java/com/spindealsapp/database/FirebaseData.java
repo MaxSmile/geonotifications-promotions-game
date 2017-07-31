@@ -249,11 +249,13 @@ public class FirebaseData {
                                     Constants.DB_COMPANY.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            Company company = dataSnapshot.getValue(Company.class);
-                                            coupon.setCompanyName(company.getName());
-                                            coupon.setLogo(company.getLogo());
-                                            newCoupons.add(coupon);
-                                            updateOffer(newCoupons);
+                                            if (dataSnapshot.exists()) {
+                                                Company company = dataSnapshot.getValue(Company.class);
+                                                coupon.setCompanyName(company.getName());
+                                                coupon.setLogo(company.getLogo());
+                                                newCoupons.add(coupon);
+                                                updateOffer(newCoupons);
+                                            }
                                         }
 
                                         @Override

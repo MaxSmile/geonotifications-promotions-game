@@ -107,7 +107,7 @@ public class ActiveCompaniesFragment extends Fragment {
         Iterator<Place> iterator = newPlaces.iterator();
         while (iterator.hasNext()) {
             Place place = iterator.next();
-            if (!place.isSpinAvailable()) {
+            if (!place.isSpinAvailable() || place.getBox().size() == 0) {
                 iterator.remove();
             }
         }

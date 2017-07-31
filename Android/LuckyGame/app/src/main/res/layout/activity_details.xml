@@ -117,7 +117,7 @@
                             style="@style/DetailsText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/info"
+                            android:text="@string/news"
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"/>
                         <TextView
@@ -132,7 +132,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="10dp"
                             android:layout_marginEnd="10dp"
-                            android:visibility="@{place.infoChecked ? v.GONE : v.VISIBLE}"/>
+                            android:visibility="@{place.infoChecked || place.infoTimestamp == 0 ? v.GONE : v.VISIBLE}"/>
 
                     </RelativeLayout>
                     <RelativeLayout
@@ -508,7 +508,7 @@
                     android:textColor="@color/colorDetailsTextInfo"
                     android:layout_below="@+id/detailsBtnPlay"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}"/>
+                    android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING || countGift == 0  ? v.GONE : v.VISIBLE}"/>
             </RelativeLayout>
 
             <LinearLayout

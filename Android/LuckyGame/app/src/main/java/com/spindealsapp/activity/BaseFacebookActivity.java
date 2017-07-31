@@ -104,12 +104,16 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     @Override
     public void share(View view) {
+        String image = getString(R.string.app_preview_image_url);
         if (place != null) {
+            if (place.getGallery().size() > 0) {
+                image = place.getGallery().get(0);
+            }
             ShareLinkContent content = new ShareLinkContent.Builder()
                     .setContentTitle(place.getName())
                     .setContentDescription(place.getInfo())
                     .setContentUrl(Uri.parse(place.getUrl()))
-                    .setImageUrl(Uri.parse(place.getGallery().get(0)))
+                    .setImageUrl(Uri.parse(image))
                     .build();
             shareButton.setShareContent(content);
             shareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
