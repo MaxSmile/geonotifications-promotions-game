@@ -25,7 +25,7 @@ public class Properties {
     }
 
     public static int getNearMeRadius(){
-        String s = getPrefs().getString(NEAR_ME_RADIUS , "100");
+        String s = getPrefs().getString(NEAR_ME_RADIUS , "15000");
         if (s.isEmpty()) {
             return 0;
         }

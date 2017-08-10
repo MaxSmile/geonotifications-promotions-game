@@ -8,7 +8,7 @@
             android:numeric="integer"
             android:inputType="number"
             android:maxLength="9"
-            android:defaultValue="100"/>
+            android:defaultValue="15000"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/sound_category">

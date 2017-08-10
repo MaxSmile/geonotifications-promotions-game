@@ -34,7 +34,8 @@ import java.util.List;
 public class CouponsFragment extends Fragment {
 
     private RecyclerView couponsList;
-    private List<CouponExtension> coupons;
+    private List<CouponExtension> coupons = new ArrayList<CouponExtension>();
+    private CouponListAdapter adapter;
 
     @Nullable
     @Override
@@ -48,6 +49,8 @@ public class CouponsFragment extends Fragment {
         couponsList = (RecyclerView) getActivity().findViewById(R.id.couponsList);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         couponsList.setLayoutManager(llm);
+        adapter = new CouponListAdapter(getContext(), coupons);
+        couponsList.setAdapter(adapter);
     }
 
     @Override
@@ -138,6 +141,6 @@ public class CouponsFragment extends Fragment {
             }
         }
 
-        couponsList.setAdapter(new CouponListAdapter(getContext(), coupons));
+        adapter.updateData(coupons);
     }
 }

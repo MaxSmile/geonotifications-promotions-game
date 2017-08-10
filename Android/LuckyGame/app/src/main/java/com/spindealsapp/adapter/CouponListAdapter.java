@@ -32,6 +32,12 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         this.couponsList = couponsList;
     }
 
+    public void updateData(List<CouponExtension> couponsList) {
+        this.couponsList.clear();
+        this.couponsList.addAll(couponsList);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.coupons_row, parent, false);

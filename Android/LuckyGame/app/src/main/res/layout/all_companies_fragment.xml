@@ -92,7 +92,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"            >
+                    android:orientation="horizontal">
                     <com.spindealsapp.common.SquareLinearLayout
                         android:id="@+id/companyCoffee"
                         android:layout_width="match_parent"

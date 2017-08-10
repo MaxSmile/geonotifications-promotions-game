@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">SpinDeals</string>
     <string name="share_title">Μοιραστείτε  %s και πάρτε κουπόνι</string>
-    <string name="coupon_redeem">Εξαργύρώση</string>
-    <string name="location_service_stop">Επιλέξτε για να σταματήσετε την αναζήτηση</string>
+    <string name="coupon_redeem"> Εξαργύρωση</string>
+    <string name="location_service_stop">Επιλέξτε για κλείσιμο</string>
     <string name="location_service_text">Αναζήτηση νέου spin σε εξέλιξη</string>
     <string name="fragment_companies_title">\'Ολοι οι \nΣυνέταιροι</string>
     <string name="fragment_active_companies_title">Ενεργά \nSpins</string>
@@ -14,7 +14,7 @@
     <string name="spin_active">Ενεργό Spin</string>
     <string name="spin_is_coming">Spin έρχεται</string>
     <string name="spin_plus">+1 Spin</string>
-    <string name="e_shops">Έρχεται σύντομα</string>
+    <string name="e_shops">Έρχεται \nσύντομα</string>
     <string name="all">Όλα</string>
     <string name="food">Φαγητό</string>
     <string name="nightlife">Νυχτερινή ζωή</string>
@@ -34,7 +34,7 @@
     <string name="expires">Λήγει σε:</string>
     <string name="share_coupon">Μοιράσου\nΚουπόνι</string>
     <string name="unlock">Ξεκλείδωμα</string>
-    <string name="send_friends">Στείλε το σε\nφίλους</string>
+    <string name="send_friends">Στείλε σε\nφίλους</string>
     <string name="next_version">Σύντομα θα έρθει στην επόμενη έκδοση!</string>
     <string name="login_title">Νιώθεις τυχερός σήμερα;</string>
     <string name="call">Κλήση</string>
@@ -45,7 +45,7 @@
     <string name="more_info">Περισσότερες πληροφορίες</string>
     <string name="add_to_favorites">Προσθήκη στα αγαπημένα</string>
     <string name="dont_wont_notifications">Δεν θέλω ειδοποιήσεις</string>
-    <string name="out_of_spins"><b>Έλλειψη spins?</b> Πάρτε ένα επιπλέον spin</string>
+    <string name="out_of_spins"><b>Έλλειψη spins?</b> Πάρε ένα επιπλέον</string>
     <string name="play">Παίξε</string>
     <string name="gifts_info">Πληροφορίες δώρων</string>
     <string name="finish_on">Τελειώνει σε %s</string>
@@ -55,15 +55,15 @@
     <string name="time_short">%dμ</string>
     <string name="direction_distance">Απόσταση: %s</string>
     <string name="more_about">Σχετικά</string>
-    <string name="coupon_code">Κωδικός κουπονιού</string>
+    <string name="coupon_code">Κωδικός </string>
     <string name="important">Σημαντικό!</string>
     <string name="redeem_text">Βεβαιωθείτε ότι έχετε δείξει στο ταμείο αυτό το κουπόνι πριν το εξαργυρώσετε</string>
     <string name="not_now">Όχι τώρα</string>
     <string name="unlock_title">Ξεκλείδωμα</string>
-    <string name="unlock_text1">Μπορείς να <b>ξεκλείδώσεις</b> και να <b>εξαργυρώσεις</b> αυτό το κουπόνι πολύ εύκολα</string>
+    <string name="unlock_text1">Μπορείς να <b>ξεκλειδώσεις</b> και να <b>εξαργυρώσεις</b> αυτό το κουπόνι πολύ εύκολα</string>
     <string name="unlock_text2">Απλά χρησιμοποιήσε ένα από τα παρακάτω</string>
-    <string name="unlock_text3">Μπορείτε να πείτε στους φίλους σας δίπλα σας να δοκιμάσουν την τύχη τους</string>
-    <string name="unlock_text4">Να σας στείλουν τα κουπόνια τους</string>
+    <string name="unlock_text3">Μπορείς να πεις στους φίλους σας δίπλα σου να δοκιμάσουν την τύχη τους</string>
+    <string name="unlock_text4">Να σου στείλουν τα κουπόνια τους</string>
     <string name="time_left">Χρόνος:</string>
     <string name="unlock_facebook_like">Like %s σελίδα facebook</string>
     <string name="unlock_facebook_share">Μοιράσου με φίλους %s</string>
@@ -71,9 +71,9 @@
     <string name="login_license">Με την είσοδο ή την πρόσβαση στην εφαρμογή SpinDeals, συμφωνείτε και αποδέχεστε τους <u>\'Ορους &amp; Προϋποθέσεις</u></string>
     <string name="lose_title">Εχασες!</string>
     <string name="lose_text1">Δεν είσαι αρκετά τυχερός/ή σήμερα…</string>
-    <string name="lose_text2">Μην το βάζετε κάτω</string>
-    <string name="lose_text3">Πάρτε ένα επιπλέον</string>
-    <string name="extra_spin_text1">Έλλειψη spins? Μπορείς να πάρετε</string>
+    <string name="lose_text2">Μην το βάζεις κάτω</string>
+    <string name="lose_text3">Πάρε ένα επιπλέον spin</string>
+    <string name="extra_spin_text1">Έλλειψη spins? Μπορείς να πάρεις</string>
     <string name="extra_spin_text2">ένα επιπλέον spin</string>
     <string name="empty_spin">Spin ανενεργό</string>
     <string name="spin_new_try">Έχετε μια νέα προσπάθεια</string>
@@ -86,7 +86,7 @@
     <string name="see_gifts">Δείτε δώρα</string>
     <string name="my_coupons">Τα κουπόνια μου</string>
     <string name="game_out_of_spins">Έλλειψη spins?</string>
-    <string name="game_get_extra_spins">Πάρτε ένα επιπλέον spin</string>
+    <string name="game_get_extra_spins">Πάρε ένα επιπλέον</string>
     <string name="redeemed">Εξαργυρωμένο:</string>
     <string name="wait_for_update_data">Περιμένετε για δεδομένα ενημέρωσης</string>
     <string name="empty_category">Αυτή η κατηγορία είναι κενή</string>
@@ -104,10 +104,10 @@
     <string name="sound_category">Ήχος</string>
     <string name="sound_game">Απενεργοποίηση του παιχνιδιού</string>
     <string name="notification_category">Ειδοποιήσεις</string>
-    <string name="notification_title">Απενεργοποίηση γεωγραφικών ειδοποιήσεων</string>
+    <string name="notification_title">Απενεργοποίηση GPS ειδοποιήσεων</string>
     <string name="spin_empty">Δεν έχεις spin για αυτό το μέρος</string>
     <string name="send_title">Στείλε το σε φίλους</string>
-    <string name="send_text">Στείλε αυτό το κουπόνι στους φίλους σας και ο <b>πρώτος</b> που θα το εξαργυρώσει μπορεί να το αποκτήσει</string>
+    <string name="send_text">Στείλε αυτό το κουπόνι στους φίλους σου και ο <b>πρώτος</b> που θα το εξαργυρώσει μπορεί να το αποκτήσει</string>
     <string name="send_btn">Αποστολή</string>
     <string name="send_chooser_title">Αποστολή με</string>
     <string name="send_coupon_text">Κωδικός κουπονιού για το SpinDeals: %s</string>
@@ -142,7 +142,7 @@
     <string name="gifts_over">Συγγνώμη, όλα τα δώρα έχουν τελειώσει.</string>
     <string name="other_places">Άλλες τοποθεσίες</string>
     <string name="select_maps_app">Επιλέξτε την εφαρμογή με χάρτες που θέλετε</string>
-    <string name="favorites_text1"> Η λίστα με τα αγαπημένα σας\n είναι ακόμα κενή</string>
+    <string name="favorites_text1">Η λίστα με τα αγαπημένα σας είναι\n ακόμα κενή</string>
     <string name="favorites_text2">
         Συγκεντρώστε εδώ όλα τα αγαπημένα σας
         \nκαταστήματα και εταιρείες 

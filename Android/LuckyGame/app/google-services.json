@@ -8,64 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:826390527227:android:1902b3a983e8cbfd",
-        "android_client_info": {
-          "package_name": "com.vasilkoff.luckygame"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "826390527227-j88aql8fhna14ajgnbs32khk7gja59gr.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "826390527227-1k1tvns3khosq8j0usq9b610v2197fd8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.vasilkoff.luckygame",
-            "certificate_hash": "fbbf9d51d7cc1aa97c085e28cfc692e4ad7a66b4"
-          }
-        },
-        {
-          "client_id": "826390527227-hs4neupokr3ioonf16lgo9pvhblak75i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.vasilkoff.luckygame",
-            "certificate_hash": "dac7778f41fa569d707cdad2e05d3e4f631ef6e5"
-          }
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDhrb-dHJ7V5at70nk19tks1XgG77P9yoQ"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "826390527227-j88aql8fhna14ajgnbs32khk7gja59gr.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:826390527227:android:2346d79e1f648020",
         "android_client_info": {
           "package_name": "com.spindealsapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "826390527227-9p3j2208uthup3ilatr07v1jkqhhuoid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spindealsapp",
+            "certificate_hash": "fbbf9d51d7cc1aa97c085e28cfc692e4ad7a66b4"
+          }
+        },
         {
           "client_id": "826390527227-nqdudtaqedc7p58urvm721f06cu93lrn.apps.googleusercontent.com",
           "client_type": 1,
