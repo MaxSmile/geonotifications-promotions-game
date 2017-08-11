@@ -1,6 +1,7 @@
 package com.spindealsapp.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -250,8 +252,29 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
             }
         } else {
-            startActivity(new Intent(this, ChooseAccountActivity.class));
+            loginDialog();
         }
+    }
+
+    private void loginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.login_dialog_title))
+                .setMessage(getString(R.string.login_dialog_message))
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                .setPositiveButton(getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                startActivity(new Intent(DetailsActivity.this, ChooseAccountActivity.class));
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -366,8 +389,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Intent intent = new Intent(this, ChooseAccountActivity.class);
-                startActivity(intent);
+                loginDialog();
             }
         } else {
             startActivity(new Intent(this, NetworkActivity.class));

@@ -37,6 +37,13 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         this.places = places;
     }
 
+    public void updateData(ArrayList<Place> places, HashMap<String, Company> companies) {
+        this.companies = companies;
+        this.places.clear();
+        this.places.addAll(places);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.companies_row, parent, false);

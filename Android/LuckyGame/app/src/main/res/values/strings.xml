@@ -152,4 +152,7 @@
     <string name="cheat_message">You already used this</string>
     <string name="coming_soon_message">This category is coming soon</string>
     <string name="info_empty_message">No news at this moment</string>
+    <string name="login_dialog_title">Attention</string>
+    <string name="login_dialog_message">To continue need to login</string>
+    <string name="ok">Ok</string>
 </resources>

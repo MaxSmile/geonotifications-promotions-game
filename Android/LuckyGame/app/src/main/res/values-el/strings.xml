@@ -152,4 +152,7 @@
     <string name="cheat_message">Το χρησιμοποιήσατε ήδη</string>
     <string name="coming_soon_message">Αυτή η κατηγορία έρχεται σύντομα</string>
 	<string name="info_empty_message">Τίποτα νέο αυτή τη στιγμή</string>
+    <string name="login_dialog_title">Attention</string>
+    <string name="login_dialog_message">To continue need to login</string>
+    <string name="ok">Ok</string>
 </resources>

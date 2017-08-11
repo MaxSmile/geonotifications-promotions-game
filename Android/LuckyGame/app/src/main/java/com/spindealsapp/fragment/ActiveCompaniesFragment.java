@@ -40,7 +40,8 @@ public class ActiveCompaniesFragment extends Fragment {
     private DataBridge dataBridge;
     private RelativeLayout networkUnavailable;
 
-    private ArrayList<Place> newPlaces;
+    private ArrayList<Place> newPlaces = new ArrayList<Place>();
+    private CompanyListAdapter adapter;
 
     @Override
     public void onAttach(Context context) {
@@ -62,6 +63,8 @@ public class ActiveCompaniesFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
         networkUnavailable = (RelativeLayout) getActivity().findViewById(R.id.networkUnavailable);
+        adapter = new CompanyListAdapter(getContext(), newPlaces, DBHelper.getInstance(getActivity()).getCompanies());
+        companiesList.setAdapter(adapter);
     }
 
     @Override
@@ -163,6 +166,6 @@ public class ActiveCompaniesFragment extends Fragment {
 
 
         dataBridge.activeSpins(places.size());
-        companiesList.setAdapter(new CompanyListAdapter(getContext(), places, DBHelper.getInstance(getActivity()).getCompanies()));
+        adapter.updateData(places, DBHelper.getInstance(getActivity()).getCompanies());
     }
 }
