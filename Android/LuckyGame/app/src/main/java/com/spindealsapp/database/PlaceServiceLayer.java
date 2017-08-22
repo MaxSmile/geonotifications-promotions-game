@@ -10,6 +10,7 @@ import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.util.LocationDistance;
 import com.spindealsapp.R;
+import com.spindealsapp.util.Rrule;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -59,7 +60,7 @@ public class PlaceServiceLayer {
             }
         }
 
-        if (place.getSpinFinish() >= System.currentTimeMillis() && place.getSpinStart() <= System.currentTimeMillis()) {
+        if (place.getRrule() != null && Rrule.isAvailable(place.getRrule())) {
             if (place.isSpinAvailable()) {
                 place.setSpinStatus(Constants.SPIN_STATUS_ACTIVE);
             } else {

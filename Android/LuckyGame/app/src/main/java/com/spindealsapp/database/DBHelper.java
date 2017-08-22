@@ -26,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -90,6 +90,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_PLACE_SPIN_START = "spinStart";
     private static final String KEY_PLACE_INFO_TIMESTAMP = "infoTimestamp";
     private static final String KEY_PLACE_INFO_CHECKED = "infoChecked";
+    private static final String KEY_PLACE_SPIN_ID = "spinId";
+    private static final String KEY_PLACE_RRULE = "rrule";
 
     private static final String KEY_COUPON_STATUS = "status";
     private static final String KEY_COUPON_CODE = "code";
@@ -293,6 +295,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACE_INFO_TIMESTAMP + " INTEGER,"
                 + KEY_PLACE_INFO_CHECKED + " INTEGER,"
                 + KEY_KEYWORDS + " text,"
+                + KEY_PLACE_SPIN_ID + " text,"
+                + KEY_PLACE_RRULE + " text,"
                 + "UNIQUE ("
                 + KEY_PLACE_ID
                 + ") ON CONFLICT REPLACE"
@@ -608,6 +612,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_PLACE_INFO_TIMESTAMP, place.getInfoTimestamp());
         contentValues.put(KEY_PLACE_INFO_CHECKED, place.isInfoChecked() ? 1 : 0);
         contentValues.put(KEY_KEYWORDS, place.getKeywords());
+        contentValues.put(KEY_PLACE_SPIN_ID, place.getSpinId());
+        contentValues.put(KEY_PLACE_RRULE, place.getRrule());
 
         return contentValues;
     }
@@ -1060,7 +1066,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getLong(27),
                 cursor.getLong(28),
                 cursor.getInt(29) > 0,
-                cursor.getString(30)
+                cursor.getString(30),
+                cursor.getString(31),
+                cursor.getString(32)
         );
+
     }
 }

@@ -14,6 +14,7 @@ import com.spindealsapp.entity.Spin;
 import com.spindealsapp.entity.UsedSpin;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.DateFormat;
+import com.spindealsapp.util.Rrule;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -308,7 +309,9 @@ public class FirebaseData {
                             for (DataSnapshot data : dataSnapshot.getChildren()) {
                                 final Spin spin = data.getValue(Spin.class);
                                 place.setSpinFinish(spin.getDateFinish());
-                                if (spin.getDateStart() <= System.currentTimeMillis() && spin.getDateFinish() >= System.currentTimeMillis()) {
+                                place.setRrule(spin.getRrule());
+                                place.setSpinId(spin.getId());
+                                if (Rrule.isAvailable(spin.getRrule())) {
                                     if (CurrentUser.user != null) {
                                         long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
                                         Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())

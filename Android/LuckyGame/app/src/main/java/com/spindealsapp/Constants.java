@@ -11,7 +11,7 @@ import com.spindealsapp.R;
 public class Constants {
 
     public static final DatabaseReference REFERENCE = FirebaseDatabase.getInstance().getReference();
-    public static final DatabaseReference DB_VERSION = REFERENCE.child("ver1");
+    public static final DatabaseReference DB_VERSION = REFERENCE.child("ver2");
     public static final DatabaseReference DB_COUPON = DB_VERSION.child("coupon");
     public static final DatabaseReference DB_COMPANY = DB_VERSION.child("company");
     public static final DatabaseReference DB_PLACE = DB_VERSION.child("place");

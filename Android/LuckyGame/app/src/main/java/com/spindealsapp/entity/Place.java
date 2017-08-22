@@ -48,7 +48,8 @@ public class Place implements Parcelable {
     private long infoTimestamp;
     private boolean infoChecked;
     private String keywords;
-
+    private String spinId;
+    private String rrule;
 
     public Place() {
 
@@ -60,7 +61,7 @@ public class Place implements Parcelable {
                  int typeIcon, String info, String url, String tel, String about, String aboutMore,
                  double distance, String distanceString, String city, boolean spinAvailable,
                  boolean extraSpinAvailable, boolean favorites, long spinFinish, long spinStart,
-                 long infoTimestamp, boolean infoChecked, String keywords) {
+                 long infoTimestamp, boolean infoChecked, String keywords, String spinId, String rrule) {
         this.id = id;
         this.address = address;
         this.name = name;
@@ -91,6 +92,8 @@ public class Place implements Parcelable {
         this.infoTimestamp = infoTimestamp;
         this.infoChecked = infoChecked;
         this.keywords = keywords;
+        this.spinId = spinId;
+        this.rrule = rrule;
     }
 
     protected Place(Parcel in) {
@@ -129,6 +132,8 @@ public class Place implements Parcelable {
         infoTimestamp = in.readLong();
         infoChecked = in.readByte() != 0;
         keywords = in.readString();
+        spinId = in.readString();
+        rrule = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -431,6 +436,22 @@ public class Place implements Parcelable {
         this.keywords = keywords;
     }
 
+    public String getSpinId() {
+        return spinId;
+    }
+
+    public void setSpinId(String spinId) {
+        this.spinId = spinId;
+    }
+
+    public String getRrule() {
+        return rrule;
+    }
+
+    public void setRrule(String rrule) {
+        this.rrule = rrule;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -473,5 +494,7 @@ public class Place implements Parcelable {
         dest.writeLong(infoTimestamp);
         dest.writeByte((byte) (infoChecked ? 1 : 0));
         dest.writeString(keywords);
+        dest.writeString(spinId);
+        dest.writeString(rrule);
     }
 }

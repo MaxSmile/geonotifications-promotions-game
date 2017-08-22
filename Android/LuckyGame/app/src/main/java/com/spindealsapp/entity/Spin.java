@@ -18,11 +18,12 @@ public class Spin implements Parcelable {
     private Drawable statusIcon;
     private String timeLeft;
     private String statusString;
+    private String rrule;
 
     public Spin() {
     }
 
-    public Spin(String id, long dateStart, long dateFinish, String companyKey, String placeKey, int status, Drawable statusIcon, String timeLeft, String statusString) {
+    public Spin(String id, long dateStart, long dateFinish, String companyKey, String placeKey, int status, Drawable statusIcon, String timeLeft, String statusString, String rrule) {
         this.id = id;
         this.dateStart = dateStart;
         this.dateFinish = dateFinish;
@@ -32,6 +33,7 @@ public class Spin implements Parcelable {
         this.statusIcon = statusIcon;
         this.timeLeft = timeLeft;
         this.statusString = statusString;
+        this.rrule = rrule;
     }
 
     protected Spin(Parcel in) {
@@ -43,6 +45,7 @@ public class Spin implements Parcelable {
         status = in.readInt();
         timeLeft = in.readString();
         statusString = in.readString();
+        rrule = in.readString();
     }
 
     public static final Creator<Spin> CREATOR = new Creator<Spin>() {
@@ -129,6 +132,14 @@ public class Spin implements Parcelable {
         this.statusString = statusString;
     }
 
+    public String getRrule() {
+        return rrule;
+    }
+
+    public void setRrule(String rrule) {
+        this.rrule = rrule;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -144,5 +155,6 @@ public class Spin implements Parcelable {
         dest.writeInt(status);
         dest.writeString(timeLeft);
         dest.writeString(statusString);
+        dest.writeString(rrule);
     }
 }
