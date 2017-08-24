@@ -19,21 +19,9 @@ public class Spin implements Parcelable {
     private String timeLeft;
     private String statusString;
     private String rrule;
+    private long limit;
 
     public Spin() {
-    }
-
-    public Spin(String id, long dateStart, long dateFinish, String companyKey, String placeKey, int status, Drawable statusIcon, String timeLeft, String statusString, String rrule) {
-        this.id = id;
-        this.dateStart = dateStart;
-        this.dateFinish = dateFinish;
-        this.companyKey = companyKey;
-        this.placeKey = placeKey;
-        this.status = status;
-        this.statusIcon = statusIcon;
-        this.timeLeft = timeLeft;
-        this.statusString = statusString;
-        this.rrule = rrule;
     }
 
     protected Spin(Parcel in) {
@@ -46,6 +34,7 @@ public class Spin implements Parcelable {
         timeLeft = in.readString();
         statusString = in.readString();
         rrule = in.readString();
+        limit = in.readLong();
     }
 
     public static final Creator<Spin> CREATOR = new Creator<Spin>() {
@@ -140,6 +129,14 @@ public class Spin implements Parcelable {
         this.rrule = rrule;
     }
 
+    public long getLimit() {
+        return limit;
+    }
+
+    public void setLimit(long limit) {
+        this.limit = limit;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -156,5 +153,6 @@ public class Spin implements Parcelable {
         dest.writeString(timeLeft);
         dest.writeString(statusString);
         dest.writeString(rrule);
+        dest.writeLong(limit);
     }
 }

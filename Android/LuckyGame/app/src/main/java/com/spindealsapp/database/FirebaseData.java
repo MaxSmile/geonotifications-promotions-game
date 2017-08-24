@@ -14,11 +14,13 @@ import com.spindealsapp.entity.Spin;
 import com.spindealsapp.entity.UsedSpin;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.DateFormat;
+import com.spindealsapp.util.DateUtils;
 import com.spindealsapp.util.Rrule;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -313,23 +315,28 @@ public class FirebaseData {
                                 place.setSpinId(spin.getId());
                                 if (Rrule.isAvailable(spin.getRrule())) {
                                     if (CurrentUser.user != null) {
-                                        long timeShift = System.currentTimeMillis() - Constants.DAY_TIME_SHIFT;
+                                        long timeShift = Rrule.getTimeStart(spin.getRrule());
                                         Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
-                                                .orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                .child(spin.getId()).orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 boolean spinAvailable = true;
                                                 boolean extraSpinAvailable = true;
+                                                int count = 0;
 
                                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                                                     UsedSpin usedSpin = data.getValue(UsedSpin.class);
                                                     if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
-                                                        spinAvailable = false;
+                                                        count++;
                                                     }
 
-                                                    if (usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
+                                                    if (DateUtils.isToday(new Date(usedSpin.getTime())) && usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
                                                         extraSpinAvailable = false;
                                                     }
+                                                }
+
+                                                if (count >= spin.getLimit()) {
+                                                    spinAvailable = false;
                                                 }
 
                                                 place.setSpinAvailable(spinAvailable);

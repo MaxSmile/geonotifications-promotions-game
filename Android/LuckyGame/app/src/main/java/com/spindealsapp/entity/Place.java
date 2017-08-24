@@ -50,6 +50,8 @@ public class Place implements Parcelable {
     private String keywords;
     private String spinId;
     private String rrule;
+    private long spinLimit;
+    private long spinSpent;
 
     public Place() {
 
