@@ -96,6 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         FirebaseData.getGift();
         FirebaseData.getOffer();
         FirebaseData.getKeywords();
+        FirebaseData.getSpins();
     }
 
     public void setListeners() {

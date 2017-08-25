@@ -17,7 +17,9 @@ import com.spindealsapp.common.Filters;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Place;
+import com.spindealsapp.entity.Spin;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
 
@@ -101,6 +103,7 @@ public class ActiveCompaniesFragment extends Fragment {
     }
 
     private void refreshData() {
+        ArrayList<Spin> spins = SpinServiceLayer.getSpins();
         newPlaces = PlaceServiceLayer.getPlaces();
         removeInactive();
         filterData();

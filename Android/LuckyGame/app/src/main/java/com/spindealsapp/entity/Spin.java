@@ -20,8 +20,22 @@ public class Spin implements Parcelable {
     private String statusString;
     private String rrule;
     private long limit;
+    private long spent;
+    private boolean available = true;
+    private boolean extraAvailable = true;
 
     public Spin() {
+    }
+
+    public Spin(String id, String companyKey, String placeKey, String rrule, long limit, long spent, boolean available, boolean extraAvailable) {
+        this.id = id;
+        this.companyKey = companyKey;
+        this.placeKey = placeKey;
+        this.rrule = rrule;
+        this.limit = limit;
+        this.spent = spent;
+        this.available = available;
+        this.extraAvailable = extraAvailable;
     }
 
     protected Spin(Parcel in) {
@@ -35,6 +49,9 @@ public class Spin implements Parcelable {
         statusString = in.readString();
         rrule = in.readString();
         limit = in.readLong();
+        spent = in.readLong();
+        available = in.readByte() != 0;
+        extraAvailable = in.readByte() != 0;
     }
 
     public static final Creator<Spin> CREATOR = new Creator<Spin>() {
@@ -137,6 +154,30 @@ public class Spin implements Parcelable {
         this.limit = limit;
     }
 
+    public long getSpent() {
+        return spent;
+    }
+
+    public void setSpent(long spent) {
+        this.spent = spent;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public boolean isExtraAvailable() {
+        return extraAvailable;
+    }
+
+    public void setExtraAvailable(boolean extraAvailable) {
+        this.extraAvailable = extraAvailable;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -154,5 +195,8 @@ public class Spin implements Parcelable {
         dest.writeString(statusString);
         dest.writeString(rrule);
         dest.writeLong(limit);
+        dest.writeLong(spent);
+        dest.writeByte((byte) (available ? 1 : 0));
+        dest.writeByte((byte) (extraAvailable ? 1 : 0));
     }
 }

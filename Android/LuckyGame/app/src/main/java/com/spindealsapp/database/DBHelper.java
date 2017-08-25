@@ -13,6 +13,7 @@ import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.Place;
+import com.spindealsapp.entity.Spin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_BOX = "box";
     private static final String TABLE_GIFT = "gift";
     private static final String TABLE_KEYWORDS = "keywords";
+    private static final String TABLE_SPIN = "spin";
 
     private static final String KEY_KEYWORDS_KEYWORD = "keyword";
     private static final String KEY_KEYWORDS = "keywords";
@@ -116,6 +118,15 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_COUPON_RULES = "rules";
     private static final String KEY_COUPON_COUPON_TYPE = "couponType";
 
+    private static final String KEY_SPIN_ID = "id";
+    private static final String KEY_SPIN_COMPANY_KEY = "companyKey";
+    private static final String KEY_SPIN_PLACE_KEY = "placeKey";
+    private static final String KEY_SPIN_LIMIT = "spinLimit";
+    private static final String KEY_SPIN_RRULE = "rrule";
+    private static final String KEY_SPIN_SPENT = "spent";
+    private static final String KEY_SPIN_AVAILABLE = "available";
+    private static final String KEY_SPIN_EXTRA_AVAILABLE = "extraAvailable";
+
     private static final String KEY_COMPANY_ID = "companyId";
     private static final String KEY_COMPANY_NAME = "name";
     private static final String KEY_COMPANY_INFO = "info";
@@ -147,6 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createTableBox(sqLiteDatabase);
         createTableGift(sqLiteDatabase);
         createTableKeywords(sqLiteDatabase);
+        createTableSpin(sqLiteDatabase);
     }
 
     @Override
@@ -159,7 +171,22 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GIFT);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_KEYWORDS);
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_SPIN);
         onCreate(sqLiteDatabase);
+    }
+
+    private void createTableSpin(SQLiteDatabase db) {
+        db.execSQL("create table " + TABLE_SPIN + "("
+                + KEY_ID + " integer primary key,"
+                + KEY_SPIN_ID  + " text,"
+                + KEY_SPIN_COMPANY_KEY + " text,"
+                + KEY_SPIN_PLACE_KEY + " text,"
+                + KEY_SPIN_RRULE + " text,"
+                + KEY_SPIN_LIMIT + " INTEGER,"
+                + KEY_SPIN_SPENT + " INTEGER,"
+                + KEY_SPIN_AVAILABLE + " INTEGER,"
+                + KEY_SPIN_EXTRA_AVAILABLE + " INTEGER"
+                + ")");
     }
 
     private void createTableGift(SQLiteDatabase db) {
@@ -374,6 +401,55 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return 0;
+    }
+
+    public boolean saveSpins(ArrayList<Spin> spins) {
+        long rowInserted = -1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_SPIN, null, null);
+
+            for (Spin spin: spins) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KEY_SPIN_ID, spin.getId());
+                contentValues.put(KEY_SPIN_COMPANY_KEY, spin.getCompanyKey());
+                contentValues.put(KEY_SPIN_PLACE_KEY, spin.getPlaceKey());
+                contentValues.put(KEY_SPIN_LIMIT, spin.getLimit());
+                contentValues.put(KEY_SPIN_RRULE, spin.getRrule());
+                contentValues.put(KEY_SPIN_SPENT, spin.getSpent());
+                contentValues.put(KEY_SPIN_AVAILABLE, spin.isAvailable() ? 1 : 0);
+                contentValues.put(KEY_SPIN_EXTRA_AVAILABLE, spin.isExtraAvailable() ? 1 : 0);
+
+                rowInserted = db.insert(TABLE_SPIN, null, contentValues);
+            }
+
+            if (rowInserted > -1) {
+                db.setTransactionSuccessful();
+            }
+        } finally {
+            db.endTransaction();
+        }
+        db.close();
+
+        return rowInserted > -1;
+    }
+
+    public ArrayList<Spin> getSpins() {
+        ArrayList<Spin> spins = new ArrayList<Spin>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SPIN, null);
+        if (cursor.moveToFirst()) {
+            do {
+                spins.add(parseSpin(cursor));
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+        return spins;
     }
 
     public boolean saveGifts(ArrayList<Gift> gifts) {
@@ -1004,6 +1080,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getString(4),
                 cursor.getString(5),
                 cursor.getInt(6)
+        );
+    }
+
+    private Spin parseSpin(Cursor cursor) {
+        return new Spin(
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4),
+                cursor.getLong(5),
+                cursor.getLong(6),
+                cursor.getInt(7) > 0,
+                cursor.getInt(8) > 0
         );
     }
 

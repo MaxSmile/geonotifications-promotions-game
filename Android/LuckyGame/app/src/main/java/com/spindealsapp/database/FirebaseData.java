@@ -293,6 +293,67 @@ public class FirebaseData {
         EventBus.getDefault().post(new Events.UpdateCoupons());
     }
 
+    public static void getSpins() {
+        Constants.DB_SPIN.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<Spin> spins = new ArrayList<Spin>();
+                final long count = dataSnapshot.getChildrenCount();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    final Spin spin = data.getValue(Spin.class);
+                    if (CurrentUser.user != null) {
+                        long timeShift = Rrule.getTimeStart(spin.getRrule());
+                        Constants.DB_USER.child(CurrentUser.user.getId()).child("place")
+                                .child(spin.getPlaceKey()).child(spin.getId())
+                                .orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                long countSpent = 0;
+
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    UsedSpin usedSpin = data.getValue(UsedSpin.class);
+                                    if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
+                                        countSpent++;
+                                    }
+                                    if (DateUtils.isToday(new Date(usedSpin.getTime())) && usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
+                                        spin.setExtraAvailable(false);
+                                    }
+                                }
+
+                                if (countSpent >= spin.getLimit()) {
+                                    spin.setAvailable(false);
+                                }
+
+                                spin.setSpent(countSpent);
+                                spins.add(spin);
+                                updateSpin(spins, count);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    } else {
+                        spins.add(spin);
+                        updateSpin(spins, count);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void updateSpin(ArrayList<Spin> spins, long count) {
+        if (spins.size() == count) {
+            SpinServiceLayer.saveSpins(spins);
+        }
+    }
+
     public static void getPlaces() {
         Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
             @Override
