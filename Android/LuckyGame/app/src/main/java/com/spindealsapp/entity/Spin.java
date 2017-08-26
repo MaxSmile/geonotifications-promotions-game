@@ -4,14 +4,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by Kvm on 31.05.2017.
  */
 
 public class Spin implements Parcelable {
     private String id;
-    private long dateStart;
-    private long dateFinish;
     private String companyKey;
     private String placeKey;
     private int status;
@@ -23,6 +23,7 @@ public class Spin implements Parcelable {
     private long spent;
     private boolean available = true;
     private boolean extraAvailable = true;
+    private List<Box> box;
 
     public Spin() {
     }
@@ -40,8 +41,6 @@ public class Spin implements Parcelable {
 
     protected Spin(Parcel in) {
         id = in.readString();
-        dateStart = in.readLong();
-        dateFinish = in.readLong();
         companyKey = in.readString();
         placeKey = in.readString();
         status = in.readInt();
@@ -52,6 +51,7 @@ public class Spin implements Parcelable {
         spent = in.readLong();
         available = in.readByte() != 0;
         extraAvailable = in.readByte() != 0;
+        box = in.createTypedArrayList(Box.CREATOR);
     }
 
     public static final Creator<Spin> CREATOR = new Creator<Spin>() {
@@ -72,22 +72,6 @@ public class Spin implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public long getDateStart() {
-        return dateStart;
-    }
-
-    public void setDateStart(long dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public long getDateFinish() {
-        return dateFinish;
-    }
-
-    public void setDateFinish(long dateFinish) {
-        this.dateFinish = dateFinish;
     }
 
     public String getCompanyKey() {
@@ -178,6 +162,14 @@ public class Spin implements Parcelable {
         this.extraAvailable = extraAvailable;
     }
 
+    public List<Box> getBox() {
+        return box;
+    }
+
+    public void setBox(List<Box> box) {
+        this.box = box;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -186,8 +178,6 @@ public class Spin implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeLong(dateStart);
-        dest.writeLong(dateFinish);
         dest.writeString(companyKey);
         dest.writeString(placeKey);
         dest.writeInt(status);
@@ -198,5 +188,6 @@ public class Spin implements Parcelable {
         dest.writeLong(spent);
         dest.writeByte((byte) (available ? 1 : 0));
         dest.writeByte((byte) (extraAvailable ? 1 : 0));
+        dest.writeTypedList(box);
     }
 }

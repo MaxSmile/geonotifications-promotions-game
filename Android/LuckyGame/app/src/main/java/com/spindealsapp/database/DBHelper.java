@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -54,6 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_GIFT_COUNT_AVAILABLE = "countAvailable";
     private static final String KEY_GIFT_ACTIVE = "active";
 
+    private static final String KEY_BOX_SPIN_ID = "spinId";
     private static final String KEY_BOX_COLOR = "color";
     private static final String KEY_BOX_COUNT = "count";
     private static final String KEY_BOX_GIFT = "gift";
@@ -85,15 +86,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_PLACE_DISTANCE = "distance";
     private static final String KEY_PLACE_DISTANCE_STRING = "distanceString";
     private static final String KEY_PLACE_CITY = "city";
-    private static final String KEY_PLACE_SPIN_AVAILABLE = "spinAvailable";
-    private static final String KEY_PLACE_EXTRA_SPIN_AVAILABLE = "extraSpinAvailable";
     private static final String KEY_PLACE_FAVORITES = "favorites";
-    private static final String KEY_PLACE_SPIN_FINISH = "spinFinish";
-    private static final String KEY_PLACE_SPIN_START = "spinStart";
     private static final String KEY_PLACE_INFO_TIMESTAMP = "infoTimestamp";
     private static final String KEY_PLACE_INFO_CHECKED = "infoChecked";
-    private static final String KEY_PLACE_SPIN_ID = "spinId";
-    private static final String KEY_PLACE_RRULE = "rrule";
 
     private static final String KEY_COUPON_STATUS = "status";
     private static final String KEY_COUPON_CODE = "code";
@@ -208,7 +203,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private void createTableBox(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_BOX + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_PLACE_ID  + " text,"
+                + KEY_BOX_SPIN_ID  + " text,"
                 + KEY_BOX_COLOR + " INTEGER,"
                 + KEY_BOX_COUNT + " INTEGER,"
                 + KEY_BOX_GIFT+ " text"
@@ -314,16 +309,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACE_DISTANCE + " real,"
                 + KEY_PLACE_DISTANCE_STRING + " text,"
                 + KEY_PLACE_CITY + " text,"
-                + KEY_PLACE_SPIN_AVAILABLE + " INTEGER,"
-                + KEY_PLACE_EXTRA_SPIN_AVAILABLE + " INTEGER,"
                 + KEY_PLACE_FAVORITES + " INTEGER,"
-                + KEY_PLACE_SPIN_FINISH + " INTEGER,"
-                + KEY_PLACE_SPIN_START + " INTEGER,"
                 + KEY_PLACE_INFO_TIMESTAMP + " INTEGER,"
                 + KEY_PLACE_INFO_CHECKED + " INTEGER,"
                 + KEY_KEYWORDS + " text,"
-                + KEY_PLACE_SPIN_ID + " text,"
-                + KEY_PLACE_RRULE + " text,"
                 + "UNIQUE ("
                 + KEY_PLACE_ID
                 + ") ON CONFLICT REPLACE"
@@ -403,25 +392,74 @@ public class DBHelper extends SQLiteOpenHelper {
         return 0;
     }
 
+    public void updateSpin(Spin spin) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = getSpinValues(spin);
+        db.update(TABLE_SPIN, contentValues, KEY_SPIN_ID + " = ?", new String[] {spin.getId()});
+        db.close();
+    }
+
+    public Spin getSpin(String Id) {
+        Spin spin = new Spin();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                        + TABLE_SPIN
+                        + " WHERE "
+                        + KEY_SPIN_ID
+                        + " = ?"
+                , new String[] {Id});
+        if (cursor.moveToFirst()) {
+            do {
+                spin = parseSpin(cursor);
+            } while (cursor.moveToNext());
+        } else {
+            Log.d(TAG ,"0 rows");
+        }
+
+        cursor.close();
+        db.close();
+        return spin;
+    }
+
+    private ContentValues getSpinValues(Spin spin) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_SPIN_ID, spin.getId());
+        contentValues.put(KEY_SPIN_COMPANY_KEY, spin.getCompanyKey());
+        contentValues.put(KEY_SPIN_PLACE_KEY, spin.getPlaceKey());
+        contentValues.put(KEY_SPIN_LIMIT, spin.getLimit());
+        contentValues.put(KEY_SPIN_RRULE, spin.getRrule());
+        contentValues.put(KEY_SPIN_SPENT, spin.getSpent());
+        contentValues.put(KEY_SPIN_AVAILABLE, spin.isAvailable() ? 1 : 0);
+        contentValues.put(KEY_SPIN_EXTRA_AVAILABLE, spin.isExtraAvailable() ? 1 : 0);
+
+        return contentValues;
+    }
+
+
     public boolean saveSpins(ArrayList<Spin> spins) {
         long rowInserted = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
             db.delete(TABLE_SPIN, null, null);
+            db.delete(TABLE_BOX, null, null);
 
             for (Spin spin: spins) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(KEY_SPIN_ID, spin.getId());
-                contentValues.put(KEY_SPIN_COMPANY_KEY, spin.getCompanyKey());
-                contentValues.put(KEY_SPIN_PLACE_KEY, spin.getPlaceKey());
-                contentValues.put(KEY_SPIN_LIMIT, spin.getLimit());
-                contentValues.put(KEY_SPIN_RRULE, spin.getRrule());
-                contentValues.put(KEY_SPIN_SPENT, spin.getSpent());
-                contentValues.put(KEY_SPIN_AVAILABLE, spin.isAvailable() ? 1 : 0);
-                contentValues.put(KEY_SPIN_EXTRA_AVAILABLE, spin.isExtraAvailable() ? 1 : 0);
+                rowInserted = db.insert(TABLE_SPIN, null, getSpinValues(spin));
 
-                rowInserted = db.insert(TABLE_SPIN, null, contentValues);
+                if (rowInserted > -1) {
+                    List<Box> box = spin.getBox();
+                    if (box != null) {
+                        for (int i = 0; i < box.size(); i++) {
+                            ContentValues boxValues = new ContentValues();
+                            boxValues.put(KEY_BOX_SPIN_ID, spin.getId());
+                            boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
+                            boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
+                            boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
+                            rowInserted = db.insert(TABLE_BOX, null, boxValues);
+                        }
+                    }
+                }
             }
 
             if (rowInserted > -1) {
@@ -441,7 +479,9 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SPIN, null);
         if (cursor.moveToFirst()) {
             do {
-                spins.add(parseSpin(cursor));
+                Spin spin = parseSpin(cursor);
+                spin.setBox(getBox(spin.getId()));
+                spins.add(spin);
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -612,7 +652,6 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             db.delete(TABLE_PLACES, null, null);
             db.delete(TABLE_GALLERY, null, null);
-            db.delete(TABLE_BOX, null, null);
 
             for (Place place : places) {
                 ContentValues contentValues = getPlaceValues(place);
@@ -626,20 +665,6 @@ public class DBHelper extends SQLiteOpenHelper {
                             galleryValues.put(KEY_PLACE_ID, place.getId());
                             galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
                             rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
-                        }
-                    }
-                }
-
-                if (rowInserted > -1) {
-                    List<Box> box = place.getBox();
-                    if (box != null) {
-                        for (int i = 0; i < box.size(); i++) {
-                            ContentValues boxValues = new ContentValues();
-                            boxValues.put(KEY_PLACE_ID, place.getId());
-                            boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
-                            boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
-                            boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
-                            rowInserted = db.insert(TABLE_BOX, null, boxValues);
                         }
                     }
                 }
@@ -680,16 +705,10 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_PLACE_DISTANCE, place.getDistance());
         contentValues.put(KEY_PLACE_DISTANCE_STRING, place.getDistanceString());
         contentValues.put(KEY_PLACE_CITY, place.getCity());
-        contentValues.put(KEY_PLACE_SPIN_AVAILABLE, place.isSpinAvailable() ? 1 : 0);
-        contentValues.put(KEY_PLACE_EXTRA_SPIN_AVAILABLE, place.isExtraSpinAvailable() ? 1 : 0);
         contentValues.put(KEY_PLACE_FAVORITES, place.isFavorites() ? 1 : 0);
-        contentValues.put(KEY_PLACE_SPIN_FINISH, place.getSpinFinish());
-        contentValues.put(KEY_PLACE_SPIN_START, place.getSpinStart());
         contentValues.put(KEY_PLACE_INFO_TIMESTAMP, place.getInfoTimestamp());
         contentValues.put(KEY_PLACE_INFO_CHECKED, place.isInfoChecked() ? 1 : 0);
         contentValues.put(KEY_KEYWORDS, place.getKeywords());
-        contentValues.put(KEY_PLACE_SPIN_ID, place.getSpinId());
-        contentValues.put(KEY_PLACE_RRULE, place.getRrule());
 
         return contentValues;
     }
@@ -720,7 +739,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Place> getOrderPlaces() {
-        HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
+        ArrayList<Place> orderPlaces = new ArrayList<Place>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_PLACES
@@ -731,8 +750,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Place place = parsePlace(cursor);
-                place.setBox(getBox(place.getId()));
-                orderPlaces.put(cursor.getString(4), place);
+                orderPlaces.add(place);
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -741,7 +759,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return new ArrayList<Place>(orderPlaces.values());
+        return orderPlaces;
     }
 
 
@@ -811,7 +829,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (place.getId() != null) {
             place.setGallery(getGallery(place.getId()));
-            place.setBox(getBox(place.getId()));
         }
 
         cursor.close();
@@ -820,15 +837,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return place;
     }
 
-    private List<Box> getBox(String placeId) {
+    private List<Box> getBox(String spinId) {
         List<Box> box = new ArrayList<Box>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_BOX
                         + " WHERE "
-                        + KEY_PLACE_ID
+                        + KEY_BOX_SPIN_ID
                         + " = ?"
-                , new String[] {placeId});
+                , new String[] {spinId});
 
         if (cursor.moveToFirst()) {
             do {
@@ -1149,15 +1166,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getString(21),
                 cursor.getString(22),
                 cursor.getInt(23) > 0,
-                cursor.getInt(24) > 0,
+                cursor.getLong(24),
                 cursor.getInt(25) > 0,
-                cursor.getLong(26),
-                cursor.getLong(27),
-                cursor.getLong(28),
-                cursor.getInt(29) > 0,
-                cursor.getString(30),
-                cursor.getString(31),
-                cursor.getString(32)
+                cursor.getString(26)
         );
 
     }

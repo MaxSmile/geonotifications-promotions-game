@@ -38,7 +38,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
     @Override
     protected void socialSuccess() {
         Intent intent = new Intent(this, GameActivity.class);
-        place.setExtraSpinAvailable(false);
+        place.getSpin().setExtraAvailable(false);
         intent.putExtra(Place.class.getCanonicalName(), place);
         intent.putExtra(Company.class.getCanonicalName(), company);
         intent.putExtra(Gift.class.getCanonicalName(), gifts);

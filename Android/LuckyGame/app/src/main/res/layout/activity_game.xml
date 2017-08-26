@@ -202,7 +202,7 @@
                         android:layout_weight="5"
                         android:layout_height="wrap_content"
                         android:paddingLeft="2dp"
-                        android:text="@{place.spinTimeLeft}"
+                        android:text="@{place.spin.timeLeft}"
                         android:textColor="@color/gameSubText"
                         android:textSize="15sp"
                         android:textStyle="bold"/>

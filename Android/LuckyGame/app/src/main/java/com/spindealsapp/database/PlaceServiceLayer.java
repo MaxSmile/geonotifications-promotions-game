@@ -6,18 +6,21 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.entity.Place;
+import com.spindealsapp.entity.Spin;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.DateFormat;
+import com.spindealsapp.util.DateUtils;
 import com.spindealsapp.util.LocationDistance;
 import com.spindealsapp.R;
-import com.spindealsapp.util.Rrule;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kvm on 27.06.2017.
@@ -26,31 +29,44 @@ import java.util.HashMap;
 public class PlaceServiceLayer {
 
     public static ArrayList<Place> getPlaces() {
-        ArrayList<Place> placesList = DBHelper.getInstance(App.getInstance()).getOrderPlaces();
+        ArrayList<Place> placesList = getPlacesWithSpin();
         Collections.sort(placesList, new PlaceComparator());
-        TypedArray spinIcon = App.getInstance().getResources().obtainTypedArray(R.array.spin_type_icon);
-        String[] spinType = App.getInstance().getResources().getStringArray(R.array.spin_type);
         for (int i = 0; i < placesList.size(); i++) {
             Place place = placesList.get(i);
-            updatePlace(place, spinIcon, spinType);
+            updatePlace(place);
         }
-        spinIcon.recycle();
-
        return placesList;
+    }
+
+    private static ArrayList<Place> getPlacesWithSpin() {
+        ArrayList<Place> placesList = DBHelper.getInstance(App.getInstance()).getOrderPlaces();
+        Map<String, Spin> spins = SpinServiceLayer.getSpins();
+        HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
+        for (Place place : placesList) {
+            if (spins.get(place.getId()) != null) {
+                place.setSpin(spins.get(place.getId()));
+                orderPlaces.put(place.getCompanyKey(), place);
+            } else if (orderPlaces.get(place.getCompanyKey()) == null) {
+                place.setSpin(SpinServiceLayer.getSpinComing());
+                orderPlaces.put(place.getCompanyKey(), place);
+            }
+        }
+        return new ArrayList<Place>(orderPlaces.values());
     }
 
     public static Place getPlace(String id) {
         Place place = DBHelper.getInstance(App.getInstance()).getPlace(id);
-        TypedArray spinIcon = App.getInstance().getResources().obtainTypedArray(R.array.spin_type_icon);
-        String[] spinType = App.getInstance().getResources().getStringArray(R.array.spin_type);
-
-        updatePlace(place, spinIcon, spinType);
-
-        spinIcon.recycle();
+        Map<String, Spin> spins = SpinServiceLayer.getSpins();
+        if (spins.get(place.getId()) != null) {
+            place.setSpin(spins.get(place.getId()));
+        } else {
+            place.setSpin(SpinServiceLayer.getSpinComing());
+        }
+        updatePlace(place);
         return place;
     }
 
-    private static void updatePlace(Place place, TypedArray spinIcon, String[] spinType) {
+    private static void updatePlace(Place place) {
         if (CurrentLocation.lat != 0) {
             if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
                 place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
@@ -59,20 +75,6 @@ public class PlaceServiceLayer {
                         place.getGeoLat(), place.getGeoLon()));
             }
         }
-
-        if (place.getRrule() != null && Rrule.isAvailable(place.getRrule())) {
-            if (place.isSpinAvailable()) {
-                place.setSpinStatus(Constants.SPIN_STATUS_ACTIVE);
-            } else {
-                place.setSpinStatus(Constants.SPIN_STATUS_EXTRA_AVAILABLE);
-            }
-        } else {
-            place.setSpinStatus(Constants.SPIN_STATUS_COMING);
-        }
-
-        place.setSpinStatusIcon(spinIcon.getDrawable(place.getSpinStatus()));
-        place.setSpinStatusString(spinType[place.getSpinStatus()]);
-        place.setSpinTimeLeft(DateFormat.getDiff(place.getSpinFinish()));
     }
 
     private static class PlaceComparator implements Comparator<Place> {

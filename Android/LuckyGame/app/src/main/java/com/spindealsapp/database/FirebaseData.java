@@ -320,10 +320,6 @@ public class FirebaseData {
                                     }
                                 }
 
-                                if (countSpent >= spin.getLimit()) {
-                                    spin.setAvailable(false);
-                                }
-
                                 spin.setSpent(countSpent);
                                 spins.add(spin);
                                 updateSpin(spins, count);
@@ -358,75 +354,13 @@ public class FirebaseData {
         Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final ArrayList<Place> places = new ArrayList<Place>();
-                final long count = dataSnapshot.getChildrenCount();
+                ArrayList<Place> places = new ArrayList<Place>();
+                long count = dataSnapshot.getChildrenCount();
                 for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
-                    final Place place = dataPlace.getValue(Place.class);
-                    Constants.DB_SPIN.orderByChild("placeKey").equalTo(place.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getChildrenCount() == 0) {
-                                addPlace(places, place, count);
-                            }
-
-                            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                final Spin spin = data.getValue(Spin.class);
-                                place.setSpinFinish(spin.getDateFinish());
-                                place.setRrule(spin.getRrule());
-                                place.setSpinId(spin.getId());
-                                if (Rrule.isAvailable(spin.getRrule())) {
-                                    if (CurrentUser.user != null) {
-                                        long timeShift = Rrule.getTimeStart(spin.getRrule());
-                                        Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
-                                                .child(spin.getId()).orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                boolean spinAvailable = true;
-                                                boolean extraSpinAvailable = true;
-                                                int count = 0;
-
-                                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                                    UsedSpin usedSpin = data.getValue(UsedSpin.class);
-                                                    if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
-                                                        count++;
-                                                    }
-
-                                                    if (DateUtils.isToday(new Date(usedSpin.getTime())) && usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
-                                                        extraSpinAvailable = false;
-                                                    }
-                                                }
-
-                                                if (count >= spin.getLimit()) {
-                                                    spinAvailable = false;
-                                                }
-
-                                                place.setSpinAvailable(spinAvailable);
-                                                place.setExtraSpinAvailable(extraSpinAvailable);
-
-                                                addPlace(places, place, count);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                                    } else {
-                                        place.setSpinAvailable(true);
-                                        addPlace(places, place, count);
-                                    }
-                                } else {
-                                    addPlace(places, place, count);
-                                }
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                    places.add(dataPlace.getValue(Place.class));
+                    if (count == places.size()) {
+                        PlaceServiceLayer.updatePlaces(places);
+                    }
                 }
             }
 
@@ -436,14 +370,6 @@ public class FirebaseData {
             }
         });
     }
-
-    private static void addPlace(ArrayList<Place> places, Place place, long count) {
-        places.add(place);
-        if (count == places.size()) {
-            PlaceServiceLayer.updatePlaces(places);
-        }
-    }
-
 
     public static void getGift() {
         Constants.DB_GIFT.addValueEventListener(new ValueEventListener() {

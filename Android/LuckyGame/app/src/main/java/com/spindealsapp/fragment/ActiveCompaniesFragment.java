@@ -103,8 +103,8 @@ public class ActiveCompaniesFragment extends Fragment {
     }
 
     private void refreshData() {
-        ArrayList<Spin> spins = SpinServiceLayer.getSpins();
         newPlaces = PlaceServiceLayer.getPlaces();
+
         removeInactive();
         filterData();
     }
@@ -113,7 +113,7 @@ public class ActiveCompaniesFragment extends Fragment {
         Iterator<Place> iterator = newPlaces.iterator();
         while (iterator.hasNext()) {
             Place place = iterator.next();
-            if (!place.isSpinAvailable() || place.getBox().size() == 0) {
+            if (!place.getSpin().isAvailable() || place.getSpin().getBox().size() == 0) {
                 iterator.remove();
             }
         }

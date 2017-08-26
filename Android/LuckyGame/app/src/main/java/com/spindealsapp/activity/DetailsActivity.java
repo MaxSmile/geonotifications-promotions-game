@@ -69,6 +69,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private HashMap<String, Place> otherPlacesCompany;
     private ArrayList<String> otherList;
     private ListView detailsOtherPlaces;
+    private List<Box> boxes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,9 +141,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private void refreshData() {
         place = PlaceServiceLayer.getPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
+        boxes = place.getSpin().getBox();
         if (place.getCompanyKey() != null) {
             gifts = GiftServiceLayer.getGifts(place);
-            List<Box> boxes = place.getBox();
             Iterator<Box> iterator = boxes.iterator();
             while (iterator.hasNext()) {
                 Box box = iterator.next();
@@ -159,7 +160,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             binding.setCountCoupons(countCoupons);
             binding.setPlace(place);
             binding.setCompany(company);
-            if ((place.isSpinAvailable() || geoNotification) && place.getBox().size() > 0) {
+            if ((place.getSpin().isAvailable() || geoNotification) && place.getSpin().getBox().size() > 0) {
                 detailsBtnPlay.startAnimation(rotateAnim);
             } else {
                 detailsBtnPlay.clearAnimation();
@@ -205,7 +206,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void showGifts(View view) {
-        if (place.getBox().size() > 0) {
+        if (boxes.size() > 0) {
             Intent intent = new Intent(this, LegendActivity.class);
             intent.putExtra(Place.class.getCanonicalName(), place);
             intent.putExtra(Company.class.getCanonicalName(), company);
@@ -217,8 +218,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void goToPlay(View view) {
         if (NetworkState.isOnline()) {
-            if (place.getBox().size() > 0) {
-                if (place.getSpinStatus() != Constants.SPIN_STATUS_COMING || geoNotification) {
+            if (boxes.size() > 0) {
+                if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING || geoNotification) {
                     startGame();
                 } else {
                     Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
@@ -234,14 +235,14 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private void startGame() {
         if (CurrentUser.user != null) {
-            if (place.isSpinAvailable() || geoNotification) {
+            if (place.getSpin().isAvailable() || geoNotification) {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra(Company.class.getCanonicalName(), company);
                 intent.putExtra(Gift.class.getCanonicalName(), gifts);
 
                 int type = Constants.SPIN_TYPE_NORMAL;
                 if (geoNotification) {
-                    place.setExtraSpinAvailable(false);
+                    place.getSpin().setExtraAvailable(false);
                     type = Constants.SPIN_TYPE_EXTRA;
                     geoNotification = false;
                 }
@@ -375,8 +376,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     public void getExtraSpin(View view) {
         if (NetworkState.isOnline()) {
             if (CurrentUser.user != null) {
-                if (place.getSpinStatus() != Constants.SPIN_STATUS_COMING) {
-                    if (place.isExtraSpinAvailable()) {
+                if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING) {
+                    if (place.getSpin().isExtraAvailable()) {
                         Intent intent = new Intent(this, ExtraSpinActivity.class);
                         intent.putExtra(Place.class.getCanonicalName(), place);
                         intent.putExtra(Company.class.getCanonicalName(), company);

@@ -33,7 +33,7 @@ public class LegendActivity extends BaseActivity {
         Company company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
         HashMap<String, Gift> gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
 
-        List<Box> boxes = place.getBox();
+        List<Box> boxes = place.getSpin().getBox();
 
         ActivityLegendBinding binding = DataBindingUtil.setContentView(LegendActivity.this, R.layout.activity_legend);
         binding.setCompany(company);

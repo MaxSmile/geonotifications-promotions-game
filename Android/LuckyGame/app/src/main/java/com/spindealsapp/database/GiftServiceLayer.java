@@ -17,7 +17,7 @@ public class GiftServiceLayer {
     public static HashMap<String, Gift> getGifts(Place place) {
         HashMap<String, Gift> gifts = new HashMap<String, Gift>();
         HashMap<String, Gift> giftsCompany = DBHelper.getInstance(App.getInstance()).getGifts(place.getCompanyKey());
-        List<Box> boxes = place.getBox();
+        List<Box> boxes = place.getSpin().getBox();
         for (int i = 0; i < boxes.size(); i++) {
             String giftId = boxes.get(i).getGift();
             Gift gift = giftsCompany.get(giftId);

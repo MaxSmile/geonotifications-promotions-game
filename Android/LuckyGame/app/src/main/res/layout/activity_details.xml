@@ -498,17 +498,17 @@
                     android:textColor="@color/colorDetailsTitle"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}"/>
+                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{place.spinTimeLeft}"
+                    android:text="@{place.spin.timeLeft}"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorDetailsTextInfo"
                     android:layout_below="@+id/detailsBtnPlay"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{place.spinStatus == Constants.SPIN_STATUS_COMING || countGift == 0  ? v.GONE : v.VISIBLE}"/>
+                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_COMING || countGift == 0  ? v.GONE : v.VISIBLE}"/>
             </RelativeLayout>
 
             <LinearLayout

@@ -123,7 +123,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
         binding.setPlace(place);
-        binding.setCountGift(place.getBox().size());
+        binding.setCountGift(place.getSpin().getBox().size());
         binding.setCountCoupons(countCoupons);
 
         binding.setHandler(this);
@@ -193,7 +193,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private void initData() {
         Arrays.fill(colorBox, -1);
         int i = 0;
-        List<Box> boxes = place.getBox();
+        List<Box> boxes = place.getSpin().getBox();
         for (int j = 0; j < boxes.size(); j++) {
             Box box = boxes.get(j);
             for (int k = 0; k < box.getCount(); k++) {
@@ -462,7 +462,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     }
 
     public void getExtra() {
-        if (place.isExtraSpinAvailable()) {
+        if (place.getSpin().isExtraAvailable()) {
             Intent intent = new Intent(this, ExtraSpinActivity.class);
             intent.putExtra(Place.class.getCanonicalName(), place);
             intent.putExtra(Company.class.getCanonicalName(), company);
@@ -514,15 +514,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
         Constants.DB_USER.child(CurrentUser.user.getId()).child("userInfo").setValue(CurrentUser.user);
         Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
-                .child(place.getSpinId()).child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
+                .child(place.getSpin().getId()).child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
         if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
-            place.setExtraSpinAvailable(false);
+            place.getSpin().setExtraAvailable(false);
         } else {
-            place.setSpinAvailable(false);
+            place.getSpin().setAvailable(false);
         }
-        DBHelper.getInstance(this).updatePlace(place);
+        DBHelper.getInstance(this).updateSpin(place.getSpin());
         EventBus.getDefault().postSticky(new Events.UpdateSpinAvailable());
-
     }
 
     @Override
