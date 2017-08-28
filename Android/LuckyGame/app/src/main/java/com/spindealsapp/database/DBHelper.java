@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -45,14 +45,13 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_KEYWORDS = "keywords";
 
     private static final String KEY_GIFT_ID = "id";
-    private static final String KEY_GIFT_DATE_START = "dateStart";
-    private static final String KEY_GIFT_DATE_FINISH = "dateFinish";
     private static final String KEY_GIFT_DESCRIPTION = "description";
     private static final String KEY_GIFT_TIME_LOCK = "timeLock";
     private static final String KEY_GIFT_RULES = "rules";
     private static final String KEY_GIFT_LIMIT_GIFTS = "limitGifts";
     private static final String KEY_GIFT_COUNT_AVAILABLE = "countAvailable";
-    private static final String KEY_GIFT_ACTIVE = "active";
+    private static final String KEY_GIFT_SPIN_KEY = "spinKey";
+    private static final String KEY_GIFT_EXPIRATION_TIME = "expirationTime";
 
     private static final String KEY_BOX_SPIN_ID = "spinId";
     private static final String KEY_BOX_COLOR = "color";
@@ -112,6 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_COUPON_CITY = "city";
     private static final String KEY_COUPON_RULES = "rules";
     private static final String KEY_COUPON_COUPON_TYPE = "couponType";
+    private static final String KEY_COUPON_RRULE = "rrule";
 
     private static final String KEY_SPIN_ID = "id";
     private static final String KEY_SPIN_COMPANY_KEY = "companyKey";
@@ -188,15 +188,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_GIFT + "("
                 + KEY_ID + " integer primary key,"
                 + KEY_GIFT_ID  + " text,"
-                + KEY_GIFT_DATE_START + " INTEGER,"
-                + KEY_GIFT_DATE_FINISH + " INTEGER,"
                 + KEY_COMPANY_ID + " text,"
                 + KEY_GIFT_DESCRIPTION + " text,"
                 + KEY_GIFT_TIME_LOCK + " INTEGER,"
                 + KEY_GIFT_RULES + " text,"
                 + KEY_GIFT_LIMIT_GIFTS + " INTEGER,"
                 + KEY_GIFT_COUNT_AVAILABLE + " INTEGER,"
-                + KEY_GIFT_ACTIVE + " INTEGER"
+                + KEY_GIFT_SPIN_KEY + " text,"
+                + KEY_GIFT_EXPIRATION_TIME + " INTEGER"
                 + ")");
     }
 
@@ -267,6 +266,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_COUPON_RULES + " text,"
                 + KEY_COUPON_COUPON_TYPE + " INTEGER,"
                 + KEY_KEYWORDS + " text,"
+                + KEY_COUPON_RRULE + " text,"
                 + "UNIQUE ("
                 + KEY_COUPON_CODE
                 + ") ON CONFLICT REPLACE"
@@ -502,15 +502,14 @@ public class DBHelper extends SQLiteOpenHelper {
             for (Gift gift: gifts) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(KEY_GIFT_ID, gift.getId());
-                contentValues.put(KEY_GIFT_DATE_START, gift.getDateStart());
-                contentValues.put(KEY_GIFT_DATE_FINISH, gift.getDateFinish());
                 contentValues.put(KEY_COMPANY_ID, gift.getCompanyKey());
                 contentValues.put(KEY_GIFT_DESCRIPTION, gift.getDescription());
                 contentValues.put(KEY_GIFT_TIME_LOCK, gift.getTimeLock());
                 contentValues.put(KEY_GIFT_RULES, gift.getRules());
                 contentValues.put(KEY_GIFT_LIMIT_GIFTS, gift.getLimitGifts());
                 contentValues.put(KEY_GIFT_COUNT_AVAILABLE, gift.getCountAvailable());
-                contentValues.put(KEY_GIFT_ACTIVE, gift.isActive() ? 1 : 0);
+                contentValues.put(KEY_GIFT_SPIN_KEY , gift.getSpinKey());
+                contentValues.put(KEY_GIFT_EXPIRATION_TIME , gift.getExpirationTime());
 
                 rowInserted = db.insert(TABLE_GIFT, null, contentValues);
             }
@@ -526,15 +525,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return rowInserted > -1;
     }
 
-    public HashMap<String, Gift> getGifts(String companyId) {
+    public HashMap<String, Gift> getGifts(String spinId) {
         HashMap<String, Gift> gifts = new HashMap<String, Gift>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_GIFT
                         + " WHERE "
-                        + KEY_COMPANY_ID
+                        + KEY_GIFT_SPIN_KEY
                         + " = ?"
-                , new String[] {companyId});
+                , new String[] {spinId});
         if (cursor.moveToFirst()) {
             do {
                 gifts.put(cursor.getString(1), parseGift(cursor));
@@ -941,6 +940,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_COUPON_RULES, coupon.getRules());
         contentValues.put(KEY_COUPON_COUPON_TYPE, coupon.getCouponType());
         contentValues.put(KEY_KEYWORDS, coupon.getKeywords());
+        contentValues.put(KEY_COUPON_RRULE, coupon.getRrule());
 
         db.insert(TABLE_COUPONS, null, contentValues);
     }
@@ -1069,15 +1069,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private Gift parseGift(Cursor cursor) {
         return new Gift(
                 cursor.getString(1),
-                cursor.getLong(2),
-                cursor.getLong(3),
-                cursor.getString(4),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getLong(4),
                 cursor.getString(5),
                 cursor.getLong(6),
-                cursor.getString(7),
-                cursor.getLong(8),
-                cursor.getLong(9),
-                cursor.getInt(10) > 0
+                cursor.getLong(7),
+                cursor.getString(8),
+                cursor.getLong(9)
         );
     }
 
@@ -1137,7 +1136,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getString(20),
                 cursor.getString(21),
                 cursor.getInt(22),
-                cursor.getString(23)
+                cursor.getString(23),
+                cursor.getString(24)
         );
     }
 

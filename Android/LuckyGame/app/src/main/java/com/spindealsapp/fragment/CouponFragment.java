@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
@@ -31,6 +32,7 @@ import com.spindealsapp.util.LocationDistance;
 import com.spindealsapp.util.NetworkState;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.FragmentCouponBinding;
+import com.spindealsapp.util.Rrule;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -119,7 +121,11 @@ public class CouponFragment extends Fragment implements CouponHandler {
                     intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
                     startActivity(intent);
                 } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE) {
-                    showPopUp();
+                    if (Rrule.isAvailable(coupon.getRrule())) {
+                        showPopUp();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.coupon_not_available, Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 startActivity(new Intent(getActivity(), ChooseAccountActivity.class));

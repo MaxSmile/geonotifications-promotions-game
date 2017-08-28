@@ -10,36 +10,33 @@ import android.os.Parcelable;
 public class Gift implements Parcelable {
 
     private String id;
-    private long dateStart;
-    private long dateFinish;
     private String companyKey;
     private String description;
     private long timeLock;
     private String rules;
     private long limitGifts;
     private long countAvailable;
+    private String spinKey;
+    private long expirationTime;
     private boolean active;
 
     public Gift() {
     }
 
-    public Gift(String id, long dateStart, long dateFinish, String companyKey, String description, long timeLock, String rules, long limitGifts, long countAvailable, boolean active) {
+    public Gift(String id, String companyKey, String description, long timeLock, String rules, long limitGifts, long countAvailable, String spinKey, long expirationTime) {
         this.id = id;
-        this.dateStart = dateStart;
-        this.dateFinish = dateFinish;
         this.companyKey = companyKey;
         this.description = description;
         this.timeLock = timeLock;
         this.rules = rules;
         this.limitGifts = limitGifts;
         this.countAvailable = countAvailable;
-        this.active = active;
+        this.spinKey = spinKey;
+        this.expirationTime = expirationTime;
     }
 
     protected Gift(Parcel in) {
         id = in.readString();
-        dateStart = in.readLong();
-        dateFinish = in.readLong();
         companyKey = in.readString();
         description = in.readString();
         timeLock = in.readLong();
@@ -47,6 +44,8 @@ public class Gift implements Parcelable {
         limitGifts = in.readLong();
         countAvailable = in.readLong();
         active = in.readByte() != 0;
+        spinKey = in.readString();
+        expirationTime = in.readLong();
     }
 
     public static final Creator<Gift> CREATOR = new Creator<Gift>() {
@@ -67,22 +66,6 @@ public class Gift implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public long getDateStart() {
-        return dateStart;
-    }
-
-    public void setDateStart(long dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public long getDateFinish() {
-        return dateFinish;
-    }
-
-    public void setDateFinish(long dateFinish) {
-        this.dateFinish = dateFinish;
     }
 
     public String getCompanyKey() {
@@ -141,6 +124,22 @@ public class Gift implements Parcelable {
         this.active = active;
     }
 
+    public String getSpinKey() {
+        return spinKey;
+    }
+
+    public void setSpinKey(String spinKey) {
+        this.spinKey = spinKey;
+    }
+
+    public long getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(long expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -149,8 +148,6 @@ public class Gift implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeLong(dateStart);
-        dest.writeLong(dateFinish);
         dest.writeString(companyKey);
         dest.writeString(description);
         dest.writeLong(timeLock);
@@ -158,5 +155,7 @@ public class Gift implements Parcelable {
         dest.writeLong(limitGifts);
         dest.writeLong(countAvailable);
         dest.writeByte((byte) (active ? 1 : 0));
+        dest.writeString(spinKey);
+        dest.writeLong(expirationTime);
     }
 }

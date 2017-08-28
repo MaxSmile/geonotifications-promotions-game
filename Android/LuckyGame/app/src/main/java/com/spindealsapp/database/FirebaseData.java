@@ -371,43 +371,56 @@ public class FirebaseData {
         });
     }
 
+    private static void updateGift(ArrayList<Gift> gifts, long count) {
+        if (gifts.size() == count) {
+
+        }
+    }
+
     public static void getGift() {
-        Constants.DB_GIFT.addValueEventListener(new ValueEventListener() {
+        Constants.DB_GIFT.orderByChild("spinKey").startAt("1").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<Gift> gifts = new ArrayList<Gift>();
                 final long count = dataSnapshot.getChildrenCount();
                 for (DataSnapshot dataGift : dataSnapshot.getChildren()) {
                     final Gift gift = dataGift.getValue(Gift.class);
-                    String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
-                    Constants.DB_LIMIT.child(gift.getCompanyKey()).child(limitKey).child(gift.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    Constants.DB_SPIN.child(gift.getSpinKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (gift.getDateStart() < System.currentTimeMillis() && gift.getDateFinish() > System.currentTimeMillis()) {
-                                gift.setActive(true);
-                                long countLimit = 0;
-                                if (dataSnapshot.exists()) {
-                                    countLimit = dataSnapshot.getValue(Long.class);
+                            Spin spin = dataSnapshot.getValue(Spin.class);
+                            long timeShift = Rrule.getTimeStart(spin.getRrule());
+                            Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
+                                    .orderByChild("date").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    long countSpent = 0;
+                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                        long value = (long)data.child("value").getValue();
+                                        countSpent += value;
+                                    }
+                                    long countAvailable = gift.getLimitGifts() - countSpent;
+
+                                    if (countAvailable > 0) {
+                                        gift.setActive(true);
+                                    } else {
+                                        gift.setActive(false);
+                                        countAvailable = 0;
+                                    }
+                                    gift.setCountAvailable(countAvailable);
+                                    gifts.add(gift);
+
+                                    if (gifts.size() == count) {
+                                        DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
+                                    }
+
                                 }
-                                long countAvailable = gift.getLimitGifts() - countLimit;
 
-                                if (countAvailable > 0) {
-                                    gift.setActive(true);
-                                } else {
-                                    gift.setActive(false);
-                                    countAvailable = 0;
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
                                 }
-                                gift.setCountAvailable(countAvailable);
-
-                            } else {
-                                gift.setActive(false);
-                            }
-
-                            gifts.add(gift);
-
-                            if (gifts.size() == count) {
-                                DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
-                            }
+                            });
                         }
 
                         @Override

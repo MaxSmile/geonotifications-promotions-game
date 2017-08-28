@@ -218,14 +218,14 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void goToPlay(View view) {
         if (NetworkState.isOnline()) {
-            if (boxes.size() > 0) {
-                if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING || geoNotification) {
+            if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING || geoNotification) {
+                if (boxes.size() > 0) {
                     startGame();
                 } else {
-                    Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
             }
         } else {
             startActivity(new Intent(this, NetworkActivity.class));

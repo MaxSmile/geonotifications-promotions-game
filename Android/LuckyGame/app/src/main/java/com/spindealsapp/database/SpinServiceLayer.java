@@ -54,6 +54,7 @@ public class SpinServiceLayer {
 
     public static Spin getSpinComing() {
         Spin spin = new Spin();
+        spin.setId("0");
         spin.setAvailable(false);
         spin.setExtraAvailable(false);
         TypedArray spinIcon = App.getInstance().getResources().obtainTypedArray(R.array.spin_type_icon);

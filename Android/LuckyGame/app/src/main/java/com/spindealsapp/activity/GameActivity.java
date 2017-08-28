@@ -43,18 +43,21 @@ import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Coupon;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.entity.Gift;
+import com.spindealsapp.entity.GiftLimit;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.entity.UsedSpin;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityGameBinding;
+import com.spindealsapp.util.DateUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
@@ -333,9 +336,10 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 gift.getDescription(),
                 CurrentUser.user.getId(),
                 System.currentTimeMillis(),
-                gift.getDateFinish(),
+                System.currentTimeMillis() + gift.getExpirationTime(),
                 lockTime,
-                lock
+                lock,
+                place.getSpin().getRrule()
         );
 
         CouponExtension couponExtension = new CouponExtension(
@@ -347,7 +351,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 gift.getDescription(),
                 CurrentUser.user.getId(),
                 System.currentTimeMillis(),
-                gift.getDateFinish(),
+                System.currentTimeMillis() + gift.getExpirationTime(),
                 lockTime,
                 company.getName(),
                 place.getName(),
@@ -361,12 +365,13 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                 place.getCity(),
                 gift.getRules(),
                 Constants.COUPON_TYPE_NORMAL,
-                place.getKeywords()
+                place.getKeywords(),
+                place.getSpin().getRrule()
         );
 
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
         dbHelper.saveCoupon(couponExtension);
-        setLimit(coupon);
+        setLimit(gift);
     }
 
     private void goToCoupon() {
@@ -397,16 +402,19 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
 
 
-    private void setLimit(final Coupon coupon) {
-        final String limitKey = DateFormat.getDate("yyyyMMdd", System.currentTimeMillis());
-        Constants.DB_LIMIT.child(company.getId()).child(limitKey).child(coupon.getGiftKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void setLimit(final Gift gift) {
+        final String timeKey = String.valueOf(DateUtils.getStart(new Date()).getTime());
+        Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
+                .child(timeKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long countLimit = 1;
+                GiftLimit giftLimit = new GiftLimit(DateUtils.getStart(new Date()).getTime(), 1);
                 if (dataSnapshot.exists()) {
-                    countLimit = dataSnapshot.getValue(Long.class) + 1;
+                    giftLimit = dataSnapshot.getValue(GiftLimit.class);
+                    giftLimit.setValue(giftLimit.getValue() + 1);
                 }
-                Constants.DB_LIMIT.child(company.getId()).child(limitKey).child(coupon.getGiftKey()).setValue(countLimit);
+                Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
+                        .child(timeKey).setValue(giftLimit);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class Spin implements Parcelable {
     private long spent;
     private boolean available = true;
     private boolean extraAvailable = true;
-    private List<Box> box;
+    private List<Box> box = new ArrayList<Box>();
 
     public Spin() {
     }

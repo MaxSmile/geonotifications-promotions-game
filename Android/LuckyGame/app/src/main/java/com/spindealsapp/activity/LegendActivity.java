@@ -54,12 +54,12 @@ public class LegendActivity extends BaseActivity {
                     .setText(gift.getDescription());
 
             String subText;
-            if (gift.getCountAvailable() < 70) {
+            if (gift.getCountAvailable() < 10) {
                 subText = String.format(getResources().getString(R.string.gifts_left),
                         gift.getCountAvailable());
             } else {
                 subText = String.format(getResources().getString(R.string.finish_on),
-                        DateFormat.getDate("dd/MM/yyyy", gift.getDateFinish()));
+                        DateFormat.getDate("dd/MM/yyyy", System.currentTimeMillis() + gift.getExpirationTime()));
             }
 
             ((TextView)rowLayout.findViewById(R.id.legendRowSubText))
