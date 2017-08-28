@@ -40,6 +40,7 @@ import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.NetworkState;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityDetailsBinding;
+import com.spindealsapp.util.Rrule;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -235,7 +236,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private void startGame() {
         if (CurrentUser.user != null) {
-            if (place.getSpin().isAvailable() || geoNotification) {
+            if (place.getSpin().isAvailable() || (geoNotification && Rrule.isAvailable(place.getSpin().getRrule()))) {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra(Company.class.getCanonicalName(), company);
                 intent.putExtra(Gift.class.getCanonicalName(), gifts);

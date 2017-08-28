@@ -373,7 +373,7 @@ public class FirebaseData {
 
     private static void updateGift(ArrayList<Gift> gifts, long count) {
         if (gifts.size() == count) {
-
+            DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
         }
     }
 
@@ -389,38 +389,40 @@ public class FirebaseData {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Spin spin = dataSnapshot.getValue(Spin.class);
-                            long timeShift = Rrule.getTimeStart(spin.getRrule());
-                            Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
-                                    .orderByChild("date").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    long countSpent = 0;
-                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                        long value = (long)data.child("value").getValue();
-                                        countSpent += value;
+                            if (spin != null) {
+                                long timeShift = Rrule.getTimeStart(spin.getRrule());
+                                Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
+                                        .orderByChild("date").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        long countSpent = 0;
+                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                            long value = (long)data.child("value").getValue();
+                                            countSpent += value;
+                                        }
+                                        long countAvailable = gift.getLimitGifts() - countSpent;
+
+                                        if (countAvailable > 0) {
+                                            gift.setActive(true);
+                                        } else {
+                                            gift.setActive(false);
+                                            countAvailable = 0;
+                                        }
+                                        gift.setCountAvailable(countAvailable);
+                                        gifts.add(gift);
+
+                                        updateGift(gifts, count);
                                     }
-                                    long countAvailable = gift.getLimitGifts() - countSpent;
 
-                                    if (countAvailable > 0) {
-                                        gift.setActive(true);
-                                    } else {
-                                        gift.setActive(false);
-                                        countAvailable = 0;
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
                                     }
-                                    gift.setCountAvailable(countAvailable);
-                                    gifts.add(gift);
-
-                                    if (gifts.size() == count) {
-                                        DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
-                                    }
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+                                });
+                            } else {
+                                gifts.add(gift);
+                                updateGift(gifts, count);
+                            }
                         }
 
                         @Override

@@ -155,4 +155,5 @@
     <string name="login_dialog_title">Attention</string>
     <string name="login_dialog_message">To continue need to login</string>
     <string name="ok">Ok</string>
+    <string name="coupon_not_available">Το κουπόνι δεν είναι διαθέσιμο σήμερα</string>
 </resources>
