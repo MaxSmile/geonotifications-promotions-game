@@ -27,10 +27,17 @@ public class Rrule {
         RecurrenceRule rrule = getRRule(rruleString);
         Recurrence recur = rrule.getValue();
         Map<String, List<String>> map = recur.getXRules();
-        DateIterator it = rrule.getDateIterator(ICalDateFormat.parse(map.get("DTSTART").get(0)) , TimeZone.getDefault());
+        Date start = new Date();
+        if (map.size() > 0) {
+            start = ICalDateFormat.parse(map.get("DTSTART").get(0));
+        }
+        DateIterator it = rrule.getDateIterator(start , TimeZone.getDefault());
         boolean isAvailable = false;
         while (it.hasNext()) {
             Date date =  it.next();
+            if (date.getTime() > new Date().getTime()) {
+                return isAvailable;
+            }
             if (DateUtils.isToday(date)) {
                 isAvailable = true;
             }
@@ -56,6 +63,63 @@ public class Rrule {
         return 0;
     }
 
+    public static long getTimeEnd(String rruleString) {
+        RecurrenceRule rrule = getRRule(rruleString);
+        Recurrence recur = rrule.getValue();
+        Frequency freq = recur.getFrequency();
+        Calendar calEnd = clearEndCalendar();
+        if (recur.getByMonthDay().size() > 0 || freq == Frequency.DAILY) {
+            return calEnd.getTimeInMillis();
+        } else {
+            Map <String, List<String>>map = recur.getXRules();
+            Date start = new Date();
+            if (map.size() > 0) {
+                start = ICalDateFormat.parse(map.get("DTSTART").get(0));
+            }
+            TimeZone timezone = TimeZone.getDefault();
+            DateIterator it = rrule.getDateIterator(start , timezone);
+            Calendar calStart = clearCalendar();
+
+            long previous = calStart.getTimeInMillis();
+            long endPeriod = getTimeEndPeriod(freq);
+            long today = calStart.getTimeInMillis();
+            long endContinuousPeriod = calEnd.getTimeInMillis();
+            while (it.hasNext()) {
+                Date date =  it.next();
+                long time = date.getTime();
+                if (time >= today) {
+                    if ((time - previous) > 86400000 || time > endPeriod) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(previous);
+                        cal.set(Calendar.HOUR_OF_DAY, 23);
+                        cal.set(Calendar.MINUTE, 59);
+                        cal.set(Calendar.SECOND, 59);
+                        cal.clear(Calendar.MILLISECOND);
+                        endContinuousPeriod = cal.getTimeInMillis();
+                        return endContinuousPeriod;
+                    }
+                    previous = time;
+                }
+            }
+            return endContinuousPeriod;
+        }
+    }
+
+    public static long getTimeEndPeriod(Frequency freq) {
+        Calendar cal = clearEndCalendar();
+        switch (freq) {
+            case DAILY:
+                return cal.getTimeInMillis();
+            case WEEKLY:
+                cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek() - 1);
+                return cal.getTimeInMillis();
+            case MONTHLY:
+                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                return cal.getTimeInMillis();
+        }
+        return 0;
+    }
+
     private static RecurrenceRule getRRule(String rruleString) {
         RecurrenceRuleScribe scribe = new RecurrenceRuleScribe();
         ParseContext context = new ParseContext();
@@ -65,9 +129,20 @@ public class Rrule {
 
     private static Calendar clearCalendar() {
         Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+        return cal;
+    }
+
+    private static Calendar clearEndCalendar() {
+        Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
         cal.clear(Calendar.MILLISECOND);
         return cal;
     }

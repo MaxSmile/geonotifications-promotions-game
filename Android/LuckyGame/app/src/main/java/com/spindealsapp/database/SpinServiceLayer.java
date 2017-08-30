@@ -32,6 +32,7 @@ public class SpinServiceLayer {
         String[] spinType = App.getInstance().getResources().getStringArray(R.array.spin_type);
         for (Spin spin : spins) {
             if (Rrule.isAvailable(spin.getRrule())) {
+                spin.setTimeLeft(DateFormat.getDiff(Rrule.getTimeEnd(spin.getRrule())));
                 if (spin.getSpent() < spin.getLimit()) {
                     updateSpin(spin, spinIcon, spinType);
                     mSpins.put(spin.getPlaceKey(), spin);
@@ -77,6 +78,5 @@ public class SpinServiceLayer {
 
         spin.setStatusIcon(spinIcon.getDrawable(spin.getStatus()));
         spin.setStatusString(spinType[spin.getStatus()]);
-        spin.setTimeLeft(DateFormat.getDiff(DateUtils.getEnd(new Date()).getTime()));
     }
 }
