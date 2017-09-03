@@ -104,7 +104,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         if (isTaskRoot()) {
             loadData();
         }
-        refreshData();
+
     }
 
     private void initSlider() {
@@ -138,6 +138,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshData();
     }
 
     private void refreshData() {

@@ -102,7 +102,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public void setListeners() {
         FirebaseData.placeListener();
         FirebaseData.companyListener();
-        FirebaseData.spinListener();
     }
 
     boolean checkLogin() {

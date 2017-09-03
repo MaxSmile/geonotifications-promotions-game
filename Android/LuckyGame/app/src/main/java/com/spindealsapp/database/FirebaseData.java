@@ -29,7 +29,6 @@ import java.util.List;
 
 public class FirebaseData {
 
-    private static boolean initSpin;
     private static boolean initPlace;
     private static boolean initCompany;
 
@@ -73,24 +72,6 @@ public class FirebaseData {
 
             }
         });
-    }
-
-    public static void spinListener() {
-        Constants.DB_SPIN.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (initSpin) {
-                    getPlaces();
-                }
-                initSpin = true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
     public static void checkCouponsByCode(final String code) {

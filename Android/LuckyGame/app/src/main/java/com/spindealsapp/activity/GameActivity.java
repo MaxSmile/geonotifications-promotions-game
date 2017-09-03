@@ -526,7 +526,12 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
             place.getSpin().setExtraAvailable(false);
         } else {
-            place.getSpin().setAvailable(false);
+            long spent = place.getSpin().getSpent() + 1;
+            long limit = place.getSpin().getLimit();
+            if (spent < limit) {
+                gameAvailable = true;
+            }
+            place.getSpin().setSpent(spent);
         }
         DBHelper.getInstance(this).updateSpin(place.getSpin());
         EventBus.getDefault().postSticky(new Events.UpdateSpinAvailable());

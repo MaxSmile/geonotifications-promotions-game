@@ -6,9 +6,12 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.R;
 import com.spindealsapp.entity.Spin;
+import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.util.DateUtils;
 import com.spindealsapp.util.Rrule;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +25,9 @@ import java.util.Map;
 public class SpinServiceLayer {
 
     public static void saveSpins(ArrayList<Spin> spins) {
-        DBHelper.getInstance(App.getInstance()).saveSpins(spins);
+        if (DBHelper.getInstance(App.getInstance()).saveSpins(spins)) {
+            EventBus.getDefault().post(new Events.UpdatePlaces());
+        }
     }
 
     public static Map<String, Spin> getSpins() {
