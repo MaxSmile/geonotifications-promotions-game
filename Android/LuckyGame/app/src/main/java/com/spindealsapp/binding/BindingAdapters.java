@@ -3,6 +3,7 @@ package com.spindealsapp.binding;
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 
+import com.spindealsapp.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -30,6 +31,7 @@ public class BindingAdapters {
                     public void onError() {
                         Picasso.with(view.getContext())
                                 .load(url)
+                                .error(R.mipmap.ic_launcher)
                                 .into(view);
                     }
                 });
