@@ -375,25 +375,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:visibility="gone">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/dont_wont_notifications"
-                            android:textColor="@color/colorDetailsTextInfo"
-                            android:textSize="17sp"
-                            android:layout_centerVertical="true"/>
-                        <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/checkbox"
-                            android:background="@null"
-                            android:layout_alignParentEnd="true" />
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
                         android:onClick="@{handler::getExtraSpin}">
                         <TextView
                             android:layout_width="wrap_content"

@@ -176,30 +176,32 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_gravity="center_horizontal"
-                android:minWidth="250dp">
-
+                android:gravity="center_horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="3dp"
-                    android:layout_margin="0dp">
+                    android:layout_margin="0dp"
+                    android:minWidth="250dp">
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="@string/time_left"
                         android:textColor="@color/gameText"
                         android:textSize="15sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:gravity="right"/>
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="5"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:paddingLeft="2dp"
                         android:text="@{place.spin.timeLeft}"
@@ -207,13 +209,55 @@
                         android:textSize="15sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:onClick="@{handler::favorites}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_to_favorites"
+                        android:textColor="@color/gameText"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"/>
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@{place.favorites ? @drawable/heart_filled : @drawable/heart}"
+                        android:background="@null"
+                        android:layout_alignParentEnd="true"
+                        android:onClick="@{handler::favorites}"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:onClick="@{handler::getExtraSpin}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/out_of_spins"
+                        android:textColor="@color/gameText"
+                        android:textSize="15sp"
+                        android:layout_centerVertical="true"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/plus_one"
+                        android:layout_alignParentEnd="true"
+                        android:onClick="@{handler::getExtraSpin}"/>
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="3dp"
-                    android:onClick="@{handler::getExtraSpin}">
+                    android:onClick="@{handler::getExtraSpin}"
+                    android:minWidth="250dp"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="3"
@@ -221,7 +265,8 @@
                         android:text="@string/game_out_of_spins"
                         android:textColor="@color/gameText"
                         android:textSize="15sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:maxLines="1"/>
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="4"
@@ -230,7 +275,8 @@
                         android:text="@string/game_get_extra_spins"
                         android:textColor="@color/gameSubText"
                         android:textSize="15sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:maxLines="1"/>
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -240,13 +286,15 @@
 
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="3dp"
                     android:layout_marginBottom="5dp"
-                    android:onClick="@{handler::favorites}">
+                    android:onClick="@{handler::favorites}"
+                    android:minWidth="250dp"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="7"

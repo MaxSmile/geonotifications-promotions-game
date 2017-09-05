@@ -75,6 +75,9 @@ public class PlaceServiceLayer {
                         place.getGeoLat(), place.getGeoLon()));
             }
         }
+        if (place.getInfo().isEmpty()) {
+            place.setInfoChecked(true);
+        }
     }
 
     private static class PlaceComparator implements Comparator<Place> {
