@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -162,8 +163,21 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
             }
         }
 
+        places = groupByCompany(places);
         binding.setCountResult(places.size() > 0);
         companiesList.setAdapter(new CompanyListAdapter(this, places, DBHelper.getInstance(this).getCompanies()));
+    }
+
+    private ArrayList<Place> groupByCompany(ArrayList<Place> places) {
+        HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
+        for (Place place : places) {
+            if (place.getSpin().getStatus() == Constants.SPIN_STATUS_ACTIVE) {
+                orderPlaces.put(place.getCompanyKey(), place);
+            } else if (orderPlaces.get(place.getCompanyKey()) == null) {
+                orderPlaces.put(place.getCompanyKey(), place);
+            }
+        }
+        return new ArrayList<Place>(orderPlaces.values());
     }
 
     @Override

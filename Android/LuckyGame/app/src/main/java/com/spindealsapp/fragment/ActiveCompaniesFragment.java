@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -167,8 +168,16 @@ public class ActiveCompaniesFragment extends Fragment {
             }
         }
 
-
+        places = groupByCompany(places);
         dataBridge.activeSpins(places.size());
         adapter.updateData(places, DBHelper.getInstance(getActivity()).getCompanies());
+    }
+
+    private ArrayList<Place> groupByCompany(ArrayList<Place> places) {
+        HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
+        for (Place place : places) {
+            orderPlaces.put(place.getCompanyKey(), place);
+        }
+        return new ArrayList<Place>(orderPlaces.values());
     }
 }

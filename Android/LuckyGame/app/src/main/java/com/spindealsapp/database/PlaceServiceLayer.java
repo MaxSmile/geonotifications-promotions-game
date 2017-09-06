@@ -41,17 +41,15 @@ public class PlaceServiceLayer {
     private static ArrayList<Place> getPlacesWithSpin() {
         ArrayList<Place> placesList = DBHelper.getInstance(App.getInstance()).getOrderPlaces();
         Map<String, Spin> spins = SpinServiceLayer.getSpins();
-        HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
         for (Place place : placesList) {
             if (spins.get(place.getId()) != null) {
                 place.setSpin(spins.get(place.getId()));
-                orderPlaces.put(place.getCompanyKey(), place);
-            } else if (orderPlaces.get(place.getCompanyKey()) == null) {
+            } else {
                 place.setSpin(SpinServiceLayer.getSpinComing());
-                orderPlaces.put(place.getCompanyKey(), place);
             }
         }
-        return new ArrayList<Place>(orderPlaces.values());
+
+        return placesList;
     }
 
     public static Place getPlace(String id) {

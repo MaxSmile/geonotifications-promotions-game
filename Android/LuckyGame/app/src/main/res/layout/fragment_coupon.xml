@@ -272,7 +272,7 @@
                     android:gravity="right">
                     <Button
                         android:layout_width="wrap_content"
-                        android:layout_height="45dp"
+                        android:layout_height="55dp"
                         android:background="@{coupon.status == -1 ? @drawable/redeem_bg : @drawable/redeem_inactive_bg}"
                         android:paddingLeft="25dp"
                         android:paddingRight="25dp"
@@ -291,8 +291,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center">
                     <TextView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
                         android:background="@drawable/bg_share"
                         android:gravity="center"
                         android:text="@string/send_friends"

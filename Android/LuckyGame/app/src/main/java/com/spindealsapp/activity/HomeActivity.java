@@ -177,7 +177,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
-
     }
 
     @Override
