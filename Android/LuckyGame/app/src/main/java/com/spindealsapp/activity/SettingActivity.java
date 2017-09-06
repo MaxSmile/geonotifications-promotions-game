@@ -116,11 +116,6 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
         sendMail(getString(R.string.mail_for_improve));
     }
 
-    @Override
-    public void addCoupon(View view) {
-        startActivity(new Intent(this, InputCouponActivity.class));
-    }
-
     private void sendMail(String address) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 "mailto",address, null));

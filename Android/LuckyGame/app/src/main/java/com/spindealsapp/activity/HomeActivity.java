@@ -52,7 +52,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private AppBarLayout appBarLayout;
     private ImageView logo;
     private ImageView logoSmall;
+    private ImageView addCouponBtn;
     private ActivityHomeBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         logo = (ImageView) findViewById(R.id.homeLogo);
         logoSmall = (ImageView) findViewById(R.id.homeLogoSmall);
-
+        addCouponBtn = (ImageView) findViewById(R.id.addCouponBtn);
 
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
@@ -102,6 +104,12 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
                     appBarLayout.setBackground(ContextCompat.getDrawable(HomeActivity.this, R.drawable.cover_small));
                     logo.setVisibility(View.GONE);
                     logoSmall.setVisibility(View.VISIBLE);
+                }
+
+                if (tab.getPosition() == 2) {
+                    addCouponBtn.setVisibility(View.VISIBLE);
+                } else {
+                    addCouponBtn.setVisibility(View.GONE);
                 }
             }
 
@@ -228,6 +236,11 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     @Override
     public void settings(View view) {
         startActivity(new Intent(this, SettingActivity.class));
+    }
+
+    @Override
+    public void addCoupon(View view) {
+        startActivity(new Intent(this, InputCouponActivity.class));
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

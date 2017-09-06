@@ -8,4 +8,5 @@ import android.view.View;
 
 public interface HomeHandler extends FiltersHandler {
     public void settings(View view);
+    public void addCoupon(View view);
 }

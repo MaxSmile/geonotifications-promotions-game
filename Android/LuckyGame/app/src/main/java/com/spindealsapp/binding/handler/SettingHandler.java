@@ -17,7 +17,6 @@ public interface SettingHandler extends BaseHandler {
     public void rating(View view);
     public void forPartner(View view);
     public void forImprove(View view);
-    public void addCoupon(View view);
 
     public void clear(View view);
 }

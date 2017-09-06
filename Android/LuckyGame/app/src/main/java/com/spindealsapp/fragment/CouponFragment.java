@@ -101,7 +101,7 @@ public class CouponFragment extends Fragment implements CouponHandler {
     @Override
     public void send(View view) {
         Intent intent = new Intent(getContext(), SendCouponActivity.class);
-        intent.putExtra("couponCode", String.format(getString(R.string.send_coupon_text), coupon.getCode()));
+        intent.putExtra(Constants.COUPON_KEY, String.format(getString(R.string.send_coupon_text), coupon.getCode()));
         startActivity(intent);
     }
 

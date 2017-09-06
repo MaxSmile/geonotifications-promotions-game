@@ -89,7 +89,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
         @Override
         public void send(View view) {
             Intent intent = new Intent(context, SendCouponActivity.class);
-            intent.putExtra("couponCode", String.format(context.getString(R.string.send_coupon_text), coupon.getCode()));
+            intent.putExtra(Constants.COUPON_KEY, String.format(context.getString(R.string.send_coupon_text), coupon.getCode()));
             context.startActivity(intent);
         }
 

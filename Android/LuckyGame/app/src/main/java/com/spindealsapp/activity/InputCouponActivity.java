@@ -36,7 +36,7 @@ public class InputCouponActivity extends BaseActivity implements InputCouponHand
         binding.setColorTitle(ContextCompat.getColor(this, android.R.color.tab_indicator_text));
         binding.setResult(true);
         binding.setCouponCheck(true);
-        binding.setCode("co1499930275");
+        //binding.setCode("va1504631216");
         binding.setHandler(this);
     }
 
@@ -72,8 +72,9 @@ public class InputCouponActivity extends BaseActivity implements InputCouponHand
     public void onAddedCoupon(Events.AddedCoupon addedCoupon) {
         binding.setResult(true);
         if (code != null) {
-            Intent intent = new Intent(this, SlideCouponsActivity.class);
+            Intent intent = new Intent(this, SendCouponActivity.class);
             intent.putExtra(Constants.COUPON_KEY, code);
+            intent.putExtra("type", 1);
             startActivity(intent);
             finish();
         }

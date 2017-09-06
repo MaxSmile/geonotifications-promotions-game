@@ -64,12 +64,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/add_coupon_title"
-                    android:onClick="@{handler::addCoupon}"
-                    style="@style/SettingsList"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="@string/settings_invite"
                     android:onClick="@{handler::invite}"
                     style="@style/SettingsList"/>
