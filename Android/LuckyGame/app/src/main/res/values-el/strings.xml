@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SpinDeals</string>
-    <string name="share_title">Μοιραστείτε  %s και πάρτε κουπόνι</string>
     <string name="coupon_redeem"> Εξαργύρωση</string>
     <string name="location_service_stop">Επιλέξτε για κλείσιμο</string>
     <string name="location_service_text">Αναζήτηση νέου spin σε εξέλιξη</string>
@@ -44,7 +43,6 @@
     <string name="about">Πληροφορίες</string>
     <string name="more_info">Περισσότερες πληροφορίες</string>
     <string name="add_to_favorites">Προσθήκη στα αγαπημένα</string>
-    <string name="dont_wont_notifications">Δεν θέλω ειδοποιήσεις</string>
     <string name="out_of_spins"><b>Έλλειψη spins?</b> Πάρε ένα επιπλέον</string>
     <string name="play">Παίξε</string>
     <string name="gifts_info">Πληροφορίες δώρων</string>
@@ -75,9 +73,6 @@
     <string name="lose_text3">Πάρε ένα επιπλέον spin</string>
     <string name="extra_spin_text1">Έλλειψη spins? Μπορείς να πάρεις</string>
     <string name="extra_spin_text2">ένα επιπλέον spin</string>
-    <string name="empty_spin">Spin ανενεργό</string>
-    <string name="spin_new_try">Έχετε μια νέα προσπάθεια</string>
-    <string name="title_activity_setting">Ρύθμιση δραστηριοτήτων</string>
     <string name="setting_title">Μενού</string>
     <string name="logout">Αποσυνδέση</string>
     <string name="login">Σύνδεση</string>
@@ -105,7 +100,6 @@
     <string name="sound_game">Απενεργοποίηση για το παιχνίδι</string>
     <string name="notification_category">Ειδοποιήσεις</string>
     <string name="notification_title">Απενεργοποίηση GPS ειδοποιήσεων</string>
-    <string name="spin_empty">Δεν έχεις spin για αυτό το μέρος</string>
     <string name="send_title">Στείλε το σε φίλους</string>
     <string name="send_text">Στείλε αυτό το κουπόνι στους φίλους σου και ο <b>πρώτος</b> που θα το εξαργυρώσει μπορεί να το αποκτήσει</string>
     <string name="send_btn">Αποστολή</string>
@@ -121,7 +115,6 @@
     <string name="visit_our_website">Επισκεφτείτε την ιστοσελίδα μας</string>
     <string name="visit_our_facebook">Επισκεφθείτε τη σελίδα μας στο Facebook</string>
     <string name="settings_invite">Προσκαλέσετε τους φίλους σας</string>
-    <string name="like_our_app">Like την εφαρμογή μας</string>
     <string name="rating_us">Αξιολογήστε μας</string>
     <string name="mail_chooser">Στείλτε e-mail:</string>
     <string name="filter_by_town"><u>Ανα πόλη</u></string>
@@ -132,8 +125,6 @@
     <string name="search_placeholder">Αναζήτηση βάσει ονόματος ή λέξεις</string>
     <string name="gps_title">Δεν βρέθηκε τοποθεσία</string>
     <string name="gps_text">Ενεργοποιήστε τις Υπηρεσίες τοποθεσιών για να επιτρέψετε στην εφαρμογή να προσδιορίσει την τοποθεσία σας</string>
-    <string name="title_activity_slide_coupons">Δραστηριότητα κουπονιού διαφάνειας</string>
-    <string name="action_settings">Ρυθμίσεις</string>
     <string name="search_empty">Η αναζήτηση δεν επέστρεψε κανένα αποτέλεσμα</string>
     <string name="add_coupon_title">Προσθήκη κουπονιού</string>
     <string name="add_coupon_button">Προσθήκη</string>
