@@ -545,6 +545,13 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         Constants.DB_USER.child(CurrentUser.user.getId()).child("userInfo").setValue(CurrentUser.user);
         Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
                 .child(place.getSpin().getId()).child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
+
+        usedSpin.setCompanyKey(place.getCompanyKey());
+        usedSpin.setPlaceKey(place.getId());
+        usedSpin.setUserKey(CurrentUser.user.getId());
+        usedSpin.setSpinKey(place.getSpin().getId());
+        Constants.DB_LOG.child(place.getCompanyKey()).push().setValue(usedSpin);
+
         if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
             place.getSpin().setExtra(false);
         } else {
