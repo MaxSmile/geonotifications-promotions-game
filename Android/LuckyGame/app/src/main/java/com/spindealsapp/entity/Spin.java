@@ -24,12 +24,14 @@ public class Spin implements Parcelable {
     private long spent;
     private boolean available = true;
     private boolean extraAvailable = true;
+    private long extraCreateTime;
+    private boolean extra;
     private List<Box> box = new ArrayList<Box>();
 
     public Spin() {
     }
 
-    public Spin(String id, String companyKey, String placeKey, String rrule, long limit, long spent, boolean available, boolean extraAvailable) {
+    public Spin(String id, String companyKey, String placeKey, String rrule, long limit, long spent, boolean available, boolean extraAvailable, long extraCreateTime, boolean extra) {
         this.id = id;
         this.companyKey = companyKey;
         this.placeKey = placeKey;
@@ -38,6 +40,8 @@ public class Spin implements Parcelable {
         this.spent = spent;
         this.available = available;
         this.extraAvailable = extraAvailable;
+        this.extraCreateTime = extraCreateTime;
+        this.extra = extra;
     }
 
     protected Spin(Parcel in) {
@@ -52,6 +56,8 @@ public class Spin implements Parcelable {
         spent = in.readLong();
         available = in.readByte() != 0;
         extraAvailable = in.readByte() != 0;
+        extraCreateTime = in.readLong();
+        extra = in.readByte() != 0;
         box = in.createTypedArrayList(Box.CREATOR);
     }
 
@@ -163,6 +169,22 @@ public class Spin implements Parcelable {
         this.extraAvailable = extraAvailable;
     }
 
+    public long getExtraCreateTime() {
+        return extraCreateTime;
+    }
+
+    public void setExtraCreateTime(long extraCreateTime) {
+        this.extraCreateTime = extraCreateTime;
+    }
+
+    public boolean isExtra() {
+        return extra;
+    }
+
+    public void setExtra(boolean extra) {
+        this.extra = extra;
+    }
+
     public List<Box> getBox() {
         return box;
     }
@@ -189,6 +211,8 @@ public class Spin implements Parcelable {
         dest.writeLong(spent);
         dest.writeByte((byte) (available ? 1 : 0));
         dest.writeByte((byte) (extraAvailable ? 1 : 0));
+        dest.writeLong(extraCreateTime);
+        dest.writeByte((byte) (extra ? 1 : 0));
         dest.writeTypedList(box);
     }
 }

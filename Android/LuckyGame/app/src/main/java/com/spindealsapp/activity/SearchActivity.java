@@ -83,7 +83,7 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
     }
 
     private void refreshData() {
-        newPlaces = PlaceServiceLayer.getPlaces();        ;
+        newPlaces = PlaceServiceLayer.getPlaces();
     }
 
     @Override

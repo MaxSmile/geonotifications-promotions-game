@@ -173,7 +173,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         for (Place place : places) {
             if (place.getSpin().getStatus() == Constants.SPIN_STATUS_ACTIVE) {
                 orderPlaces.put(place.getCompanyKey(), place);
-            } else if (orderPlaces.get(place.getCompanyKey()) == null) {
+            } else if (orderPlaces.get(place.getCompanyKey()) == null || place.getSpin().getStatus() == Constants.SPIN_STATUS_EXTRA_AVAILABLE) {
                 orderPlaces.put(place.getCompanyKey(), place);
             }
         }

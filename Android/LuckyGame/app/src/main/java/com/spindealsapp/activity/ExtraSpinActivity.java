@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.spindealsapp.Constants;
+import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.Place;
@@ -39,6 +40,10 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
     protected void socialSuccess() {
         Intent intent = new Intent(this, GameActivity.class);
         place.getSpin().setExtraAvailable(false);
+        place.getSpin().setExtra(true);
+        place.getSpin().setExtraCreateTime(System.currentTimeMillis());
+        SpinServiceLayer.updateSpin(place.getSpin());
+
         intent.putExtra(Place.class.getCanonicalName(), place);
         intent.putExtra(Company.class.getCanonicalName(), company);
         intent.putExtra(Gift.class.getCanonicalName(), gifts);

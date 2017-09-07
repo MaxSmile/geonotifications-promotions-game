@@ -248,6 +248,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     type = Constants.SPIN_TYPE_EXTRA;
                     geoNotification = false;
                 }
+                if (place.getSpin().getSpent() >= place.getSpin().getLimit() && place.getSpin().isExtra()) {
+                    type = Constants.SPIN_TYPE_EXTRA;
+                }
                 intent.putExtra(Constants.SPIN_TYPE_KEY, type);
                 intent.putExtra(Place.class.getCanonicalName(), place);
                 startActivity(intent);
@@ -378,18 +381,22 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     public void getExtraSpin(View view) {
         if (NetworkState.isOnline()) {
             if (CurrentUser.user != null) {
-                if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING) {
-                    if (place.getSpin().isExtraAvailable()) {
-                        Intent intent = new Intent(this, ExtraSpinActivity.class);
-                        intent.putExtra(Place.class.getCanonicalName(), place);
-                        intent.putExtra(Company.class.getCanonicalName(), company);
-                        intent.putExtra(Gift.class.getCanonicalName(), gifts);
-                        startActivity(intent);
+                if (boxes.size() > 0) {
+                    if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING) {
+                        if (place.getSpin().isExtraAvailable()) {
+                            Intent intent = new Intent(this, ExtraSpinActivity.class);
+                            intent.putExtra(Place.class.getCanonicalName(), place);
+                            intent.putExtra(Company.class.getCanonicalName(), company);
+                            intent.putExtra(Gift.class.getCanonicalName(), gifts);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
                 }
             } else {
                 loginDialog();

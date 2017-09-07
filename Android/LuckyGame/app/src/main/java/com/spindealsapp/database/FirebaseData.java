@@ -296,9 +296,9 @@ public class FirebaseData {
                                     if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
                                         countSpent++;
                                     }
-                                    if (DateUtils.isToday(new Date(usedSpin.getTime())) && usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
+                                    /*if (DateUtils.isToday(new Date(usedSpin.getTime())) && usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
                                         spin.setExtraAvailable(false);
-                                    }
+                                    }*/
                                 }
 
                                 spin.setSpent(countSpent);

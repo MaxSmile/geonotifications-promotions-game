@@ -40,6 +40,7 @@ import com.spindealsapp.common.FasterAnimationsContainer;
 import com.spindealsapp.common.MyRotateAnimation;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Coupon;
@@ -545,7 +546,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         Constants.DB_USER.child(CurrentUser.user.getId()).child("place").child(place.getId())
                 .child(place.getSpin().getId()).child(String.valueOf(System.currentTimeMillis())).setValue(usedSpin);
         if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
-            place.getSpin().setExtraAvailable(false);
+            place.getSpin().setExtra(false);
         } else {
             long spent = place.getSpin().getSpent() + 1;
             long limit = place.getSpin().getLimit();
@@ -554,7 +555,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             }
             place.getSpin().setSpent(spent);
         }
-        DBHelper.getInstance(this).updateSpin(place.getSpin());
+        SpinServiceLayer.updateSpin(place.getSpin());
         EventBus.getDefault().postSticky(new Events.UpdateSpinAvailable());
     }
 

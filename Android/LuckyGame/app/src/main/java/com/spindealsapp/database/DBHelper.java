@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -121,6 +121,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_SPIN_SPENT = "spent";
     private static final String KEY_SPIN_AVAILABLE = "available";
     private static final String KEY_SPIN_EXTRA_AVAILABLE = "extraAvailable";
+    private static final String KEY_SPIN_EXTRA = "extra";
+    private static final String KEY_SPIN_EXTRA_CREATE_TIME = "extraCreateTime";
 
     private static final String KEY_COMPANY_ID = "companyId";
     private static final String KEY_COMPANY_NAME = "name";
@@ -180,7 +182,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_SPIN_LIMIT + " INTEGER,"
                 + KEY_SPIN_SPENT + " INTEGER,"
                 + KEY_SPIN_AVAILABLE + " INTEGER,"
-                + KEY_SPIN_EXTRA_AVAILABLE + " INTEGER"
+                + KEY_SPIN_EXTRA_AVAILABLE + " INTEGER,"
+                + KEY_SPIN_EXTRA_CREATE_TIME + " INTEGER,"
+                + KEY_SPIN_EXTRA + " INTEGER"
                 + ")");
     }
 
@@ -205,7 +209,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_BOX_SPIN_ID  + " text,"
                 + KEY_BOX_COLOR + " INTEGER,"
                 + KEY_BOX_COUNT + " INTEGER,"
-                + KEY_BOX_GIFT+ " text"
+                + KEY_BOX_GIFT + " text"
                 + ")");
     }
 
@@ -431,6 +435,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_SPIN_SPENT, spin.getSpent());
         contentValues.put(KEY_SPIN_AVAILABLE, spin.isAvailable() ? 1 : 0);
         contentValues.put(KEY_SPIN_EXTRA_AVAILABLE, spin.isExtraAvailable() ? 1 : 0);
+        contentValues.put(KEY_SPIN_EXTRA_CREATE_TIME, spin.getExtraCreateTime());
+        contentValues.put(KEY_SPIN_EXTRA, spin.isExtra() ? 1 : 0);
 
         return contentValues;
     }
@@ -473,15 +479,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return rowInserted > -1;
     }
 
-    public ArrayList<Spin> getSpins() {
-        ArrayList<Spin> spins = new ArrayList<Spin>();
+    public HashMap<String, Spin> getSpins() {
+        HashMap<String, Spin> spins = new HashMap<String, Spin>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SPIN, null);
         if (cursor.moveToFirst()) {
             do {
                 Spin spin = parseSpin(cursor);
                 spin.setBox(getBox(spin.getId()));
-                spins.add(spin);
+                spins.put(spin.getId(), spin);
             } while (cursor.moveToNext());
         } else {
             Log.d(TAG ,"0 rows");
@@ -1108,7 +1114,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getLong(5),
                 cursor.getLong(6),
                 cursor.getInt(7) > 0,
-                cursor.getInt(8) > 0
+                cursor.getInt(8) > 0,
+                cursor.getLong(9),
+                cursor.getInt(10) > 0
         );
     }
 

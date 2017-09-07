@@ -25,32 +25,46 @@ import java.util.Map;
 public class SpinServiceLayer {
 
     public static void saveSpins(ArrayList<Spin> spins) {
+        Map<String, Spin> oldSpins = DBHelper.getInstance(App.getInstance()).getSpins();
+        for (Spin spin : spins) {
+            Spin oldSpin = oldSpins.get(spin.getId());
+            if (oldSpin != null) {
+                spin.setExtraCreateTime(oldSpin.getExtraCreateTime());
+                spin.setExtra(oldSpin.isExtra());
+            }
+        }
         if (DBHelper.getInstance(App.getInstance()).saveSpins(spins)) {
             EventBus.getDefault().post(new Events.UpdatePlaces());
         }
     }
 
     public static Map<String, Spin> getSpins() {
-        ArrayList<Spin> spins = DBHelper.getInstance(App.getInstance()).getSpins();
+        ArrayList<Spin> spins = new ArrayList<Spin>(DBHelper.getInstance(App.getInstance()).getSpins().values());
         Map<String, Spin> mSpins = new HashMap<String, Spin>();
         TypedArray spinIcon = App.getInstance().getResources().obtainTypedArray(R.array.spin_type_icon);
         String[] spinType = App.getInstance().getResources().getStringArray(R.array.spin_type);
         for (Spin spin : spins) {
+            if (spin.getExtraCreateTime() > 0 && DateUtils.isToday(new Date(spin.getExtraCreateTime()))) {
+                spin.setExtraAvailable(false);
+            } else {
+                spin.setExtraAvailable(true);
+            }
             if (Rrule.isAvailable(spin.getRrule())) {
                 spin.setTimeLeft(DateFormat.getDiff(Rrule.getTimeEnd(spin.getRrule())));
-                if (spin.getSpent() < spin.getLimit()) {
-                    updateSpin(spin, spinIcon, spinType);
+                if (spin.getSpent() < spin.getLimit() || spin.isExtra()) {
+                    spin.setAvailable(true);
+                    updateSpinData(spin, spinIcon, spinType);
                     mSpins.put(spin.getPlaceKey(), spin);
                 } else if (mSpins.get(spin.getPlaceKey()) == null ||
                         (!mSpins.get(spin.getPlaceKey()).isAvailable() && spin.isExtraAvailable())){
                     spin.setAvailable(false);
-                    updateSpin(spin, spinIcon, spinType);
+                    updateSpinData(spin, spinIcon, spinType);
                     mSpins.put(spin.getPlaceKey(), spin);
                 }
             } else if (mSpins.get(spin.getPlaceKey()) == null) {
                 spin.setAvailable(false);
                 spin.setExtraAvailable(false);
-                updateSpin(spin, spinIcon, spinType);
+                updateSpinData(spin, spinIcon, spinType);
                 mSpins.put(spin.getPlaceKey(), spin);
             }
         }
@@ -65,12 +79,16 @@ public class SpinServiceLayer {
         spin.setExtraAvailable(false);
         TypedArray spinIcon = App.getInstance().getResources().obtainTypedArray(R.array.spin_type_icon);
         String[] spinType = App.getInstance().getResources().getStringArray(R.array.spin_type);
-        updateSpin(spin, spinIcon, spinType);
+        updateSpinData(spin, spinIcon, spinType);
         spinIcon.recycle();
         return spin;
     }
 
-    private static void updateSpin(Spin spin, TypedArray spinIcon, String[] spinType) {
+    public static void updateSpin(Spin spin) {
+        DBHelper.getInstance(App.getInstance()).updateSpin(spin);
+    }
+
+    private static void updateSpinData(Spin spin, TypedArray spinIcon, String[] spinType) {
         if (spin.isAvailable()) {
             spin.setStatus(Constants.SPIN_STATUS_ACTIVE);
         } else {
