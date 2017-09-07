@@ -94,45 +94,41 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
     private void search(String keyword) {
         keyword = keyword.trim().toLowerCase();
         HashMap<String, Place> spinsSearch = new HashMap<String, Place>();
-
+        //String[] arraySearch = keyword.split("\\s++", -1);
         if (keyword.length() > 0) {
-            String[] arraySearch = keyword.split("\\s++", -1);
+            for (int j = 0; j < newPlaces.size(); j++) {
+                Place place = newPlaces.get(j);
 
-            for (int i = 0; i < arraySearch.length; i++) {
-                for (int j = 0; j < newPlaces.size(); j++) {
-                    Place place = newPlaces.get(j);
+                if (place.getName().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getName().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getCity().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getCity().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getTypeName().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getTypeName().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getAddress().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getAddress().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getTel().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getTel().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getAbout().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getAbout().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getAboutMore().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
+                }
 
-                    if (place.getAboutMore().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
-
-                    if (place.getKeywords().toLowerCase().contains(arraySearch[i])) {
-                        spinsSearch.put(place.getId(), place);
-                    }
+                if (place.getKeywords().toLowerCase().contains(keyword)) {
+                    spinsSearch.put(place.getId(), place);
                 }
             }
         }
