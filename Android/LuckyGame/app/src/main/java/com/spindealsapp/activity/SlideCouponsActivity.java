@@ -1,5 +1,7 @@
 package com.spindealsapp.activity;
 
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -85,9 +88,23 @@ public class SlideCouponsActivity extends BaseActivity {
                 }
             }
         });
+
+        if (getIntent().getBooleanExtra("userPrize", false)) {
+            initSound();
+        }
     }
 
-
+    private void initSound() {
+        try {
+            AssetFileDescriptor afd = getAssets().openFd(getString(R.string.winning_sound));
+            MediaPlayer player = new MediaPlayer();
+            player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+            player.prepare();
+            player.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void checkPosition(int position) {
         if (position == mSectionsPagerAdapter.getCount() - 1) {

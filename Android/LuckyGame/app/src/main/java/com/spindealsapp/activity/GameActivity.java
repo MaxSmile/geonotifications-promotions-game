@@ -93,7 +93,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private boolean social = false;
 
     private SoundPool sp;
-    private MediaPlayer player;
     private int soundIdLose;
     private int soundIdTick;
     private int soundIdWin;
@@ -192,21 +191,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             soundIdLose = sp.load(getAssets().openFd(getString(R.string.loser_sound)), 1);
             soundIdTick = sp.load(getAssets().openFd(getString(R.string.tick_sound)), 1);
             //soundIdWin = sp.load(getAssets().openFd(getString(R.string.winning_sound)), 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            AssetFileDescriptor afd = getAssets().openFd(getString(R.string.winning_sound));
-            player = new MediaPlayer();
-            player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
-            player.prepare();
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    goToCoupon();
-                }
-            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -396,6 +380,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     private void goToCoupon() {
         Intent intent = new Intent(this, SlideCouponsActivity.class);
         intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
+        intent.putExtra("userPrize", true);
         startActivity(intent);
         finish();
     }
@@ -516,13 +501,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             createCoupon(gifts.get(winKey));
             setLog(Constants.GAME_WIN);
             //startAnimation(getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]]);
-
-            if (Properties.getSoundGame()) {
-                //sp.play(soundIdWin, 1, 1, 0, 0, 1);
-                player.start();
-            } else {
-                goToCoupon();
-            }
+            goToCoupon();
         } else {
             if (Properties.getSoundGame()) {
                 sp.play(soundIdLose, 1, 1, 0, 0, 1);

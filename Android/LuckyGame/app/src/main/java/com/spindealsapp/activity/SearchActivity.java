@@ -95,7 +95,7 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
         keyword = keyword.trim().toLowerCase();
         HashMap<String, Place> spinsSearch = new HashMap<String, Place>();
         //String[] arraySearch = keyword.split("\\s++", -1);
-        if (keyword.length() > 0) {
+        if (keyword.length() > 0 && newPlaces != null) {
             for (int j = 0; j < newPlaces.size(); j++) {
                 Place place = newPlaces.get(j);
 
