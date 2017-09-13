@@ -93,29 +93,40 @@ public class PlaceServiceLayer {
         TypedArray iconArray = App.getInstance().getResources().obtainTypedArray(R.array.company_type_icons);
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
-            place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
-            place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
-            if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                        place.getGeoLat(), place.getGeoLon()));
-                place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                        place.getGeoLat(), place.getGeoLon()));
-            }
-
             Place oldPlace = oldPlaces.get(place.getId());
-            if (oldPlace != null) {
-                place.setFavorites(oldPlace.isFavorites());
-                if (place.getInfoTimestamp() != oldPlace.getInfoTimestamp()) {
-                    place.setInfoChecked(false);
-                } else {
-                    place.setInfoChecked(oldPlace.isInfoChecked());
-                }
-            }
-
+            updatePlaceBeforeSave(place, oldPlace, iconArray);
         }
         iconArray.recycle();
         if (DBHelper.getInstance(App.getInstance()).savePlaces(places)) {
             EventBus.getDefault().post(new Events.UpdatePlaces());
+        }
+    }
+
+    public static void insertPlace(Place place) {
+        Place oldPlace = DBHelper.getInstance(App.getInstance()).getPlace(place.getId());
+        TypedArray iconArray = App.getInstance().getResources().obtainTypedArray(R.array.company_type_icons);
+        updatePlaceBeforeSave(place, oldPlace, iconArray);
+        iconArray.recycle();
+        DBHelper.getInstance(App.getInstance()).insertPlace(place);
+        EventBus.getDefault().post(new Events.UpdatePlaces());
+    }
+
+    private static void updatePlaceBeforeSave(Place place, Place oldPlace, TypedArray iconArray) {
+        place.setTypeName(Constants.COMPANY_TYPE_NAMES[place.getType()]);
+        place.setTypeIcon(iconArray.getResourceId(place.getType(), 0));
+        if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+            place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
+                    place.getGeoLat(), place.getGeoLon()));
+            place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                    place.getGeoLat(), place.getGeoLon()));
+        }
+        if (oldPlace != null) {
+            place.setFavorites(oldPlace.isFavorites());
+            if (place.getInfoTimestamp() != oldPlace.getInfoTimestamp()) {
+                place.setInfoChecked(false);
+            } else {
+                place.setInfoChecked(oldPlace.isInfoChecked());
+            }
         }
     }
 }

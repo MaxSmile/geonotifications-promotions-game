@@ -92,7 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public void loadData() {
         FirebaseData.getCoupons();
-        FirebaseData.getPlaces();
+        //FirebaseData.getPlaces();
         FirebaseData.getGift();
         FirebaseData.getOffer();
         FirebaseData.getKeywords();
@@ -100,8 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     }
 
     public void setListeners() {
-        FirebaseData.placeListener();
-        FirebaseData.companyListener();
+        FirebaseData.loadCompanies();
     }
 
     boolean checkLogin() {

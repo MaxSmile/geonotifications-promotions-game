@@ -553,6 +553,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return gifts;
     }
 
+    public void insertCompany(Company company) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_COMPANIES, null, getCompanyValues(company));
+        db.close();
+    }
+
     public boolean saveCompanies(ArrayList<Company> companies) {
         long rowInserted = -1;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -561,15 +567,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db.delete(TABLE_COMPANIES, null, null);
 
             for (Company company: companies) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(KEY_COMPANY_ID, company.getId());
-                contentValues.put(KEY_COMPANY_NAME, company.getName());
-                contentValues.put(KEY_COMPANY_INFO, company.getInfo());
-                contentValues.put(KEY_COMPANY_LOGO, company.getLogo());
-                contentValues.put(KEY_COMPANY_FACEBOOK_URL, company.getFacebookUrl());
-                contentValues.put(KEY_COMPANY_TYPE, company.getType());
-
-                rowInserted = db.insert(TABLE_COMPANIES, null, contentValues);
+                rowInserted = db.insert(TABLE_COMPANIES, null, getCompanyValues(company));
             }
 
             if (rowInserted > -1) {
@@ -581,6 +579,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return rowInserted > -1;
+    }
+
+    private ContentValues getCompanyValues(Company company) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_COMPANY_ID, company.getId());
+        contentValues.put(KEY_COMPANY_NAME, company.getName());
+        contentValues.put(KEY_COMPANY_INFO, company.getInfo());
+        contentValues.put(KEY_COMPANY_LOGO, company.getLogo());
+        contentValues.put(KEY_COMPANY_FACEBOOK_URL, company.getFacebookUrl());
+        contentValues.put(KEY_COMPANY_TYPE, company.getType());
+
+        return contentValues;
     }
 
     public Company getCompany(String id) {
@@ -620,7 +630,6 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             Log.d(TAG ,"0 rows");
         }
-
         cursor.close();
         db.close();
 
@@ -650,6 +659,29 @@ public class DBHelper extends SQLiteOpenHelper {
         return rowInserted > -1;
     }
 
+    public void insertPlace(Place place) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_PLACES, null, getPlaceValues(place));
+        db.delete(TABLE_GALLERY, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
+        saveGallery(db, place);
+        db.close();
+    }
+
+    private long saveGallery(SQLiteDatabase db, Place place) {
+        long rowInserted = -1;
+        List<String> gallery = place.getGallery();
+        if (gallery != null) {
+            for (int i = 0; i < gallery.size(); i++) {
+                ContentValues galleryValues = new ContentValues();
+                galleryValues.put(KEY_PLACE_ID, place.getId());
+                galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
+                rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
+            }
+        }
+
+        return rowInserted;
+    }
+
     public boolean savePlaces(ArrayList<Place> places) {
         long rowInserted = -1;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -659,19 +691,9 @@ public class DBHelper extends SQLiteOpenHelper {
             db.delete(TABLE_GALLERY, null, null);
 
             for (Place place : places) {
-                ContentValues contentValues = getPlaceValues(place);
-                rowInserted = db.insert(TABLE_PLACES, null, contentValues);
-
+                rowInserted = db.insert(TABLE_PLACES, null, getPlaceValues(place));
                 if (rowInserted > -1) {
-                    List<String> gallery = place.getGallery();
-                    if (gallery != null) {
-                        for (int i = 0; i < gallery.size(); i++) {
-                            ContentValues galleryValues = new ContentValues();
-                            galleryValues.put(KEY_PLACE_ID, place.getId());
-                            galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
-                            rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
-                        }
-                    }
+                    rowInserted = saveGallery(db, place);
                 }
             }
 

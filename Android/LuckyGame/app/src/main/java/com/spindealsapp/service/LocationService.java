@@ -155,7 +155,6 @@ public class LocationService extends Service {
     }
 
     private void addProximityAlert(double latitude, double longitude, String id, int pointRadius) {
-        System.out.println("myTest pointRadius=" + pointRadius);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(PROX_ALERT_INTENT + id);

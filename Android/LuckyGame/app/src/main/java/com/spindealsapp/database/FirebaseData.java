@@ -1,5 +1,6 @@
 package com.spindealsapp.database;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -13,14 +14,11 @@ import com.spindealsapp.entity.Place;
 import com.spindealsapp.entity.Spin;
 import com.spindealsapp.entity.UsedSpin;
 import com.spindealsapp.eventbus.Events;
-import com.spindealsapp.util.DateFormat;
-import com.spindealsapp.util.DateUtils;
 import com.spindealsapp.util.Rrule;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,12 +26,12 @@ import java.util.List;
  */
 
 public class FirebaseData {
+    private static boolean initCompanies;
+    private static long countCompanies;
+    private static boolean initPlaces;
+    private static long countPlaces;
 
-    private static boolean initPlace;
-    private static boolean initCompany;
-
-    public static void placeListener() {
-
+    /*public static void placeListener() {
         Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -48,23 +46,131 @@ public class FirebaseData {
 
             }
         });
-    }
+    }*/
 
-    public static void companyListener() {
-        final ArrayList<Company> companies = new ArrayList<Company>();
-        Constants.DB_COMPANY.addValueEventListener(new ValueEventListener() {
+    public static void loadCompanies() {
+        Constants.DB_COMPANY.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (initCompany) {
-                    getPlaces();
-                }
-                initCompany = true;
+                companyListener(dataSnapshot.getChildrenCount());
+            }
 
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    companies.add(data.getValue(Company.class));
-                }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
+            }
+        });
+    }
+
+    private static void companyListener(final long count) {
+        final ArrayList<Company> companies = new ArrayList<Company>();
+        Constants.DB_COMPANY.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (initCompanies) {
+                    insertCompany(dataSnapshot.getValue(Company.class));
+                } else {
+                    companies.add(dataSnapshot.getValue(Company.class));
+                    countCompanies++;
+                    if (countCompanies == count) {
+                        initCompanies = true;
+                        DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
+                        loadPlaces();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                insertCompany(dataSnapshot.getValue(Company.class));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void insertCompany(Company company) {
+        DBHelper.getInstance(App.getInstance()).insertCompany(company);
+    }
+
+    private static void loadPlaces() {
+        Constants.DB_PLACE.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                placeListener(dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void placeListener(final long count) {
+        final ArrayList<Place> places = new ArrayList<Place>();
+        Constants.DB_PLACE.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (initPlaces) {
+                    PlaceServiceLayer.insertPlace(dataSnapshot.getValue(Place.class));
+                } else {
+                    places.add(dataSnapshot.getValue(Place.class));
+                    countPlaces++;
+                    if (countPlaces == count) {
+                        initPlaces = true;
+                        PlaceServiceLayer.updatePlaces(places);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                PlaceServiceLayer.insertPlace(dataSnapshot.getValue(Place.class));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getPlaces() {
+        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Place> places = new ArrayList<Place>();
+                long count = dataSnapshot.getChildrenCount();
+                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
+                    places.add(dataPlace.getValue(Place.class));
+                    if (count == places.size()) {
+                        PlaceServiceLayer.updatePlaces(places);
+                    }
+                }
             }
 
             @Override
@@ -329,27 +435,6 @@ public class FirebaseData {
         if (spins.size() == count) {
             SpinServiceLayer.saveSpins(spins);
         }
-    }
-
-    public static void getPlaces() {
-        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Place> places = new ArrayList<Place>();
-                long count = dataSnapshot.getChildrenCount();
-                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
-                    places.add(dataPlace.getValue(Place.class));
-                    if (count == places.size()) {
-                        PlaceServiceLayer.updatePlaces(places);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private static void updateGift(ArrayList<Gift> gifts, long count) {
