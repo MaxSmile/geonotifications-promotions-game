@@ -64,7 +64,7 @@ public class ChooseAccountActivity extends BaseActivity {
     }
 
     private void showLoginSuccessMessage() {
-        FirebaseData.getPlaces();
+        FirebaseData.reloadSpins();
         onBackPressed();
     }
 

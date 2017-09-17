@@ -20,6 +20,14 @@ import java.util.List;
 
 public class CouponServiceLayer {
 
+    public static void insertCoupon(CouponExtension coupon) {
+        DBHelper.getInstance(App.getInstance()).insertCoupon(coupon);
+    }
+
+    public static void saveCoupons(List<CouponExtension> coupons, boolean offer) {
+        DBHelper.getInstance(App.getInstance()).saveCoupons(coupons, offer);
+    }
+
     public static List<CouponExtension> getCoupons() {
         List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsExtension();
         return updateData(coupons, false);

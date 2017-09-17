@@ -8,6 +8,7 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.entity.Company;
+import com.spindealsapp.entity.Count;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.Place;
@@ -26,33 +27,35 @@ import java.util.List;
  */
 
 public class FirebaseData {
+    private static Count countChildren;
     private static boolean initCompanies;
     private static long countCompanies;
     private static boolean initPlaces;
     private static long countPlaces;
+    private static boolean initGifts;
+    private static long countGifts;
+    private static boolean initSpins;
+    private static long countSpins;
+    private static boolean initOffers;
+    private static long countOffers;
 
-    /*public static void placeListener() {
-        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
+    private static ArrayList<Gift> giftsList;
+    private static ArrayList<Spin> spinsList;
+    private static ArrayList<CouponExtension> offersList;
+
+    public static void reloadSpins() {
+        initSpins = false;
+        countSpins = 0;
+        spinListener();
+    }
+
+    public static void loadData() {
+        getKeywords();
+        Constants.DB_COUNT.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (initPlace) {
-                    getCoupons();
-                }
-                initPlace = true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
-
-    public static void loadCompanies() {
-        Constants.DB_COMPANY.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                companyListener(dataSnapshot.getChildrenCount());
+                countChildren = dataSnapshot.getValue(Count.class);
+                companyListener();
             }
 
             @Override
@@ -62,7 +65,7 @@ public class FirebaseData {
         });
     }
 
-    private static void companyListener(final long count) {
+    private static void companyListener() {
         final ArrayList<Company> companies = new ArrayList<Company>();
         Constants.DB_COMPANY.addChildEventListener(new ChildEventListener() {
             @Override
@@ -72,10 +75,10 @@ public class FirebaseData {
                 } else {
                     companies.add(dataSnapshot.getValue(Company.class));
                     countCompanies++;
-                    if (countCompanies == count) {
+                    if (countCompanies == countChildren.getCompanies()) {
                         initCompanies = true;
                         DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
-                        loadPlaces();
+                        placeListener();
                     }
                 }
             }
@@ -104,23 +107,10 @@ public class FirebaseData {
 
     private static void insertCompany(Company company) {
         DBHelper.getInstance(App.getInstance()).insertCompany(company);
+        EventBus.getDefault().post(new Events.UpdatePlaces());
     }
 
-    private static void loadPlaces() {
-        Constants.DB_PLACE.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                placeListener(dataSnapshot.getChildrenCount());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private static void placeListener(final long count) {
+    private static void placeListener() {
         final ArrayList<Place> places = new ArrayList<Place>();
         Constants.DB_PLACE.addChildEventListener(new ChildEventListener() {
             @Override
@@ -130,9 +120,10 @@ public class FirebaseData {
                 } else {
                     places.add(dataSnapshot.getValue(Place.class));
                     countPlaces++;
-                    if (countPlaces == count) {
+                    if (countPlaces == countChildren.getPlaces()) {
                         initPlaces = true;
                         PlaceServiceLayer.updatePlaces(places);
+                        giftListener();
                     }
                 }
             }
@@ -159,17 +150,71 @@ public class FirebaseData {
         });
     }
 
-    public static void getPlaces() {
-        Constants.DB_PLACE.addValueEventListener(new ValueEventListener() {
+    private static void giftListener() {
+        giftsList = new ArrayList<Gift>();
+        Constants.DB_GIFT.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                updateGift(dataSnapshot.getValue(Gift.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                updateGift(dataSnapshot.getValue(Gift.class));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void updateGift(final Gift gift) {
+        Constants.DB_SPIN.child(gift.getSpinKey()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Place> places = new ArrayList<Place>();
-                long count = dataSnapshot.getChildrenCount();
-                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
-                    places.add(dataPlace.getValue(Place.class));
-                    if (count == places.size()) {
-                        PlaceServiceLayer.updatePlaces(places);
-                    }
+                Spin spin = dataSnapshot.getValue(Spin.class);
+                if (spin != null) {
+                    long timeShift = Rrule.getTimeStart(spin.getRrule());
+                    Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
+                            .orderByChild("date").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            long countSpent = 0;
+                            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                long value = (long)data.child("value").getValue();
+                                countSpent += value;
+                            }
+                            long countAvailable = gift.getLimitGifts() - countSpent;
+
+                            if (countAvailable > 0) {
+                                gift.setActive(true);
+                            } else {
+                                gift.setActive(false);
+                                countAvailable = 0;
+                            }
+                            gift.setCountAvailable(countAvailable);
+                            saveGift(gift);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    saveGift(gift);
                 }
             }
 
@@ -178,6 +223,183 @@ public class FirebaseData {
 
             }
         });
+    }
+
+    private static void saveGift(Gift gift) {
+        if (initGifts) {
+            GiftServiceLayer.insertGift(gift);
+        } else {
+            giftsList.add(gift);
+            countGifts++;
+            if (countGifts == countChildren.getGifts()) {
+                initGifts = true;
+                GiftServiceLayer.saveGifts(giftsList);
+                spinListener();
+            }
+        }
+    }
+
+    private static void spinListener() {
+        spinsList = new ArrayList<Spin>();
+        Constants.DB_SPIN.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                updateSpin(dataSnapshot.getValue(Spin.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                updateSpin(dataSnapshot.getValue(Spin.class));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void updateSpin(final Spin spin) {
+        if (CurrentUser.user != null) {
+            long timeShift = Rrule.getTimeStart(spin.getRrule());
+            Constants.DB_USER.child(CurrentUser.user.getId()).child("place")
+                    .child(spin.getPlaceKey()).child(spin.getId())
+                    .orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    long countSpent = 0;
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        UsedSpin usedSpin = data.getValue(UsedSpin.class);
+                        if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
+                            countSpent++;
+                        }
+                    }
+                    spin.setSpent(countSpent);
+                    saveSpin(spin);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            saveSpin(spin);
+        }
+    }
+
+    private static void saveSpin(Spin spin) {
+        if (initSpins) {
+            SpinServiceLayer.insertSpin(spin);
+        } else {
+            spinsList.add(spin);
+            countSpins++;
+            if (countSpins == countChildren.getSpins()) {
+                initSpins = true;
+                SpinServiceLayer.saveSpins(spinsList);
+                if (!initOffers) {
+                    offerListener();
+                }
+            }
+        }
+    }
+
+    private static void offerListener() {
+        offersList = new ArrayList<CouponExtension>();
+        Constants.DB_OFFER.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                updateOffer(dataSnapshot.getValue(CouponExtension.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                updateOffer(dataSnapshot.getValue(CouponExtension.class));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void updateOffer(final CouponExtension coupon) {
+        coupon.setCouponType(Constants.COUPON_TYPE_OFFER);
+        coupon.setCode(coupon.getGiftKey());
+        Constants.DB_PLACE.orderByChild("offer").equalTo(coupon.getGiftKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
+                        Place place = dataPlace.getValue(Place.class);
+                        coupon.setPlaceName(place.getName());
+                        coupon.setType(place.getType());
+                        coupon.setGeoLat(place.getGeoLat());
+                        coupon.setGeoLon(place.getGeoLon());
+                        coupon.setCity(place.getCity());
+                        coupon.setPlaceKey(place.getId());
+                        Constants.DB_COMPANY.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    Company company = dataSnapshot.getValue(Company.class);
+                                    coupon.setCompanyName(company.getName());
+                                    coupon.setLogo(company.getLogo());
+                                    saveOffer(coupon);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                } else {
+                    saveOffer(coupon);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void saveOffer(CouponExtension coupon) {
+        if (initOffers) {
+            CouponServiceLayer.insertCoupon(coupon);
+        } else {
+            offersList.add(coupon);
+            countOffers++;
+            if (countOffers == countChildren.getOffers()) {
+                initOffers = true;
+                CouponServiceLayer.saveCoupons(offersList, true);
+            }
+        }
     }
 
     public static void checkCouponsByCode(final String code) {
@@ -313,196 +535,5 @@ public class FirebaseData {
         } else {
             EventBus.getDefault().post(new Events.UpdateCoupons());
         }
-    }
-
-    public static void getOffer() {
-        Constants.DB_OFFER.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<CouponExtension> newCoupons = new ArrayList<CouponExtension>();
-                for (final DataSnapshot dataOffer : dataSnapshot.getChildren()) {
-                    CouponExtension baseCoupon = dataOffer.getValue(CouponExtension.class);
-                    Constants.DB_PLACE.orderByChild("offer").equalTo(baseCoupon.getGiftKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getChildrenCount() > 0) {
-                                for (DataSnapshot dataPlace : dataSnapshot.getChildren()) {
-                                    final CouponExtension coupon = dataOffer.getValue(CouponExtension.class);
-                                    Place place = dataPlace.getValue(Place.class);
-                                    coupon.setCouponType(Constants.COUPON_TYPE_OFFER);
-                                    coupon.setPlaceName(place.getName());
-                                    coupon.setType(place.getType());
-                                    coupon.setGeoLat(place.getGeoLat());
-                                    coupon.setGeoLon(place.getGeoLon());
-                                    coupon.setCity(place.getCity());
-                                    coupon.setPlaceKey(place.getId());
-                                    Constants.DB_COMPANY.child(place.getCompanyKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.exists()) {
-                                                Company company = dataSnapshot.getValue(Company.class);
-                                                coupon.setCompanyName(company.getName());
-                                                coupon.setLogo(company.getLogo());
-                                                newCoupons.add(coupon);
-                                                updateOffer(newCoupons);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-                            } else {
-                                updateOffer(newCoupons);
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private static void updateOffer(List<CouponExtension> coupons) {
-        DBHelper.getInstance(App.getInstance()).saveCoupons(coupons, true);
-        EventBus.getDefault().post(new Events.UpdateCoupons());
-    }
-
-    public static void getSpins() {
-        Constants.DB_SPIN.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final ArrayList<Spin> spins = new ArrayList<Spin>();
-                final long count = dataSnapshot.getChildrenCount();
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    final Spin spin = data.getValue(Spin.class);
-                    if (CurrentUser.user != null) {
-                        long timeShift = Rrule.getTimeStart(spin.getRrule());
-                        Constants.DB_USER.child(CurrentUser.user.getId()).child("place")
-                                .child(spin.getPlaceKey()).child(spin.getId())
-                                .orderByChild("time").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                long countSpent = 0;
-
-                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                    UsedSpin usedSpin = data.getValue(UsedSpin.class);
-                                    if (usedSpin.getType() == Constants.SPIN_TYPE_NORMAL) {
-                                        countSpent++;
-                                    }
-                                    /*if (DateUtils.isToday(new Date(usedSpin.getTime())) && usedSpin.getType() == Constants.SPIN_TYPE_EXTRA) {
-                                        spin.setExtraAvailable(false);
-                                    }*/
-                                }
-
-                                spin.setSpent(countSpent);
-                                spins.add(spin);
-                                updateSpin(spins, count);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    } else {
-                        spins.add(spin);
-                        updateSpin(spins, count);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private static void updateSpin(ArrayList<Spin> spins, long count) {
-        if (spins.size() == count) {
-            SpinServiceLayer.saveSpins(spins);
-        }
-    }
-
-    private static void updateGift(ArrayList<Gift> gifts, long count) {
-        if (gifts.size() == count) {
-            DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
-        }
-    }
-
-    public static void getGift() {
-        Constants.DB_GIFT.orderByChild("spinKey").startAt("1").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final ArrayList<Gift> gifts = new ArrayList<Gift>();
-                final long count = dataSnapshot.getChildrenCount();
-                for (DataSnapshot dataGift : dataSnapshot.getChildren()) {
-                    final Gift gift = dataGift.getValue(Gift.class);
-                    Constants.DB_SPIN.child(gift.getSpinKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Spin spin = dataSnapshot.getValue(Spin.class);
-                            if (spin != null) {
-                                long timeShift = Rrule.getTimeStart(spin.getRrule());
-                                Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
-                                        .orderByChild("date").startAt(timeShift).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        long countSpent = 0;
-                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                            long value = (long)data.child("value").getValue();
-                                            countSpent += value;
-                                        }
-                                        long countAvailable = gift.getLimitGifts() - countSpent;
-
-                                        if (countAvailable > 0) {
-                                            gift.setActive(true);
-                                        } else {
-                                            gift.setActive(false);
-                                            countAvailable = 0;
-                                        }
-                                        gift.setCountAvailable(countAvailable);
-                                        gifts.add(gift);
-
-                                        updateGift(gifts, count);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            } else {
-                                gifts.add(gift);
-                                updateGift(gifts, count);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 }

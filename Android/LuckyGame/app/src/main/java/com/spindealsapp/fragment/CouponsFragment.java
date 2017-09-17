@@ -13,6 +13,7 @@ import com.spindealsapp.adapter.CouponListAdapter;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.CouponServiceLayer;
+import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
@@ -65,7 +66,7 @@ public class CouponsFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUpdateLocatio(Events.UpdateLocation updateLocation) {
+    public void onUpdateLocation(Events.UpdateLocation updateLocation) {
         refreshList();
     }
 

@@ -5,6 +5,7 @@ import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.Place;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,4 +34,13 @@ public class GiftServiceLayer {
 
         return gifts;
     }
+
+    public static void insertGift(Gift gift) {
+        DBHelper.getInstance(App.getInstance()).insertGift(gift);
+    }
+
+    public static void saveGifts(ArrayList<Gift> gifts) {
+        DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
+    }
+
 }

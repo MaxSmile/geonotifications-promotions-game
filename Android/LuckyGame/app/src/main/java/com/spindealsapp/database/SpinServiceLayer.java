@@ -23,18 +23,28 @@ import java.util.Map;
  */
 
 public class SpinServiceLayer {
+    public static void insertSpin(Spin spin) {
+        Spin oldSpin = DBHelper.getInstance(App.getInstance()).getSpin(spin.getId());
+        setOldData(spin, oldSpin);
+        DBHelper.getInstance(App.getInstance()).insertSpin(spin);
+        EventBus.getDefault().post(new Events.UpdatePlaces());
+    }
 
     public static void saveSpins(ArrayList<Spin> spins) {
         Map<String, Spin> oldSpins = DBHelper.getInstance(App.getInstance()).getSpins();
         for (Spin spin : spins) {
             Spin oldSpin = oldSpins.get(spin.getId());
-            if (oldSpin != null) {
-                spin.setExtraCreateTime(oldSpin.getExtraCreateTime());
-                spin.setExtra(oldSpin.isExtra());
-            }
+            setOldData(spin, oldSpin);
         }
         if (DBHelper.getInstance(App.getInstance()).saveSpins(spins)) {
             EventBus.getDefault().post(new Events.UpdatePlaces());
+        }
+    }
+
+    private static void setOldData(Spin spin, Spin oldSpin) {
+        if (oldSpin != null) {
+            spin.setExtraCreateTime(oldSpin.getExtraCreateTime());
+            spin.setExtra(oldSpin.isExtra());
         }
     }
 

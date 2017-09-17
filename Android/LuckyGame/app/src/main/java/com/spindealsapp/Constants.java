@@ -23,6 +23,7 @@ public class Constants {
     public static final DatabaseReference DB_SETTINGS = DB_VERSION.child("settings");
     public static final DatabaseReference DB_KEYWORDS = DB_SETTINGS.child("keywords");
     public static final DatabaseReference DB_LOG = DB_VERSION.child("log");
+    public static final DatabaseReference DB_COUNT = DB_SETTINGS.child("count");
 
     public static final String PLACE_KEY = "placeKey";
     public static final String PLACE_TYPE_KEY = "placeType";

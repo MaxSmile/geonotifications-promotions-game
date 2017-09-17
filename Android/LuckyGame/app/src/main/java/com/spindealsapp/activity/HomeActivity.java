@@ -28,6 +28,7 @@ import com.spindealsapp.binding.handler.HomeHandler;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.fragment.ActiveCompaniesFragment;
 import com.spindealsapp.fragment.AllCompaniesFragment;
@@ -155,7 +156,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             checkNetwork();
         }
 
-        setListeners();
+        FirebaseData.loadData();
 
         if (Properties.getShowTutorial()) {
             Properties.setShowTutorial(false);
@@ -168,7 +169,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
+        FirebaseData.getCoupons();
 
         if (showPopUpLogin && !checkLogin()) {
             showPopUpLogin = false;

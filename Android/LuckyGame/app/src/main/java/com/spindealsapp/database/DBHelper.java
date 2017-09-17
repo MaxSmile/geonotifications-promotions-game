@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static DBHelper sInstance;
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
@@ -184,7 +184,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_SPIN_AVAILABLE + " INTEGER,"
                 + KEY_SPIN_EXTRA_AVAILABLE + " INTEGER,"
                 + KEY_SPIN_EXTRA_CREATE_TIME + " INTEGER,"
-                + KEY_SPIN_EXTRA + " INTEGER"
+                + KEY_SPIN_EXTRA + " INTEGER,"
+                + "UNIQUE ("
+                + KEY_SPIN_ID
+                + ") ON CONFLICT REPLACE"
                 + ")");
     }
 
@@ -199,7 +202,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_GIFT_LIMIT_GIFTS + " INTEGER,"
                 + KEY_GIFT_COUNT_AVAILABLE + " INTEGER,"
                 + KEY_GIFT_SPIN_KEY + " text,"
-                + KEY_GIFT_EXPIRATION_TIME + " INTEGER"
+                + KEY_GIFT_EXPIRATION_TIME + " INTEGER,"
+                + "UNIQUE ("
+                + KEY_GIFT_ID
+                + ") ON CONFLICT REPLACE"
                 + ")");
     }
 
@@ -396,10 +402,17 @@ public class DBHelper extends SQLiteOpenHelper {
         return 0;
     }
 
+    public void insertSpin(Spin spin) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_SPIN, null, getSpinValues(spin));
+        db.delete(TABLE_BOX, KEY_BOX_SPIN_ID + " = ?", new String[] {spin.getId()});
+        saveBoxes(db, spin);
+        db.close();
+    }
+
     public void updateSpin(Spin spin) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = getSpinValues(spin);
-        db.update(TABLE_SPIN, contentValues, KEY_SPIN_ID + " = ?", new String[] {spin.getId()});
+        db.update(TABLE_SPIN, getSpinValues(spin), KEY_SPIN_ID + " = ?", new String[] {spin.getId()});
         db.close();
     }
 
@@ -454,17 +467,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 rowInserted = db.insert(TABLE_SPIN, null, getSpinValues(spin));
 
                 if (rowInserted > -1) {
-                    List<Box> box = spin.getBox();
-                    if (box != null) {
-                        for (int i = 0; i < box.size(); i++) {
-                            ContentValues boxValues = new ContentValues();
-                            boxValues.put(KEY_BOX_SPIN_ID, spin.getId());
-                            boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
-                            boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
-                            boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
-                            rowInserted = db.insert(TABLE_BOX, null, boxValues);
-                        }
-                    }
+                    rowInserted = saveBoxes(db, spin);
                 }
             }
 
@@ -477,6 +480,23 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return rowInserted > -1;
+    }
+
+    private long saveBoxes(SQLiteDatabase db, Spin spin) {
+        long rowInserted = -1;
+        List<Box> box = spin.getBox();
+        if (box != null) {
+            for (int i = 0; i < box.size(); i++) {
+                ContentValues boxValues = new ContentValues();
+                boxValues.put(KEY_BOX_SPIN_ID, spin.getId());
+                boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
+                boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
+                boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
+                rowInserted = db.insert(TABLE_BOX, null, boxValues);
+            }
+        }
+
+        return rowInserted;
     }
 
     public HashMap<String, Spin> getSpins() {
@@ -498,28 +518,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return spins;
     }
 
+    public void insertGift(Gift gift) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_GIFT, null, getGiftValues(gift));
+        db.close();
+    }
+
     public boolean saveGifts(ArrayList<Gift> gifts) {
         long rowInserted = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
             db.delete(TABLE_GIFT, null, null);
-
             for (Gift gift: gifts) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(KEY_GIFT_ID, gift.getId());
-                contentValues.put(KEY_COMPANY_ID, gift.getCompanyKey());
-                contentValues.put(KEY_GIFT_DESCRIPTION, gift.getDescription());
-                contentValues.put(KEY_GIFT_TIME_LOCK, gift.getTimeLock());
-                contentValues.put(KEY_GIFT_RULES, gift.getRules());
-                contentValues.put(KEY_GIFT_LIMIT_GIFTS, gift.getLimitGifts());
-                contentValues.put(KEY_GIFT_COUNT_AVAILABLE, gift.getCountAvailable());
-                contentValues.put(KEY_GIFT_SPIN_KEY , gift.getSpinKey());
-                contentValues.put(KEY_GIFT_EXPIRATION_TIME , gift.getExpirationTime());
-
-                rowInserted = db.insert(TABLE_GIFT, null, contentValues);
+                rowInserted = db.insert(TABLE_GIFT, null, getGiftValues(gift));
             }
-
             if (rowInserted > -1) {
                 db.setTransactionSuccessful();
             }
@@ -529,6 +542,20 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return rowInserted > -1;
+    }
+
+    private ContentValues getGiftValues(Gift gift) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_GIFT_ID, gift.getId());
+        contentValues.put(KEY_COMPANY_ID, gift.getCompanyKey());
+        contentValues.put(KEY_GIFT_DESCRIPTION, gift.getDescription());
+        contentValues.put(KEY_GIFT_TIME_LOCK, gift.getTimeLock());
+        contentValues.put(KEY_GIFT_RULES, gift.getRules());
+        contentValues.put(KEY_GIFT_LIMIT_GIFTS, gift.getLimitGifts());
+        contentValues.put(KEY_GIFT_COUNT_AVAILABLE, gift.getCountAvailable());
+        contentValues.put(KEY_GIFT_SPIN_KEY , gift.getSpinKey());
+        contentValues.put(KEY_GIFT_EXPIRATION_TIME , gift.getExpirationTime());
+        return contentValues;
     }
 
     public HashMap<String, Gift> getGifts(String spinId) {
@@ -919,9 +946,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void insertCoupon(CouponExtension coupon) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_COUPONS, null, getCouponValues(coupon));
+        db.close();
+    }
+
+
     public void saveCoupon(CouponExtension coupon) {
         SQLiteDatabase db = this.getWritableDatabase();
-        saveCouponExtension(coupon,db);
+        db.insert(TABLE_COUPONS, null, getCouponValues(coupon));
         db.close();
     }
 
@@ -932,9 +966,8 @@ public class DBHelper extends SQLiteOpenHelper {
             if (offer) {
                 db.delete(TABLE_COUPONS, KEY_COUPON_COUPON_TYPE  + " = ?", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
             }
-
             for (int i = 0; i < coupons.size(); i++) {
-                saveCouponExtension(coupons.get(i),db);
+                db.insert(TABLE_COUPONS, null, getCouponValues(coupons.get(i)));
             }
             db.setTransactionSuccessful();
         } finally {
@@ -943,7 +976,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    private void saveCouponExtension(CouponExtension coupon, SQLiteDatabase db) {
+    private ContentValues getCouponValues(CouponExtension coupon) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_COUPON_STATUS, coupon.getStatus());
         contentValues.put(KEY_COUPON_CODE, coupon.getCode());
@@ -970,7 +1003,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(KEY_KEYWORDS, coupon.getKeywords());
         contentValues.put(KEY_COUPON_RRULE, coupon.getRrule());
 
-        db.insert(TABLE_COUPONS, null, contentValues);
+        return contentValues;
     }
 
     public List<CouponExtension> getCouponsExtension() {

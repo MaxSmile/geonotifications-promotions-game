@@ -90,19 +90,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
-    public void loadData() {
-        FirebaseData.getCoupons();
-        //FirebaseData.getPlaces();
-        FirebaseData.getGift();
-        FirebaseData.getOffer();
-        FirebaseData.getKeywords();
-        FirebaseData.getSpins();
-    }
-
-    public void setListeners() {
-        FirebaseData.loadCompanies();
-    }
-
     boolean checkLogin() {
         if (AccessToken.getCurrentAccessToken() != null) {
             getFacebookUserInfo();
@@ -118,12 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         return false;
     }
 
-    boolean checkResult() {
-        if (!result)
-            Toast.makeText(this, R.string.wait_for_update_data, Toast.LENGTH_LONG).show();
 
-        return result;
-    }
 
     void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {

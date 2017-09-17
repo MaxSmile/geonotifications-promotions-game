@@ -30,6 +30,7 @@ import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.DetailsHandler;
 import com.spindealsapp.common.Helper;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.GiftServiceLayer;
 import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Box;
@@ -102,7 +103,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         expandableLayout.collapse();
 
         if (isTaskRoot()) {
-            loadData();
+            FirebaseData.loadData();
         }
 
     }
