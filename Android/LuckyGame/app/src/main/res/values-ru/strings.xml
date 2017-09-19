@@ -148,4 +148,5 @@
     <string name="ok">Ok</string>
     <string name="coupon_not_available">Купон не доступен сегодня</string>
     <string name="get_coupon_text">Только тот, кто использует купон первым, получит его.</string>
+    <string name="loading">Загрузка…</string>
 </resources>
