@@ -43,13 +43,21 @@ public class FirebaseData {
     private static ArrayList<Spin> spinsList;
     private static ArrayList<CouponExtension> offersList;
 
-    public static void reloadSpins() {
+    private static void init() {
+        initCompanies = false;
+        countCompanies = 0;
+        initPlaces = false;
+        countPlaces = 0;
+        initGifts = false;
+        countGifts = 0;
         initSpins = false;
         countSpins = 0;
-        spinListener();
+        initOffers = false;
+        countOffers = 0;
     }
 
     public static void loadData() {
+        init();
         getKeywords();
         Constants.DB_COUNT.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -79,6 +87,7 @@ public class FirebaseData {
                         initCompanies = true;
                         DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
                         placeListener();
+                        EventBus.getDefault().post(new Events.LoadingData(10));
                     }
                 }
             }
@@ -124,6 +133,7 @@ public class FirebaseData {
                         initPlaces = true;
                         PlaceServiceLayer.updatePlaces(places);
                         giftListener();
+                        EventBus.getDefault().post(new Events.LoadingData(40));
                     }
                 }
             }
@@ -235,6 +245,7 @@ public class FirebaseData {
                 initGifts = true;
                 GiftServiceLayer.saveGifts(giftsList);
                 spinListener();
+                EventBus.getDefault().post(new Events.LoadingData(50));
             }
         }
     }
@@ -307,6 +318,7 @@ public class FirebaseData {
             if (countSpins == countChildren.getSpins()) {
                 initSpins = true;
                 SpinServiceLayer.saveSpins(spinsList);
+                EventBus.getDefault().post(new Events.LoadingData(90));
                 if (!initOffers) {
                     offerListener();
                 }
@@ -398,6 +410,7 @@ public class FirebaseData {
             if (countOffers == countChildren.getOffers()) {
                 initOffers = true;
                 CouponServiceLayer.saveCoupons(offersList, true);
+                EventBus.getDefault().post(new Events.FinishLoadData());
             }
         }
     }

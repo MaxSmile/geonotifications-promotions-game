@@ -13,15 +13,15 @@
         android:layout_centerHorizontal="true"/>
     <TextView
         android:id="@+id/customTabCount"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:minWidth="20dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:minWidth="22dp"
         android:textSize="15sp"
         android:gravity="center"
         android:textColor="@color/colorTabText"
         android:text="0"
         android:visibility="gone"
         android:layout_toEndOf="@+id/customTabText"
-        android:layout_marginStart="-5dp"
+        android:layout_marginStart="-9dp"
         android:background="@drawable/bg_count"/>
 </RelativeLayout>

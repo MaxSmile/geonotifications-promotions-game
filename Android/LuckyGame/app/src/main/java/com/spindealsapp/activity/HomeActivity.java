@@ -40,6 +40,8 @@ import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityHomeBinding;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class HomeActivity extends BaseActivity implements DataBridge, HomeHandler {
 
@@ -156,28 +158,23 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             checkNetwork();
         }
 
-        FirebaseData.loadData();
 
+        startGeoService();
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (Properties.getShowTutorial()) {
             Properties.setShowTutorial(false);
             startActivity(new Intent(this, TutorialActivity.class));
         }
 
-        startGeoService();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        FirebaseData.getCoupons();
-
-        if (showPopUpLogin && !checkLogin()) {
-            showPopUpLogin = false;
-            startActivity(new Intent(this, ChooseAccountActivity.class));
-        }
-
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
+        FirebaseData.getCoupons();
     }
 
     @Override

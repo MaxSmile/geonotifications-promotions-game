@@ -59,7 +59,6 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
             logoutGoogle();
             CurrentUser.user = null;
         }
-        FirebaseData.reloadSpins();
         startActivity(new Intent(this, ChooseAccountActivity.class));
         finish();
     }

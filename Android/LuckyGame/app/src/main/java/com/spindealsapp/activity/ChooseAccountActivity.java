@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.R;
+import com.spindealsapp.util.NetworkState;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,8 +65,12 @@ public class ChooseAccountActivity extends BaseActivity {
     }
 
     private void showLoginSuccessMessage() {
-        FirebaseData.reloadSpins();
-        onBackPressed();
+        Intent loaderIntent = new Intent(this, LoaderActivity.class);
+        if (getIntent().getBooleanExtra("loginForGame", false)) {
+            loaderIntent.putExtra("loginForGame", true);
+        }
+        startActivity(loaderIntent);
+        finish();
     }
 
     @Override
@@ -98,7 +103,12 @@ public class ChooseAccountActivity extends BaseActivity {
                 break;
             case R.id.btnLoginSkip:
                 showPopUpLogin = false;
-                onBackPressed();
+                if (getIntent().getBooleanExtra("loginForGame", false)) {
+                    onBackPressed();
+                } else {
+                    startActivity(new Intent(this, LoaderActivity.class));
+                    finish();
+                }
                 break;
             case R.id.chooseAccountTermsConditions:
                 Intent intent = new Intent(this, TermsConditionsActivity.class);

@@ -102,9 +102,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         expandableLayout = (ExpandableLayout) findViewById(R.id.expandableLayout);
         expandableLayout.collapse();
 
-        if (isTaskRoot()) {
+        /*if (isTaskRoot()) {
             FirebaseData.loadData();
-        }
+        }*/
 
     }
 
@@ -204,7 +204,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         } else {
             onBackPressed();
         }
-
     }
 
     @Override
@@ -277,7 +276,9 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                startActivity(new Intent(DetailsActivity.this, ChooseAccountActivity.class));
+                                Intent intent = new Intent(DetailsActivity.this, ChooseAccountActivity.class);
+                                intent.putExtra("loginForGame", true);
+                                startActivity(intent);
                             }
                         });
         AlertDialog alert = builder.create();

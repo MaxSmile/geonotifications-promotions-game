@@ -24,6 +24,21 @@ public class Events {
     public static class AddedCoupon {
     }
 
+    public static class FinishLoadData {
+    }
+
+    public static class LoadingData {
+        private int percent;
+
+        public LoadingData(int percent) {
+            this.percent = percent;
+        }
+
+        public int getPercent() {
+            return percent;
+        }
+    }
+
     public static class CheckCoupons {
         private boolean exist;
 
