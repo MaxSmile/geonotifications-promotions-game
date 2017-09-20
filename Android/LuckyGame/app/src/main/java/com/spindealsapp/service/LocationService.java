@@ -163,6 +163,7 @@ public class LocationService extends Service {
             if (pointRadius < 1) {
                 pointRadius = 1;
             }
+
             locationManager.addProximityAlert(
                     latitude,
                     longitude,
@@ -185,7 +186,6 @@ public class LocationService extends Service {
             CurrentLocation.lat = location.getLatitude();
             CurrentLocation.lon = location.getLongitude();
             CurrentLocation.provider = location.getProvider();
-
             if (!CurrentLocation.check) {
                 CurrentLocation.check = true;
                 ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
