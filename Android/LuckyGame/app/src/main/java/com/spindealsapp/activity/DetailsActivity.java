@@ -118,7 +118,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         public void setImageForPosition(int position, final ImageView imageView) {
             Picasso.with(imageView.getContext())
                     .load(gallery.get(position))
-                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .into(imageView);
         }
     };
