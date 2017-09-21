@@ -20,17 +20,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.DetailsHandler;
 import com.spindealsapp.common.Helper;
 import com.spindealsapp.database.DBHelper;
-import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.GiftServiceLayer;
 import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Box;
@@ -42,6 +37,10 @@ import com.spindealsapp.util.NetworkState;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityDetailsBinding;
 import com.spindealsapp.util.Rrule;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -49,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,7 +61,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     private RotateAnimation rotateAnim;
     private ImageView detailsBtnPlay;
-    private SliderLayout slider;
     private ExpandableLayout expandableLayout;
     private ExpandableLayout expandableLayoutOther;
     private ImageView detailsArrow;
@@ -72,17 +71,18 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private ArrayList<String> otherList;
     private ListView detailsOtherPlaces;
     private List<Box> boxes;
+    private CarouselView carouselView;
+    private List<String> gallery = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
         geoNotification = getIntent().getBooleanExtra("geoNotification", false);
-
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setHandler(this);
 
+        carouselView = (CarouselView) findViewById(R.id.detailsSlider);
         detailsOtherPlaces = (ListView)findViewById(R.id.detailsOtherPlaces);
 
         detailsBtnPlay = (ImageView) findViewById(R.id.detailsBtnPlay);
@@ -94,9 +94,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         rotateAnim.setRepeatCount(Animation.INFINITE);
         rotateAnim.setRepeatMode(Animation.RESTART);
         rotateAnim.setDuration(2000);
-
-        slider = (SliderLayout) findViewById(R.id.detailsSlider);
-
         expandableLayoutOther = (ExpandableLayout) findViewById(R.id.expandableLayoutOther);
         expandableLayoutOther.collapse();
         expandableLayout = (ExpandableLayout) findViewById(R.id.expandableLayout);
@@ -109,32 +106,22 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void initSlider() {
-        slider.removeAllSliders();
-        List<String> gallery = place.getGallery();
+        gallery = place.getGallery();
         if (gallery.size() > 0) {
-            for (int i = 0; i < gallery.size(); i++) {
-                DefaultSliderView sliderView = new DefaultSliderView(this);
-                sliderView
-                        .image(gallery.get(i))
-                        .setScaleType(BaseSliderView.ScaleType.Fit);
-                slider.addSlider(sliderView);
-            }
-
-            slider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
-            slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-            slider.startAutoCycle();
-            slider.setSliderTransformDuration(1000, new LinearInterpolator());
-            slider.setDuration(10000);
+            carouselView.setPageCount(gallery.size());
+            carouselView.setImageListener(imageListener);
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        if (slider != null)
-            slider.stopAutoCycle();
-
-        super.onDestroy();
-    }
+    ImageListener imageListener = new ImageListener() {
+        @Override
+        public void setImageForPosition(int position, final ImageView imageView) {
+            Picasso.with(imageView.getContext())
+                    .load(gallery.get(position))
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(imageView);
+        }
+    };
 
     @Override
     protected void onResume() {

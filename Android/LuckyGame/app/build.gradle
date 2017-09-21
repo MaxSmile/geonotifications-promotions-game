@@ -22,7 +22,7 @@ android {
         applicationId "com.spindealsapp"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 39
+        versionCode 40
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "luckygame-$versionName-$versionCode")
@@ -59,12 +59,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.daimajia.slider:library:1.1.5@aar'
     compile 'net.cachapa.expandablelayout:expandablelayout:2.9.1'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'net.sf.biweekly:biweekly:0.6.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.synnapps:carouselview:0.1.4'
     testCompile 'junit:junit:4.12'
 }
 

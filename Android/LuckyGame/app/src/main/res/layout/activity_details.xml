@@ -43,12 +43,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/image">
-                    <com.daimajia.slider.library.SliderLayout
+                    <com.synnapps.carouselview.CarouselView
                         android:id="@+id/detailsSlider"
                         android:layout_width="match_parent"
-                        app:indicator_visibility="visible"
-                        android:layout_height="300dp"/>
-
+                        android:layout_height="300dp"
+                        app:fillColor="#FFFFFFFF"
+                        app:pageColor="#00000000"
+                        app:radius="3dp"
+                        app:pageTransformInterval="2000"
+                        app:slideInterval="5000"
+                        app:animateOnBoundary="false"
+                        app:strokeColor="#FF777777"
+                        app:strokeWidth="1dp"/>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
