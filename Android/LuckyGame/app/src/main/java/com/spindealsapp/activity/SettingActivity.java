@@ -18,6 +18,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.SettingHandler;
 import com.spindealsapp.R;
+import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.databinding.ActivitySettingBinding;
 
@@ -58,6 +59,7 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
             LoginManager.getInstance().logOut();
             logoutGoogle();
             CurrentUser.user = null;
+            Properties.setUser(null);
         }
         startActivity(new Intent(this, ChooseAccountActivity.class));
         finish();

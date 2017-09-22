@@ -300,7 +300,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void info(View view) {
-        if (binding.getPlace().isInfoChecked() || place.getInfoTimestamp() == 0) {
+        if (place.getInfoTimestamp() == 0 || place.getInfo() == null || place.getInfo().length() == 0) {
             Toast.makeText(this, R.string.info_empty_message, Toast.LENGTH_SHORT).show();
         } else {
             place.setInfoChecked(true);

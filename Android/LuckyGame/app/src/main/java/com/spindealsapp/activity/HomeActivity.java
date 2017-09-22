@@ -38,6 +38,7 @@ import com.spindealsapp.service.LocationService;
 import com.spindealsapp.util.LocationState;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityHomeBinding;
+import com.spindealsapp.util.NetworkState;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -154,11 +155,10 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         }*/
 
-        if (DBHelper.getInstance(App.getInstance()).getPlaces().size() == 0) {
+       /* if (DBHelper.getInstance(App.getInstance()).getPlaces().size() == 0) {
             checkNetwork();
-        }
-
-
+        }*/
+        checkNetwork();
         startGeoService();
     }
 

@@ -25,8 +25,10 @@ public class NetworkActivity extends BaseActivity implements NetworkHandler {
     @Override
     protected void onResume() {
         super.onResume();
-        if (NetworkState.isOnline())
-            onBackPressed();
+        if (NetworkState.isOnline()) {
+            startActivity(new Intent(this, LoaderActivity.class));
+            finish();
+        }
     }
 
     @Override
@@ -34,4 +36,5 @@ public class NetworkActivity extends BaseActivity implements NetworkHandler {
         Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
         startActivity(intent);
     }
+
 }

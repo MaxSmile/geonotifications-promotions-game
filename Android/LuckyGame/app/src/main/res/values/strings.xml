@@ -147,6 +147,6 @@
     <string name="login_dialog_message">To continue need to login</string>
     <string name="ok">Ok</string>
     <string name="coupon_not_available">Coupon not available today</string>
-    <string name="get_coupon_text">Only whoever redeem the coupon first will receive it.</string>
+    <string name="get_coupon_text">Only whoever redeems the coupon first will receive it.</string>
     <string name="loading">Loading…</string>
 </resources>

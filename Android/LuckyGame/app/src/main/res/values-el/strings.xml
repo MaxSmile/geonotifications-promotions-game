@@ -13,7 +13,7 @@
     <string name="spin_active">Ενεργό Spin</string>
     <string name="spin_is_coming">Spin έρχεται</string>
     <string name="spin_plus">+1 Spin</string>
-    <string name="e_shops">Έρχεται σύντομα</string>
+    <string name="e_shops">Έρχεται \nσύντομα</string>
     <string name="all">Όλα</string>
     <string name="food">Φαγητό</string>
     <string name="nightlife">Νυχτερινή ζωή</string>
@@ -50,7 +50,7 @@
     <string name="day">%dμέρα</string>
     <string name="days">%dμέρες</string>
     <string name="time">%1$dω,%2$dλ</string>
-    <string name="time_short">%dμ</string>
+    <string name="time_short">%dλ</string>
     <string name="direction_distance">Απόσταση: %s</string>
     <string name="more_about">Σχετικά</string>
     <string name="coupon_code">Κωδικός </string>
@@ -147,6 +147,6 @@
     <string name="login_dialog_message">Για να συνεχίσετε πρέπει να συνδεθείτε</string>
     <string name="ok">Ok</string>
     <string name="coupon_not_available">Το κουπόνι δεν είναι διαθέσιμο σήμερα</string>
-    <string name="get_coupon_text">Μόνο όποιος χρησιμοποιεί το κουπόνι πρώτα θα το λάβει.</string>
+    <string name="get_coupon_text">Μόνο όποιος χρησιμοποιήσει το κουπόνι πρώτος θα το λάβει.</string>
     <string name="loading">Φόρτωση…</string>
 </resources>

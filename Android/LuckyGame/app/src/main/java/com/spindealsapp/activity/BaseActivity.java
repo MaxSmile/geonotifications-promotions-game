@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.BaseHandler;
+import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.entity.Company;
@@ -91,6 +93,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     }
 
     boolean checkLogin() {
+        User user = Properties.getUser();
+        if (user != null) {
+            CurrentUser.user = user;
+            return true;
+        }
+        /*
         if (AccessToken.getCurrentAccessToken() != null) {
             getFacebookUserInfo();
             return true;
@@ -101,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                 handleSignInResult(result);
                 return true;
             }
-        }
+        }*/
         return false;
     }
 
@@ -115,7 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                     accountGoogle.getDisplayName(),
                     Constants.USER_TYPE_GOOGLE
             );
-
+            Properties.setUser(CurrentUser.user);
         }
     }
 
@@ -143,6 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                                         objectFacebook.getString("id"),
                                         objectFacebook.getString("name"),
                                         Constants.USER_TYPE_FACEBOOK);
+                                Properties.setUser(CurrentUser.user);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -23,6 +23,7 @@ public class LoaderActivity extends BaseActivity {
         progressBar = (ProgressBar)findViewById(R.id.loadProgress);
         progressBar.setMax(100);
         progressBar.setProgress(0);
+        FirebaseData.loadData();
         if (!NetworkState.isOnline()) {
             loadDataSuccess();
         } else {

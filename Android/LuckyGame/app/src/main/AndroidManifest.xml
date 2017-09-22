@@ -84,7 +84,6 @@
         <activity
             android:name=".activity.NetworkActivity"
             android:launchMode="singleTop"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".activity.PreferencesActivity" />

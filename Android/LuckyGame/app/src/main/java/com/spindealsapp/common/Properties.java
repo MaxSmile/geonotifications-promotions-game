@@ -3,7 +3,9 @@ package com.spindealsapp.common;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
 import com.spindealsapp.App;
+import com.spindealsapp.entity.User;
 
 /**
  * Created by Kvm on 04.05.2017.
@@ -16,6 +18,7 @@ public class Properties {
     private static final String SOUND_GAME = "soundGame";
     private static final String NOTIFICATIONS = "notifications";
     private static final String SHOW_TUTORIAL = "showTutorial";
+    private static final String CURRENT_USER = "currentUser";
 
     private synchronized static SharedPreferences getPrefs(){
         if (prefs == null) {
@@ -24,8 +27,21 @@ public class Properties {
         return prefs;
     }
 
+    public static void setUser(User user) {
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        getPrefs().edit().putString(CURRENT_USER, json).apply();
+    }
+
+    public static User getUser() {
+        Gson gson = new Gson();
+        String json = getPrefs().getString(CURRENT_USER, "");
+        User user = gson.fromJson(json, User.class);
+        return user;
+    }
+
     public static int getNearMeRadius(){
-        String s = getPrefs().getString(NEAR_ME_RADIUS , "15000");
+        String s = getPrefs().getString(NEAR_ME_RADIUS , "7000");
         if (s.isEmpty()) {
             return 0;
         }
