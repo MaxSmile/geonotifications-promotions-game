@@ -39,7 +39,7 @@
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:onClick="@{handler::like}"
-            android:visibility="@{company.facebookUrl != null ? v.VISIBLE : v.GONE}">
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

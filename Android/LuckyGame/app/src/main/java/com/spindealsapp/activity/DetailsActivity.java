@@ -116,9 +116,11 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     ImageListener imageListener = new ImageListener() {
         @Override
         public void setImageForPosition(int position, final ImageView imageView) {
-            Picasso.with(imageView.getContext())
-                    .load(gallery.get(position))
-                    .into(imageView);
+            if (!gallery.get(position).equals("")) {
+                Picasso.with(imageView.getContext())
+                        .load(gallery.get(position))
+                        .into(imageView);
+            }
         }
     };
 
