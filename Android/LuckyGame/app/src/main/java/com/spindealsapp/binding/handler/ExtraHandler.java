@@ -10,5 +10,6 @@ public interface ExtraHandler extends BaseHandler {
 
     public void like(View view);
     public void share(View view);
+    public void shareApp(View view);
     public void invite(View view);
 }

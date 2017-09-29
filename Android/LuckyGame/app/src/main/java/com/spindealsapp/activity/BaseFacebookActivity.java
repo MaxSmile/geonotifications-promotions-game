@@ -74,7 +74,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     private void init() {
         ((TextView)findViewById(R.id.unlockLikeText))
-                .setText(String.format(getString(R.string.unlock_facebook_like), name));
+                .setText(String.format(getString(R.string.unlock_facebook_share), getString(R.string.app_name)));
         ((TextView)findViewById(R.id.unlockCheckInText))
                 .setText(String.format(getString(R.string.unlock_facebook_share), name));
 
@@ -84,6 +84,33 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     protected void socialSuccess() {
 
+    }
+
+    private void shareFb(String title, String description, String url, String imageUrl) {
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentTitle(title)
+                .setContentDescription(description)
+                .setContentUrl(Uri.parse(url))
+                .setImageUrl(Uri.parse(imageUrl))
+                .build();
+        shareButton.setShareContent(content);
+        shareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                socialSuccess();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+        shareButton.callOnClick();
     }
 
     @Override
@@ -103,36 +130,19 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
     }
 
     @Override
+    public void shareApp(View view) {
+        shareFb(getString(R.string.app_name), getString(R.string.share_app_description),
+                getString(R.string.website_url), getString(R.string.app_preview_image_url));
+    }
+
+    @Override
     public void share(View view) {
         String image = getString(R.string.app_preview_image_url);
         if (place != null) {
             if (place.getGallery().size() > 0) {
                 image = place.getGallery().get(0);
             }
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentTitle(place.getName())
-                    .setContentDescription(place.getInfo())
-                    .setContentUrl(Uri.parse(place.getUrl()))
-                    .setImageUrl(Uri.parse(image))
-                    .build();
-            shareButton.setShareContent(content);
-            shareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
-                @Override
-                public void onSuccess(Sharer.Result result) {
-                    socialSuccess();
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-
-                @Override
-                public void onError(FacebookException error) {
-
-                }
-            });
-            shareButton.callOnClick();
+            shareFb(place.getName(), place.getInfo(), place.getUrl(), image);
         }
     }
 

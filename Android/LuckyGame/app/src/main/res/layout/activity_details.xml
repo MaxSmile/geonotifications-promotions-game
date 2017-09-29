@@ -52,7 +52,7 @@
                         app:radius="3dp"
                         app:pageTransformInterval="2000"
                         app:slideInterval="5000"
-                        app:animateOnBoundary="false"
+                        app:animateOnBoundary="true"
                         app:strokeColor="#FF777777"
                         app:strokeWidth="1dp"/>
                     <RelativeLayout

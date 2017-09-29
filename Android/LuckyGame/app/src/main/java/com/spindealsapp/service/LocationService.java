@@ -130,9 +130,6 @@ public class LocationService extends Service {
         } else {
             loadPlaces();
         }
-
-
-
         return START_STICKY;
     }
 
