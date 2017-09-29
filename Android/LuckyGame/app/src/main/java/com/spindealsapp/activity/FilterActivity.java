@@ -1,20 +1,29 @@
 package com.spindealsapp.activity;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.spindealsapp.Constants;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.R;
+import com.spindealsapp.util.Locales;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class FilterActivity extends BaseActivity {
 
@@ -30,16 +39,21 @@ public class FilterActivity extends BaseActivity {
     private ArrayAdapter<String> arrayKeywordsAdapter;
 
     private static int FILTER_INDEX_ZA = 0;
+    private int categoryType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
+        categoryType = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, Constants.CATEGORY_ALL);
         filterLayoutByKeywords = (LinearLayout)findViewById(R.id.filterLayoutByKeywords);
         filterListByKeywords = (ListView)findViewById(R.id.filterListByKeywords);
         filterListByKeywords.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         keywordsList = DBHelper.getInstance(this).getKeywords();
+        if (keywordsList.size() > 0 && categoryType >= 0) {
+            updateKeywords();
+        }
         if (keywordsList.size() > 0) {
             filterLayoutByKeywords.setVisibility(View.VISIBLE);
         } else {
@@ -120,6 +134,27 @@ public class FilterActivity extends BaseActivity {
                 arrayKeywordsAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void updateKeywords() {
+        Resources localizedResources = Locales.getLocalizedResources(this, Locale.US);
+        String[] typesName = localizedResources.getStringArray(R.array.company_type);
+        String typeName = typesName[categoryType].toLowerCase();
+        Iterator<String> iKeywords = keywordsList.iterator();
+        while (iKeywords.hasNext()) {
+            boolean exist = false;
+            String keyword = iKeywords.next();
+            List<String> keywords = Arrays.asList(keyword.split("-"));
+            if (keywords.size() > 1) {
+                String type = keywords.get(0).toLowerCase().trim();
+                if (type.equals(typeName)) {
+                    exist = true;
+                }
+            }
+            if (!exist) {
+                iKeywords.remove();
+            }
+        }
     }
 
     private void apply() {

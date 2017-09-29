@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="40dp"
-    android:paddingLeft="35dp"
-    android:paddingRight="35dp"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
     android:paddingTop="40dp"
     tools:context="com.spindealsapp.activity.FilterActivity">
     <RelativeLayout
@@ -91,7 +91,7 @@
                     android:background="@null"
                     android:textAllCaps="false"
                     android:textColor="@color/filterText"
-                    android:textSize="18sp"/>
+                    android:textSize="17sp"/>
                 <Button
                     android:id="@+id/filterClear"
                     android:layout_width="0dp"
@@ -101,7 +101,7 @@
                     android:background="@null"
                     android:textAllCaps="false"
                     android:textColor="@color/filterText"
-                    android:textSize="18sp"/>
+                    android:textSize="17sp"/>
                 <Button
                     android:id="@+id/filterClose"
                     android:layout_width="0dp"
@@ -111,7 +111,7 @@
                     android:background="@null"
                     android:textAllCaps="false"
                     android:textColor="@color/filterText"
-                    android:textSize="18sp"/>
+                    android:textSize="17sp"/>
             </LinearLayout>
 
         </LinearLayout>

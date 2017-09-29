@@ -139,7 +139,7 @@
         \nместа компаний и магазины
     </string>
     <string name="offer">Предложение</string>
-    <string name="filter_by_keywords"><u>По ключевым словам</u></string>
+    <string name="filter_by_keywords"><u>Подкатегории</u></string>
     <string name="cheat_message">Вы уже использовали это</string>
     <string name="coming_soon_message">Эта категория скоро появится</string>
     <string name="info_empty_message">Нет новостей в данный момент</string>

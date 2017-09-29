@@ -119,7 +119,7 @@
     <string name="mail_chooser">Στείλτε e-mail:</string>
     <string name="filter_by_town"><u>Ανα πόλη</u></string>
     <string name="filter_za">Ω-Α</string>
-    <string name="filter_apply">Ισχύει</string>
+    <string name="filter_apply">Υποβολή</string>
     <string name="filter_clear">Διαγραφή</string>
     <string name="filter_close">Κλείσιμο</string>
     <string name="search_placeholder">Αναζήτηση βάσει ονόματος ή λέξεις</string>
@@ -139,7 +139,7 @@
         \nκαταστήματα και εταιρείες 
     </string>
     <string name="offer">Προσφορά</string>   
-    <string name="filter_by_keywords"><u>Ανα λέξεις-κλειδιά</u></string>
+    <string name="filter_by_keywords"><u>Υποκατηγορίες</u></string>
     <string name="cheat_message">Το χρησιμοποιήσατε ήδη</string>
     <string name="coming_soon_message">Αυτή η κατηγορία έρχεται σύντομα</string>
 	<string name="info_empty_message">Τίποτα νέο αυτή τη στιγμή</string>

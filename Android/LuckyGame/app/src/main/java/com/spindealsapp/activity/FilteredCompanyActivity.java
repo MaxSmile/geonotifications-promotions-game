@@ -64,9 +64,16 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         companiesList = (RecyclerView) findViewById(R.id.filteredCompanyList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         companiesList.setLayoutManager(llm);
+        clearKeywords();
     }
 
-
+    private void clearKeywords() {
+        if (Filters.byKeywords) {
+            Filters.count--;
+        }
+        Filters.byKeywords = false;
+        Filters.checkedKeywordsArray = null;
+    }
 
     @Override
     protected void onResume() {
@@ -192,6 +199,17 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         super.onStop();
     }
 
+    @Override
+    public void back(View view) {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        clearKeywords();
+        super.onBackPressed();
+    }
+
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
         refreshData();
@@ -215,7 +233,9 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Override
     public void filters(View view) {
-         startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+        Intent intent = new Intent(this, FilterActivity.class);
+        intent.putExtra(Constants.PLACE_TYPE_KEY, type);
+        startActivityForResult(intent, Filters.FILTER_CODE);
     }
 
     @Override
