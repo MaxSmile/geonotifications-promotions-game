@@ -33,4 +33,24 @@ public class Count {
     public long getSpins() {
         return spins;
     }
+
+    public void setCompanies(long companies) {
+        this.companies = companies;
+    }
+
+    public void setGifts(long gifts) {
+        this.gifts = gifts;
+    }
+
+    public void setOffers(long offers) {
+        this.offers = offers;
+    }
+
+    public void setPlaces(long places) {
+        this.places = places;
+    }
+
+    public void setSpins(long spins) {
+        this.spins = spins;
+    }
 }

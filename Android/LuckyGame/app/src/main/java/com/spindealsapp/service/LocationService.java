@@ -56,6 +56,7 @@ public class LocationService extends Service {
 
     private List<ProximityIntentReceiver> receivers;
     private List<PendingIntent> pendingIntents;
+    private LocationListener locationListener;
 
     @Nullable
     @Override
@@ -69,7 +70,7 @@ public class LocationService extends Service {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            LocationListener locationListener = new MyLocationListener();
+            locationListener = new MyLocationListener();
 
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
@@ -120,6 +121,7 @@ public class LocationService extends Service {
                 }
                 pendingIntents = new ArrayList<PendingIntent>();
             }
+            locationManager.removeUpdates(locationListener);
             stopSelf();
             return START_NOT_STICKY;
         }
@@ -149,7 +151,6 @@ public class LocationService extends Service {
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
             if (place.getGeoTimeStart() < System.currentTimeMillis() && place.getGeoTimeFinish() > System.currentTimeMillis()) {
-                System.out.println("myTest place=" + place.getName());
                 addProximityAlert(place.getGeoLat(), place.getGeoLon(), place.getId(), place.getGeoRadius());
             }
         }
@@ -184,7 +185,6 @@ public class LocationService extends Service {
 
     public class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
-            System.out.println("myTest location.getLatitude= " + location.getLatitude());
             CurrentLocation.lat = location.getLatitude();
             CurrentLocation.lon = location.getLongitude();
             CurrentLocation.provider = location.getProvider();

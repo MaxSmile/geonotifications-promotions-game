@@ -14,6 +14,7 @@ import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.adapter.CompanyListAdapter;
 import com.spindealsapp.binding.handler.FilteredHandler;
 import com.spindealsapp.common.Filters;
+import com.spindealsapp.common.PlaceDistanceComparator;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -171,6 +173,11 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         }
 
         places = groupByCompany(places);
+
+        if (Filters.nearMe) {
+            Collections.sort(places, new PlaceDistanceComparator());
+        }
+
         binding.setCountResult(places.size() > 0);
         companiesList.setAdapter(new CompanyListAdapter(this, places, DBHelper.getInstance(this).getCompanies()));
     }

@@ -58,6 +58,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private ImageView logoSmall;
     private ImageView addCouponBtn;
     private ActivityHomeBinding binding;
+    private int tabPosition;
 
 
     @Override
@@ -91,6 +92,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                tabPosition = tab.getPosition();
                 ((TextView) tab.getCustomView().findViewById(R.id.customTabText))
                         .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTabTextSelected));
                 if (tab.getPosition() == 1) {
@@ -139,25 +141,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(mSectionsPagerAdapter.getTabView(i));
         }
-
-         /*try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.spindealsapp",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }*/
-
-       /* if (DBHelper.getInstance(App.getInstance()).getPlaces().size() == 0) {
-            checkNetwork();
-        }*/
         checkNetwork();
         startGeoService();
     }
@@ -212,9 +195,12 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             startActivity(new Intent(this, LocationActivity.class));
         }
         if (CurrentLocation.lat != 0 ) {
-                Filters.nearMe = !Filters.nearMe;
-                binding.setFilterNearMe(Filters.nearMe);
-                filterData();
+            Filters.nearMe = !Filters.nearMe;
+            binding.setFilterNearMe(Filters.nearMe);
+            filterData();
+            if (tabPosition == 0) {
+                startActivity(new Intent(this, FilteredCompanyActivity.class));
+            }
         } else {
             Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
         }

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.spindealsapp.adapter.CompanyListAdapter;
 import com.spindealsapp.common.Filters;
+import com.spindealsapp.common.PlaceDistanceComparator;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
@@ -29,6 +30,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -169,6 +172,11 @@ public class ActiveCompaniesFragment extends Fragment {
         }
 
         places = groupByCompany(places);
+
+        if (Filters.nearMe) {
+            Collections.sort(places, new PlaceDistanceComparator());
+        }
+
         dataBridge.activeSpins(places.size());
         adapter.updateData(places, DBHelper.getInstance(getActivity()).getCompanies());
     }

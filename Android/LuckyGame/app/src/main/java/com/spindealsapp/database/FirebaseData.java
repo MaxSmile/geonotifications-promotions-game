@@ -59,10 +59,80 @@ public class FirebaseData {
     public static void loadData() {
         init();
         getKeywords();
-        Constants.DB_COUNT.addListenerForSingleValueEvent(new ValueEventListener() {
+        countChildren = new Count();
+        getCountCompanies();
+    }
+
+    private static void getCountCompanies() {
+        Constants.DB_COMPANY.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                countChildren = dataSnapshot.getValue(Count.class);
+                countChildren.setCompanies(dataSnapshot.getChildrenCount());
+                EventBus.getDefault().post(new Events.LoadingData(5));
+                getCountPlaces();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void getCountPlaces() {
+        Constants.DB_PLACE.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                countChildren.setPlaces(dataSnapshot.getChildrenCount());
+                EventBus.getDefault().post(new Events.LoadingData(20));
+                getCountGifts();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void getCountGifts() {
+        Constants.DB_GIFT.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                countChildren.setGifts(dataSnapshot.getChildrenCount());
+                EventBus.getDefault().post(new Events.LoadingData(25));
+                getCountSpins();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void getCountSpins() {
+        Constants.DB_SPIN.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                countChildren.setSpins(dataSnapshot.getChildrenCount());
+                EventBus.getDefault().post(new Events.LoadingData(45));
+                getCountOffers();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void getCountOffers() {
+        Constants.DB_OFFER.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                countChildren.setOffers(dataSnapshot.getChildrenCount());
+                EventBus.getDefault().post(new Events.LoadingData(50));
                 companyListener();
             }
 
@@ -72,6 +142,7 @@ public class FirebaseData {
             }
         });
     }
+
 
     private static void companyListener() {
         final ArrayList<Company> companies = new ArrayList<Company>();
@@ -87,7 +158,7 @@ public class FirebaseData {
                         initCompanies = true;
                         DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
                         placeListener();
-                        EventBus.getDefault().post(new Events.LoadingData(10));
+                        EventBus.getDefault().post(new Events.LoadingData(55));
                     }
                 }
             }
@@ -133,7 +204,7 @@ public class FirebaseData {
                         initPlaces = true;
                         PlaceServiceLayer.updatePlaces(places);
                         giftListener();
-                        EventBus.getDefault().post(new Events.LoadingData(40));
+                        EventBus.getDefault().post(new Events.LoadingData(70));
                     }
                 }
             }
@@ -245,7 +316,7 @@ public class FirebaseData {
                 initGifts = true;
                 GiftServiceLayer.saveGifts(giftsList);
                 spinListener();
-                EventBus.getDefault().post(new Events.LoadingData(50));
+                EventBus.getDefault().post(new Events.LoadingData(70));
             }
         }
     }
@@ -318,7 +389,7 @@ public class FirebaseData {
             if (countSpins == countChildren.getSpins()) {
                 initSpins = true;
                 SpinServiceLayer.saveSpins(spinsList);
-                EventBus.getDefault().post(new Events.LoadingData(90));
+                EventBus.getDefault().post(new Events.LoadingData(95));
                 if (!initOffers) {
                     offerListener();
                 }

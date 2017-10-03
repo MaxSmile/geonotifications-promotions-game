@@ -24,6 +24,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -95,16 +97,6 @@ public class CouponsFragment extends Fragment {
 
     private void filterData() {
 
-        if (Filters.nearMe) {
-            Iterator<CouponExtension> j = coupons.iterator();
-            while (j.hasNext()) {
-                CouponExtension coupon = j.next();
-                if (coupon.getDistance() > Properties.getNearMeRadius()) {
-                    j.remove();
-                }
-            }
-        }
-
         if (Filters.byCity) {
             Iterator<CouponExtension> iCity = coupons.iterator();
             while (iCity.hasNext()) {
@@ -142,6 +134,27 @@ public class CouponsFragment extends Fragment {
             }
         }
 
+        if (Filters.nearMe) {
+            Iterator<CouponExtension> j = coupons.iterator();
+            while (j.hasNext()) {
+                CouponExtension coupon = j.next();
+                if (coupon.getDistance() > Properties.getNearMeRadius()) {
+                    j.remove();
+                }
+            }
+            Collections.sort(coupons, new CouponDistanceComparator());
+        }
+
         adapter.updateData(coupons);
+    }
+
+    private class CouponDistanceComparator implements Comparator<CouponExtension> {
+
+        @Override
+        public int compare(CouponExtension o1, CouponExtension o2) {
+            double distance1 = o1.getDistance();
+            double distance2 = o2.getDistance();
+            return Double.compare(distance1, distance2);
+        }
     }
 }
