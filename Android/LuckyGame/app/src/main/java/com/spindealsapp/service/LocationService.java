@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
@@ -84,6 +85,8 @@ public class LocationService extends Service {
                     locationListener
             );
 
+            RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.custom_notification);
+
             Intent intent = new Intent(this, HomeActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
@@ -91,14 +94,13 @@ public class LocationService extends Service {
             stopIntent.setAction(STOP_LOCATION_SERVICE);
             PendingIntent disconnectPendingIntent = PendingIntent.getService(
                     this, 0, stopIntent, 0);
+            contentView.setOnClickPendingIntent(R.id.notificationClose, disconnectPendingIntent);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setContentIntent(pendingIntent)
-                    .setOngoing(true)
-                    .setAutoCancel(true)
-                    .setContentText(getString(R.string.location_service_text))
-                    .addAction(R.drawable.ic_close_white, getString(R.string.location_service_stop), disconnectPendingIntent)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setDeleteIntent(disconnectPendingIntent)
+                    .setContent(contentView)
                     .setSmallIcon(R.mipmap.ic_launcher);
 
             Notification notification = builder.build();
@@ -121,6 +123,7 @@ public class LocationService extends Service {
             stopSelf();
             return START_NOT_STICKY;
         }
+
         if (pendingIntents != null) {
             for (int i = 0; i < pendingIntents.size(); i++) {
                 locationManager.removeProximityAlert(pendingIntents.get(i));
@@ -146,6 +149,7 @@ public class LocationService extends Service {
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
             if (place.getGeoTimeStart() < System.currentTimeMillis() && place.getGeoTimeFinish() > System.currentTimeMillis()) {
+                System.out.println("myTest place=" + place.getName());
                 addProximityAlert(place.getGeoLat(), place.getGeoLon(), place.getId(), place.getGeoRadius());
             }
         }
@@ -180,6 +184,7 @@ public class LocationService extends Service {
 
     public class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
+            System.out.println("myTest location.getLatitude= " + location.getLatitude());
             CurrentLocation.lat = location.getLatitude();
             CurrentLocation.lon = location.getLongitude();
             CurrentLocation.provider = location.getProvider();

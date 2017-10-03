@@ -3,4 +3,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+    <style name="notificationTitle" parent="android:TextAppearance.Material.Notification.Title" />
+    <style name="notificationText" parent="android:TextAppearance.Material.Notification" />
 </resources>

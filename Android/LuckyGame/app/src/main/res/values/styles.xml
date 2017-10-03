@@ -74,4 +74,7 @@
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="notificationTitle" parent="android:TextAppearance.Medium" />
+    <style name="notificationText" parent="android:TextAppearance.Small" />
+
 </resources>

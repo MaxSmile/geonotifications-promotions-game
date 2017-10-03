@@ -71,13 +71,7 @@ public class Rrule {
         if (recur.getByMonthDay().size() > 0 || freq == Frequency.DAILY) {
             return calEnd.getTimeInMillis();
         } else {
-            Map <String, List<String>>map = recur.getXRules();
-            Date start = new Date();
-            if (map.size() > 0) {
-                start = ICalDateFormat.parse(map.get("DTSTART").get(0));
-            }
-            TimeZone timezone = TimeZone.getDefault();
-            DateIterator it = rrule.getDateIterator(start , timezone);
+            DateIterator it = rrule.getDateIterator(new Date(), TimeZone.getTimeZone("GMT+00:00"));
             Calendar calStart = clearCalendar();
 
             long previous = calStart.getTimeInMillis();
