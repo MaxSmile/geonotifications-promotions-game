@@ -63,7 +63,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/facebook_like"
+                android:src="@drawable/ic_share"
                 android:minWidth="28dp"/>
             <TextView
                 android:id="@+id/unlockLikeText"
@@ -84,7 +84,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/geo_fence"
+                android:src="@drawable/ic_share"
                 android:minWidth="28dp"/>
             <TextView
                 android:id="@+id/unlockCheckInText"
