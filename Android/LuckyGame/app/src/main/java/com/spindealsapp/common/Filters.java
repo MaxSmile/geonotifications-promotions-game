@@ -23,4 +23,14 @@ public class Filters {
     public static SparseBooleanArray checkedKeywordsArray;
 
     public static int count;
+
+    public static void clear() {
+        count = 0;
+        byCity = false;
+        byKeywords = false;
+        filteredCities = null;
+        filteredKeywords = null;
+        checkedCitiesArray = null;
+        checkedKeywordsArray = null;
+    }
 }

@@ -141,6 +141,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(mSectionsPagerAdapter.getTabView(i));
         }
+        Filters.clear();
         checkNetwork();
         startGeoService();
     }
@@ -165,8 +166,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (requestCode == Filters.FILTER_CODE) {
-            if (resultCode == RESULT_OK)
+            if (resultCode == RESULT_OK) {
                 filterData();
+            }
         }
     }
 
@@ -197,9 +199,10 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         if (CurrentLocation.lat != 0 ) {
             Filters.nearMe = !Filters.nearMe;
             binding.setFilterNearMe(Filters.nearMe);
-            filterData();
-            if (tabPosition == 0) {
+            if (tabPosition == 0 && Filters.nearMe) {
                 startActivity(new Intent(this, FilteredCompanyActivity.class));
+            } else {
+                filterData();
             }
         } else {
             Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
@@ -208,7 +211,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void filters(View view) {
-        startActivityForResult(new Intent(this, FilterActivity.class), Filters.FILTER_CODE);
+        Intent intent = new Intent(this, FilterActivity.class);
+        intent.putExtra("position", tabPosition);
+        startActivityForResult(intent, Filters.FILTER_CODE);
     }
 
     @Override

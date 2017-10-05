@@ -1,11 +1,13 @@
 package com.spindealsapp.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityFilteredCompanyBinding;
+import com.spindealsapp.util.Locales;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +36,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class FilteredCompanyActivity extends BaseActivity implements FilteredHandler {
     private int type;
@@ -70,11 +75,40 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     }
 
     private void clearKeywords() {
-        if (Filters.byKeywords) {
-            Filters.count--;
+        if (type != Constants.CATEGORY_ALL) {
+            Filters.clear();
+            /*if (Filters.filteredKeywords != null && Filters.filteredKeywords.size() > 0) {
+                Resources localizedResources = Locales.getLocalizedResources(this, Locale.US);
+                String[] typesName = localizedResources.getStringArray(R.array.company_type);
+                String typeName = typesName[type].toLowerCase();
+                Iterator<String> filteredKeywordsIt = Filters.filteredKeywords.keySet().iterator();
+                while (filteredKeywordsIt.hasNext()) {
+                    boolean exist = false;
+                    String keyword = filteredKeywordsIt.next();
+                    List<String> keywords = Arrays.asList(keyword.split("-"));
+                    if (keywords.size() > 1) {
+                        String type = keywords.get(0).toLowerCase().trim();
+                        if (type.equals(typeName)) {
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        filteredKeywordsIt.remove();
+                    }
+                }
+                Filters.count = 0;
+                if (Filters.filteredCities.size() > 0) {
+                    Filters.count = Filters.filteredCities.size();
+                }
+
+                if (Filters.filteredKeywords.size() > 0) {
+                    Filters.byKeywords = true;
+                    Filters.count += Filters.filteredKeywords.size();
+                } else {
+                    Filters.byKeywords = false;
+                }
+            }*/
         }
-        Filters.byKeywords = false;
-        Filters.checkedKeywordsArray = null;
     }
 
     @Override
@@ -213,7 +247,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Override
     public void onBackPressed() {
-        clearKeywords();
+        Filters.clear();
         super.onBackPressed();
     }
 

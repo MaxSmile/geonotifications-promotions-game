@@ -40,6 +40,7 @@ public class FilterActivity extends BaseActivity {
 
     private static int FILTER_INDEX_ZA = 0;
     private int categoryType;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class FilterActivity extends BaseActivity {
         setContentView(R.layout.activity_filter);
 
         categoryType = getIntent().getIntExtra(Constants.PLACE_TYPE_KEY, Constants.CATEGORY_ALL);
+        position = getIntent().getIntExtra("position", -1);
         filterLayoutByKeywords = (LinearLayout)findViewById(R.id.filterLayoutByKeywords);
         filterListByKeywords = (ListView)findViewById(R.id.filterListByKeywords);
         filterListByKeywords.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -59,7 +61,6 @@ public class FilterActivity extends BaseActivity {
         } else {
             filterListByKeywords.clearChoices();
             Filters.byKeywords = false;
-            Filters.count--;
         }
         arrayKeywordsAdapter = new ArrayAdapter<String>(
                 this, R.layout.my_simple_list_item_multiple_choice, keywordsList);
@@ -92,11 +93,10 @@ public class FilterActivity extends BaseActivity {
             }
         }
 
-        if (Filters.checkedKeywordsArray != null) {
-            for (int i = 0; i < Filters.checkedKeywordsArray.size(); i++) {
-                int key = Filters.checkedKeywordsArray.keyAt(i);
-                if (Filters.checkedKeywordsArray.get(key)) {
-                    filterListByKeywords.setItemChecked(key, true);
+        if (Filters.filteredKeywords != null && Filters.filteredKeywords.size() > 0) {
+            for (int i = 0; i < keywordsList.size(); i++) {
+                if (Filters.filteredKeywords.get(keywordsList.get(i).toLowerCase()) != null) {
+                    filterListByKeywords.setItemChecked(i, true);
                 }
             }
         }
@@ -159,8 +159,11 @@ public class FilterActivity extends BaseActivity {
 
     private void apply() {
         updateData();
-
-        setResult(RESULT_OK, new Intent());
+        if (position == 0) {
+            startActivity(new Intent(this, FilteredCompanyActivity.class));
+        } else {
+            setResult(RESULT_OK, new Intent());
+        }
         finish();
     }
 
@@ -191,23 +194,21 @@ public class FilterActivity extends BaseActivity {
             int key = Filters.checkedFiltersArray.keyAt(i);
             if (Filters.checkedFiltersArray.get(key)) {
                 if (key == FILTER_INDEX_ZA) {
-                    Filters.count++;
                     Filters.byZA = true;
                 }
 
             }
         }
 
-
         if (Filters.filteredCities.size() > 0) {
-            Filters.count++;
+            Filters.count = Filters.filteredCities.size();
             Filters.byCity = true;
         } else {
             Filters.byCity = false;
         }
 
         if (Filters.filteredKeywords.size() > 0) {
-            Filters.count++;
+            Filters.count += Filters.filteredKeywords.size();
             Filters.byKeywords = true;
         } else {
             Filters.byKeywords = false;
