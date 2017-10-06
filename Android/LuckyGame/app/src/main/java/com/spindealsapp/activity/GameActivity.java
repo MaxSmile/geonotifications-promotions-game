@@ -40,6 +40,7 @@ import com.spindealsapp.common.FasterAnimationsContainer;
 import com.spindealsapp.common.MyRotateAnimation;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.GiftServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
@@ -407,6 +408,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
 
     private void setLimit(final Gift gift) {
+        gift.setCountAvailable(gift.getCountAvailable() - 1);
+        GiftServiceLayer.insertGift(gift);
         final String timeKey = String.valueOf(DateUtils.getStart(new Date()).getTime());
         Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
                 .child(timeKey).addListenerForSingleValueEvent(new ValueEventListener() {

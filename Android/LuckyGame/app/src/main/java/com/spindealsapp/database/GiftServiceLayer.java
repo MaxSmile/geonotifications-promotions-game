@@ -26,6 +26,8 @@ public class GiftServiceLayer {
                 if (gift != null) {
                     if (gift.getCountAvailable() > 0) {
                         gift.setActive(true);
+                    } else {
+                        gift.setActive(false);
                     }
                     gifts.put(giftId, gift);
                 }
