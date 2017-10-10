@@ -20,6 +20,7 @@ import com.spindealsapp.util.Rrule;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -259,6 +260,12 @@ public class FirebaseData {
 
             }
         });
+    }
+
+    public static void refreshGifts(List<Gift> gifts) {
+        for (Gift gift : gifts) {
+            updateGift(gift);
+        }
     }
 
     private static void updateGift(final Gift gift) {

@@ -40,6 +40,7 @@ import com.spindealsapp.common.FasterAnimationsContainer;
 import com.spindealsapp.common.MyRotateAnimation;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.GiftServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
@@ -59,6 +60,7 @@ import com.spindealsapp.util.DateUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -123,7 +125,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
         place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
-        gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
+        //gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
+        gifts = GiftServiceLayer.getGifts(place);
+        FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
 
         countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
 
@@ -500,11 +504,18 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         timer.cancel();
         timer.purge();
         imagePointer.setRotation(0);
+        gifts = GiftServiceLayer.getGifts(place);
         if (winKey != null) {
-            createCoupon(gifts.get(winKey));
-            setLog(Constants.GAME_WIN);
-            //startAnimation(getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]]);
-            goToCoupon();
+            Gift gift = gifts.get(winKey);
+            if (gift.isActive()) {
+                createCoupon(gift);
+                setLog(Constants.GAME_WIN);
+                //startAnimation(getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]]);
+                goToCoupon();
+            } else {
+                Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
+            }
+
         } else {
             if (Properties.getSoundGame()) {
                 sp.play(soundIdLose, 1, 1, 0, 0, 1);

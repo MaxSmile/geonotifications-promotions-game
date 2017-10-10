@@ -26,6 +26,7 @@ import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.DetailsHandler;
 import com.spindealsapp.common.Helper;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.GiftServiceLayer;
 import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Box;
@@ -135,6 +136,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         boxes = place.getSpin().getBox();
         if (place.getCompanyKey() != null) {
             gifts = GiftServiceLayer.getGifts(place);
+            FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
             Iterator<Box> iterator = boxes.iterator();
             while (iterator.hasNext()) {
                 Box box = iterator.next();
@@ -224,7 +226,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void startGame() {
-        if (CurrentUser.user != null) {
+        if (CurrentUser.user != null && CurrentUser.user.getId() != null) {
             if (place.getSpin().isAvailable() || (geoNotification && Rrule.isAvailable(place.getSpin().getRrule()))) {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra(Company.class.getCanonicalName(), company);

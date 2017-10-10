@@ -33,9 +33,6 @@ public class ChooseAccountActivity extends BaseActivity {
         checkNetwork();
 
         btnGoogle = (Button)findViewById(R.id.btnGoogle);
-
-
-
         callbackManager = CallbackManager.Factory.create();
         loginFb = (LoginButton)findViewById(R.id.loginFbButton);
         loginFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
