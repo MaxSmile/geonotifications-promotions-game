@@ -263,6 +263,7 @@ public class FirebaseData {
     }
 
     public static void refreshGifts(List<Gift> gifts) {
+        initGifts = true;
         for (Gift gift : gifts) {
             updateGift(gift);
         }
@@ -397,8 +398,12 @@ public class FirebaseData {
                 initSpins = true;
                 SpinServiceLayer.saveSpins(spinsList);
                 EventBus.getDefault().post(new Events.LoadingData(95));
-                if (!initOffers) {
-                    offerListener();
+                if (countChildren.getOffers() > 0) {
+                    if (!initOffers) {
+                        offerListener();
+                    }
+                } else {
+                    EventBus.getDefault().post(new Events.FinishLoadData());
                 }
             }
         }
