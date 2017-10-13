@@ -150,4 +150,5 @@
     <string name="get_coupon_text">Μόνο όποιος χρησιμοποιήσει το κουπόνι πρώτος θα το λάβει.</string>
     <string name="loading">Φόρτωση…</string>
     <string name="share_app_description">SpinDeals Cyprus - Spin and Win Unique Offers and Coupons</string>
+    <string name="add_coupon_text">Εδώ μπορείτε να προσθέσετε τον κωδικό κουπονιού που λάβατε από τον φίλο σας.</string>
 </resources>

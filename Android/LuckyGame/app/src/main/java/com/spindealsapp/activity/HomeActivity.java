@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -141,6 +142,12 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(mSectionsPagerAdapter.getTabView(i));
         }
+        LinearLayout layout = ((LinearLayout) ((LinearLayout) tabLayout.getChildAt(0)).getChildAt(1));
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
+        float width = layoutParams.weight;
+        layoutParams.weight = width * 1.2f;
+        layout.setLayoutParams(layoutParams);
+
         Filters.clear();
         checkNetwork();
         startGeoService();
