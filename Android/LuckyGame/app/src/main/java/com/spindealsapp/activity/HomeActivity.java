@@ -200,7 +200,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void filterNearMe(View view) {
-        if (!LocationState.isEnabled()) {
+        if (!LocationState.isEnabled() && !Filters.nearMe) {
             startActivity(new Intent(this, LocationActivity.class));
         }
         if (CurrentLocation.lat != 0 ) {
