@@ -8,6 +8,7 @@
     <string name="facebook_page_url" translatable="false">https://www.facebook.com/SpinDealsApp/?ref=aymt_homepage_panel</string>
     <string name="mail_for_partner" translatable="false">sales@spindealsapp.com</string>
     <string name="mail_for_improve" translatable="false">info@spindealsapp.com</string>
+    <string name="server_log_url" translatable="false">https://us-central1-lucky-game-e26de.cloudfunctions.net/log</string>
 
     <string name="winning_sound" translatable="false">winning.mp3</string>
     <string name="loser_sound" translatable="false">loser.wav</string>

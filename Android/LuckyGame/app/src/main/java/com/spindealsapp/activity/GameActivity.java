@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,9 +31,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.GameHandler;
@@ -58,6 +64,8 @@ import com.spindealsapp.databinding.ActivityGameBinding;
 import com.spindealsapp.util.DateUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -543,7 +551,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         usedSpin.setPlaceKey(place.getId());
         usedSpin.setUserKey(CurrentUser.user.getId());
         usedSpin.setSpinKey(place.getSpin().getId());
-        Constants.DB_LOG.child(place.getCompanyKey()).push().setValue(usedSpin);
+        //Constants.DB_LOG.child(place.getCompanyKey()).push().setValue(usedSpin);
+        sendLog(usedSpin);
 
         if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
             place.getSpin().setExtra(false);
@@ -557,6 +566,34 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         }
         SpinServiceLayer.updateSpin(place.getSpin());
         EventBus.getDefault().postSticky(new Events.UpdateSpinAvailable());
+    }
+
+    private void sendLog(UsedSpin usedSpin) {
+        Gson gson = new Gson();
+        String json = gson.toJson(usedSpin);
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (jsonObject != null) {
+            AndroidNetworking.post(getString(R.string.server_log_url))
+                    .addJSONObjectBody(jsonObject)
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG , response.toString());
+                        }
+                        @Override
+                        public void onError(ANError error) {
+                            Log.d(TAG , error.toString());
+                        }
+                    });
+        }
     }
 
     @Override
