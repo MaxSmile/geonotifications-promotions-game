@@ -144,8 +144,7 @@
                     android:orientation="horizontal"
                     android:paddingTop="5dp"
                     android:paddingBottom="30dp"
-                    android:visibility="@{coupon.status == 1 ? v.GONE : v.VISIBLE}">
-
+                    android:visibility="@{coupon.status == Constants.COUPON_STATUS_REDEEMED || coupon.status == Constants.COUPON_STATUS_EXPIRED ? v.GONE : v.VISIBLE}">
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -224,30 +223,55 @@
                             android:visibility="@{coupon.status == 0 &amp;&amp; coupon.couponType != Constants.COUPON_TYPE_OFFER ? v.VISIBLE : v.GONE}"/>
                     </LinearLayout>
                 </LinearLayout>
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
-                    android:visibility="@{coupon.status != 1 ? v.GONE : v.VISIBLE}">
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/redeemed"
-                        android:textColor="@color/couponRedeemed"
-                        android:textSize="17sp"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:visibility="@{coupon.status != Constants.COUPON_STATUS_EXPIRED ? v.GONE : v.VISIBLE}">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/expired"
+                            android:textColor="@color/colorNameCompany"
+                            android:textSize="17sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorNameCompany"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:text="@{coupon.expiredString}"
+                            android:paddingLeft="5dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/couponRedeemed"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        android:text="@{coupon.redeemedString}"
-                        android:paddingLeft="5dp"/>
-                </LinearLayout>
-
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:visibility="@{coupon.status != Constants.COUPON_STATUS_REDEEMED ? v.GONE : v.VISIBLE}">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/redeemed"
+                            android:textColor="@color/couponRedeemed"
+                            android:textSize="17sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/couponRedeemed"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:text="@{coupon.redeemedString}"
+                            android:paddingLeft="5dp"/>
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"

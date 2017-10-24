@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.Sharer;
@@ -20,6 +21,9 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.LikeView;
 import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
+import com.spindealsapp.Constants;
+import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.ExtraHandler;
 import com.spindealsapp.R;
 
@@ -34,15 +38,16 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     public static CallbackManager callbackManager;
     private LikeView likeView;
-    private ShareButton shareButton;
     public String name;
     private LoginButton loginFb;
     private boolean unLike;
+    private ShareLinkContent content;
+    public static boolean getPerm;
 
 
     public void initData() {
         callbackManager = CallbackManager.Factory.create();
-        /*if (CurrentUser.user == null || CurrentUser.user.getType() == Constants.USER_TYPE_GOOGLE) {
+      /*  if (CurrentUser.user == null || CurrentUser.user.getType() == Constants.USER_TYPE_GOOGLE) {
             loginFb();
         }*/
         init();
@@ -67,7 +72,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
             }
         });
 
-        List<String> permissionNeeds = Arrays.asList("user_friends","email","user_birthday");
+        List<String> permissionNeeds = Arrays.asList("user_friends", "email", "user_birthday");
         loginFb.setReadPermissions(permissionNeeds);
         loginFb.performClick();
     }
@@ -79,38 +84,49 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
                 .setText(String.format(getString(R.string.unlock_facebook_share), name));
 
         likeView = (LikeView) findViewById(R.id.likeView);
-        shareButton = (ShareButton) findViewById(R.id.fb_share_button);
     }
 
     protected void socialSuccess() {
 
     }
 
-    private void shareFb(String title, String description, String url, String imageUrl) {
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentTitle(title)
-                .setContentDescription(description)
-                .setContentUrl(Uri.parse(url))
-                .setImageUrl(Uri.parse(imageUrl))
-                .build();
-        shareButton.setShareContent(content);
-        shareButton.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
-            @Override
-            public void onSuccess(Sharer.Result result) {
-                socialSuccess();
-            }
+    private void getPermAndShare(String title, String description, String url, String imageUrl) {
+        content = new ShareLinkContent.Builder()
+            .setContentTitle(title)
+            .setContentDescription(description)
+            .setContentUrl(Uri.parse(url))
+            .setImageUrl(Uri.parse(imageUrl))
+            .build();
 
-            @Override
-            public void onCancel() {
+        if (getPerm) {
+            shareFb();
+        } else {
+            LoginManager.getInstance().logOut();
+            LoginManager.getInstance().logInWithPublishPermissions(
+                    this,
+                    Arrays.asList("publish_actions"));
+            LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    getPerm = true;
+                    shareFb();
+                }
 
-            }
+                @Override
+                public void onCancel() {
+                }
 
-            @Override
-            public void onError(FacebookException error) {
+                @Override
+                public void onError(FacebookException error) {
 
-            }
-        });
-        shareButton.callOnClick();
+                }
+            });
+        }
+    }
+
+    private void shareFb() {
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
     }
 
     @Override
@@ -131,7 +147,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
 
     @Override
     public void shareApp(View view) {
-        shareFb(getString(R.string.app_name), getString(R.string.share_app_description),
+        getPermAndShare(getString(R.string.app_name), getString(R.string.share_app_description),
                 getString(R.string.website_url), getString(R.string.app_preview_image_url));
     }
 
@@ -142,7 +158,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
             if (place.getGallery().size() > 0) {
                 image = place.getGallery().get(0);
             }
-            shareFb(place.getName(), place.getInfo(), place.getUrl(), image);
+            getPermAndShare(place.getName(), place.getInfo(), place.getUrl(), image);
         }
     }
 
@@ -151,7 +167,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
         if (AppInviteDialog.canShow()) {
             AppInviteContent content = new AppInviteContent.Builder()
                     .setApplinkUrl(getString(R.string.facebook_app_link))
-                    .setPreviewImageUrl(getString(R.string.app_preview_image_url))
+                    .setPreviewImageUrl(getString(R.string.invite_image_url))
                     .build();
             AppInviteDialog appInviteDialog = new AppInviteDialog(this);
             appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
@@ -181,15 +197,17 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
                 Bundle bundle = intent.getExtras().getBundle("com.facebook.platform.protocol.RESULT_ARGS");
                 if (bundle != null) {
                     bundle.getBoolean("object_is_liked"); // liked/unliked
-                    bundle.getInt("didComplete");
+                    bundle.getBoolean("didComplete");
                     bundle.getInt("like_count"); // object like count
                     bundle.getString("like_count_string");
                     bundle.getString("social_sentence");
                     bundle.getString("completionGesture"); // liked/cancel/unliked
 
                     String result = bundle.getString("completionGesture");
-                    System.out.println(TAG + " result =" + result);
                     if (result != null) {
+                        if (result.equals("post")) {
+                            socialSuccess();
+                        }
                         if (result.equals("unlike")) {
                             unLike = true;
                         }

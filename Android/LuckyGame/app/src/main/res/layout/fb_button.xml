@@ -20,10 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
-            <com.facebook.share.widget.ShareButton
-                android:id="@+id/fb_share_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"   />
+
 
             <com.facebook.share.widget.LikeView
                 android:id="@+id/likeView"

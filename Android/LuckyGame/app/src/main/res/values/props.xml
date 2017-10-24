@@ -9,6 +9,7 @@
     <string name="mail_for_partner" translatable="false">sales@spindealsapp.com</string>
     <string name="mail_for_improve" translatable="false">info@spindealsapp.com</string>
     <string name="server_log_url" translatable="false">https://us-central1-lucky-game-e26de.cloudfunctions.net/log</string>
+    <string name="invite_image_url" translatable="false">https://firebasestorage.googleapis.com/v0/b/lucky-game-e26de.appspot.com/o/invite_photo.jpg?alt=media&amp;token=2ab25f91-9109-4f91-8529-d8759e318427</string>
 
     <string name="winning_sound" translatable="false">winning.mp3</string>
     <string name="loser_sound" translatable="false">loser.wav</string>

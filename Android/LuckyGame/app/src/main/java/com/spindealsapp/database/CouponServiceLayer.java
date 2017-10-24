@@ -88,6 +88,7 @@ public class CouponServiceLayer {
                     coupon.setStatusIcon(ta.getResourceId(coupon.getStatus(), 0));
                 }
                 coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
+                coupon.setExpiredString(DateFormat.getDate("dd/MM/yyyy", coupon.getExpired()));
             }
 
         }

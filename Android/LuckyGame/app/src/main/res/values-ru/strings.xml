@@ -151,4 +151,6 @@
     <string name="loading">Загрузка…</string>
     <string name="share_app_description">SpinDeals Cyprus - Вращайте и Выигрывайте Уникальные Предложения и Купоны</string>
     <string name="add_coupon_text">Здесь вы можете добавить код купона, который вы получили от своего друга.</string>
+    <string name="expired">Закончился:</string>
+    <string name="near_me_message">Поиск  для вашего местоположения</string>
 </resources>

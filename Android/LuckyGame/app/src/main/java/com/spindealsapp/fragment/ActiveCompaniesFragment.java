@@ -91,7 +91,11 @@ public class ActiveCompaniesFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateFilter(Events.UpdateFilter updateFilter) {
-        filterData();
+        if (Filters.nearMe) {
+            refreshData();
+        } else {
+            filterData();
+        }
     }
 
     @Override

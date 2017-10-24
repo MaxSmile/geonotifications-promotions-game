@@ -483,9 +483,9 @@
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:textColor="@color/colorDetailsTitle"
+                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_COMING || countGift == 0 ? v.GONE : v.VISIBLE}"
                     android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_COMING  ? v.GONE : v.VISIBLE}"/>
+                    android:layout_centerHorizontal="true" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

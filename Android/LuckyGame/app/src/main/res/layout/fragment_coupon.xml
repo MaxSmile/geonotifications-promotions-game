@@ -324,6 +324,29 @@
                         android:text="@{coupon.redeemedString}"
                         android:paddingLeft="5dp"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:visibility="@{coupon.status != Constants.COUPON_STATUS_EXPIRED ? v.GONE : v.VISIBLE}">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expired"
+                        android:textColor="@color/colorNameCompany"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorNameCompany"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:text="@{coupon.expiredString}"
+                        android:paddingLeft="5dp"/>
+                </LinearLayout>
             </LinearLayout>
 
         </RelativeLayout>

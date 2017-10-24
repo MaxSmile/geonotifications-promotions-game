@@ -40,6 +40,7 @@ public class CouponExtension implements Parcelable {
     private int couponType;
     private String keywords;
     private String rrule;
+    private String expiredString;
 
 
     public CouponExtension() {
@@ -108,6 +109,7 @@ public class CouponExtension implements Parcelable {
         couponType = in.readInt();
         keywords = in.readString();
         rrule = in.readString();
+        expiredString = in.readString();
     }
 
     public static final Creator<CouponExtension> CREATOR = new Creator<CouponExtension>() {
@@ -370,6 +372,14 @@ public class CouponExtension implements Parcelable {
         this.rrule = rrule;
     }
 
+    public String getExpiredString() {
+        return expiredString;
+    }
+
+    public void setExpiredString(String expiredString) {
+        this.expiredString = expiredString;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -408,5 +418,6 @@ public class CouponExtension implements Parcelable {
         dest.writeInt(couponType);
         dest.writeString(keywords);
         dest.writeString(rrule);
+        dest.writeString(expiredString);
     }
 }

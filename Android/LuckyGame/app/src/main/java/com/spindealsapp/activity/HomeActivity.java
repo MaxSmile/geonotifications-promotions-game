@@ -209,6 +209,9 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
             if (tabPosition == 0 && Filters.nearMe) {
                 startActivity(new Intent(this, FilteredCompanyActivity.class));
             } else {
+                if (Filters.nearMe) {
+                    Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
+                }
                 filterData();
             }
         } else {

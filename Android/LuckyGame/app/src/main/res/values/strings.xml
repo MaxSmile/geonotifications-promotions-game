@@ -151,4 +151,6 @@
     <string name="loading">Loading…</string>
     <string name="share_app_description">SpinDeals Cyprus - Spin and Win Unique Offers and Coupons</string>
     <string name="add_coupon_text">Here you can Add the coupon code you received from your friend.</string>
+    <string name="expired">Expired:</string>
+    <string name="near_me_message">Searching for your location</string>
 </resources>

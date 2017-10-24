@@ -457,7 +457,8 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         ((ImageButton) view.findViewById(R.id.losePopUpClose)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.dismiss();
+                //popupWindow.dismiss();
+                onBackPressed();
             }
         });
         ((LinearLayout) view.findViewById(R.id.losePopUpGetSpin)).setOnClickListener(new View.OnClickListener() {
@@ -513,6 +514,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         timer.purge();
         imagePointer.setRotation(0);
         gifts = GiftServiceLayer.getGifts(place);
+        winKey = null;
         if (winKey != null) {
             Gift gift = gifts.get(winKey);
             if (gift.isActive()) {

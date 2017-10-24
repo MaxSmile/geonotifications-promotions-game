@@ -266,7 +266,11 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         if (CurrentLocation.lat != 0 ) {
             Filters.nearMe = !Filters.nearMe;
             binding.setFilterNearMe(Filters.nearMe);
-            filter();
+            //filter();
+            if (Filters.nearMe) {
+                Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
+            }
+            refreshData();
         } else {
             Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
         }
