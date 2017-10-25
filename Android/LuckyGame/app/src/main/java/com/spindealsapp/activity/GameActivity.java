@@ -7,6 +7,9 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -452,13 +455,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         );
 
         popupWindow.setOutsideTouchable(false);
-        popupWindow.setFocusable(true);
+        popupWindow.setFocusable(false);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         ((ImageButton) view.findViewById(R.id.losePopUpClose)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //popupWindow.dismiss();
-                onBackPressed();
+                finish();
             }
         });
         ((LinearLayout) view.findViewById(R.id.losePopUpGetSpin)).setOnClickListener(new View.OnClickListener() {
@@ -514,7 +518,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         timer.purge();
         imagePointer.setRotation(0);
         gifts = GiftServiceLayer.getGifts(place);
-        winKey = null;
         if (winKey != null) {
             Gift gift = gifts.get(winKey);
             if (gift.isActive()) {

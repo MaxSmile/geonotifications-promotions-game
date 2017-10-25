@@ -202,20 +202,21 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     public void filterNearMe(View view) {
         if (!LocationState.isEnabled() && !Filters.nearMe) {
             startActivity(new Intent(this, LocationActivity.class));
-        }
-        if (CurrentLocation.lat != 0 ) {
-            Filters.nearMe = !Filters.nearMe;
-            binding.setFilterNearMe(Filters.nearMe);
-            if (tabPosition == 0 && Filters.nearMe) {
-                startActivity(new Intent(this, FilteredCompanyActivity.class));
-            } else {
-                if (Filters.nearMe) {
-                    Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
-                }
-                filterData();
-            }
         } else {
-            Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+            if (CurrentLocation.lat != 0 ) {
+                Filters.nearMe = !Filters.nearMe;
+                binding.setFilterNearMe(Filters.nearMe);
+                if (tabPosition == 0 && Filters.nearMe) {
+                    startActivity(new Intent(this, FilteredCompanyActivity.class));
+                } else {
+                    if (Filters.nearMe) {
+                        Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
+                    }
+                    filterData();
+                }
+            } else {
+                Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

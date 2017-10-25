@@ -25,6 +25,7 @@ import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityFilteredCompanyBinding;
 import com.spindealsapp.util.Locales;
+import com.spindealsapp.util.LocationState;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -263,16 +264,20 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
 
     @Override
     public void filterNearMe(View view) {
-        if (CurrentLocation.lat != 0 ) {
-            Filters.nearMe = !Filters.nearMe;
-            binding.setFilterNearMe(Filters.nearMe);
-            //filter();
-            if (Filters.nearMe) {
-                Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
-            }
-            refreshData();
+        if (!LocationState.isEnabled() && !Filters.nearMe) {
+            startActivity(new Intent(this, LocationActivity.class));
         } else {
-            Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+            if (CurrentLocation.lat != 0 ) {
+                Filters.nearMe = !Filters.nearMe;
+                binding.setFilterNearMe(Filters.nearMe);
+                //filter();
+                if (Filters.nearMe) {
+                    Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
+                }
+                refreshData();
+            } else {
+                Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
