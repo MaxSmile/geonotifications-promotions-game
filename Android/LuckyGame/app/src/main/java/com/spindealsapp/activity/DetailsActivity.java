@@ -328,10 +328,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0 && NetworkState.isOnline()) {
 
             String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
-                    + place.getGeoLat() + ","
-                    + place.getGeoLon() + "&daddr="
-                    + CurrentLocation.lat +","
-                    + CurrentLocation.lon;
+                    + CurrentLocation.lat + ","
+                    + CurrentLocation.lon + "&daddr="
+                    + place.getGeoLat() +","
+                    + place.getGeoLon();
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
 
