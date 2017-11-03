@@ -3,6 +3,8 @@ package com.spindealsapp.database;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
@@ -28,6 +30,9 @@ import java.util.List;
  */
 
 public class FirebaseData {
+    private static DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+    private static boolean firstConnection;
+
     private static Count countChildren;
     private static boolean initCompanies;
     private static long countCompanies;
@@ -44,7 +49,24 @@ public class FirebaseData {
     private static ArrayList<Spin> spinsList;
     private static ArrayList<CouponExtension> offersList;
 
+    private static void checkConnection() {
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (firstConnection && !connected) {
+                    cancel();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
+    }
+
     private static void init() {
+        firstConnection = false;
         initCompanies = false;
         countCompanies = 0;
         initPlaces = false;
@@ -59,9 +81,14 @@ public class FirebaseData {
 
     public static void loadData() {
         init();
+        checkConnection();
         getKeywords();
         countChildren = new Count();
         getCountCompanies();
+    }
+
+    private static void cancel() {
+        EventBus.getDefault().post(new Events.FinishLoadData());
     }
 
     private static void getCountCompanies() {
@@ -75,7 +102,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -91,7 +118,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -107,7 +134,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -123,7 +150,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -139,7 +166,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -181,7 +208,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -227,7 +254,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -257,7 +284,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -299,7 +326,7 @@ public class FirebaseData {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            cancel();
                         }
                     });
                 } else {
@@ -309,7 +336,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -318,11 +345,15 @@ public class FirebaseData {
         if (initGifts) {
             GiftServiceLayer.insertGift(gift);
         } else {
-            giftsList.add(gift);
+            if (giftsList != null)
+                giftsList.add(gift);
+
             countGifts++;
             if (countGifts == countChildren.getGifts()) {
                 initGifts = true;
-                GiftServiceLayer.saveGifts(giftsList);
+                if (giftsList != null)
+                    GiftServiceLayer.saveGifts(giftsList);
+
                 spinListener();
                 EventBus.getDefault().post(new Events.LoadingData(70));
             }
@@ -354,7 +385,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -380,7 +411,7 @@ public class FirebaseData {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    cancel();
                 }
             });
         } else {
@@ -434,7 +465,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -467,7 +498,7 @@ public class FirebaseData {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-
+                                cancel();
                             }
                         });
                     }
@@ -479,7 +510,7 @@ public class FirebaseData {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                cancel();
             }
         });
     }
@@ -525,6 +556,7 @@ public class FirebaseData {
         Constants.DB_KEYWORDS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                firstConnection = true;
                 ArrayList<String> keywords = new ArrayList<String>();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     keywords.add(data.getValue(String.class));
