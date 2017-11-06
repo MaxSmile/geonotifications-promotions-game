@@ -73,7 +73,7 @@ public class PlaceServiceLayer {
                         place.getGeoLat(), place.getGeoLon()));
             }
         }
-        if (place.getInfo().isEmpty()) {
+        if (place.getInfo() == null || place.getInfo().isEmpty()) {
             place.setInfoChecked(true);
         }
     }
