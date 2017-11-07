@@ -33,9 +33,10 @@ public class Rrule {
         }
         DateIterator it = rrule.getDateIterator(start , TimeZone.getDefault());
         boolean isAvailable = false;
+        long limit = new Date().getTime() + 86400000;
         while (it.hasNext()) {
             Date date =  it.next();
-            if (date.getTime() > new Date().getTime()) {
+            if (date.getTime() > limit) {
                 return isAvailable;
             }
             if (DateUtils.isToday(date)) {
