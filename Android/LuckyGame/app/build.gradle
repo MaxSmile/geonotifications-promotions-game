@@ -22,7 +22,7 @@ android {
         applicationId "com.spindealsapp"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 63
+        versionCode 64
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "luckygame-$versionName-$versionCode")

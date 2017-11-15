@@ -1,5 +1,6 @@
 package com.spindealsapp.binding;
 
+import android.content.res.Resources;
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 
@@ -39,6 +40,10 @@ public class BindingAdapters {
 
     @BindingAdapter("android:src")
     public static void loadImage(ImageView view, int resource){
-        view.setImageResource(resource);
+        try {
+            view.setImageResource(resource);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
