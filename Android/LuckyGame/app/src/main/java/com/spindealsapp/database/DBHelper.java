@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.spindealsapp.App;
 import com.spindealsapp.Constants;
+import com.spindealsapp.database.table.CompanyTable;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.CouponExtension;
@@ -34,7 +36,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_COUPONS = "coupons";
     private static final String TABLE_PLACES = "places";
     private static final String TABLE_NOTIFICATION = "notification";
-    private static final String TABLE_COMPANIES = "companies";
     private static final String TABLE_GALLERY = "gallery";
     private static final String TABLE_BOX = "box";
     private static final String TABLE_GIFT = "gift";
@@ -124,18 +125,16 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_SPIN_EXTRA = "extra";
     private static final String KEY_SPIN_EXTRA_CREATE_TIME = "extraCreateTime";
 
-    private static final String KEY_COMPANY_ID = "companyId";
-    private static final String KEY_COMPANY_NAME = "name";
-    private static final String KEY_COMPANY_INFO = "info";
-    private static final String KEY_COMPANY_LOGO = "logo";
-    private static final String KEY_COMPANY_FACEBOOK_URL = "facebookUrl";
-    private static final String KEY_COMPANY_TYPE = "type";
-
-
-
     public static synchronized DBHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DBHelper(context.getApplicationContext());
+        }
+        return sInstance;
+    }
+
+    public static synchronized DBHelper getInstance() {
+        if (sInstance == null) {
+            sInstance = new DBHelper(App.getInstance());
         }
         return sInstance;
     }
@@ -163,7 +162,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_COUPONS);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_PLACES);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_COMPANIES);
+        sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GALLERY);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GIFT);
@@ -195,7 +194,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + TABLE_GIFT + "("
                 + KEY_ID + " integer primary key,"
                 + KEY_GIFT_ID  + " text,"
-                + KEY_COMPANY_ID + " text,"
+                + CompanyTable.Fields.ID + " text,"
                 + KEY_GIFT_DESCRIPTION + " text,"
                 + KEY_GIFT_TIME_LOCK + " INTEGER,"
                 + KEY_GIFT_RULES + " text,"
@@ -235,16 +234,16 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTableCompanies(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_COMPANIES + "("
+        db.execSQL("create table " + CompanyTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_COMPANY_ID + " text,"
-                + KEY_COMPANY_NAME + " text,"
-                + KEY_COMPANY_INFO + " text,"
-                + KEY_COMPANY_LOGO  + " text,"
-                + KEY_COMPANY_FACEBOOK_URL + " text,"
-                + KEY_COMPANY_TYPE + " INTEGER,"
+                + CompanyTable.Fields.ID + " text,"
+                + CompanyTable.Fields.NAME + " text,"
+                + CompanyTable.Fields.INFO + " text,"
+                + CompanyTable.Fields.LOGO  + " text,"
+                + CompanyTable.Fields.FACEBOOK_URL + " text,"
+                + CompanyTable.Fields.TYPE + " INTEGER,"
                 + "UNIQUE ("
-                + KEY_COMPANY_ID
+                + CompanyTable.Fields.ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
     }
@@ -547,7 +546,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private ContentValues getGiftValues(Gift gift) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_GIFT_ID, gift.getId());
-        contentValues.put(KEY_COMPANY_ID, gift.getCompanyKey());
+        contentValues.put(CompanyTable.Fields.ID, gift.getCompanyKey());
         contentValues.put(KEY_GIFT_DESCRIPTION, gift.getDescription());
         contentValues.put(KEY_GIFT_TIME_LOCK, gift.getTimeLock());
         contentValues.put(KEY_GIFT_RULES, gift.getRules());
@@ -578,89 +577,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return gifts;
-    }
-
-    public void insertCompany(Company company) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_COMPANIES, null, getCompanyValues(company));
-        db.close();
-    }
-
-    public boolean saveCompanies(ArrayList<Company> companies) {
-        long rowInserted = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            db.delete(TABLE_COMPANIES, null, null);
-
-            for (Company company: companies) {
-                rowInserted = db.insert(TABLE_COMPANIES, null, getCompanyValues(company));
-            }
-
-            if (rowInserted > -1) {
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-        db.close();
-
-        return rowInserted > -1;
-    }
-
-    private ContentValues getCompanyValues(Company company) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_COMPANY_ID, company.getId());
-        contentValues.put(KEY_COMPANY_NAME, company.getName());
-        contentValues.put(KEY_COMPANY_INFO, company.getInfo());
-        contentValues.put(KEY_COMPANY_LOGO, company.getLogo());
-        contentValues.put(KEY_COMPANY_FACEBOOK_URL, company.getFacebookUrl());
-        contentValues.put(KEY_COMPANY_TYPE, company.getType());
-
-        return contentValues;
-    }
-
-    public Company getCompany(String id) {
-        Company company = new Company();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_COMPANIES
-                        + " WHERE "
-                        + KEY_COMPANY_ID
-                        + " = ?"
-                , new String[] {id});
-        if (cursor.moveToFirst()) {
-            do {
-                company = parseCompany(cursor);
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        db.close();
-
-        return company;
-    }
-
-
-    public HashMap<String, Company> getCompanies() {
-        HashMap<String, Company> companies = new HashMap<String, Company>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_COMPANIES, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                companies.put(cursor.getString(1), parseCompany(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-        cursor.close();
-        db.close();
-
-        return companies;
     }
 
     public boolean updatePlaces(ArrayList<Place> places) {
@@ -1146,17 +1062,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getInt(2),
                 cursor.getInt(3),
                 cursor.getString(4)
-        );
-    }
-
-    private Company parseCompany(Cursor cursor) {
-        return new Company(
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getInt(6)
         );
     }
 

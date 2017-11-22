@@ -19,6 +19,7 @@ import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
+import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.entity.Spin;
 import com.spindealsapp.eventbus.Events;
@@ -69,7 +70,7 @@ public class ActiveCompaniesFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         companiesList.setLayoutManager(llm);
         networkUnavailable = (RelativeLayout) getActivity().findViewById(R.id.networkUnavailable);
-        adapter = new CompanyListAdapter(getContext(), newPlaces, DBHelper.getInstance(getActivity()).getCompanies());
+        adapter = new CompanyListAdapter(getContext(), newPlaces, CompanyServiceLayer.getCompanies());
         companiesList.setAdapter(adapter);
     }
 
@@ -182,7 +183,7 @@ public class ActiveCompaniesFragment extends Fragment {
         }
 
         dataBridge.activeSpins(places.size());
-        adapter.updateData(places, DBHelper.getInstance(getActivity()).getCompanies());
+        adapter.updateData(places, CompanyServiceLayer.getCompanies());
     }
 
     private ArrayList<Place> groupByCompany(ArrayList<Place> places) {

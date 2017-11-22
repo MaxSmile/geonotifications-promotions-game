@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.spindealsapp.Constants;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityUnlockBinding;
@@ -23,7 +24,8 @@ public class UnlockActivity extends BaseFacebookActivity {
         coupon = getIntent().getParcelableExtra(CouponExtension.class.getCanonicalName());
         binding = DataBindingUtil.setContentView(this, R.layout.activity_unlock);
         place = PlaceServiceLayer.getPlace(coupon.getPlaceKey());
-        company = DBHelper.getInstance(this).getCompany(coupon.getCompanyKey());
+//        company = DBHelper.getInstance(this).getCompany(coupon.getCompanyKey());
+        company = CompanyServiceLayer.getCompany(coupon.getCompanyKey());
         binding.setCompany(company);
         binding.setCoupon(coupon);
         binding.setHandler(this);

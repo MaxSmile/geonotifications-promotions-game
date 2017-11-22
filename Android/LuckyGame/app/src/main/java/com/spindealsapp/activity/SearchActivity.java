@@ -14,6 +14,7 @@ import com.spindealsapp.adapter.CompanyListAdapter;
 import com.spindealsapp.binding.handler.SearchHandler;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
@@ -142,7 +143,7 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
             binding.setShowBg(true);
         }
 
-        companiesList.setAdapter(new CompanyListAdapter(this, spinsResult, DBHelper.getInstance(this).getCompanies()));
+        companiesList.setAdapter(new CompanyListAdapter(this, spinsResult, CompanyServiceLayer.getCompanies()));
     }
 
     private void initSearch() {

@@ -9,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
+import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Count;
 import com.spindealsapp.entity.CouponExtension;
@@ -22,7 +23,6 @@ import com.spindealsapp.util.Rrule;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -184,7 +184,8 @@ public class FirebaseData {
                     countCompanies++;
                     if (countCompanies == countChildren.getCompanies()) {
                         initCompanies = true;
-                        DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
+                        CompanyServiceLayer.add(companies);
+                        //DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
                         placeListener();
                         EventBus.getDefault().post(new Events.LoadingData(55));
                     }
@@ -214,7 +215,8 @@ public class FirebaseData {
     }
 
     private static void insertCompany(Company company) {
-        DBHelper.getInstance(App.getInstance()).insertCompany(company);
+        CompanyServiceLayer.add(company);
+        //DBHelper.getInstance(App.getInstance()).insertCompany(company);
         EventBus.getDefault().post(new Events.UpdatePlaces());
     }
 

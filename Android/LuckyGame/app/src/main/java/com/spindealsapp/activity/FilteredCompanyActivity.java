@@ -20,6 +20,7 @@ import com.spindealsapp.common.PlaceDistanceComparator;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
@@ -214,7 +215,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         }
 
         binding.setCountResult(places.size() > 0);
-        companiesList.setAdapter(new CompanyListAdapter(this, places, DBHelper.getInstance(this).getCompanies()));
+        companiesList.setAdapter(new CompanyListAdapter(this, places, CompanyServiceLayer.getCompanies()));
     }
 
     private ArrayList<Place> groupByCompany(ArrayList<Place> places) {

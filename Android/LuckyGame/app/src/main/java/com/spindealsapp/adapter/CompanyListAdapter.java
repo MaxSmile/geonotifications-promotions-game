@@ -20,6 +20,7 @@ import com.spindealsapp.databinding.CompaniesRowBinding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kusenko on 17.02.2017.
@@ -28,16 +29,16 @@ import java.util.HashMap;
 public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.Holder>{
     private Context context;
     private ArrayList<Place> places;
-    private HashMap<String, Company> companies;
+    private Map<String, Company> companies;
 
 
-    public CompanyListAdapter(Context context, ArrayList<Place> places, HashMap<String, Company> companies) {
+    public CompanyListAdapter(Context context, ArrayList<Place> places, Map<String, Company> companies) {
         this.context = context;
         this.companies = companies;
         this.places = places;
     }
 
-    public void updateData(ArrayList<Place> places, HashMap<String, Company> companies) {
+    public void updateData(ArrayList<Place> places, Map<String, Company> companies) {
         this.companies = companies;
         this.places.clear();
         this.places.addAll(places);

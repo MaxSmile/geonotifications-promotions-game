@@ -23,12 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.spindealsapp.App;
 import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.binding.handler.HomeHandler;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.common.Properties;
-import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.fragment.ActiveCompaniesFragment;
@@ -39,11 +37,8 @@ import com.spindealsapp.service.LocationService;
 import com.spindealsapp.util.LocationState;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityHomeBinding;
-import com.spindealsapp.util.NetworkState;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class HomeActivity extends BaseActivity implements DataBridge, HomeHandler {
 
