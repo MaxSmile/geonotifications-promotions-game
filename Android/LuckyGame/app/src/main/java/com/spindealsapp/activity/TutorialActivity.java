@@ -16,6 +16,7 @@ import com.spindealsapp.databinding.ActivityTutorialBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TutorialActivity extends BaseActivity {
 
@@ -72,7 +73,11 @@ public class TutorialActivity extends BaseActivity {
         });
 
         listImage = new ArrayList<Integer>();
-        TypedArray ta = getResources().obtainTypedArray(R.array.tutorial);
+        int resource = R.array.tutorial;
+        if (Locale.getDefault().getLanguage().equals("el")) {
+            resource = R.array.tutorial_el;
+        }
+        TypedArray ta = getResources().obtainTypedArray(resource);
         for (int i = 0; i < ta.length(); i++) {
             listImage.add(ta.getResourceId(i, 0));
         }

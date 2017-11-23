@@ -66,4 +66,11 @@
         <item>@drawable/stage4</item>
         <item>@drawable/stage5</item>
     </integer-array>
+    <integer-array name="tutorial_el">
+        <item>@drawable/stage1_el</item>
+        <item>@drawable/stage2_el</item>
+        <item>@drawable/stage3_el</item>
+        <item>@drawable/stage4_el</item>
+        <item>@drawable/stage5_el</item>
+    </integer-array>
 </resources>
