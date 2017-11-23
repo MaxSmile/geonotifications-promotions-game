@@ -11,7 +11,7 @@
     <string name="near_me">Κοντά μου</string>
     <string name="filters">Φίλτρα</string>
     <string name="spin_active">Ενεργό Spin</string>
-    <string name="spin_is_coming">Spin έρχεται</string>
+    <string name="spin_is_coming">Όχι Spin σήμερα</string>
     <string name="spin_plus">+1 Spin</string>
     <string name="e_shops">Έρχεται \nσύντομα</string>
     <string name="all">Όλα</string>
@@ -40,7 +40,7 @@
     <string name="news">Νέα</string>
     <string name="directions">Κατευθύνσεις</string>
     <string name="web">Ιστός</string>
-    <string name="about">Πληροφορίες</string>
+    <string name="about">Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
     <string name="more_info">Περισσότερες πληροφορίες</string>
     <string name="add_to_favorites">Προσθήκη στα αγαπημένα</string>
     <string name="out_of_spins"><b>Έλλειψη spins?</b> Πάρε ένα επιπλέον</string>
@@ -104,7 +104,7 @@
     <string name="send_text">Στείλε αυτό το κουπόνι στους φίλους σου και ο <b>πρώτος</b> που θα το εξαργυρώσει μπορεί να το αποκτήσει</string>
     <string name="send_btn">Αποστολή</string>
     <string name="send_chooser_title">Αποστολή με</string>
-    <string name="send_coupon_text">Κωδικός κουπονιού για το SpinDeals: %s</string>
+    <string name="send_coupon_text">SpinDeals app Κωδικός κουπονιού - Πηγαίνετε στα κουπόνια μου, πατήστε το κουμπί \"+\" και προσθέστε τον κωδικό: %s</string>
     <string name="terms_conditions">Όροι &amp; Προϋποθέσεις</string>
     <string name="version">Εκδοχή %s</string>
     <string name="partner">Συνεργαστείτε μαζί μας</string>

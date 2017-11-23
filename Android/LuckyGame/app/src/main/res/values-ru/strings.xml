@@ -11,7 +11,7 @@
     <string name="near_me">Возле меня</string>
     <string name="filters">Фильтры</string>
     <string name="spin_active">Активный Спин</string>
-    <string name="spin_is_coming">Спин пока недоступен</string>
+    <string name="spin_is_coming">Спин недоступен сегодня</string>
     <string name="spin_plus">+1 Спин</string>
     <string name="e_shops">Скоро</string>
     <string name="all">Все</string>
@@ -40,7 +40,7 @@
     <string name="news">Новости</string>
     <string name="directions">Направления</string>
     <string name="web">Сайт</string>
-    <string name="about">О нас</string>
+    <string name="about">О Спинах и Купонах для этого места</string>
     <string name="more_info">Больше информации</string>
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="out_of_spins"><b>Закончились спины?</b> Получите еще</string>
@@ -104,7 +104,7 @@
     <string name="send_text">Отправьте этот купон своим друзьям и кто <b>первый</b> его использует тот его и получит</string>
     <string name="send_btn">Отправить</string>
     <string name="send_chooser_title">Отправить с помощью</string>
-    <string name="send_coupon_text">Код купона для SpinDeals: %s</string>
+    <string name="send_coupon_text">Приложение SpinDeals Код купона - Перейдите на вкладку Мои купоны, нажмите кнопку \"+\" и добавьте код: %s</string>
     <string name="terms_conditions">Правила и Соглашения</string>
     <string name="version">Версия %s</string>
     <string name="partner">Станьте партнерами</string>
