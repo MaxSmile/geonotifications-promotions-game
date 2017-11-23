@@ -76,8 +76,8 @@
     <string name="setting_title">Μενού</string>
     <string name="logout">Αποσυνδέση</string>
     <string name="login">Σύνδεση</string>
-    <string name="spin_not_available">Σήμερα σπαταλήσατε το spin σας για αυτό το μέρος</string>
-    <string name="extra_spin_not_available">Σήμερα σπαταλήσατε το επιπλέον spin σας για αυτό το μέρος</string>
+    <string name="spin_not_available">Σπατάλησες το Spin σου σε αυτό το μέρος  για τώρα. Για το επόμενο σου Spin κοίταξε στο:Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
+    <string name="extra_spin_not_available">Σπατάλησες το Spin σου σε αυτό το μέρος  για τώρα. Για το επόμενο σου Spin κοίταξε στο:Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
     <string name="see_gifts">Δείτε δώρα</string>
     <string name="my_coupons">Τα κουπόνια μου</string>
     <string name="game_out_of_spins">Έλλειψη spins?</string>
@@ -85,7 +85,7 @@
     <string name="redeemed">Εξαργυρωμένο:</string>
     <string name="wait_for_update_data">Περιμένετε για δεδομένα ενημέρωσης</string>
     <string name="empty_category">Αυτή η κατηγορία είναι κενή</string>
-    <string name="spin_coming_message">Δεν είναι διαθέσιμο, το spin έρχεται</string>
+    <string name="spin_coming_message">Σπατάλησες το Spin σου σε αυτό το μέρος  για τώρα. Για το επόμενο σου Spin κοίταξε στο:Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
     <string name="network_title">Δεν βρέθηκε σύνδεση</string>
     <string name="network_text">Η σύνδεσή σας στο ασύρματο δίκτυο είναι απενεργοποιημένη. Επαναφέρετε τη σύνδεσή σας και δοκιμάστε ξανά.</string>
     <string name="settings">Ρυθμίσεις</string>

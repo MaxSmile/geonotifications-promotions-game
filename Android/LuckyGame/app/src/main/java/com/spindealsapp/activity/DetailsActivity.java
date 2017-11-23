@@ -39,6 +39,7 @@ import com.spindealsapp.util.NetworkState;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityDetailsBinding;
 import com.spindealsapp.util.Rrule;
+import com.spindealsapp.util.ToastTimer;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -217,7 +218,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                ToastTimer.start(Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
             }
         } else {
             startActivity(new Intent(this, NetworkActivity.class));
@@ -245,7 +246,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 intent.putExtra(Place.class.getCanonicalName(), place);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_LONG).show();
+                ToastTimer.start(Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_SHORT), 5000);
             }
         } else {
             loginDialog();
@@ -382,10 +383,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             intent.putExtra(Gift.class.getCanonicalName(), gifts);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_LONG).show();
+                            ToastTimer.start(Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_SHORT), 5000);
                         }
                     } else {
-                        Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_LONG).show();
+                        ToastTimer.start(Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
                     }
                 } else {
                     Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
@@ -426,6 +427,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        ToastTimer.cancel();
         super.onStop();
     }
 }

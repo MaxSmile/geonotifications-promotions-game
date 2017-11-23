@@ -76,8 +76,8 @@
     <string name="setting_title">Menu</string>
     <string name="logout">LogOut</string>
     <string name="login">LogIn</string>
-    <string name="spin_not_available">Today you spent spin for this place</string>
-    <string name="extra_spin_not_available">Today you spent extra spin for this place</string>
+    <string name="spin_not_available">You spent your Spin for this place for now. For your next Spin see the: About Spins and Coupons for this place</string>
+    <string name="extra_spin_not_available">You spent your Spin for this place for now. For your next Spin see the: About Spins and Coupons for this place</string>
     <string name="see_gifts">See gifts</string>
     <string name="my_coupons">My coupons</string>
     <string name="game_out_of_spins">Out of spins?</string>
@@ -85,7 +85,7 @@
     <string name="redeemed">Redeemed:</string>
     <string name="wait_for_update_data">Wait for update data</string>
     <string name="empty_category">This category is empty</string>
-    <string name="spin_coming_message">Not available, spin is coming</string>
+    <string name="spin_coming_message">You spent your Spin for this place for now. For your next Spin see the: About Spins and Coupons for this place</string>
     <string name="network_title">No connection found</string>
     <string name="network_text">Your connection to the wireless network is turned off. Restore your connection and try again.</string>
     <string name="settings">Settings</string>

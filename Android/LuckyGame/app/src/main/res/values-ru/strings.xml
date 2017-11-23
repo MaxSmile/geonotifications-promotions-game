@@ -76,8 +76,8 @@
     <string name="setting_title">Меню</string>
     <string name="logout">Выйти</string>
     <string name="login">Авторизоваться</string>
-    <string name="spin_not_available">Сегодня вы потратили спин для этого места</string>
-    <string name="extra_spin_not_available">Сегодня вы потратили дополнительный спин для этого места</string>
+    <string name="spin_not_available">На данный момент вы потратили свой Спин для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
+    <string name="extra_spin_not_available">На данный момент вы потратили свой Спин для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
     <string name="see_gifts">Просмотреть подарки</string>
     <string name="my_coupons">Мои купоны</string>
     <string name="game_out_of_spins">Закончились спины?</string>
@@ -85,7 +85,7 @@
     <string name="redeemed">Использован:</string>
     <string name="wait_for_update_data">Дождитесь обновления данных</string>
     <string name="empty_category">Эта категория пуста</string>
-    <string name="spin_coming_message">Невозможно, спин еще недоступен</string>
+    <string name="spin_coming_message">На данный момент вы потратили свой Спин для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
     <string name="network_title">Не найдено ни одного соединения</string>
     <string name="network_text">Ваше подключение к беспроводной сети отключено. Восстановите соединение и повторите попытку.</string>
     <string name="settings">Настройки</string>
