@@ -1,17 +1,14 @@
 package com.spindealsapp.activity;
 
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,7 +47,7 @@ import com.spindealsapp.common.MyRotateAnimation;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.FirebaseData;
-import com.spindealsapp.database.GiftServiceLayer;
+import com.spindealsapp.database.service.GiftServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
@@ -61,7 +58,6 @@ import com.spindealsapp.entity.GiftLimit;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.entity.UsedSpin;
 import com.spindealsapp.eventbus.Events;
-import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityGameBinding;
 import com.spindealsapp.util.DateUtils;
@@ -424,7 +420,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
     private void setLimit(final Gift gift) {
         gift.setCountAvailable(gift.getCountAvailable() - 1);
-        GiftServiceLayer.insertGift(gift);
+        GiftServiceLayer.add(gift);
         final String timeKey = String.valueOf(DateUtils.getStart(new Date()).getTime());
         Constants.DB_LIMIT.child(gift.getCompanyKey()).child(gift.getId())
                 .child(timeKey).addListenerForSingleValueEvent(new ValueEventListener() {

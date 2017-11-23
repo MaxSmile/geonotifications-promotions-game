@@ -6,53 +6,54 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.spindealsapp.database.DBHelper;
-import com.spindealsapp.database.mapper.CompanyToContentValuesMapper;
-import com.spindealsapp.database.mapper.CursorToCompanyMapper;
+import com.spindealsapp.database.mapper.CursorToGiftMapper;
+import com.spindealsapp.database.mapper.GiftToContentValuesMapper;
 import com.spindealsapp.database.mapper.Mapper;
 import com.spindealsapp.database.repository.specification.Specification;
 import com.spindealsapp.database.repository.specification.SqlSpecification;
-import com.spindealsapp.database.table.CompanyTable;
+import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.entity.Company;
+import com.spindealsapp.entity.Gift;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Volodymyr Kusenko on 21.11.2017.
+ * Created by Volodymyr Kusenko on 22.11.2017.
  */
 
-public class CompanySqlRepository implements Repository<Company> {
+public class GiftSqlRepository implements Repository<Gift> {
 
     private final SQLiteOpenHelper openHelper;
 
-    private final Mapper<Company, ContentValues> toContentValuesMapper;
-    private final Mapper<Cursor, Company> toObjectMapper;
+    private final Mapper<Gift, ContentValues> toContentValuesMapper;
+    private final Mapper<Cursor, Gift> toObjectMapper;
 
-    public CompanySqlRepository() {
+    public GiftSqlRepository() {
         this.openHelper = DBHelper.getInstance();
 
-        this.toContentValuesMapper = new CompanyToContentValuesMapper();
-        this.toObjectMapper = new CursorToCompanyMapper();
+        this.toContentValuesMapper = new GiftToContentValuesMapper();
+        this.toObjectMapper = new CursorToGiftMapper();
     }
 
     @Override
-    public void add(Company item) {
+    public void add(Gift item) {
         SQLiteDatabase database = openHelper.getWritableDatabase();
         ContentValues contentValues = toContentValuesMapper.map(item);
-        database.insert(CompanyTable.TABLE_NAME, null, contentValues);
+        database.insert(GiftTable.TABLE_NAME, null, contentValues);
         database.close();
     }
 
     @Override
-    public void add(Iterable<Company> items) {
+    public void add(Iterable<Gift> items) {
         SQLiteDatabase database = openHelper.getWritableDatabase();
         database.beginTransaction();
         try {
-            database.delete(CompanyTable.TABLE_NAME, null, null);
+            database.delete(GiftTable.TABLE_NAME, null, null);
 
-            for (Company item : items) {
+            for (Gift item : items) {
                 ContentValues contentValues = toContentValuesMapper.map(item);
-                database.insert(CompanyTable.TABLE_NAME, null, contentValues);
+                database.insert(GiftTable.TABLE_NAME, null, contentValues);
             }
 
             database.setTransactionSuccessful();
@@ -63,12 +64,12 @@ public class CompanySqlRepository implements Repository<Company> {
     }
 
     @Override
-    public void update(Company item) {
+    public void update(Gift item) {
 
     }
 
     @Override
-    public void remove(Company item) {
+    public void remove(Gift item) {
 
     }
 
@@ -78,11 +79,11 @@ public class CompanySqlRepository implements Repository<Company> {
     }
 
     @Override
-    public List<Company> query(Specification specification) {
+    public List<Gift> query(Specification specification) {
         SqlSpecification sqlSpecification = (SqlSpecification) specification;
 
         SQLiteDatabase database = openHelper.getReadableDatabase();
-        List<Company> list = new ArrayList<>();
+        List<Gift> list = new ArrayList<>();
 
         try {
             Cursor cursor = database.rawQuery(sqlSpecification.toSqlQuery(), new String[]{});

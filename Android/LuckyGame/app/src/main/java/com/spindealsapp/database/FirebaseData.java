@@ -10,6 +10,7 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.database.service.CompanyServiceLayer;
+import com.spindealsapp.database.service.GiftServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Count;
 import com.spindealsapp.entity.CouponExtension;
@@ -345,7 +346,7 @@ public class FirebaseData {
 
     private static void saveGift(Gift gift) {
         if (initGifts) {
-            GiftServiceLayer.insertGift(gift);
+            GiftServiceLayer.add(gift);
         } else {
             if (giftsList != null)
                 giftsList.add(gift);
@@ -354,7 +355,7 @@ public class FirebaseData {
             if (countGifts == countChildren.getGifts()) {
                 initGifts = true;
                 if (giftsList != null)
-                    GiftServiceLayer.saveGifts(giftsList);
+                    GiftServiceLayer.add(giftsList);
 
                 spinListener();
                 EventBus.getDefault().post(new Events.LoadingData(70));

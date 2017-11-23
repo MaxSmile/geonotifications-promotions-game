@@ -1,11 +1,10 @@
-package com.spindealsapp.database;
+package com.spindealsapp.database.service;
 
-import com.spindealsapp.App;
+import com.spindealsapp.database.repository.GiftSqlRepository;
+import com.spindealsapp.database.repository.specification.GiftBySpinIdSqlSpecification;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.Place;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,10 +13,15 @@ import java.util.List;
  */
 
 public class GiftServiceLayer {
+    private static GiftSqlRepository repository = new GiftSqlRepository();
 
     public static HashMap<String, Gift> getGifts(Place place) {
         HashMap<String, Gift> gifts = new HashMap<String, Gift>();
-        HashMap<String, Gift> giftsSpin = DBHelper.getInstance(App.getInstance()).getGifts(place.getSpin().getId());
+        List<Gift> giftList = repository.query(new GiftBySpinIdSqlSpecification(place.getSpin().getId()));
+
+        HashMap<String, Gift> giftsSpin = new HashMap<String, Gift>();
+        for (Gift i : giftList) giftsSpin.put(i.getId(),i);
+
         List<Box> boxes = place.getSpin().getBox();
         if (boxes != null) {
             for (int i = 0; i < boxes.size(); i++) {
@@ -37,12 +41,11 @@ public class GiftServiceLayer {
         return gifts;
     }
 
-    public static void insertGift(Gift gift) {
-        DBHelper.getInstance(App.getInstance()).insertGift(gift);
+    public static void add(Gift gift) {
+        repository.add(gift);
     }
 
-    public static void saveGifts(ArrayList<Gift> gifts) {
-        DBHelper.getInstance(App.getInstance()).saveGifts(gifts);
+    public static void add(Iterable<Gift> gifts) {
+        repository.add(gifts);
     }
-
 }

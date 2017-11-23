@@ -10,6 +10,7 @@ import android.util.Log;
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.database.table.CompanyTable;
+import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.CouponExtension;
@@ -38,21 +39,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_NOTIFICATION = "notification";
     private static final String TABLE_GALLERY = "gallery";
     private static final String TABLE_BOX = "box";
-    private static final String TABLE_GIFT = "gift";
     private static final String TABLE_KEYWORDS = "keywords";
     private static final String TABLE_SPIN = "spin";
 
     private static final String KEY_KEYWORDS_KEYWORD = "keyword";
     private static final String KEY_KEYWORDS = "keywords";
-
-    private static final String KEY_GIFT_ID = "id";
-    private static final String KEY_GIFT_DESCRIPTION = "description";
-    private static final String KEY_GIFT_TIME_LOCK = "timeLock";
-    private static final String KEY_GIFT_RULES = "rules";
-    private static final String KEY_GIFT_LIMIT_GIFTS = "limitGifts";
-    private static final String KEY_GIFT_COUNT_AVAILABLE = "countAvailable";
-    private static final String KEY_GIFT_SPIN_KEY = "spinKey";
-    private static final String KEY_GIFT_EXPIRATION_TIME = "expirationTime";
 
     private static final String KEY_BOX_SPIN_ID = "spinId";
     private static final String KEY_BOX_COLOR = "color";
@@ -165,7 +156,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GALLERY);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_GIFT);
+        sqLiteDatabase.execSQL("drop table if exists " + GiftTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_KEYWORDS);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_SPIN);
         onCreate(sqLiteDatabase);
@@ -191,19 +182,19 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTableGift(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_GIFT + "("
+        db.execSQL("create table " + GiftTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_GIFT_ID  + " text,"
-                + CompanyTable.Fields.ID + " text,"
-                + KEY_GIFT_DESCRIPTION + " text,"
-                + KEY_GIFT_TIME_LOCK + " INTEGER,"
-                + KEY_GIFT_RULES + " text,"
-                + KEY_GIFT_LIMIT_GIFTS + " INTEGER,"
-                + KEY_GIFT_COUNT_AVAILABLE + " INTEGER,"
-                + KEY_GIFT_SPIN_KEY + " text,"
-                + KEY_GIFT_EXPIRATION_TIME + " INTEGER,"
+                + GiftTable.Fields.ID  + " text,"
+                + GiftTable.Fields.COMPANY_ID + " text,"
+                + GiftTable.Fields.DESCRIPTION + " text,"
+                + GiftTable.Fields.TIME_LOCK + " INTEGER,"
+                + GiftTable.Fields.RULES + " text,"
+                + GiftTable.Fields.LIMIT_GIFTS + " INTEGER,"
+                + GiftTable.Fields.COUNT_AVAILABLE + " INTEGER,"
+                + GiftTable.Fields.SPIN_KEY + " text,"
+                + GiftTable.Fields.EXPIRATION_TIME + " INTEGER,"
                 + "UNIQUE ("
-                + KEY_GIFT_ID
+                + GiftTable.Fields.ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
     }
@@ -515,68 +506,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return spins;
-    }
-
-    public void insertGift(Gift gift) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_GIFT, null, getGiftValues(gift));
-        db.close();
-    }
-
-    public boolean saveGifts(ArrayList<Gift> gifts) {
-        long rowInserted = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            db.delete(TABLE_GIFT, null, null);
-            for (Gift gift: gifts) {
-                rowInserted = db.insert(TABLE_GIFT, null, getGiftValues(gift));
-            }
-            if (rowInserted > -1) {
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-        db.close();
-
-        return rowInserted > -1;
-    }
-
-    private ContentValues getGiftValues(Gift gift) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_GIFT_ID, gift.getId());
-        contentValues.put(CompanyTable.Fields.ID, gift.getCompanyKey());
-        contentValues.put(KEY_GIFT_DESCRIPTION, gift.getDescription());
-        contentValues.put(KEY_GIFT_TIME_LOCK, gift.getTimeLock());
-        contentValues.put(KEY_GIFT_RULES, gift.getRules());
-        contentValues.put(KEY_GIFT_LIMIT_GIFTS, gift.getLimitGifts());
-        contentValues.put(KEY_GIFT_COUNT_AVAILABLE, gift.getCountAvailable());
-        contentValues.put(KEY_GIFT_SPIN_KEY , gift.getSpinKey());
-        contentValues.put(KEY_GIFT_EXPIRATION_TIME , gift.getExpirationTime());
-        return contentValues;
-    }
-
-    public HashMap<String, Gift> getGifts(String spinId) {
-        HashMap<String, Gift> gifts = new HashMap<String, Gift>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_GIFT
-                        + " WHERE "
-                        + KEY_GIFT_SPIN_KEY
-                        + " = ?"
-                , new String[] {spinId});
-        if (cursor.moveToFirst()) {
-            do {
-                gifts.put(cursor.getString(1), parseGift(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        db.close();
-        return gifts;
     }
 
     public boolean updatePlaces(ArrayList<Place> places) {
@@ -1041,20 +970,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return coupons;
-    }
-
-    private Gift parseGift(Cursor cursor) {
-        return new Gift(
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getLong(4),
-                cursor.getString(5),
-                cursor.getLong(6),
-                cursor.getLong(7),
-                cursor.getString(8),
-                cursor.getLong(9)
-        );
     }
 
     private Box parseBox(Cursor cursor) {
