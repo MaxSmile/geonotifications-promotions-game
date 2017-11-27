@@ -85,7 +85,7 @@
     <string name="redeemed">Redeemed:</string>
     <string name="wait_for_update_data">Wait for update data</string>
     <string name="empty_category">This category is empty</string>
-    <string name="spin_coming_message">You spent your Spin for this place for now. For your next Spin see the: About Spins and Coupons for this place</string>
+    <string name="spin_coming_message">No Spin today for this place. For the next Spin see the: About Spins and Coupons for this place</string>
     <string name="network_title">No connection found</string>
     <string name="network_text">Your connection to the wireless network is turned off. Restore your connection and try again.</string>
     <string name="settings">Settings</string>
@@ -130,7 +130,7 @@
     <string name="add_coupon_button">Add</string>
     <string name="add_coupon_code_wrong">Wrong coupon code</string>
     <string name="gifts_left">%d gifts left</string>
-    <string name="gifts_over">Sorry, all gifts are over.</string>
+    <string name="gifts_over">Sorry, all gifts are over for now.</string>
     <string name="other_places">Other locations of this company</string>
     <string name="select_maps_app">Select your maps app</string>
     <string name="favorites_text1">Favourites still empty</string>

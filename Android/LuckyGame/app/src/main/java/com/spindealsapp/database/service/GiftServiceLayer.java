@@ -17,23 +17,25 @@ public class GiftServiceLayer {
 
     public static HashMap<String, Gift> getGifts(Place place) {
         HashMap<String, Gift> gifts = new HashMap<String, Gift>();
-        List<Gift> giftList = repository.query(new GiftBySpinIdSqlSpecification(place.getSpin().getId()));
+        if (place != null) {
+            List<Gift> giftList = repository.query(new GiftBySpinIdSqlSpecification(place.getSpin().getId()));
 
-        HashMap<String, Gift> giftsSpin = new HashMap<String, Gift>();
-        for (Gift i : giftList) giftsSpin.put(i.getId(),i);
+            HashMap<String, Gift> giftsSpin = new HashMap<String, Gift>();
+            for (Gift i : giftList) giftsSpin.put(i.getId(),i);
 
-        List<Box> boxes = place.getSpin().getBox();
-        if (boxes != null) {
-            for (int i = 0; i < boxes.size(); i++) {
-                String giftId = boxes.get(i).getGift();
-                Gift gift = giftsSpin.get(giftId);
-                if (gift != null) {
-                    if (gift.getCountAvailable() > 0) {
-                        gift.setActive(true);
-                    } else {
-                        gift.setActive(false);
+            List<Box> boxes = place.getSpin().getBox();
+            if (boxes != null) {
+                for (int i = 0; i < boxes.size(); i++) {
+                    String giftId = boxes.get(i).getGift();
+                    Gift gift = giftsSpin.get(giftId);
+                    if (gift != null) {
+                        if (gift.getCountAvailable() > 0) {
+                            gift.setActive(true);
+                        } else {
+                            gift.setActive(false);
+                        }
+                        gifts.put(giftId, gift);
                     }
-                    gifts.put(giftId, gift);
                 }
             }
         }

@@ -76,7 +76,7 @@
     <string name="setting_title">Меню</string>
     <string name="logout">Выйти</string>
     <string name="login">Авторизоваться</string>
-    <string name="spin_not_available">На данный момент вы потратили свой Спин для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
+    <string name="spin_not_available">На данный момент вы потратили свой Спин для этого места. Для следующего Спина см.: О Спинах и Купонах для этого места</string>
     <string name="extra_spin_not_available">На данный момент вы потратили свой Спин для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
     <string name="see_gifts">Просмотреть подарки</string>
     <string name="my_coupons">Мои купоны</string>
@@ -85,7 +85,7 @@
     <string name="redeemed">Использован:</string>
     <string name="wait_for_update_data">Дождитесь обновления данных</string>
     <string name="empty_category">Эта категория пуста</string>
-    <string name="spin_coming_message">На данный момент вы потратили свой Спин для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
+    <string name="spin_coming_message">Сегодня нет Спина для этого места. Для вашего следующего Спина см.: О Спинах и Купонах для этого места</string>
     <string name="network_title">Не найдено ни одного соединения</string>
     <string name="network_text">Ваше подключение к беспроводной сети отключено. Восстановите соединение и повторите попытку.</string>
     <string name="settings">Настройки</string>
@@ -130,7 +130,7 @@
     <string name="add_coupon_button">Добавить</string>
     <string name="add_coupon_code_wrong">Неверный код купона</string>
     <string name="gifts_left">%d подарков осталось</string>
-    <string name="gifts_over">Извините, все подарки закончились.</string>
+    <string name="gifts_over">Извините, все подарки уже закончились.</string>
     <string name="other_places">Другие заведения этой компании</string>
     <string name="select_maps_app">Выберите приложение для карт</string>
     <string name="favorites_text1">Избранные все еще пусты</string>

@@ -12,12 +12,14 @@ public class ToastTimer {
     public static CountDownTimer countDownTimer;
 
     public static void start(final Toast toast, long duration) {
-        countDownTimer =  new CountDownTimer(duration, 1000)
-        {
+
+        countDownTimer =  new CountDownTimer(duration, 1000) {
+            @Override
             public void onTick(long millisUntilFinished) {
                 toast.show();
             }
 
+            @Override
             public void onFinish() {
                 toast.cancel();
 

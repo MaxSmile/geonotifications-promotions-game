@@ -85,7 +85,7 @@
     <string name="redeemed">Εξαργυρωμένο:</string>
     <string name="wait_for_update_data">Περιμένετε για δεδομένα ενημέρωσης</string>
     <string name="empty_category">Αυτή η κατηγορία είναι κενή</string>
-    <string name="spin_coming_message">Σπατάλησες το Spin σου σε αυτό το μέρος  για τώρα. Για το επόμενο σου Spin κοίταξε στο:Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
+    <string name="spin_coming_message">Οχι Spin σήμερα για αυτό το μέρος. Για το επόμενο Spin κοίταξε στο:Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
     <string name="network_title">Δεν βρέθηκε σύνδεση</string>
     <string name="network_text">Η σύνδεσή σας στο ασύρματο δίκτυο είναι απενεργοποιημένη. Επαναφέρετε τη σύνδεσή σας και δοκιμάστε ξανά.</string>
     <string name="settings">Ρυθμίσεις</string>
@@ -130,8 +130,8 @@
     <string name="add_coupon_button">Προσθήκη</string>
     <string name="add_coupon_code_wrong">Λάθος κωδικός κουπονιού</string>
     <string name="gifts_left">%d Υπολειπόμενα δώρα</string>
-    <string name="gifts_over">Συγνώμη, όλα τα δώρα έχουν τελειώσει.</string>
-    <string name="other_places">Άλλες τοποθεσίες</string>
+    <string name="gifts_over">Συγνώμη, όλα τα δώρα έχουν τελειώσει για τώρα.</string>
+    <string name="other_places">Άλλες τοποθεσίες αυτής της εταιρείας</string>
     <string name="select_maps_app">Επιλέξτε την εφαρμογή με χάρτες που θέλετε</string>
     <string name="favorites_text1">Η λίστα με τα αγαπημένα σας είναι\n ακόμα κενή</string>
     <string name="favorites_text2">

@@ -132,7 +132,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
         place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
-        //gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
         gifts = GiftServiceLayer.getGifts(place);
         FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
 
@@ -515,16 +514,19 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         imagePointer.setRotation(0);
         gifts = GiftServiceLayer.getGifts(place);
         if (winKey != null) {
-            Gift gift = gifts.get(winKey);
-            if (gift.isActive()) {
-                createCoupon(gift);
-                setLog(Constants.GAME_WIN);
-                //startAnimation(getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]]);
-                goToCoupon();
+            if (gifts.size() > 0) {
+                Gift gift = gifts.get(winKey);
+                if (gift.isActive()) {
+                    createCoupon(gift);
+                    setLog(Constants.GAME_WIN);
+                    //startAnimation(getResources().getStringArray(R.array.box_name_type)[colorBox[prizeIndex]]);
+                    goToCoupon();
+                } else {
+                    Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
+                }
             } else {
                 Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
             }
-
         } else {
             if (Properties.getSoundGame()) {
                 sp.play(soundIdLose, 1, 1, 0, 0, 1);
