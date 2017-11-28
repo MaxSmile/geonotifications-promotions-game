@@ -483,7 +483,7 @@
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:textColor="@color/colorDetailsTitle"
-                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_COMING || countGift == 0 ? v.GONE : v.VISIBLE}"
+                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_ACTIVE &amp;&amp; countGift > 0 ? v.VISIBLE : v.GONE}"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
                 <TextView
@@ -495,7 +495,7 @@
                     android:textColor="@color/colorDetailsTextInfo"
                     android:layout_below="@+id/detailsBtnPlay"
                     android:layout_centerHorizontal="true"
-                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_COMING || countGift == 0  ? v.GONE : v.VISIBLE}"/>
+                    android:visibility="@{place.spin.status == Constants.SPIN_STATUS_ACTIVE &amp;&amp; countGift > 0 ? v.VISIBLE : v.GONE}"/>
             </RelativeLayout>
 
             <LinearLayout

@@ -104,7 +104,6 @@
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.SlideCouponsActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity

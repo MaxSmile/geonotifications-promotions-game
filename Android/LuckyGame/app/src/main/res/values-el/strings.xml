@@ -131,7 +131,7 @@
     <string name="add_coupon_code_wrong">Λάθος κωδικός κουπονιού</string>
     <string name="gifts_left">%d Υπολειπόμενα δώρα</string>
     <string name="gifts_over">Συγνώμη, όλα τα δώρα έχουν τελειώσει για τώρα.</string>
-    <string name="other_places">Άλλες τοποθεσίες αυτής της εταιρείας</string>
+    <string name="other_places"> Άλλες τοποθεσίες της εταιρείας</string>
     <string name="select_maps_app">Επιλέξτε την εφαρμογή με χάρτες που θέλετε</string>
     <string name="favorites_text1">Η λίστα με τα αγαπημένα σας είναι\n ακόμα κενή</string>
     <string name="favorites_text2">

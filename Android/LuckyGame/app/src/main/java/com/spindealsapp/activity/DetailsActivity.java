@@ -78,7 +78,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
         geoNotification = getIntent().getBooleanExtra("geoNotification", false);
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setHandler(this);
@@ -148,7 +147,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
             binding.setCountGift(boxes.size());
             initSlider();
-//            company = DBHelper.getInstance(this).getCompany(place.getCompanyKey());
             company = CompanyServiceLayer.getCompany(place.getCompanyKey());
             countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
             binding.setCountCoupons(countCoupons);
@@ -374,8 +372,8 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     public void getExtraSpin(View view) {
         if (NetworkState.isOnline()) {
             if (CurrentUser.user != null) {
-                if (boxes.size() > 0) {
-                    if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING) {
+                if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING) {
+                    if (boxes.size() > 0) {
                         if (place.getSpin().isExtraAvailable()) {
                             Intent intent = new Intent(this, ExtraSpinActivity.class);
                             intent.putExtra(Place.class.getCanonicalName(), place);
@@ -386,10 +384,10 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             ToastTimer.start(Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_SHORT), 5000);
                         }
                     } else {
-                        ToastTimer.start(Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
+                        Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
+                    ToastTimer.start(Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
                 }
             } else {
                 loginDialog();
