@@ -153,4 +153,5 @@
     <string name="add_coupon_text">Здесь вы можете добавить код купона, который вы получили от своего друга.</string>
     <string name="expired">Закончился:</string>
     <string name="near_me_message">Поиск  для вашего местоположения</string>
+    <string name="directions_message">По всему Кипру</string>
 </resources>

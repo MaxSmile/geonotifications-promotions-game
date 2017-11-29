@@ -79,37 +79,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     private void clearKeywords() {
         if (type != Constants.CATEGORY_ALL) {
             Filters.clear();
-            /*if (Filters.filteredKeywords != null && Filters.filteredKeywords.size() > 0) {
-                Resources localizedResources = Locales.getLocalizedResources(this, Locale.US);
-                String[] typesName = localizedResources.getStringArray(R.array.company_type);
-                String typeName = typesName[type].toLowerCase();
-                Iterator<String> filteredKeywordsIt = Filters.filteredKeywords.keySet().iterator();
-                while (filteredKeywordsIt.hasNext()) {
-                    boolean exist = false;
-                    String keyword = filteredKeywordsIt.next();
-                    List<String> keywords = Arrays.asList(keyword.split("-"));
-                    if (keywords.size() > 1) {
-                        String type = keywords.get(0).toLowerCase().trim();
-                        if (type.equals(typeName)) {
-                            exist = true;
-                        }
-                    }
-                    if (!exist) {
-                        filteredKeywordsIt.remove();
-                    }
-                }
-                Filters.count = 0;
-                if (Filters.filteredCities.size() > 0) {
-                    Filters.count = Filters.filteredCities.size();
-                }
-
-                if (Filters.filteredKeywords.size() > 0) {
-                    Filters.byKeywords = true;
-                    Filters.count += Filters.filteredKeywords.size();
-                } else {
-                    Filters.byKeywords = false;
-                }
-            }*/
         }
     }
 

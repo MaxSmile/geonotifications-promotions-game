@@ -153,4 +153,5 @@
     <string name="add_coupon_text">Here you can Add the coupon code you received from your friend.</string>
     <string name="expired">Expired:</string>
     <string name="near_me_message">Searching for your location</string>
+    <string name="directions_message">All over Cyprus</string>
 </resources>

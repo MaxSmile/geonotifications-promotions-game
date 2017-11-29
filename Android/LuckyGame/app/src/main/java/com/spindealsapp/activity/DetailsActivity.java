@@ -324,21 +324,22 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void directions(View view) {
-        if (CurrentLocation.lat != 0 && place.getGeoLat() != 0 && place.getGeoLon() != 0 && NetworkState.isOnline()) {
-
-            String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
-                    + CurrentLocation.lat + ","
-                    + CurrentLocation.lon + "&daddr="
-                    + place.getGeoLat() +","
-                    + place.getGeoLon();
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
-
+        if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
+            if (CurrentLocation.lat != 0 && NetworkState.isOnline()) {
+                String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
+                        + CurrentLocation.lat + ","
+                        + CurrentLocation.lon + "&daddr="
+                        + place.getGeoLat() +","
+                        + place.getGeoLon();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
+            } else {
+                String uri = String.format(Locale.getDefault(), "geo:%f,%f", place.getGeoLat(), place.getGeoLon());
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
+            }
         } else {
-            String uri = String.format(Locale.getDefault(), "geo:%f,%f", place.getGeoLat(), place.getGeoLon());
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            startActivity(Intent.createChooser(intent, getString(R.string.select_maps_app)));
-            //Toast.makeText(this, R.string.unknown_location, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.directions_message, Toast.LENGTH_SHORT).show();
         }
     }
 
