@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/layer"
         android:id="@+id/preloader"
-        android:visibility="@{result ? v.GONE : v.VISIBLE}">
+        android:visibility="@{result ? v.VISIBLE : v.GONE}">
         <ProgressBar
             android:layout_width="150dp"
             android:layout_height="150dp"
