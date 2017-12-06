@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.DatabaseManager;
 import com.spindealsapp.database.mapper.CursorToGiftMapper;
 import com.spindealsapp.database.mapper.GiftToContentValuesMapper;
 import com.spindealsapp.database.mapper.Mapper;
@@ -38,15 +39,18 @@ public class GiftSqlRepository implements Repository<Gift> {
 
     @Override
     public void add(Gift item) {
-        SQLiteDatabase database = openHelper.getWritableDatabase();
+        //SQLiteDatabase database = openHelper.getWritableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = toContentValuesMapper.map(item);
         database.insert(GiftTable.TABLE_NAME, null, contentValues);
-        database.close();
+        //database.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override
     public void add(Iterable<Gift> items) {
-        SQLiteDatabase database = openHelper.getWritableDatabase();
+        //SQLiteDatabase database = openHelper.getWritableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
         try {
             database.delete(GiftTable.TABLE_NAME, null, null);
@@ -59,7 +63,8 @@ public class GiftSqlRepository implements Repository<Gift> {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
+            //database.close();
+            DatabaseManager.getInstance().closeDatabase();
         }
     }
 
@@ -82,7 +87,8 @@ public class GiftSqlRepository implements Repository<Gift> {
     public List<Gift> query(Specification specification) {
         SqlSpecification sqlSpecification = (SqlSpecification) specification;
 
-        SQLiteDatabase database = openHelper.getReadableDatabase();
+        //SQLiteDatabase database = openHelper.getWritableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         List<Gift> list = new ArrayList<>();
 
         try {
@@ -98,7 +104,8 @@ public class GiftSqlRepository implements Repository<Gift> {
 
             return list;
         } finally {
-            database.close();
+            //database.close();
+            DatabaseManager.getInstance().closeDatabase();
         }
     }
 }

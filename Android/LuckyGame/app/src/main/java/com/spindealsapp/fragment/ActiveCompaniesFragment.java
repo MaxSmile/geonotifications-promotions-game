@@ -85,10 +85,10 @@ public class ActiveCompaniesFragment extends Fragment {
         refreshData();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+  /*  @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateLocation(Events.UpdateLocation updateLocation) {
         refreshData();
-    }
+    }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateFilter(Events.UpdateFilter updateFilter) {

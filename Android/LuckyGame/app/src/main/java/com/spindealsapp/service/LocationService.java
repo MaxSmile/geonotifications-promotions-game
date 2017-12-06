@@ -24,6 +24,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.activity.HomeActivity;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.receiver.ProximityIntentReceiver;
@@ -202,9 +203,11 @@ public class LocationService extends Service {
     private void changeLocation() {
         CurrentLocation.lat = CurrentLocation.location.getLatitude();
         CurrentLocation.lon = CurrentLocation.location.getLongitude();
-        if (!CurrentLocation.check) {
+        if (!CurrentLocation.check && !PlaceServiceLayer.isBusy()) {
             CurrentLocation.check = true;
-            ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
+            PlaceServiceLayer.calculateData();
+            EventBus.getDefault().post(new Events.UpdateLocation());
+           /* ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
             for (int i = 0; i < places.size(); i++) {
                 Place place = places.get(i);
                 if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
@@ -217,7 +220,7 @@ public class LocationService extends Service {
 
             if (DBHelper.getInstance(App.getInstance()).updatePlaces(places)) {
                 EventBus.getDefault().post(new Events.UpdateLocation());
-            }
+            }*/
         }
     }
 

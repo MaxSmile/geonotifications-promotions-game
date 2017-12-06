@@ -178,6 +178,7 @@ public class FirebaseData {
         Constants.DB_COMPANY.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println("myTest initCompanies=" + initCompanies);
                 if (initCompanies) {
                     insertCompany(dataSnapshot.getValue(Company.class));
                 } else {
@@ -217,8 +218,9 @@ public class FirebaseData {
 
     private static void insertCompany(Company company) {
         CompanyServiceLayer.add(company);
-        //DBHelper.getInstance(App.getInstance()).insertCompany(company);
-        EventBus.getDefault().post(new Events.UpdatePlaces());
+        System.out.println("myTest insertCompany");
+        PlaceServiceLayer.calculateData();
+        //EventBus.getDefault().post(new Events.UpdatePlaces());
     }
 
     private static void placeListener() {
@@ -431,7 +433,7 @@ public class FirebaseData {
             if (countSpins == countChildren.getSpins()) {
                 initSpins = true;
                 SpinServiceLayer.saveSpins(spinsList);
-                EventBus.getDefault().post(new Events.LoadingData(95));
+                EventBus.getDefault().post(new Events.LoadingData(90));
                 if (countChildren.getOffers() > 0) {
                     if (!initOffers) {
                         offerListener();

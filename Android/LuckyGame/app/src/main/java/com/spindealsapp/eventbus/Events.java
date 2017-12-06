@@ -27,6 +27,9 @@ public class Events {
     public static class FinishLoadData {
     }
 
+    public static class FinishCalculateData {
+    }
+
     public static class LoadingData {
         private int percent;
 

@@ -3,6 +3,8 @@ package com.spindealsapp;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.DatabaseManager;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.spindealsapp.BuildConfig;
@@ -24,6 +26,8 @@ public class App extends Application {
             Fabric.with(this, new Crashlytics());
 
         instance = this;
+
+        DatabaseManager.initializeInstance(DBHelper.getInstance());
 
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));

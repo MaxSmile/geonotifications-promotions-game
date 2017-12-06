@@ -320,7 +320,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void saveKeywords(ArrayList<String> keywords) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         long rowInserted;
         db.beginTransaction();
         try {
@@ -338,11 +339,13 @@ public class DBHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
 
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     public ArrayList<String> getKeywords() {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ArrayList<String> keywords = new ArrayList<String>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_KEYWORDS, null);
         if (cursor.moveToFirst()) {
@@ -354,23 +357,26 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
         return keywords;
     }
 
     public void saveTimeNotification(String placeI) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_PLACE_ID, placeI);
         contentValues.put(KEY_LAST_NOTIFICATION, System.currentTimeMillis());
 
         db.insert(TABLE_NOTIFICATION, null, contentValues);
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     public long getTimeNotification(String placeId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_NOTIFICATION
                         + " WHERE "
@@ -387,28 +393,34 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return 0;
     }
 
     public void insertSpin(Spin spin) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.insert(TABLE_SPIN, null, getSpinValues(spin));
         db.delete(TABLE_BOX, KEY_BOX_SPIN_ID + " = ?", new String[] {spin.getId()});
         saveBoxes(db, spin);
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     public void updateSpin(Spin spin) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.update(TABLE_SPIN, getSpinValues(spin), KEY_SPIN_ID + " = ?", new String[] {spin.getId()});
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     public Spin getSpin(String Id) {
         Spin spin = new Spin();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_SPIN
                         + " WHERE "
@@ -424,7 +436,8 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
         return spin;
     }
 
@@ -447,7 +460,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean saveSpins(ArrayList<Spin> spins) {
         long rowInserted = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.beginTransaction();
         try {
             db.delete(TABLE_SPIN, null, null);
@@ -467,7 +481,8 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return rowInserted > -1;
     }
@@ -491,7 +506,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public HashMap<String, Spin> getSpins() {
         HashMap<String, Spin> spins = new HashMap<String, Spin>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SPIN, null);
         if (cursor.moveToFirst()) {
             do {
@@ -504,13 +520,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
         return spins;
     }
 
     public boolean updatePlaces(ArrayList<Place> places) {
         long rowInserted = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.beginTransaction();
         try {
             for (Place place : places) {
@@ -526,17 +544,20 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return rowInserted > -1;
     }
 
     public void insertPlace(Place place) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.insert(TABLE_PLACES, null, getPlaceValues(place));
         db.delete(TABLE_GALLERY, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
         saveGallery(db, place);
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     private long saveGallery(SQLiteDatabase db, Place place) {
@@ -556,7 +577,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean savePlaces(ArrayList<Place> places) {
         long rowInserted = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.beginTransaction();
         try {
             db.delete(TABLE_PLACES, null, null);
@@ -575,7 +597,8 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return rowInserted > -1;
     }
@@ -614,7 +637,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<String> getCities() {
         List<String> cities = new ArrayList<String>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT DISTINCT "
                 + KEY_PLACE_CITY
                 + " FROM "
@@ -632,14 +656,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return cities;
     }
 
     public ArrayList<Place> getOrderPlaces() {
         ArrayList<Place> orderPlaces = new ArrayList<Place>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_PLACES
                 + " ORDER BY "
@@ -656,15 +682,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
-
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
         return orderPlaces;
     }
 
 
     public HashMap<String, Place> getPlaces() {
         HashMap<String, Place> places = new HashMap<String, Place>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_PLACES, null);
 
@@ -677,14 +704,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
-
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
         return places;
     }
 
     public HashMap<String, Place> getOtherPlacesCompany(String companyId, String placeId) {
         HashMap<String, Place> places = new HashMap<String, Place>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_PLACES
                         + " WHERE "
@@ -703,14 +731,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return places;
     }
 
     public Place getPlace(String placeId) {
         Place place = new Place();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_PLACES
                         + " WHERE "
@@ -731,14 +761,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return place;
     }
 
     private List<Box> getBox(String spinId) {
         List<Box> box = new ArrayList<Box>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_BOX
                         + " WHERE "
@@ -755,14 +787,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return box;
     }
 
     private List<String> getGallery(String placeId) {
         List<String> gallery = new ArrayList<String>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_GALLERY
                         + " WHERE "
@@ -779,33 +813,44 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return gallery;
     }
 
     public void updatePlace(Place place) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = getPlaceValues(place);
         db.update(TABLE_PLACES, contentValues, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
+
     }
 
     public void insertCoupon(CouponExtension coupon) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.insert(TABLE_COUPONS, null, getCouponValues(coupon));
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
+
     }
 
 
     public void saveCoupon(CouponExtension coupon) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.insert(TABLE_COUPONS, null, getCouponValues(coupon));
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
+
     }
 
     public void saveCoupons(List<CouponExtension> coupons, boolean offer) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.beginTransaction();
         try {
             if (offer) {
@@ -818,7 +863,8 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     private ContentValues getCouponValues(CouponExtension coupon) {
@@ -853,7 +899,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<CouponExtension> getCouponsExtension() {
         List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_COUPONS
                 + " WHERE "
@@ -871,14 +918,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return coupons;
     }
 
     public List<CouponExtension> getCouponsByPlace(String placeKey) {
         List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.query(TABLE_COUPONS,
                 null,
                 KEY_COUPON_PLACE_KEY + "=?",
@@ -895,14 +944,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return coupons;
     }
 
     public List<CouponExtension> getCouponsByPlaceGift(String giftKey, String placeKey) {
         List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.query(TABLE_COUPONS,
                 null,
                 KEY_COUPON_GIFT_KEY + " = ? AND "
@@ -921,14 +972,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return coupons;
     }
 
     public List<CouponExtension> getCouponsByCode(String couponKey) {
         List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.query(TABLE_COUPONS,
                 null,
                 KEY_COUPON_CODE + "=?",
@@ -945,13 +998,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return coupons;
     }
 
     public List<String> getCoupons() {
-        SQLiteDatabase db = this.getWritableDatabase();
+        //SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         List<String> coupons = new ArrayList<String>();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_COUPONS
@@ -967,7 +1022,8 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
+        DatabaseManager.getInstance().closeDatabase();
 
         return coupons;
     }

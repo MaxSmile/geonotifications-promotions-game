@@ -73,10 +73,10 @@ public class SearchActivity extends BaseActivity implements SearchHandler {
         super.onStop();
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+   /* @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
         refreshData();
-    }
+    }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {

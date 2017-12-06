@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 import com.spindealsapp.R;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.FirebaseData;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.NetworkState;
 
@@ -23,7 +24,6 @@ public class LoaderActivity extends BaseActivity {
         progressBar = (ProgressBar)findViewById(R.id.loadProgress);
         progressBar.setMax(100);
         progressBar.setProgress(0);
-        FirebaseData.loadData();
         if (!NetworkState.isOnline()) {
             loadDataSuccess();
         } else {
@@ -33,13 +33,18 @@ public class LoaderActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void finishLoadData(Events.FinishLoadData finishLoadData) {
-        progressBar.setProgress(100);
-        loadDataSuccess();
+        PlaceServiceLayer.calculateData();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void LoadingData(Events.LoadingData loadingData) {
+    public void loadingData(Events.LoadingData loadingData) {
         progressBar.setProgress(loadingData.getPercent());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void finishCalculateData(Events.FinishCalculateData finishCalculateData) {
+        progressBar.setProgress(100);
+        loadDataSuccess();
     }
 
     private void loadDataSuccess() {

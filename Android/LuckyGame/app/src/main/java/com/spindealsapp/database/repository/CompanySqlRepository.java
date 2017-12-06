@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.DatabaseManager;
 import com.spindealsapp.database.mapper.CompanyToContentValuesMapper;
 import com.spindealsapp.database.mapper.CursorToCompanyMapper;
 import com.spindealsapp.database.mapper.Mapper;
@@ -37,15 +38,18 @@ public class CompanySqlRepository implements Repository<Company> {
 
     @Override
     public void add(Company item) {
-        SQLiteDatabase database = openHelper.getWritableDatabase();
+        //SQLiteDatabase database = openHelper.getWritableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = toContentValuesMapper.map(item);
         database.insert(CompanyTable.TABLE_NAME, null, contentValues);
-        database.close();
+        //database.close();
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override
     public void add(Iterable<Company> items) {
-        SQLiteDatabase database = openHelper.getWritableDatabase();
+        //SQLiteDatabase database = openHelper.getWritableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
         try {
             database.delete(CompanyTable.TABLE_NAME, null, null);
@@ -58,7 +62,8 @@ public class CompanySqlRepository implements Repository<Company> {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            database.close();
+            //database.close();
+            DatabaseManager.getInstance().closeDatabase();
         }
     }
 
@@ -81,7 +86,8 @@ public class CompanySqlRepository implements Repository<Company> {
     public List<Company> query(Specification specification) {
         SqlSpecification sqlSpecification = (SqlSpecification) specification;
 
-        SQLiteDatabase database = openHelper.getReadableDatabase();
+        //SQLiteDatabase database = openHelper.getWritableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         List<Company> list = new ArrayList<>();
 
         try {
@@ -97,7 +103,8 @@ public class CompanySqlRepository implements Repository<Company> {
 
             return list;
         } finally {
-            database.close();
+            //database.close();
+            DatabaseManager.getInstance().closeDatabase();
         }
     }
 }

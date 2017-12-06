@@ -222,10 +222,10 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         super.onBackPressed();
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    /*@Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onCurrentLocation(Events.UpdateLocation updateLocation) {
         refreshData();
-    }
+    }*/
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {

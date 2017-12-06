@@ -16,9 +16,11 @@ import com.spindealsapp.R;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,14 +30,40 @@ import java.util.Map;
 
 public class PlaceServiceLayer {
 
+    private static ArrayList<Place> placesList;
+    private static int day;
+    private static Calendar calendar = new GregorianCalendar();
+    private static boolean busy;
+
     public static ArrayList<Place> getPlaces() {
-        ArrayList<Place> placesList = getPlacesWithSpin();
-        Collections.sort(placesList, new PlaceComparator());
-        for (int i = 0; i < placesList.size(); i++) {
-            Place place = placesList.get(i);
-            updatePlace(place);
+        if (placesList == null || day != calendar.get(Calendar.DAY_OF_MONTH)) {
+            placesList = new ArrayList<>();
+            calculateData();
         }
-       return placesList;
+        return placesList;
+    }
+
+    public static void calculateData() {
+        System.out.println("myTest calculateData");
+        if (!busy) {
+            busy = true;
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    placesList = getPlacesWithSpin();
+                    Collections.sort(placesList, new PlaceComparator());
+                    for (int i = 0; i < placesList.size(); i++) {
+                        Place place = placesList.get(i);
+                        updatePlace(place);
+                    }
+                    System.out.println("myTest placesList.size=" + placesList.size());
+                    busy = false;
+                    EventBus.getDefault().post(new Events.UpdatePlaces());
+                    EventBus.getDefault().post(new Events.FinishCalculateData());
+                }
+            }).start();
+        }
     }
 
     private static ArrayList<Place> getPlacesWithSpin() {
@@ -128,5 +156,9 @@ public class PlaceServiceLayer {
                 place.setInfoChecked(oldPlace.isInfoChecked());
             }
         }
+    }
+
+    public static boolean isBusy() {
+        return busy;
     }
 }
