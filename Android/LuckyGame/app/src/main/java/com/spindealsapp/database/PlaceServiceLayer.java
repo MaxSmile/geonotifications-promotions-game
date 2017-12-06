@@ -40,11 +40,18 @@ public class PlaceServiceLayer {
             placesList = new ArrayList<>();
             calculateData();
         }
+        calculateTimeLeft();
         return placesList;
     }
 
+    private static void calculateTimeLeft() {
+        for (int i = 0; i < placesList.size(); i++) {
+            Spin spin = placesList.get(i).getSpin();
+            spin.setTimeLeft(DateFormat.getDiff(spin.getTimeEnd()));
+        }
+    }
+
     public static void calculateData() {
-        System.out.println("myTest calculateData");
         if (!busy) {
             busy = true;
             day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -57,7 +64,6 @@ public class PlaceServiceLayer {
                         Place place = placesList.get(i);
                         updatePlace(place);
                     }
-                    System.out.println("myTest placesList.size=" + placesList.size());
                     busy = false;
                     EventBus.getDefault().post(new Events.UpdatePlaces());
                     EventBus.getDefault().post(new Events.FinishCalculateData());

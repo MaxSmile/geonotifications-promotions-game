@@ -47,6 +47,7 @@ import com.spindealsapp.common.MyRotateAnimation;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.FirebaseData;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.database.service.GiftServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
@@ -513,6 +514,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         timer.purge();
         imagePointer.setRotation(0);
         gifts = GiftServiceLayer.getGifts(place);
+        PlaceServiceLayer.calculateData();
         if (winKey != null) {
             if (gifts.size() > 0) {
                 Gift gift = gifts.get(winKey);

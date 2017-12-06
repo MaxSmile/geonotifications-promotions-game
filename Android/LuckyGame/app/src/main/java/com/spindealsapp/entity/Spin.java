@@ -27,6 +27,7 @@ public class Spin implements Parcelable {
     private long extraCreateTime;
     private boolean extra;
     private List<Box> box = new ArrayList<Box>();
+    private long timeEnd;
 
     public Spin() {
     }
@@ -59,6 +60,7 @@ public class Spin implements Parcelable {
         extraCreateTime = in.readLong();
         extra = in.readByte() != 0;
         box = in.createTypedArrayList(Box.CREATOR);
+        timeEnd = in.readLong();
     }
 
     public static final Creator<Spin> CREATOR = new Creator<Spin>() {
@@ -193,6 +195,14 @@ public class Spin implements Parcelable {
         this.box = box;
     }
 
+    public long getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(long timeEnd) {
+        this.timeEnd = timeEnd;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -214,5 +224,6 @@ public class Spin implements Parcelable {
         dest.writeLong(extraCreateTime);
         dest.writeByte((byte) (extra ? 1 : 0));
         dest.writeTypedList(box);
+        dest.writeLong(timeEnd);
     }
 }

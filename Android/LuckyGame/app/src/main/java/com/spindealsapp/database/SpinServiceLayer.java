@@ -60,7 +60,8 @@ public class SpinServiceLayer {
                 spin.setExtraAvailable(true);
             }
             if (Rrule.isAvailable(spin.getRrule())) {
-                spin.setTimeLeft(DateFormat.getDiff(Rrule.getTimeEnd(spin.getRrule())));
+                //spin.setTimeLeft(DateFormat.getDiff(Rrule.getTimeEnd(spin.getRrule())));
+                spin.setTimeEnd(Rrule.getTimeEnd(spin.getRrule()));
                 if (spin.getSpent() < spin.getLimit() || spin.isExtra()) {
                     spin.setAvailable(true);
                     updateSpinData(spin, spinIcon, spinType);

@@ -207,20 +207,6 @@ public class LocationService extends Service {
             CurrentLocation.check = true;
             PlaceServiceLayer.calculateData();
             EventBus.getDefault().post(new Events.UpdateLocation());
-           /* ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
-            for (int i = 0; i < places.size(); i++) {
-                Place place = places.get(i);
-                if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                    place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                    place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                            place.getGeoLat(), place.getGeoLon()));
-                }
-            }
-
-            if (DBHelper.getInstance(App.getInstance()).updatePlaces(places)) {
-                EventBus.getDefault().post(new Events.UpdateLocation());
-            }*/
         }
     }
 

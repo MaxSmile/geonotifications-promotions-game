@@ -178,7 +178,6 @@ public class FirebaseData {
         Constants.DB_COMPANY.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println("myTest initCompanies=" + initCompanies);
                 if (initCompanies) {
                     insertCompany(dataSnapshot.getValue(Company.class));
                 } else {
@@ -218,9 +217,7 @@ public class FirebaseData {
 
     private static void insertCompany(Company company) {
         CompanyServiceLayer.add(company);
-        System.out.println("myTest insertCompany");
         PlaceServiceLayer.calculateData();
-        //EventBus.getDefault().post(new Events.UpdatePlaces());
     }
 
     private static void placeListener() {
