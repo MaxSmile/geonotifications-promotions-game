@@ -125,13 +125,14 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
     private Coupon coupon;
     private int prizeIndex;
+    private boolean isGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
+        //place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
         gifts = GiftServiceLayer.getGifts(place);
         FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
@@ -285,9 +286,12 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        gameAvailable = true;
     }
 
-    private void StartSpinner() {
+    private void startSpinner() {
+        isGame = true;
+        updateSpin();
         initWheel();
 
         mSpinRevolutions = count*60;
@@ -514,7 +518,6 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         timer.purge();
         imagePointer.setRotation(0);
         gifts = GiftServiceLayer.getGifts(place);
-        PlaceServiceLayer.calculateData();
         if (winKey != null) {
             if (gifts.size() > 0) {
                 Gift gift = gifts.get(winKey);
@@ -536,12 +539,32 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             gameLose();
             setLog(Constants.GAME_LOSE);
         }
-
+        isGame = false;
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+    private void updateSpin() {
+        int typeSpin = getIntent().getIntExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_EXTRA);
+        if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
+            place.getSpin().setExtra(false);
+            place.getSpin().setAvailable(false);
+        } else {
+            long spent = place.getSpin().getSpent() + 1;
+            place.getSpin().setSpent(spent);
+            long limit = place.getSpin().getLimit();
+            if (spent < limit) {
+                gameAvailable = true;
+            }
+            if (spent < limit || place.getSpin().isExtra()) {
+                place.getSpin().setAvailable(true);
+            } else {
+                place.getSpin().setAvailable(false);
+            }
+        }
     }
 
     private void setLog(int result) {
@@ -556,21 +579,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         usedSpin.setPlaceKey(place.getId());
         usedSpin.setUserKey(CurrentUser.user.getId());
         usedSpin.setSpinKey(place.getSpin().getId());
-        //Constants.DB_LOG.child(place.getCompanyKey()).push().setValue(usedSpin);
         sendLog(usedSpin);
 
-        if (typeSpin == Constants.SPIN_TYPE_EXTRA) {
-            place.getSpin().setExtra(false);
-        } else {
-            long spent = place.getSpin().getSpent() + 1;
-            long limit = place.getSpin().getLimit();
-            if (spent < limit) {
-                gameAvailable = true;
-            }
-            place.getSpin().setSpent(spent);
-        }
         SpinServiceLayer.updateSpin(place.getSpin());
-        EventBus.getDefault().postSticky(new Events.UpdateSpinAvailable());
     }
 
     private void sendLog(UsedSpin usedSpin) {
@@ -647,6 +658,17 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
             setImage();
     }
 
+    @Override
+    public void back(View view) {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isGame)
+            super.onBackPressed();
+    }
+
     private class PowerTouchListener implements View.OnTouchListener {
 
         @Override
@@ -681,7 +703,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
                     powerButton.setImageResource(R.drawable.wheel_button);
                     flag = false;
                     if (gameAvailable) {
-                        StartSpinner();
+                        startSpinner();
                     }
                     gameAvailable = false;
                     return true;

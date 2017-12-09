@@ -1,6 +1,7 @@
 package com.spindealsapp.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -40,6 +41,8 @@ import com.spindealsapp.databinding.ActivityHomeBinding;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
 public class HomeActivity extends BaseActivity implements DataBridge, HomeHandler {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -55,7 +58,6 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
     private ImageView addCouponBtn;
     private ActivityHomeBinding binding;
     private int tabPosition;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +163,15 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
         FirebaseData.getCoupons();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isTaskRoot()) {
+            moveTaskToBack(true);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

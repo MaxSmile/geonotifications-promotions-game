@@ -18,9 +18,6 @@ public class Events {
     public static class UpdatePlaces {
     }
 
-    public static class UpdateSpinAvailable {
-    }
-
     public static class AddedCoupon {
     }
 

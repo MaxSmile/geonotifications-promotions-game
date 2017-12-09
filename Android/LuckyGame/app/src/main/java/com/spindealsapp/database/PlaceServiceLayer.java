@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,14 +31,13 @@ import java.util.Map;
 
 public class PlaceServiceLayer {
 
-    private static ArrayList<Place> placesList;
+    private static Map<String, Place> placesList = new HashMap<>();
     private static int day;
     private static Calendar calendar = new GregorianCalendar();
     private static boolean busy;
 
-    public static ArrayList<Place> getPlaces() {
-        if (placesList == null || day != calendar.get(Calendar.DAY_OF_MONTH)) {
-            placesList = new ArrayList<>();
+    public static Map<String, Place> getPlaces() {
+        if (placesList.size() == 0 || day != calendar.get(Calendar.DAY_OF_MONTH)) {
             calculateData();
         }
         calculateTimeLeft();
@@ -45,8 +45,8 @@ public class PlaceServiceLayer {
     }
 
     private static void calculateTimeLeft() {
-        for (int i = 0; i < placesList.size(); i++) {
-            Spin spin = placesList.get(i).getSpin();
+        for (Map.Entry<String, Place> item : placesList.entrySet()) {
+            Spin spin = item.getValue().getSpin();
             spin.setTimeLeft(DateFormat.getDiff(spin.getTimeEnd()));
         }
     }
@@ -58,12 +58,15 @@ public class PlaceServiceLayer {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    placesList = getPlacesWithSpin();
-                    Collections.sort(placesList, new PlaceComparator());
-                    for (int i = 0; i < placesList.size(); i++) {
-                        Place place = placesList.get(i);
+                    Map<String, Place> placesNew = new HashMap<>();
+                    List<Place> places = getPlacesWithSpin();
+                    Collections.sort(places, new PlaceComparator());
+                    for (int i = 0; i < places.size(); i++) {
+                        Place place = places.get(i);
                         updatePlace(place);
+                        placesNew.put(place.getId(), place);
                     }
+                    placesList = placesNew;
                     busy = false;
                     EventBus.getDefault().post(new Events.UpdatePlaces());
                     EventBus.getDefault().post(new Events.FinishCalculateData());
@@ -87,14 +90,10 @@ public class PlaceServiceLayer {
     }
 
     public static Place getPlace(String id) {
-        Place place = DBHelper.getInstance(App.getInstance()).getPlace(id);
-        Map<String, Spin> spins = SpinServiceLayer.getSpins();
-        if (spins.get(place.getId()) != null) {
-            place.setSpin(spins.get(place.getId()));
-        } else {
-            place.setSpin(SpinServiceLayer.getSpinComing());
+        Place place = placesList.get(id);
+        if (place != null && place.getGallery() == null) {
+            place.setGallery(DBHelper.getInstance().getGallery(place.getId()));
         }
-        updatePlace(place);
         return place;
     }
 
@@ -142,7 +141,7 @@ public class PlaceServiceLayer {
         updatePlaceBeforeSave(place, oldPlace, iconArray);
         iconArray.recycle();
         DBHelper.getInstance(App.getInstance()).insertPlace(place);
-        EventBus.getDefault().post(new Events.UpdatePlaces());
+        calculateData();
     }
 
     private static void updatePlaceBeforeSave(Place place, Place oldPlace, TypedArray iconArray) {

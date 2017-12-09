@@ -700,7 +700,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 places.put(cursor.getString(1), parsePlace(cursor));
             } while (cursor.moveToNext());
         } else {
-            Log.d(TAG ,"0 rows");
+            Log.d(TAG ,"0 rows places");
         }
 
         cursor.close();
@@ -739,7 +739,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Place getPlace(String placeId) {
         Place place = new Place();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_PLACES
@@ -761,7 +760,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
 
         return place;
@@ -793,9 +791,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return box;
     }
 
-    private List<String> getGallery(String placeId) {
+    public List<String> getGallery(String placeId) {
         List<String> gallery = new ArrayList<String>();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_GALLERY
@@ -813,7 +810,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
 
         return gallery;

@@ -57,7 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     private static final String G_TAG = "SignInActivity";
 
-    public Place place;
+    public static Place place;
     public Company company;
     public HashMap<String, Gift> gifts = new HashMap<String, Gift>();
 

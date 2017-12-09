@@ -82,7 +82,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         binding = DataBindingUtil.setContentView(DetailsActivity.this, R.layout.activity_details);
         binding.setHandler(this);
 
-        carouselView = (CarouselView) findViewById(R.id.detailsSlider);
         detailsOtherPlaces = (ListView)findViewById(R.id.detailsOtherPlaces);
 
         detailsBtnPlay = (ImageView) findViewById(R.id.detailsBtnPlay);
@@ -99,15 +98,19 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         expandableLayout = (ExpandableLayout) findViewById(R.id.expandableLayout);
         expandableLayout.collapse();
 
-        /*if (isTaskRoot()) {
-            FirebaseData.loadData();
-        }*/
-
+        if (isTaskRoot() && geoNotification) {
+            Intent intent = new Intent(this, LoaderActivity.class);
+            intent.putExtra("loginForGame", true);
+            intent.putExtra(Constants.PLACE_KEY, getIntent().getStringExtra(Constants.PLACE_KEY));
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void initSlider() {
         gallery = place.getGallery();
         if (gallery.size() > 0) {
+            carouselView = (CarouselView) findViewById(R.id.detailsSlider);
             carouselView.setPageCount(gallery.size());
             carouselView.setImageListener(imageListener);
         }
@@ -127,15 +130,25 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     protected void onResume() {
         super.onResume();
-        refreshData();
+        if (place != null && place.getId().equals(getIntent().getStringExtra(Constants.PLACE_KEY))) {
+            refreshView();
+        } else {
+            refreshData();
+        }
     }
 
     private void refreshData() {
         place = PlaceServiceLayer.getPlace(getIntent().getStringExtra(Constants.PLACE_KEY));
-        boxes = place.getSpin().getBox();
-        if (place.getCompanyKey() != null) {
+        refreshView();
+    }
+
+    private void refreshView() {
+        if (place != null && place.getCompanyKey() != null) {
+            boxes = place.getSpin().getBox();
             gifts = GiftServiceLayer.getGifts(place);
-            FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
+            if (!isTaskRoot() && !geoNotification) {
+                FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
+            }
             Iterator<Box> iterator = boxes.iterator();
             while (iterator.hasNext()) {
                 Box box = iterator.next();
@@ -187,11 +200,16 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Override
     public void back(View view) {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
         if (isTaskRoot()) {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
         } else {
-            onBackPressed();
+            finish();
         }
     }
 
@@ -241,7 +259,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     type = Constants.SPIN_TYPE_EXTRA;
                 }
                 intent.putExtra(Constants.SPIN_TYPE_KEY, type);
-                intent.putExtra(Place.class.getCanonicalName(), place);
+                //intent.putExtra(Place.class.getCanonicalName(), place);
                 startActivity(intent);
             } else {
                 ToastTimer.start(Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_SHORT), 5000);
@@ -267,6 +285,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                                 dialog.cancel();
                                 Intent intent = new Intent(DetailsActivity.this, ChooseAccountActivity.class);
                                 intent.putExtra("loginForGame", true);
+                                intent.putExtra(Constants.PLACE_KEY, getIntent().getStringExtra(Constants.PLACE_KEY));
                                 startActivity(intent);
                             }
                         });
@@ -409,11 +428,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {
-        refreshData();
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onUpdateSpinAvailable(Events.UpdateSpinAvailable updateSpinAvailable) {
         refreshData();
     }
 

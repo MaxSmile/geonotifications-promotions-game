@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.spindealsapp.Constants;
+import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.CouponServiceLayer;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.eventbus.Events;
@@ -89,7 +90,7 @@ public class SlideCouponsActivity extends BaseActivity {
             }
         });
 
-        if (getIntent().getBooleanExtra("userPrize", false)) {
+        if (getIntent().getBooleanExtra("userPrize", false) && Properties.getSoundGame()) {
             initSound();
         }
     }

@@ -96,7 +96,7 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     }
 
     private void refreshData() {
-        newPlaces = PlaceServiceLayer.getPlaces();
+        newPlaces = new ArrayList<>(PlaceServiceLayer.getPlaces().values());
         removeOtherCategory();
         filter();
     }

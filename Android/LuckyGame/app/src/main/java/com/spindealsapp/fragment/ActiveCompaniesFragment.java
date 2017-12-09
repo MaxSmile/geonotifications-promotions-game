@@ -112,7 +112,7 @@ public class ActiveCompaniesFragment extends Fragment {
     }
 
     private void refreshData() {
-        newPlaces = PlaceServiceLayer.getPlaces();
+        newPlaces = new ArrayList<>(PlaceServiceLayer.getPlaces().values());
 
         removeInactive();
         filterData();

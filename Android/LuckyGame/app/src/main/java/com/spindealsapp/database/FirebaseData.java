@@ -186,7 +186,6 @@ public class FirebaseData {
                     if (countCompanies == countChildren.getCompanies()) {
                         initCompanies = true;
                         CompanyServiceLayer.add(companies);
-                        //DBHelper.getInstance(App.getInstance()).saveCompanies(companies);
                         placeListener();
                         EventBus.getDefault().post(new Events.LoadingData(55));
                     }

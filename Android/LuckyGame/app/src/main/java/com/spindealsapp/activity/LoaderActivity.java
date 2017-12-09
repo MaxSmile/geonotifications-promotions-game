@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
+import com.spindealsapp.Constants;
 import com.spindealsapp.R;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.FirebaseData;
@@ -49,7 +50,10 @@ public class LoaderActivity extends BaseActivity {
 
     private void loadDataSuccess() {
         if (getIntent().getBooleanExtra("loginForGame", false)) {
-            onBackPressed();
+            Intent intent = new Intent(this, DetailsActivity.class);
+            intent.putExtra(Constants.PLACE_KEY, getIntent().getStringExtra(Constants.PLACE_KEY));
+            startActivity(intent);
+            finish();
         } else {
             startActivity(new Intent(this, HomeActivity.class));
             finish();

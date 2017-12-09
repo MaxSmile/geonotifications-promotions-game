@@ -27,7 +27,7 @@ public class SpinServiceLayer {
         Spin oldSpin = DBHelper.getInstance(App.getInstance()).getSpin(spin.getId());
         setOldData(spin, oldSpin);
         DBHelper.getInstance(App.getInstance()).insertSpin(spin);
-        EventBus.getDefault().post(new Events.UpdatePlaces());
+        PlaceServiceLayer.calculateData();
     }
 
     public static void saveSpins(ArrayList<Spin> spins) {
@@ -97,6 +97,7 @@ public class SpinServiceLayer {
 
     public static void updateSpin(Spin spin) {
         DBHelper.getInstance(App.getInstance()).updateSpin(spin);
+        PlaceServiceLayer.calculateData();
     }
 
     private static void updateSpinData(Spin spin, TypedArray spinIcon, String[] spinType) {

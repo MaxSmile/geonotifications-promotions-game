@@ -27,9 +27,7 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extra_spin);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_extra_spin);
-        place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
-        gifts = (HashMap<String, Gift>)(getIntent().getSerializableExtra(Gift.class.getCanonicalName()));
         binding.setCompany(company);
         binding.setPlace(place);
         binding.setHandler(this);
@@ -39,16 +37,14 @@ public class ExtraSpinActivity extends BaseFacebookActivity {
 
     @Override
     protected void socialSuccess() {
-        PlaceServiceLayer.calculateData();
         Intent intent = new Intent(this, GameActivity.class);
         place.getSpin().setExtraAvailable(false);
         place.getSpin().setExtra(true);
         place.getSpin().setExtraCreateTime(System.currentTimeMillis());
+        place.getSpin().setAvailable(true);
         SpinServiceLayer.updateSpin(place.getSpin());
 
-        intent.putExtra(Place.class.getCanonicalName(), place);
         intent.putExtra(Company.class.getCanonicalName(), company);
-        intent.putExtra(Gift.class.getCanonicalName(), gifts);
         intent.putExtra(Constants.SPIN_TYPE_KEY, Constants.SPIN_TYPE_EXTRA);
         startActivity(intent);
         finish();
