@@ -3,82 +3,80 @@ package com.spindealsapp.database.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.Constants;
 import com.spindealsapp.database.DatabaseManager;
-import com.spindealsapp.database.mapper.CursorToGiftMapper;
-import com.spindealsapp.database.mapper.GiftToContentValuesMapper;
+import com.spindealsapp.database.mapper.CouponToContentValuesMapper;
+import com.spindealsapp.database.mapper.CursorToCouponMapper;
 import com.spindealsapp.database.mapper.Mapper;
 import com.spindealsapp.database.repository.specification.Specification;
 import com.spindealsapp.database.repository.specification.SqlSpecification;
-import com.spindealsapp.database.table.GiftTable;
-import com.spindealsapp.entity.Company;
-import com.spindealsapp.entity.Gift;
+import com.spindealsapp.database.table.CouponTable;
+import com.spindealsapp.entity.CouponExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Volodymyr Kusenko on 22.11.2017.
+ * Created by Volodymyr Kusenko on 11.12.2017.
  */
 
-public class GiftSqlRepository implements Repository<Gift> {
+public class CouponSqlRepository implements Repository<CouponExtension> {
 
-    private final Mapper<Gift, ContentValues> toContentValuesMapper;
-    private final Mapper<Cursor, Gift> toObjectMapper;
+    private final Mapper<CouponExtension, ContentValues> toContentValuesMapper;
+    private final Mapper<Cursor, CouponExtension> toObjectMapper;
 
-    public GiftSqlRepository() {
-        this.toContentValuesMapper = new GiftToContentValuesMapper();
-        this.toObjectMapper = new CursorToGiftMapper();
+    public CouponSqlRepository() {
+        this.toContentValuesMapper = new CouponToContentValuesMapper();
+        this.toObjectMapper = new CursorToCouponMapper();
     }
 
     @Override
-    public void add(Gift item) {
+    public void add(CouponExtension item) {
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
-        database.insert(GiftTable.TABLE_NAME, null, toContentValuesMapper.map(item));
+        database.insert(CouponTable.TABLE_NAME, null, toContentValuesMapper.map(item));
         DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override
-    public void add(Iterable<Gift> items) {
+    public void add(Iterable<CouponExtension> items) {
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
         try {
-            database.delete(GiftTable.TABLE_NAME, null, null);
-
-            for (Gift item : items) {
-                database.insert(GiftTable.TABLE_NAME, null, toContentValuesMapper.map(item));
+            for (CouponExtension item : items) {
+                database.insert(CouponTable.TABLE_NAME, null, toContentValuesMapper.map(item));
             }
-
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            DatabaseManager.getInstance().closeDatabase();
         }
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override
-    public void update(Gift item) {
+    public void update(CouponExtension item) {
 
     }
 
     @Override
-    public void remove(Gift item) {
+    public void remove(CouponExtension item) {
 
     }
 
     @Override
     public void remove(Specification specification) {
-
+        SqlSpecification sqlSpecification = (SqlSpecification) specification;
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
+        database.execSQL(sqlSpecification.toSqlQuery());
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override
-    public List<Gift> query(Specification specification) {
+    public List<CouponExtension> query(Specification specification) {
         SqlSpecification sqlSpecification = (SqlSpecification) specification;
 
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
-        List<Gift> list = new ArrayList<>();
+        List<CouponExtension> list = new ArrayList<>();
 
         try {
             Cursor cursor = database.rawQuery(sqlSpecification.toSqlQuery(), new String[]{});

@@ -9,7 +9,9 @@ import android.util.Log;
 
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
+import com.spindealsapp.database.mapper.CouponToContentValuesMapper;
 import com.spindealsapp.database.table.CompanyTable;
+import com.spindealsapp.database.table.CouponTable;
 import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
@@ -34,7 +36,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
-    private static final String TABLE_COUPONS = "coupons";
     private static final String TABLE_PLACES = "places";
     private static final String TABLE_NOTIFICATION = "notification";
     private static final String TABLE_GALLERY = "gallery";
@@ -81,30 +82,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_PLACE_INFO_TIMESTAMP = "infoTimestamp";
     private static final String KEY_PLACE_INFO_CHECKED = "infoChecked";
 
-    private static final String KEY_COUPON_STATUS = "status";
-    private static final String KEY_COUPON_CODE = "code";
-    private static final String KEY_COUPON_COMPANY_KEY = "companyKey";
-    private static final String KEY_COUPON_GIFT_KEY = "giftKey";
-    private static final String KEY_COUPON_PLACE_KEY = "placeKey";
-    private static final String KEY_COUPON_DESCRIPTION = "description";
-    private static final String KEY_COUPON_CREATOR = "creator";
-    private static final String KEY_COUPON_CREATION = "creation";
-    private static final String KEY_COUPON_EXPIRED = "expired";
-    private static final String KEY_COUPON_LOCKS = "locks";
-    private static final String KEY_COUPON_COMPANY_NAME = "companyName";
-    private static final String KEY_COUPON_PLACE_NAME = "placeName";
-    private static final String KEY_COUPON_LOGO = "logo";
-    private static final String KEY_COUPON_TYPE = "type";
-    private static final String KEY_COUPON_TYPE_STRING = "typeString";
-    private static final String KEY_COUPON_GEO_LAT = "geoLat";
-    private static final String KEY_COUPON_GEO_LON = "geoLon";
-    private static final String KEY_COUPON_LOCKED = "locked";
-    private static final String KEY_COUPON_REDEEMED = "redeemed";
-    private static final String KEY_COUPON_CITY = "city";
-    private static final String KEY_COUPON_RULES = "rules";
-    private static final String KEY_COUPON_COUPON_TYPE = "couponType";
-    private static final String KEY_COUPON_RRULE = "rrule";
-
     private static final String KEY_SPIN_ID = "id";
     private static final String KEY_SPIN_COMPANY_KEY = "companyKey";
     private static final String KEY_SPIN_PLACE_KEY = "placeKey";
@@ -130,7 +107,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return sInstance;
     }
 
-
     private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -150,7 +126,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_COUPONS);
+        sqLiteDatabase.execSQL("drop table if exists " + CouponTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_PLACES);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
         sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
@@ -241,34 +217,34 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     private void createTableCoupons(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_COUPONS + "("
+        db.execSQL("create table " + CouponTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_COUPON_STATUS + " INTEGER,"
-                + KEY_COUPON_CODE + " text,"
-                + KEY_COUPON_COMPANY_KEY + " text,"
-                + KEY_COUPON_GIFT_KEY + " text,"
-                + KEY_COUPON_PLACE_KEY + " text,"
-                + KEY_COUPON_DESCRIPTION + " text,"
-                + KEY_COUPON_CREATOR + " text,"
-                + KEY_COUPON_CREATION + " INTEGER,"
-                + KEY_COUPON_EXPIRED + " INTEGER,"
-                + KEY_COUPON_LOCKS + " INTEGER,"
-                + KEY_COUPON_COMPANY_NAME + " text,"
-                + KEY_COUPON_PLACE_NAME + " text,"
-                + KEY_COUPON_LOGO + " text,"
-                + KEY_COUPON_TYPE + " INTEGER,"
-                + KEY_COUPON_TYPE_STRING + " text,"
-                + KEY_COUPON_GEO_LAT + " REAL,"
-                + KEY_COUPON_GEO_LON + " REAL,"
-                + KEY_COUPON_LOCKED + " INTEGER,"
-                + KEY_COUPON_REDEEMED + " INTEGER,"
-                + KEY_COUPON_CITY + " text,"
-                + KEY_COUPON_RULES + " text,"
-                + KEY_COUPON_COUPON_TYPE + " INTEGER,"
-                + KEY_KEYWORDS + " text,"
-                + KEY_COUPON_RRULE + " text,"
+                + CouponTable.Fields.STATUS + " INTEGER,"
+                + CouponTable.Fields.CODE + " text,"
+                + CouponTable.Fields.COMPANY_KEY + " text,"
+                + CouponTable.Fields.GIFT_KEY + " text,"
+                + CouponTable.Fields.PLACE_KEY + " text,"
+                + CouponTable.Fields.DESCRIPTION + " text,"
+                + CouponTable.Fields.CREATOR + " text,"
+                + CouponTable.Fields.CREATION + " INTEGER,"
+                + CouponTable.Fields.EXPIRED + " INTEGER,"
+                + CouponTable.Fields.LOCKS + " INTEGER,"
+                + CouponTable.Fields.COMPANY_NAME + " text,"
+                + CouponTable.Fields.PLACE_NAME + " text,"
+                + CouponTable.Fields.LOGO + " text,"
+                + CouponTable.Fields.TYPE + " INTEGER,"
+                + CouponTable.Fields.TYPE_STRING + " text,"
+                + CouponTable.Fields.GEO_LAT + " REAL,"
+                + CouponTable.Fields.GEO_LON + " REAL,"
+                + CouponTable.Fields.LOCKED + " INTEGER,"
+                + CouponTable.Fields.REDEEMED + " INTEGER,"
+                + CouponTable.Fields.CITY + " text,"
+                + CouponTable.Fields.RULES + " text,"
+                + CouponTable.Fields.COUPON_TYPE + " INTEGER,"
+                + CouponTable.Fields.KEYWORDS + " text,"
+                + CouponTable.Fields.RRULE + " text,"
                 + "UNIQUE ("
-                + KEY_COUPON_CODE
+                + CouponTable.Fields.CODE
                 + ") ON CONFLICT REPLACE"
                 + ")");
     }
@@ -419,7 +395,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Spin getSpin(String Id) {
         Spin spin = new Spin();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_SPIN
@@ -436,7 +411,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
         return spin;
     }
@@ -506,9 +480,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public HashMap<String, Spin> getSpins() {
         HashMap<String, Spin> spins = new HashMap<String, Spin>();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SPIN, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + TABLE_SPIN
+                + " ORDER BY "
+                + KEY_SPIN_ID
+                + " DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 Spin spin = parseSpin(cursor);
@@ -520,7 +497,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
         return spins;
     }
@@ -551,12 +527,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void insertPlace(Place place) {
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.insert(TABLE_PLACES, null, getPlaceValues(place));
         db.delete(TABLE_GALLERY, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
         saveGallery(db, place);
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
     }
 
@@ -664,7 +638,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<Place> getOrderPlaces() {
         ArrayList<Place> orderPlaces = new ArrayList<Place>();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_PLACES
@@ -682,7 +655,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
         return orderPlaces;
     }
@@ -690,7 +662,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public HashMap<String, Place> getPlaces() {
         HashMap<String, Place> places = new HashMap<String, Place>();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                 + TABLE_PLACES, null);
@@ -704,14 +675,12 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
         return places;
     }
 
     public HashMap<String, Place> getOtherPlacesCompany(String companyId, String placeId) {
         HashMap<String, Place> places = new HashMap<String, Place>();
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_PLACES
@@ -731,7 +700,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
 
         return places;
@@ -816,212 +784,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void updatePlace(Place place) {
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = getPlaceValues(place);
         db.update(TABLE_PLACES, contentValues, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
 
-    }
-
-    public void insertCoupon(CouponExtension coupon) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.insert(TABLE_COUPONS, null, getCouponValues(coupon));
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-    }
-
-
-    public void saveCoupon(CouponExtension coupon) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.insert(TABLE_COUPONS, null, getCouponValues(coupon));
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-    }
-
-    public void saveCoupons(List<CouponExtension> coupons, boolean offer) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.beginTransaction();
-        try {
-            if (offer) {
-                db.delete(TABLE_COUPONS, KEY_COUPON_COUPON_TYPE  + " = ?", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
-            }
-            for (int i = 0; i < coupons.size(); i++) {
-                db.insert(TABLE_COUPONS, null, getCouponValues(coupons.get(i)));
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-    }
-
-    private ContentValues getCouponValues(CouponExtension coupon) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_COUPON_STATUS, coupon.getStatus());
-        contentValues.put(KEY_COUPON_CODE, coupon.getCode());
-        contentValues.put(KEY_COUPON_COMPANY_KEY, coupon.getCompanyKey());
-        contentValues.put(KEY_COUPON_GIFT_KEY, coupon.getGiftKey());
-        contentValues.put(KEY_COUPON_PLACE_KEY , coupon.getPlaceKey());
-        contentValues.put(KEY_COUPON_DESCRIPTION, coupon.getDescription());
-        contentValues.put(KEY_COUPON_CREATOR, coupon.getCreator());
-        contentValues.put(KEY_COUPON_CREATION, coupon.getCreation());
-        contentValues.put(KEY_COUPON_EXPIRED, coupon.getExpired());
-        contentValues.put(KEY_COUPON_LOCKS, coupon.getLocks());
-        contentValues.put(KEY_COUPON_COMPANY_NAME, coupon.getCompanyName());
-        contentValues.put(KEY_COUPON_PLACE_NAME, coupon.getPlaceName());
-        contentValues.put(KEY_COUPON_LOGO, coupon.getLogo());
-        contentValues.put(KEY_COUPON_TYPE, coupon.getType());
-        contentValues.put(KEY_COUPON_TYPE_STRING, coupon.getTypeString());
-        contentValues.put(KEY_COUPON_GEO_LAT, coupon.getGeoLat());
-        contentValues.put(KEY_COUPON_GEO_LON, coupon.getGeoLon());
-        contentValues.put(KEY_COUPON_LOCKED, coupon.getLocked());
-        contentValues.put(KEY_COUPON_REDEEMED, coupon.getRedeemed());
-        contentValues.put(KEY_COUPON_CITY, coupon.getCity());
-        contentValues.put(KEY_COUPON_RULES, coupon.getRules());
-        contentValues.put(KEY_COUPON_COUPON_TYPE, coupon.getCouponType());
-        contentValues.put(KEY_KEYWORDS, coupon.getKeywords());
-        contentValues.put(KEY_COUPON_RRULE, coupon.getRrule());
-
-        return contentValues;
-    }
-
-    public List<CouponExtension> getCouponsExtension() {
-        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_COUPONS
-                + " WHERE "
-                + KEY_COUPON_COUPON_TYPE
-                + " <> ? "
-                + " ORDER BY "
-                + KEY_COUPON_CREATION
-                + " DESC", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
-        if (cursor.moveToFirst()) {
-            do {
-                coupons.add(parseCouponExtension(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return coupons;
-    }
-
-    public List<CouponExtension> getCouponsByPlace(String placeKey) {
-        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.query(TABLE_COUPONS,
-                null,
-                KEY_COUPON_PLACE_KEY + "=?",
-                new String[]{placeKey},
-                null,
-                null,
-                KEY_COUPON_CREATION + " DESC");
-        if (cursor.moveToFirst()) {
-            do {
-                coupons.add(parseCouponExtension(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return coupons;
-    }
-
-    public List<CouponExtension> getCouponsByPlaceGift(String giftKey, String placeKey) {
-        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.query(TABLE_COUPONS,
-                null,
-                KEY_COUPON_GIFT_KEY + " = ? AND "
-                        + KEY_COUPON_PLACE_KEY
-                        + " = ?",
-                new String[]{giftKey, placeKey},
-                null,
-                null,
-                null);
-        if (cursor.moveToFirst()) {
-            do {
-                coupons.add(parseCouponExtension(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return coupons;
-    }
-
-    public List<CouponExtension> getCouponsByCode(String couponKey) {
-        List<CouponExtension>  coupons = new ArrayList<CouponExtension>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.query(TABLE_COUPONS,
-                null,
-                KEY_COUPON_CODE + "=?",
-                new String[]{couponKey},
-                null,
-                null,
-                null);
-        if (cursor.moveToFirst()) {
-            do {
-                coupons.add(parseCouponExtension(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return coupons;
-    }
-
-    public List<String> getCoupons() {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        List<String> coupons = new ArrayList<String>();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_COUPONS
-                + " WHERE "
-                + KEY_COUPON_COUPON_TYPE
-                + " <> ?", new String[]{String.valueOf(Constants.COUPON_TYPE_OFFER)});
-        if (cursor.moveToFirst()) {
-            do {
-                coupons.add(cursor.getString(2));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return coupons;
     }
 
     private Box parseBox(Cursor cursor) {
@@ -1044,35 +811,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getInt(8) > 0,
                 cursor.getLong(9),
                 cursor.getInt(10) > 0
-        );
-    }
-
-    private CouponExtension parseCouponExtension(Cursor cursor) {
-        return new CouponExtension(
-                cursor.getInt(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getString(6),
-                cursor.getString(7),
-                cursor.getLong(8),
-                cursor.getLong(9),
-                cursor.getLong(10),
-                cursor.getString(11),
-                cursor.getString(12),
-                cursor.getString(13),
-                cursor.getInt(14),
-                cursor.getString(15),
-                cursor.getDouble(16),
-                cursor.getDouble(17),
-                cursor.getInt(18),
-                cursor.getLong(19),
-                cursor.getString(20),
-                cursor.getString(21),
-                cursor.getInt(22),
-                cursor.getString(23),
-                cursor.getString(24)
         );
     }
 

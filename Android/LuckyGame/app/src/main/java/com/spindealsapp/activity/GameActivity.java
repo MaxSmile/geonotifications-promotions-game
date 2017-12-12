@@ -45,9 +45,8 @@ import com.spindealsapp.binding.handler.GameHandler;
 import com.spindealsapp.common.FasterAnimationsContainer;
 import com.spindealsapp.common.MyRotateAnimation;
 import com.spindealsapp.common.Properties;
-import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.FirebaseData;
-import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.database.service.GiftServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
@@ -58,12 +57,10 @@ import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.GiftLimit;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.entity.UsedSpin;
-import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityGameBinding;
 import com.spindealsapp.util.DateUtils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -132,12 +129,11 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        //place = getIntent().getParcelableExtra(Place.class.getCanonicalName());
         company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
         gifts = GiftServiceLayer.getGifts(place);
         FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
 
-        countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+        countCoupons = CouponServiceLayer.getCouponsByPlace(place.getId()).size();
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
         binding.setCompany(company);
@@ -389,7 +385,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         );
 
         Constants.DB_COUPON.child(couponCode).setValue(coupon);
-        dbHelper.saveCoupon(couponExtension);
+        CouponServiceLayer.add(couponExtension);
         setLimit(gift);
     }
 

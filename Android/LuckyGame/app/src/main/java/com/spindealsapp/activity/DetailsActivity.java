@@ -25,6 +25,7 @@ import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.binding.handler.DetailsHandler;
 import com.spindealsapp.common.Helper;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.service.GiftServiceLayer;
@@ -161,7 +162,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             binding.setCountGift(boxes.size());
             initSlider();
             company = CompanyServiceLayer.getCompany(place.getCompanyKey());
-            countCoupons = DBHelper.getInstance(this).getCouponsByPlace(place.getId()).size();
+            countCoupons = CouponServiceLayer.getCouponsByPlace(place.getId()).size();
             binding.setCountCoupons(countCoupons);
             binding.setPlace(place);
             binding.setCompany(company);

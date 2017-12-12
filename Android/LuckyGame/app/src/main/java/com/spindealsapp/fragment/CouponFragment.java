@@ -25,7 +25,7 @@ import com.spindealsapp.activity.NetworkActivity;
 import com.spindealsapp.activity.SendCouponActivity;
 import com.spindealsapp.activity.UnlockActivity;
 import com.spindealsapp.binding.handler.CouponHandler;
-import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.util.LocationDistance;
@@ -145,7 +145,7 @@ public class CouponFragment extends Fragment implements CouponHandler {
         coupon.setRedeemed(System.currentTimeMillis());
         coupon.setRedeemedString(DateFormat.getDate("dd/MM/yyyy", coupon.getRedeemed()));
         binding.setCoupon(coupon);
-        DBHelper.getInstance(getContext()).saveCoupon(coupon);
+        CouponServiceLayer.add(coupon);
         Constants.DB_COUPON.child(coupon.getCode()).child("status").setValue(Constants.COUPON_STATUS_REDEEMED);
         Constants.DB_COUPON.child(coupon.getCode()).child("redeemed").setValue(System.currentTimeMillis());
         Constants.DB_COUPON.child(coupon.getCode()).child("redeemUser").setValue(CurrentUser.user.getId());

@@ -15,6 +15,14 @@ public class LocationDistance {
         }
     }
 
+    public static String getStringDistance(double distance) {
+        if (distance >= 1000) {
+            return String.format("%.2f", distance/1000) + "km";
+        } else {
+            return (int)distance + "m";
+        }
+    }
+
     /**
      * Uses the Haversine formula to calculate the distnace between to lat-long coordinates
      *

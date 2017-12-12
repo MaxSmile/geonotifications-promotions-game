@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.spindealsapp.Constants;
 import com.spindealsapp.common.Properties;
-import com.spindealsapp.database.CouponServiceLayer;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.fragment.CouponFragment;

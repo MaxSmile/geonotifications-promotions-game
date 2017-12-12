@@ -38,17 +38,14 @@ public class CompanySqlRepository implements Repository<Company> {
 
     @Override
     public void add(Company item) {
-        //SQLiteDatabase database = openHelper.getWritableDatabase();
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = toContentValuesMapper.map(item);
         database.insert(CompanyTable.TABLE_NAME, null, contentValues);
-        //database.close();
         DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override
     public void add(Iterable<Company> items) {
-        //SQLiteDatabase database = openHelper.getWritableDatabase();
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
         try {
@@ -62,7 +59,6 @@ public class CompanySqlRepository implements Repository<Company> {
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();
-            //database.close();
             DatabaseManager.getInstance().closeDatabase();
         }
     }
@@ -86,7 +82,6 @@ public class CompanySqlRepository implements Repository<Company> {
     public List<Company> query(Specification specification) {
         SqlSpecification sqlSpecification = (SqlSpecification) specification;
 
-        //SQLiteDatabase database = openHelper.getWritableDatabase();
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         List<Company> list = new ArrayList<>();
 
@@ -103,7 +98,6 @@ public class CompanySqlRepository implements Repository<Company> {
 
             return list;
         } finally {
-            //database.close();
             DatabaseManager.getInstance().closeDatabase();
         }
     }

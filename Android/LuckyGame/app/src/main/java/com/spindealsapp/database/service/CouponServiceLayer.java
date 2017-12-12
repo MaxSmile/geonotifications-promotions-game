@@ -1,15 +1,23 @@
-package com.spindealsapp.database;
+package com.spindealsapp.database.service;
 
 import android.content.res.TypedArray;
 
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
+import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.repository.CouponSqlRepository;
+import com.spindealsapp.database.repository.specification.CouponsByCodeSpecification;
+import com.spindealsapp.database.repository.specification.CouponsByPlaceAndGiftSpecification;
+import com.spindealsapp.database.repository.specification.CouponsByPlaceIdSpecification;
+import com.spindealsapp.database.repository.specification.CouponsSqlSpecification;
+import com.spindealsapp.database.repository.specification.DeleteOfferSpecification;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.util.LocationDistance;
 import com.spindealsapp.R;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,31 +28,45 @@ import java.util.List;
 
 public class CouponServiceLayer {
 
-    public static void insertCoupon(CouponExtension coupon) {
-        DBHelper.getInstance(App.getInstance()).insertCoupon(coupon);
+    private static CouponSqlRepository repository = new CouponSqlRepository();
+
+    public static void add(CouponExtension coupon) {
+        repository.add(coupon);
     }
 
-    public static void saveCoupons(List<CouponExtension> coupons, boolean offer) {
-        DBHelper.getInstance(App.getInstance()).saveCoupons(coupons, offer);
+    public static void add(List<CouponExtension> coupons, boolean offer) {
+        if (offer) {
+            repository.remove(new DeleteOfferSpecification());
+        }
+        repository.add(coupons);
     }
 
     public static List<CouponExtension> getCoupons() {
-        List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsExtension();
+        List<CouponExtension> coupons = repository.query(new CouponsSqlSpecification());
         return updateData(coupons, false);
+    }
+
+    public static List<String> getCouponsCode() {
+        List<CouponExtension> coupons = repository.query(new CouponsSqlSpecification());
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < coupons.size(); i++) {
+            list.add(coupons.get(i).getCode());
+        }
+        return list;
     }
 
     public static List<CouponExtension> getCouponsByPlace(String key) {
-        List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByPlace(key);
+        List<CouponExtension> coupons = repository.query(new CouponsByPlaceIdSpecification(key));
         return updateData(coupons, false);
     }
 
-    public static List<CouponExtension> getCouponsByCode(String key) {
-        List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByCode(key);
+    public static List<CouponExtension> getCouponsByCode(String code) {
+        List<CouponExtension> coupons = repository.query(new CouponsByCodeSpecification(code));
         return updateData(coupons, true);
     }
 
     public static List<CouponExtension> getCouponsByPlaceGift(String giftKey, String placeKey) {
-        List<CouponExtension> coupons  = DBHelper.getInstance(App.getInstance()).getCouponsByPlaceGift(giftKey, placeKey);
+        List<CouponExtension> coupons = repository.query(new CouponsByPlaceAndGiftSpecification(giftKey, placeKey));
         return updateData(coupons, true);
     }
 

@@ -12,6 +12,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.activity.DetailsActivity;
 import com.spindealsapp.activity.SlideCouponsActivity;
 import com.spindealsapp.binding.handler.CompanyRowHandler;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Place;
@@ -19,7 +20,6 @@ import com.spindealsapp.R;
 import com.spindealsapp.databinding.CompaniesRowBinding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -86,7 +86,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
             binding.setPlace(place);
             binding.setHandler(this);
 
-            countCoupons = DBHelper.getInstance(context).getCouponsByPlace(place.getId()).size();
+            countCoupons = CouponServiceLayer.getCouponsByPlace(place.getId()).size();
             binding.setCountCoupons(countCoupons);
         }
 

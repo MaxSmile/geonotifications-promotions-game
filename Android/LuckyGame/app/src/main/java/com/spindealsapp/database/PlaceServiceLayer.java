@@ -40,14 +40,16 @@ public class PlaceServiceLayer {
         if (placesList.size() == 0 || day != calendar.get(Calendar.DAY_OF_MONTH)) {
             calculateData();
         }
-        calculateTimeLeft();
+        calculateTimeEndDistance();
         return placesList;
     }
 
-    private static void calculateTimeLeft() {
+    private static void calculateTimeEndDistance() {
         for (Map.Entry<String, Place> item : placesList.entrySet()) {
-            Spin spin = item.getValue().getSpin();
+            Place place = item.getValue();
+            Spin spin = place.getSpin();
             spin.setTimeLeft(DateFormat.getDiff(spin.getTimeEnd()));
+            updatePlace(place);
         }
     }
 
@@ -63,7 +65,6 @@ public class PlaceServiceLayer {
                     Collections.sort(places, new PlaceComparator());
                     for (int i = 0; i < places.size(); i++) {
                         Place place = places.get(i);
-                        updatePlace(place);
                         placesNew.put(place.getId(), place);
                     }
                     placesList = placesNew;
@@ -91,8 +92,11 @@ public class PlaceServiceLayer {
 
     public static Place getPlace(String id) {
         Place place = placesList.get(id);
-        if (place != null && place.getGallery() == null) {
-            place.setGallery(DBHelper.getInstance().getGallery(place.getId()));
+        if (place != null) {
+            if (place.getGallery() == null) {
+                place.setGallery(DBHelper.getInstance().getGallery(place.getId()));
+            }
+            updatePlace(place);
         }
         return place;
     }
@@ -100,10 +104,10 @@ public class PlaceServiceLayer {
     private static void updatePlace(Place place) {
         if (CurrentLocation.lat != 0) {
             if (place.getGeoLat() != 0 && place.getGeoLon() != 0) {
-                place.setDistanceString(LocationDistance.getDistance(CurrentLocation.lat, CurrentLocation.lon,
-                        place.getGeoLat(), place.getGeoLon()));
-                place.setDistance(LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
-                        place.getGeoLat(), place.getGeoLon()));
+                double distance = LocationDistance.calculateDistance(CurrentLocation.lat, CurrentLocation.lon,
+                        place.getGeoLat(), place.getGeoLon());
+                place.setDistanceString(LocationDistance.getStringDistance(distance));
+                place.setDistance(distance);
             }
         }
         if (place.getInfo() == null || place.getInfo().isEmpty()) {

@@ -10,6 +10,7 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentUser;
 import com.spindealsapp.database.service.CompanyServiceLayer;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.service.GiftServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Count;
@@ -518,13 +519,13 @@ public class FirebaseData {
 
     private static void saveOffer(CouponExtension coupon) {
         if (initOffers) {
-            CouponServiceLayer.insertCoupon(coupon);
+            CouponServiceLayer.add(coupon);
         } else {
             offersList.add(coupon);
             countOffers++;
             if (countOffers == countChildren.getOffers()) {
                 initOffers = true;
-                CouponServiceLayer.saveCoupons(offersList, true);
+                CouponServiceLayer.add(offersList, true);
                 EventBus.getDefault().post(new Events.FinishLoadData());
             }
         }
@@ -579,7 +580,7 @@ public class FirebaseData {
     }
 
     public static void getCoupons() {
-        getCouponsList(DBHelper.getInstance(App.getInstance()).getCoupons(), false);
+        getCouponsList(CouponServiceLayer.getCouponsCode(), false);
     }
 
     private static void getCouponsList(final List<String> couponsCode, final boolean addedCoupon) {
@@ -658,7 +659,7 @@ public class FirebaseData {
     }
 
     private static void updateCoupons(List<CouponExtension> coupons, boolean addedCoupon) {
-        DBHelper.getInstance(App.getInstance()).saveCoupons(coupons, false);
+        CouponServiceLayer.add(coupons, false);
         if (addedCoupon) {
             EventBus.getDefault().post(new Events.AddedCoupon());
         } else {
