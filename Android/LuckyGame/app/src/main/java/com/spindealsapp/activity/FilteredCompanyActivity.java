@@ -190,11 +190,15 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
     private ArrayList<Place> groupByCompany(ArrayList<Place> places) {
         HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
         for (Place place : places) {
-            if (place.getSpin().getStatus() == Constants.SPIN_STATUS_ACTIVE) {
+            if (orderPlaces.get(place.getCompanyKey()) == null ||
+                    orderPlaces.get(place.getCompanyKey()).getDistance() > place.getDistance()) {
+                orderPlaces.put(place.getCompanyKey(), place);
+            }
+            /*if (place.getSpin().getStatus() == Constants.SPIN_STATUS_ACTIVE) {
                 orderPlaces.put(place.getCompanyKey(), place);
             } else if (orderPlaces.get(place.getCompanyKey()) == null || place.getSpin().getStatus() == Constants.SPIN_STATUS_EXTRA_AVAILABLE) {
                 orderPlaces.put(place.getCompanyKey(), place);
-            }
+            }*/
         }
         return new ArrayList<Place>(orderPlaces.values());
     }

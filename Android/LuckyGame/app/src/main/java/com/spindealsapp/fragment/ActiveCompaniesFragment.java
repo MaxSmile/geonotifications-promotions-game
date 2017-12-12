@@ -85,11 +85,6 @@ public class ActiveCompaniesFragment extends Fragment {
         refreshData();
     }
 
-  /*  @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUpdateLocation(Events.UpdateLocation updateLocation) {
-        refreshData();
-    }*/
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdateFilter(Events.UpdateFilter updateFilter) {
         if (Filters.nearMe) {
@@ -189,7 +184,10 @@ public class ActiveCompaniesFragment extends Fragment {
     private ArrayList<Place> groupByCompany(ArrayList<Place> places) {
         HashMap<String, Place> orderPlaces = new HashMap<String, Place>();
         for (Place place : places) {
-            orderPlaces.put(place.getCompanyKey(), place);
+            if (orderPlaces.get(place.getCompanyKey()) == null ||
+                    orderPlaces.get(place.getCompanyKey()).getDistance() > place.getDistance()) {
+                orderPlaces.put(place.getCompanyKey(), place);
+            }
         }
         return new ArrayList<Place>(orderPlaces.values());
     }

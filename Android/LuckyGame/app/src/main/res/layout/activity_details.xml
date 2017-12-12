@@ -148,19 +148,25 @@
                         android:layout_weight="1"
                         android:onClick="@{handler::directions}">
                         <ImageView
+                            android:id="@+id/directionsIcon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/direction"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"/>
+
                         <TextView
                             style="@style/DetailsText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/directions"
+                            android:layout_below="@+id/directionsIcon"
                             android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"/>
-
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/directions"
+                            android:textSize="14sp"
+                            app:autoSizeMaxTextSize="14sp"
+                            app:autoSizeMinTextSize="11sp"
+                            app:autoSizeTextType="uniform" />
                     </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/companyDetailsWeb"
