@@ -501,31 +501,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return spins;
     }
 
-    public boolean updatePlaces(ArrayList<Place> places) {
-        long rowInserted = -1;
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.beginTransaction();
-        try {
-            for (Place place : places) {
-                ContentValues values = new ContentValues();
-                values.put(KEY_PLACE_DISTANCE, place.getDistance());
-                values.put(KEY_PLACE_DISTANCE_STRING, place.getDistanceString());
-                rowInserted = db.update(TABLE_PLACES, values, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
-            }
-
-            if (rowInserted > -1) {
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return rowInserted > -1;
-    }
-
     public void insertPlace(Place place) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         db.insert(TABLE_PLACES, null, getPlaceValues(place));

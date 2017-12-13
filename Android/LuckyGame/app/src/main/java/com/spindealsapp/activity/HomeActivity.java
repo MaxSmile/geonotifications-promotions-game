@@ -167,6 +167,7 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
     @Override
     public void onBackPressed() {
+        Filters.nearMe = false;
         if (!isTaskRoot()) {
             moveTaskToBack(true);
         } else {

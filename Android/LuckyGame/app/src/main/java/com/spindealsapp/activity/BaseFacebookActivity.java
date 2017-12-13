@@ -148,7 +148,7 @@ public abstract class BaseFacebookActivity extends BaseActivity implements Extra
     @Override
     public void shareApp(View view) {
         getPermAndShare(getString(R.string.app_name), getString(R.string.share_app_description),
-                getString(R.string.website_url), getString(R.string.app_preview_image_url));
+                getString(R.string.dynamic_link), getString(R.string.app_preview_image_url));
     }
 
     @Override

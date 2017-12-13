@@ -98,7 +98,8 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:onClick="@{handler::invite}">
+            android:onClick="@{handler::invite}"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
