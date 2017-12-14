@@ -94,11 +94,6 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
     }
 
     @Override
-    public void invite(View view) {
-        inviteApp();
-    }
-
-    @Override
     public void rating(View view) {
         final String appPackageName = getPackageName();
         try {

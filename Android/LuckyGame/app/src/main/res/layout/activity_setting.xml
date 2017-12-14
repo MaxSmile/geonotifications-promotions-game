@@ -16,10 +16,10 @@
             type="String"/>
         <variable
             name="colorTitle"
-            type="Integer"/>
+            type="int"/>
         <variable
             name="back"
-            type="Integer"/>
+            type="int"/>
         <variable
             name="handler"
             type="com.spindealsapp.binding.handler.SettingHandler" />
@@ -61,12 +61,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/tutorial"
                     android:onClick="@{handler::tutorial}"
-                    style="@style/SettingsList"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_invite"
-                    android:onClick="@{handler::invite}"
                     style="@style/SettingsList"/>
                 <TextView
                     android:layout_width="match_parent"

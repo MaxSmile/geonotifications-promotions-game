@@ -185,15 +185,4 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         }
         return false;
     }*/
-
-    public void inviteApp() {
-        if (AppInviteDialog.canShow()) {
-            AppInviteContent content = new AppInviteContent.Builder()
-                    .setApplinkUrl(getString(R.string.facebook_app_link))
-                    .setPreviewImageUrl(getString(R.string.invite_image_url))
-                    .build();
-            AppInviteDialog appInviteDialog = new AppInviteDialog(this);
-            appInviteDialog.show(content);
-        }
-    }
 }

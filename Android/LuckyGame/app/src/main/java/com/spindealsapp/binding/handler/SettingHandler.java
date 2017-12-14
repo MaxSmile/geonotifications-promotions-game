@@ -13,7 +13,6 @@ public interface SettingHandler extends BaseHandler {
     public void tutorial(View view);
     public void visitWebsite(View view);
     public void visitFacebook(View view);
-    public void invite(View view);
     public void rating(View view);
     public void forPartner(View view);
     public void forImprove(View view);
