@@ -34,7 +34,6 @@ public class PlaceServiceLayer {
     private static Map<String, Place> placesList = new HashMap<>();
     private static int day;
     private static Calendar calendar = new GregorianCalendar();
-    private static boolean busy;
 
     public static Map<String, Place> getPlaces() {
         if (placesList.size() == 0 || day != calendar.get(Calendar.DAY_OF_MONTH)) {
@@ -54,26 +53,26 @@ public class PlaceServiceLayer {
     }
 
     public static void calculateData() {
-        if (!busy) {
-            busy = true;
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Map<String, Place> placesNew = new HashMap<>();
-                    List<Place> places = getPlacesWithSpin();
-                    Collections.sort(places, new PlaceComparator());
-                    for (int i = 0; i < places.size(); i++) {
-                        Place place = places.get(i);
-                        placesNew.put(place.getId(), place);
-                    }
-                    placesList = placesNew;
-                    busy = false;
-                    EventBus.getDefault().post(new Events.UpdatePlaces());
-                    EventBus.getDefault().post(new Events.FinishCalculateData());
-                }
-            }).start();
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                calculate();
+            }
+        }).start();
+    }
+
+    private static synchronized void calculate() {
+        Map<String, Place> placesNew = new HashMap<>();
+        List<Place> places = getPlacesWithSpin();
+        Collections.sort(places, new PlaceComparator());
+        for (int i = 0; i < places.size(); i++) {
+            Place place = places.get(i);
+            placesNew.put(place.getId(), place);
         }
+        placesList = placesNew;
+        EventBus.getDefault().post(new Events.UpdatePlaces());
+        EventBus.getDefault().post(new Events.FinishCalculateData());
     }
 
     private static ArrayList<Place> getPlacesWithSpin() {
@@ -165,9 +164,5 @@ public class PlaceServiceLayer {
                 place.setInfoChecked(oldPlace.isInfoChecked());
             }
         }
-    }
-
-    public static boolean isBusy() {
-        return busy;
     }
 }

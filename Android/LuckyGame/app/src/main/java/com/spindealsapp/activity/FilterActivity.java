@@ -16,6 +16,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.R;
+import com.spindealsapp.database.service.KeywordServiceLayer;
 import com.spindealsapp.util.Locales;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class FilterActivity extends BaseActivity {
         filterLayoutByKeywords = (LinearLayout)findViewById(R.id.filterLayoutByKeywords);
         filterListByKeywords = (ListView)findViewById(R.id.filterListByKeywords);
         filterListByKeywords.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        keywordsList = DBHelper.getInstance(this).getKeywords();
+        keywordsList = KeywordServiceLayer.getKeywords();
         if (keywordsList.size() > 0 && categoryType >= 0) {
             updateKeywords();
         }

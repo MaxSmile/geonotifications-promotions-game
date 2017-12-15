@@ -12,6 +12,7 @@ import com.spindealsapp.CurrentUser;
 import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.service.GiftServiceLayer;
+import com.spindealsapp.database.service.KeywordServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Count;
 import com.spindealsapp.entity.CouponExtension;
@@ -563,7 +564,7 @@ public class FirebaseData {
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     keywords.add(data.getValue(String.class));
                 }
-                DBHelper.getInstance(App.getInstance()).saveKeywords(keywords);
+                KeywordServiceLayer.add(keywords);
             }
 
             @Override

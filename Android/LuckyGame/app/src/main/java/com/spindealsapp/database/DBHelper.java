@@ -13,6 +13,7 @@ import com.spindealsapp.database.mapper.CouponToContentValuesMapper;
 import com.spindealsapp.database.table.CompanyTable;
 import com.spindealsapp.database.table.CouponTable;
 import com.spindealsapp.database.table.GiftTable;
+import com.spindealsapp.database.table.KeywordTable;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.CouponExtension;
@@ -40,10 +41,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_NOTIFICATION = "notification";
     private static final String TABLE_GALLERY = "gallery";
     private static final String TABLE_BOX = "box";
-    private static final String TABLE_KEYWORDS = "keywords";
     private static final String TABLE_SPIN = "spin";
 
-    private static final String KEY_KEYWORDS_KEYWORD = "keyword";
     private static final String KEY_KEYWORDS = "keywords";
 
     private static final String KEY_BOX_SPIN_ID = "spinId";
@@ -133,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_GALLERY);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
         sqLiteDatabase.execSQL("drop table if exists " + GiftTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_KEYWORDS);
+        sqLiteDatabase.execSQL("drop table if exists " + KeywordTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_SPIN);
         onCreate(sqLiteDatabase);
     }
@@ -194,9 +193,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTableKeywords(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_KEYWORDS + "("
+        db.execSQL("create table " + KeywordTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_KEYWORDS_KEYWORD + " text"
+                + KeywordTable.Fields.KEYWORD + " text"
                 + ")");
     }
 
@@ -293,49 +292,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PLACE_ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
-    }
-
-    public void saveKeywords(ArrayList<String> keywords) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        long rowInserted;
-        db.beginTransaction();
-        try {
-            rowInserted = db.delete(TABLE_KEYWORDS, null, null);
-            for (int i = 0; i < keywords.size(); i++) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(KEY_KEYWORDS_KEYWORD, keywords.get(i));
-                rowInserted = db.insert(TABLE_KEYWORDS, null, contentValues);
-            }
-
-            if (rowInserted > -1) {
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-    }
-
-    public ArrayList<String> getKeywords() {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        ArrayList<String> keywords = new ArrayList<String>();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_KEYWORDS, null);
-        if (cursor.moveToFirst()) {
-            do {
-                keywords.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-        return keywords;
     }
 
     public void saveTimeNotification(String placeI) {

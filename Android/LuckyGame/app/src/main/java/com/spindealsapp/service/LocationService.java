@@ -203,7 +203,7 @@ public class LocationService extends Service {
     private void changeLocation() {
         CurrentLocation.lat = CurrentLocation.location.getLatitude();
         CurrentLocation.lon = CurrentLocation.location.getLongitude();
-        if (!CurrentLocation.check && !PlaceServiceLayer.isBusy()) {
+        if (!CurrentLocation.check) {
             CurrentLocation.check = true;
             PlaceServiceLayer.calculateData();
             EventBus.getDefault().post(new Events.UpdateLocation());

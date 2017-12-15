@@ -3,53 +3,47 @@ package com.spindealsapp.database.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.DatabaseManager;
-import com.spindealsapp.database.mapper.CompanyToContentValuesMapper;
-import com.spindealsapp.database.mapper.CursorToCompanyMapper;
+import com.spindealsapp.database.mapper.CursorToKeywordMapper;
+import com.spindealsapp.database.mapper.KeywordToContentValuesMapper;
 import com.spindealsapp.database.mapper.Mapper;
 import com.spindealsapp.database.repository.specification.Specification;
 import com.spindealsapp.database.repository.specification.SqlSpecification;
-import com.spindealsapp.database.table.CompanyTable;
-import com.spindealsapp.entity.Company;
+import com.spindealsapp.database.table.KeywordTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Volodymyr Kusenko on 21.11.2017.
+ * Created by Volodymyr Kusenko on 15.12.2017.
  */
 
-public class CompanySqlRepository implements Repository<Company> {
+public class KeywordSqlRepository implements Repository<String> {
 
-    private final Mapper<Company, ContentValues> toContentValuesMapper;
-    private final Mapper<Cursor, Company> toObjectMapper;
+    private final Mapper<String, ContentValues> toContentValuesMapper;
+    private final Mapper<Cursor, String> toObjectMapper;
 
-    public CompanySqlRepository() {
-        this.toContentValuesMapper = new CompanyToContentValuesMapper();
-        this.toObjectMapper = new CursorToCompanyMapper();
+    public KeywordSqlRepository() {
+        this.toContentValuesMapper = new KeywordToContentValuesMapper();
+        this.toObjectMapper = new CursorToKeywordMapper();
     }
 
     @Override
-    public void add(Company item) {
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
-        ContentValues contentValues = toContentValuesMapper.map(item);
-        database.insert(CompanyTable.TABLE_NAME, null, contentValues);
-        DatabaseManager.getInstance().closeDatabase();
+    public void add(String item) {
+
     }
 
     @Override
-    public void add(Iterable<Company> items) {
+    public void add(Iterable<String> items) {
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
         try {
-            database.delete(CompanyTable.TABLE_NAME, null, null);
+            database.delete(KeywordTable.TABLE_NAME, null, null);
 
-            for (Company item : items) {
+            for (String item : items) {
                 ContentValues contentValues = toContentValuesMapper.map(item);
-                database.insert(CompanyTable.TABLE_NAME, null, contentValues);
+                database.insert(KeywordTable.TABLE_NAME, null, contentValues);
             }
 
             database.setTransactionSuccessful();
@@ -60,12 +54,12 @@ public class CompanySqlRepository implements Repository<Company> {
     }
 
     @Override
-    public void update(Company item) {
+    public void update(String item) {
 
     }
 
     @Override
-    public void remove(Company item) {
+    public void remove(String item) {
 
     }
 
@@ -75,11 +69,11 @@ public class CompanySqlRepository implements Repository<Company> {
     }
 
     @Override
-    public List<Company> query(Specification specification) {
+    public List<String> query(Specification specification) {
         SqlSpecification sqlSpecification = (SqlSpecification) specification;
 
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
-        List<Company> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         try {
             Cursor cursor = database.rawQuery(sqlSpecification.toSqlQuery(), new String[]{});
