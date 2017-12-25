@@ -12,6 +12,7 @@ import com.spindealsapp.database.repository.specification.CouponsByPlaceAndGiftS
 import com.spindealsapp.database.repository.specification.CouponsByPlaceIdSpecification;
 import com.spindealsapp.database.repository.specification.CouponsSqlSpecification;
 import com.spindealsapp.database.repository.specification.DeleteOfferSpecification;
+import com.spindealsapp.database.repository.specification.DeleteOldCouponSpecification;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.util.LocationDistance;
@@ -39,6 +40,10 @@ public class CouponServiceLayer {
             repository.remove(new DeleteOfferSpecification());
         }
         repository.add(coupons);
+    }
+
+    public static void removeOld() {
+        repository.remove(new DeleteOldCouponSpecification());
     }
 
     public static List<CouponExtension> getCoupons() {

@@ -158,7 +158,6 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     iterator.remove();
                 }
             }
-
             binding.setCountGift(boxes.size());
             initSlider();
             company = CompanyServiceLayer.getCompany(place.getCompanyKey());

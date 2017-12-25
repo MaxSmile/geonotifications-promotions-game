@@ -8,6 +8,7 @@ import com.spindealsapp.R;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.NetworkState;
 
@@ -44,6 +45,7 @@ public class LoaderActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void finishCalculateData(Events.FinishCalculateData finishCalculateData) {
+        CouponServiceLayer.removeOld();
         progressBar.setProgress(100);
         loadDataSuccess();
     }

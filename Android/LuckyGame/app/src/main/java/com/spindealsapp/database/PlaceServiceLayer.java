@@ -45,10 +45,7 @@ public class PlaceServiceLayer {
 
     private static void calculateTimeEndDistance() {
         for (Map.Entry<String, Place> item : placesList.entrySet()) {
-            Place place = item.getValue();
-            Spin spin = place.getSpin();
-            spin.setTimeLeft(DateFormat.getDiff(spin.getTimeEnd()));
-            updatePlace(place);
+            updatePlace(item.getValue());
         }
     }
 
@@ -112,6 +109,9 @@ public class PlaceServiceLayer {
         if (place.getInfo() == null || place.getInfo().isEmpty()) {
             place.setInfoChecked(true);
         }
+
+        Spin spin = place.getSpin();
+        spin.setTimeLeft(DateFormat.getDiff(spin.getTimeEnd()));
     }
 
     private static class PlaceComparator implements Comparator<Place> {

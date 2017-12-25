@@ -331,7 +331,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
     private void createCoupon(Gift gift) {
         StringBuilder couponCodeBuilder = new StringBuilder();
-        couponCodeBuilder.append(company.getName().substring(0, 2).toLowerCase());
+        couponCodeBuilder.append(company.getName().substring(0, 2).toLowerCase().replaceAll("[^a-z]", ""));
         couponCodeBuilder.append(String.valueOf(System.currentTimeMillis()).substring(0, 10));
         String couponCode = couponCodeBuilder.toString();
 
