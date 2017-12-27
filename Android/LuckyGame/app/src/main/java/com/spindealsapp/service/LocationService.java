@@ -88,7 +88,7 @@ public class LocationService extends Service {
                     locationListener
             );
 
-            RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.custom_notification);
+            /*RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.custom_notification);
 
             Intent intent = new Intent(this, HomeActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -110,11 +110,11 @@ public class LocationService extends Service {
             startForeground(777, notification);
 
             receivers = new ArrayList<ProximityIntentReceiver>();
-            pendingIntents = new ArrayList<PendingIntent>();
+            pendingIntents = new ArrayList<PendingIntent>();*/
         }
     }
 
-    @Override
+    /*@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && STOP_LOCATION_SERVICE.equals(intent.getAction())) {
             if (pendingIntents != null) {
@@ -138,15 +138,15 @@ public class LocationService extends Service {
             loadPlaces();
         }
         return START_STICKY;
-    }
+    }*/
 
-    @Override
+  /*  @Override
     public void onDestroy() {
         super.onDestroy();
         for (ProximityIntentReceiver receiver : receivers) {
             unregisterReceiver(receiver);
         }
-    }
+    }*/
 
     private void loadPlaces() {
         ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
@@ -201,6 +201,7 @@ public class LocationService extends Service {
     }
 
     private void changeLocation() {
+        System.out.println("myTest changeLocation");
         CurrentLocation.lat = CurrentLocation.location.getLatitude();
         CurrentLocation.lon = CurrentLocation.location.getLongitude();
         if (!CurrentLocation.check) {
