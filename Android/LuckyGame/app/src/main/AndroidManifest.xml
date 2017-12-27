@@ -57,7 +57,6 @@
         <activity
             android:name=".activity.InfoActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.FilteredCompanyActivity"
@@ -68,15 +67,12 @@
         <activity
             android:name=".activity.LegendActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.UnlockActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.ExtraSpinActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.SettingActivity"
@@ -87,27 +83,22 @@
         <activity
             android:name=".activity.NetworkActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity android:name=".activity.PreferencesActivity" />
         <activity
             android:name=".activity.SendCouponActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.FilterActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.LocationActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.SlideCouponsActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".activity.SearchActivity"
@@ -117,7 +108,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TutorialActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.PopUp" />
 
         <service android:name=".service.LocationService" />
