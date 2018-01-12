@@ -201,7 +201,6 @@ public class LocationService extends Service {
     }
 
     private void changeLocation() {
-        System.out.println("myTest changeLocation");
         CurrentLocation.lat = CurrentLocation.location.getLatitude();
         CurrentLocation.lon = CurrentLocation.location.getLongitude();
         if (!CurrentLocation.check) {

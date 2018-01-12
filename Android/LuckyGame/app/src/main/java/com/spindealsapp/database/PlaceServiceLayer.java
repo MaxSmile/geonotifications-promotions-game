@@ -33,10 +33,9 @@ public class PlaceServiceLayer {
 
     private static Map<String, Place> placesList = new HashMap<>();
     private static int day;
-    private static Calendar calendar = new GregorianCalendar();
 
     public static Map<String, Place> getPlaces() {
-        if (placesList.size() == 0 || day != calendar.get(Calendar.DAY_OF_MONTH)) {
+        if (placesList.size() == 0 || day != new GregorianCalendar().get(Calendar.DAY_OF_MONTH)) {
             calculateData();
         }
         calculateTimeEndDistance();
@@ -50,7 +49,7 @@ public class PlaceServiceLayer {
     }
 
     public static void calculateData() {
-        day = calendar.get(Calendar.DAY_OF_MONTH);
+        day = new GregorianCalendar().get(Calendar.DAY_OF_MONTH);
         new Thread(new Runnable() {
             @Override
             public void run() {

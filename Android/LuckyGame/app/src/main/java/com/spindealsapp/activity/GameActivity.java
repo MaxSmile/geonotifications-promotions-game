@@ -127,64 +127,67 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        if (place == null) {
+            startActivity(new Intent(this, LoaderActivity.class));
+            finish();
+        } else {
+            company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
+            gifts = GiftServiceLayer.getGifts(place);
+            FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
 
-        company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
-        gifts = GiftServiceLayer.getGifts(place);
-        FirebaseData.refreshGifts(new ArrayList<Gift>(gifts.values()));
+            countCoupons = CouponServiceLayer.getCouponsByPlace(place.getId()).size();
 
-        countCoupons = CouponServiceLayer.getCouponsByPlace(place.getId()).size();
+            binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
+            binding.setCompany(company);
+            binding.setPlace(place);
+            binding.setCountGift(place.getSpin().getBox().size());
+            binding.setCountCoupons(countCoupons);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
-        binding.setCompany(company);
-        binding.setPlace(place);
-        binding.setCountGift(place.getSpin().getBox().size());
-        binding.setCountCoupons(countCoupons);
+            binding.setHandler(this);
 
-        binding.setHandler(this);
+            parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
+            imagePointer = (ImageView)findViewById(R.id.imagePointer);
 
-        parentLayout = (RelativeLayout) findViewById(R.id.gameWheel);
-        imagePointer = (ImageView)findViewById(R.id.imagePointer);
+            progressBar = (ProgressBar)findViewById(R.id.powerBar);
+            progressBar.setMax(100);
+            progressBar.setProgress(0);
+            progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progress));
 
-        progressBar = (ProgressBar)findViewById(R.id.powerBar);
-        progressBar.setMax(100);
-        progressBar.setProgress(0);
-        progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progress));
+            animationBox = (ImageView)findViewById(R.id.animationBox);
 
-        animationBox = (ImageView)findViewById(R.id.animationBox);
+            powerButton = (ImageView)findViewById(R.id.powerButton);
+            powerButton.setOnTouchListener(new PowerTouchListener());
+            pointerImageView = (ImageView)findViewById(R.id.imageWheel);
 
-        powerButton = (ImageView)findViewById(R.id.powerButton);
-        powerButton.setOnTouchListener(new PowerTouchListener());
-        pointerImageView = (ImageView)findViewById(R.id.imageWheel);
-
-        handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message message) {
-                progressBar.setProgress(message.arg1);
-                return false;
-            }
-        });
-
-        animateHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                float rotation = msg.arg1%30;
-                if (lastRotation > rotation) {
-                    if (Properties.getSoundGame()) {
-                        sp.play(soundIdTick, 1, 1, 0, 0, 1);
-                    }
-                    imagePointer.setRotation(-1*10);
-                } else {
-                    imagePointer.setRotation(0);
+            handler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message message) {
+                    progressBar.setProgress(message.arg1);
+                    return false;
                 }
-                lastRotation = rotation;
-                return false;
-            }
-        });
+            });
+
+            animateHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    float rotation = msg.arg1%30;
+                    if (lastRotation > rotation) {
+                        if (Properties.getSoundGame()) {
+                            sp.play(soundIdTick, 1, 1, 0, 0, 1);
+                        }
+                        imagePointer.setRotation(-1*10);
+                    } else {
+                        imagePointer.setRotation(0);
+                    }
+                    lastRotation = rotation;
+                    return false;
+                }
+            });
 
 
-        initSound();
-        initData();
+            initSound();
+            initData();
+        }
     }
 
     private void initSound() {
@@ -610,8 +613,10 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
 
     @Override
     protected void onDestroy() {
-        sp.release();
-        sp = null;
+        if (sp != null) {
+            sp.release();
+            sp = null;
+        }
         super.onDestroy();
     }
 

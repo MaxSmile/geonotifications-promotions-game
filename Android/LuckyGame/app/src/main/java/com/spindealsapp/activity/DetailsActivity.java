@@ -234,7 +234,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                     Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
                 }
             } else {
-                ToastTimer.start(Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
+                ToastTimer.start(this, Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
             }
         } else {
             startActivity(new Intent(this, NetworkActivity.class));
@@ -262,7 +262,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                 //intent.putExtra(Place.class.getCanonicalName(), place);
                 startActivity(intent);
             } else {
-                ToastTimer.start(Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_SHORT), 5000);
+                ToastTimer.start(this, Toast.makeText(this, R.string.spin_not_available, Toast.LENGTH_SHORT), 5000);
             }
         } else {
             loginDialog();
@@ -401,13 +401,13 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
                             intent.putExtra(Gift.class.getCanonicalName(), gifts);
                             startActivity(intent);
                         } else {
-                            ToastTimer.start(Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_SHORT), 5000);
+                            ToastTimer.start(this, Toast.makeText(this, R.string.extra_spin_not_available, Toast.LENGTH_SHORT), 5000);
                         }
                     } else {
                         Toast.makeText(this, R.string.gifts_over, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    ToastTimer.start(Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
+                    ToastTimer.start(this, Toast.makeText(this, R.string.spin_coming_message, Toast.LENGTH_SHORT), 5000);
                 }
             } else {
                 loginDialog();
