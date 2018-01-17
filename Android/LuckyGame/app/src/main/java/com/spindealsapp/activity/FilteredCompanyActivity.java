@@ -194,11 +194,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
                     orderPlaces.get(place.getCompanyKey()).getDistance() > place.getDistance()) {
                 orderPlaces.put(place.getCompanyKey(), place);
             }
-            /*if (place.getSpin().getStatus() == Constants.SPIN_STATUS_ACTIVE) {
-                orderPlaces.put(place.getCompanyKey(), place);
-            } else if (orderPlaces.get(place.getCompanyKey()) == null || place.getSpin().getStatus() == Constants.SPIN_STATUS_EXTRA_AVAILABLE) {
-                orderPlaces.put(place.getCompanyKey(), place);
-            }*/
         }
         return new ArrayList<Place>(orderPlaces.values());
     }
@@ -226,11 +221,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
         super.onBackPressed();
     }
 
-    /*@Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onCurrentLocation(Events.UpdateLocation updateLocation) {
-        refreshData();
-    }*/
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUpdatePlaces(Events.UpdatePlaces updatePlaces) {
         refreshData();
@@ -244,7 +234,6 @@ public class FilteredCompanyActivity extends BaseActivity implements FilteredHan
             if (CurrentLocation.lat != 0 ) {
                 Filters.nearMe = !Filters.nearMe;
                 binding.setFilterNearMe(Filters.nearMe);
-                //filter();
                 if (Filters.nearMe) {
                     Toast.makeText(this, R.string.near_me_message, Toast.LENGTH_SHORT).show();
                 }

@@ -15,8 +15,12 @@ public class PlaceDistanceComparator implements Comparator<Place> {
         double distance1 = o1.getDistance();
         double distance2 = o2.getDistance();
 
+        if (distance1 == distance2)
+            return 0;
+
         if (distance1 == 0.0)
             return 1;
+
         if (distance2 == 0.0)
             return -1;
 
