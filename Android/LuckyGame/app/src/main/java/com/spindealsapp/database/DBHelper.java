@@ -12,6 +12,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.database.mapper.CouponToContentValuesMapper;
 import com.spindealsapp.database.table.CompanyTable;
 import com.spindealsapp.database.table.CouponTable;
+import com.spindealsapp.database.table.GalleryTable;
 import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.database.table.KeywordTable;
 import com.spindealsapp.entity.Box;
@@ -129,7 +130,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_PLACES);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
         sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_GALLERY);
+        sqLiteDatabase.execSQL("drop table if exists " + GalleryTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
         sqLiteDatabase.execSQL("drop table if exists " + GiftTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + KeywordTable.TABLE_NAME);
@@ -187,8 +188,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private void createTableGallery(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_GALLERY + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_PLACE_ID  + " text,"
-                + KEY_GALLERY_URL + " text"
+                + GalleryTable.Fields.OWNER  + " text,"
+                + GalleryTable.Fields.PATH + " text"
                 + ")");
     }
 
