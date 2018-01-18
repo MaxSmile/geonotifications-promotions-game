@@ -28,6 +28,7 @@ import com.spindealsapp.binding.handler.BaseHandler;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.FirebaseData;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Gift;
 import com.spindealsapp.entity.Place;
@@ -172,7 +173,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     @Override
     public void favorites(View view) {
         place.setFavorites(!place.isFavorites());
-        DBHelper.getInstance(this).updatePlace(place);
+        PlaceServiceLayer.update(place);
     }
 
    /* public boolean checkFb() {

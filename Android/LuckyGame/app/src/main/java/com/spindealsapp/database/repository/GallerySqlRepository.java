@@ -40,7 +40,13 @@ public class GallerySqlRepository implements Repository<Gallery> {
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
         try {
+            boolean flag = false;
             for (Gallery item : items) {
+                if (!flag) {
+                    flag = true;
+                    database.delete(GalleryTable.TABLE_NAME, GalleryTable.Fields.OWNER + " = ?", new String[] {item.getOwner()});
+                }
+
                 ContentValues contentValues = toContentValuesMapper.map(item);
                 database.insert(GalleryTable.TABLE_NAME, null, contentValues);
             }

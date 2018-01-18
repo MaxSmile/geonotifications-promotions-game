@@ -15,6 +15,7 @@ import com.spindealsapp.database.table.CouponTable;
 import com.spindealsapp.database.table.GalleryTable;
 import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.database.table.KeywordTable;
+import com.spindealsapp.database.table.PlaceTable;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.CouponExtension;
@@ -38,49 +39,19 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
-    private static final String TABLE_PLACES = "places";
     private static final String TABLE_NOTIFICATION = "notification";
-    private static final String TABLE_GALLERY = "gallery";
     private static final String TABLE_BOX = "box";
     private static final String TABLE_SPIN = "spin";
-
-    private static final String KEY_KEYWORDS = "keywords";
+    private static final String KEY_ID = "_id";
 
     private static final String KEY_BOX_SPIN_ID = "spinId";
     private static final String KEY_BOX_COLOR = "color";
     private static final String KEY_BOX_COUNT = "count";
     private static final String KEY_BOX_GIFT = "gift";
 
-    private static final String KEY_ID = "_id";
-    private static final String KEY_GALLERY_URL = "galleryUrl";
-
     private static final String KEY_LAST_NOTIFICATION = "lastNotification";
 
     private static final String KEY_PLACE_ID = "id";
-    private static final String KEY_PLACE_ADDRESS = "address";
-    private static final String KEY_PLACE_NAME = "name";
-    private static final String KEY_PLACE_COMPANY_KEY = "companyKey";
-    private static final String KEY_PLACE_GEO_LAT = "geoLat";
-    private static final String KEY_PLACE_GEO_LON = "geoLon";
-    private static final String KEY_PLACE_GEO_RADIUS = "geoRadius";
-    private static final String KEY_PLACE_GEO_MESSAGE = "geoMessage";
-    private static final String KEY_PLACE_GEO_TIME_START = "geoTimeStart";
-    private static final String KEY_PLACE_GEO_TIME_FINISH = "geoTimeFinish";
-    private static final String KEY_PLACE_GEO_TIME_FREQUENCY = "geoTimeFrequency";
-    private static final String KEY_PLACE_TYPE = "type";
-    private static final String KEY_PLACE_TYPE_NAME = "typeName";
-    private static final String KEY_PLACE_TYPE_ICON = "typeIcon";
-    private static final String KEY_PLACE_INFO = "info";
-    private static final String KEY_PLACE_URL = "url";
-    private static final String KEY_PLACE_TEL = "tel";
-    private static final String KEY_PLACE_ABOUT = "about";
-    private static final String KEY_PLACE_ABOUT_MORE = "aboutMore";
-    private static final String KEY_PLACE_DISTANCE = "distance";
-    private static final String KEY_PLACE_DISTANCE_STRING = "distanceString";
-    private static final String KEY_PLACE_CITY = "city";
-    private static final String KEY_PLACE_FAVORITES = "favorites";
-    private static final String KEY_PLACE_INFO_TIMESTAMP = "infoTimestamp";
-    private static final String KEY_PLACE_INFO_CHECKED = "infoChecked";
 
     private static final String KEY_SPIN_ID = "id";
     private static final String KEY_SPIN_COMPANY_KEY = "companyKey";
@@ -127,7 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists " + CouponTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_PLACES);
+        sqLiteDatabase.execSQL("drop table if exists " + PlaceTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
         sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + GalleryTable.TABLE_NAME);
@@ -186,7 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTableGallery(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_GALLERY + "("
+        db.execSQL("create table " + GalleryTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
                 + GalleryTable.Fields.OWNER  + " text,"
                 + GalleryTable.Fields.PATH + " text"
@@ -261,54 +232,51 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTablePlaces(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_PLACES + "("
+        db.execSQL("create table " + PlaceTable.TABLE_NAME + "("
                 + KEY_ID + " INTEGER primary key,"
-                + KEY_PLACE_ID + " text,"
-                + KEY_PLACE_ADDRESS + " text,"
-                + KEY_PLACE_NAME + " text,"
-                + KEY_PLACE_COMPANY_KEY + " text,"
-                + KEY_PLACE_GEO_LAT  + " real,"
-                + KEY_PLACE_GEO_LON + " real,"
-                + KEY_PLACE_GEO_RADIUS + " INTEGER,"
-                + KEY_PLACE_GEO_MESSAGE + " text,"
-                + KEY_PLACE_GEO_TIME_START + " INTEGER,"
-                + KEY_PLACE_GEO_TIME_FINISH + " INTEGER,"
-                + KEY_PLACE_GEO_TIME_FREQUENCY + " INTEGER,"
-                + KEY_PLACE_TYPE + " INTEGER,"
-                + KEY_PLACE_TYPE_NAME + " text,"
-                + KEY_PLACE_TYPE_ICON + " INTEGER,"
-                + KEY_PLACE_INFO + " text,"
-                + KEY_PLACE_URL + " text,"
-                + KEY_PLACE_TEL + " text,"
-                + KEY_PLACE_ABOUT + " text,"
-                + KEY_PLACE_ABOUT_MORE + " text,"
-                + KEY_PLACE_DISTANCE + " real,"
-                + KEY_PLACE_DISTANCE_STRING + " text,"
-                + KEY_PLACE_CITY + " text,"
-                + KEY_PLACE_FAVORITES + " INTEGER,"
-                + KEY_PLACE_INFO_TIMESTAMP + " INTEGER,"
-                + KEY_PLACE_INFO_CHECKED + " INTEGER,"
-                + KEY_KEYWORDS + " text,"
+                + PlaceTable.Fields.ID + " text,"
+                + PlaceTable.Fields.ADDRESS + " text,"
+                + PlaceTable.Fields.NAME + " text,"
+                + PlaceTable.Fields.COMPANY_KEY + " text,"
+                + PlaceTable.Fields.GEO_LAT  + " real,"
+                + PlaceTable.Fields.GEO_LON + " real,"
+                + PlaceTable.Fields.GEO_RADIUS + " INTEGER,"
+                + PlaceTable.Fields.GEO_MESSAGE + " text,"
+                + PlaceTable.Fields.GEO_TIME_START + " INTEGER,"
+                + PlaceTable.Fields.GEO_TIME_FINISH + " INTEGER,"
+                + PlaceTable.Fields.GEO_TIME_FREQUENCY + " INTEGER,"
+                + PlaceTable.Fields.TYPE + " INTEGER,"
+                + PlaceTable.Fields.TYPE_NAME + " text,"
+                + PlaceTable.Fields.TYPE_ICON + " INTEGER,"
+                + PlaceTable.Fields.INFO + " text,"
+                + PlaceTable.Fields.URL + " text,"
+                + PlaceTable.Fields.TEL + " text,"
+                + PlaceTable.Fields.ABOUT + " text,"
+                + PlaceTable.Fields.ABOUT_MORE + " text,"
+                + PlaceTable.Fields.DISTANCE + " real,"
+                + PlaceTable.Fields.DISTANCE_STRING + " text,"
+                + PlaceTable.Fields.CITY + " text,"
+                + PlaceTable.Fields.FAVORITES + " INTEGER,"
+                + PlaceTable.Fields.INFO_TIMESTAMP + " INTEGER,"
+                + PlaceTable.Fields.INFO_CHECKED + " INTEGER,"
+                + PlaceTable.Fields.KEYWORDS + " text,"
                 + "UNIQUE ("
-                + KEY_PLACE_ID
+                + PlaceTable.Fields.ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
     }
 
     public void saveTimeNotification(String placeI) {
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_PLACE_ID, placeI);
         contentValues.put(KEY_LAST_NOTIFICATION, System.currentTimeMillis());
 
         db.insert(TABLE_NOTIFICATION, null, contentValues);
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
     }
 
     public long getTimeNotification(String placeId) {
-        //SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "
                         + TABLE_NOTIFICATION
@@ -326,7 +294,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         DatabaseManager.getInstance().closeDatabase();
 
         return 0;
@@ -458,213 +425,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return spins;
     }
 
-    public void insertPlace(Place place) {
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.insert(TABLE_PLACES, null, getPlaceValues(place));
-        db.delete(TABLE_GALLERY, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
-        saveGallery(db, place);
-        DatabaseManager.getInstance().closeDatabase();
-    }
-
-    private long saveGallery(SQLiteDatabase db, Place place) {
-        long rowInserted = -1;
-        List<String> gallery = place.getGallery();
-        if (gallery != null) {
-            for (int i = 0; i < gallery.size(); i++) {
-                ContentValues galleryValues = new ContentValues();
-                galleryValues.put(KEY_PLACE_ID, place.getId());
-                galleryValues.put(KEY_GALLERY_URL, gallery.get(i));
-                rowInserted = db.insert(TABLE_GALLERY, null, galleryValues);
-            }
-        }
-
-        return rowInserted;
-    }
-
-    public boolean savePlaces(ArrayList<Place> places) {
-        long rowInserted = -1;
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.beginTransaction();
-        try {
-            db.delete(TABLE_PLACES, null, null);
-            db.delete(TABLE_GALLERY, null, null);
-
-            for (Place place : places) {
-                rowInserted = db.insert(TABLE_PLACES, null, getPlaceValues(place));
-                if (rowInserted > -1) {
-                    rowInserted = saveGallery(db, place);
-                }
-            }
-
-            if (rowInserted > -1) {
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return rowInserted > -1;
-    }
-
-    private ContentValues getPlaceValues(Place place) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_PLACE_ID, place.getId());
-        contentValues.put(KEY_PLACE_ADDRESS, place.getAddress());
-        contentValues.put(KEY_PLACE_NAME, place.getName());
-        contentValues.put(KEY_PLACE_COMPANY_KEY, place.getCompanyKey());
-        contentValues.put(KEY_PLACE_GEO_LAT, place.getGeoLat());
-        contentValues.put(KEY_PLACE_GEO_LON, place.getGeoLon());
-        contentValues.put(KEY_PLACE_GEO_RADIUS, place.getGeoRadius());
-        contentValues.put(KEY_PLACE_GEO_MESSAGE, place.getGeoMessage());
-        contentValues.put(KEY_PLACE_GEO_TIME_START, place.getGeoTimeStart());
-        contentValues.put(KEY_PLACE_GEO_TIME_FINISH, place.getGeoTimeFinish());
-        contentValues.put(KEY_PLACE_GEO_TIME_FREQUENCY, place.getGeoTimeFrequency());
-        contentValues.put(KEY_PLACE_TYPE, place.getType());
-        contentValues.put(KEY_PLACE_TYPE_NAME, place.getTypeName());
-        contentValues.put(KEY_PLACE_TYPE_ICON, place.getTypeIcon());
-        contentValues.put(KEY_PLACE_INFO, place.getInfo());
-        contentValues.put(KEY_PLACE_URL, place.getUrl());
-        contentValues.put(KEY_PLACE_TEL, place.getTel());
-        contentValues.put(KEY_PLACE_ABOUT, place.getAbout());
-        contentValues.put(KEY_PLACE_ABOUT_MORE, place.getAboutMore());
-        contentValues.put(KEY_PLACE_DISTANCE, place.getDistance());
-        contentValues.put(KEY_PLACE_DISTANCE_STRING, place.getDistanceString());
-        contentValues.put(KEY_PLACE_CITY, place.getCity());
-        contentValues.put(KEY_PLACE_FAVORITES, place.isFavorites() ? 1 : 0);
-        contentValues.put(KEY_PLACE_INFO_TIMESTAMP, place.getInfoTimestamp());
-        contentValues.put(KEY_PLACE_INFO_CHECKED, place.isInfoChecked() ? 1 : 0);
-        contentValues.put(KEY_KEYWORDS, place.getKeywords());
-
-        return contentValues;
-    }
-
-    public List<String> getCities() {
-        List<String> cities = new ArrayList<String>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT DISTINCT "
-                + KEY_PLACE_CITY
-                + " FROM "
-                + TABLE_PLACES
-                + " ORDER BY "
-                + KEY_PLACE_CITY
-                + " ASC", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                cities.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return cities;
-    }
-
-    public ArrayList<Place> getOrderPlaces() {
-        ArrayList<Place> orderPlaces = new ArrayList<Place>();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_PLACES
-                + " ORDER BY "
-                + KEY_PLACE_DISTANCE
-                + " DESC", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Place place = parsePlace(cursor);
-                orderPlaces.add(place);
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-        return orderPlaces;
-    }
-
-
-    public HashMap<String, Place> getPlaces() {
-        HashMap<String, Place> places = new HashMap<String, Place>();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_PLACES, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                places.put(cursor.getString(1), parsePlace(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows places");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-        return places;
-    }
-
-    public HashMap<String, Place> getOtherPlacesCompany(String companyId, String placeId) {
-        HashMap<String, Place> places = new HashMap<String, Place>();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_PLACES
-                        + " WHERE "
-                        + KEY_PLACE_COMPANY_KEY
-                        + " = ? AND "
-                        + KEY_PLACE_ID
-                        + " <> ?"
-                , new String[] {companyId, placeId});
-
-        if (cursor.moveToFirst()) {
-            do {
-                places.put(cursor.getString(3), parsePlace(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return places;
-    }
-
-    public Place getPlace(String placeId) {
-        Place place = new Place();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_PLACES
-                        + " WHERE "
-                        + KEY_PLACE_ID
-                        + " = ?"
-                , new String[] {placeId});
-
-        if (cursor.moveToFirst()) {
-            do {
-                place = parsePlace(cursor);
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        if (place.getId() != null) {
-            place.setGallery(getGallery(place.getId()));
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return place;
-    }
-
     private List<Box> getBox(String spinId) {
         List<Box> box = new ArrayList<Box>();
         //SQLiteDatabase db = this.getWritableDatabase();
@@ -691,38 +451,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return box;
     }
 
-    public List<String> getGallery(String placeId) {
-        List<String> gallery = new ArrayList<String>();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_GALLERY
-                        + " WHERE "
-                        + KEY_PLACE_ID
-                        + " = ?"
-                , new String[] {placeId});
-
-        if (cursor.moveToFirst()) {
-            do {
-                gallery.add(cursor.getString(2));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return gallery;
-    }
-
-    public void updatePlace(Place place) {
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        ContentValues contentValues = getPlaceValues(place);
-        db.update(TABLE_PLACES, contentValues, KEY_PLACE_ID + " = ?", new String[] {place.getId()});
-        DatabaseManager.getInstance().closeDatabase();
-
-    }
-
     private Box parseBox(Cursor cursor) {
         return new Box(
                 cursor.getInt(2),
@@ -744,37 +472,5 @@ public class DBHelper extends SQLiteOpenHelper {
                 cursor.getLong(9),
                 cursor.getInt(10) > 0
         );
-    }
-
-    private Place parsePlace(Cursor cursor) {
-        return new Place(
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getDouble(5),
-                cursor.getDouble(6),
-                cursor.getInt(7),
-                cursor.getString(8),
-                cursor.getLong(9),
-                cursor.getLong(10),
-                cursor.getLong(11),
-                cursor.getInt(12),
-                cursor.getString(13),
-                cursor.getInt(14),
-                cursor.getString(15),
-                cursor.getString(16),
-                cursor.getString(17),
-                cursor.getString(18),
-                cursor.getString(19),
-                cursor.getDouble(20),
-                cursor.getString(21),
-                cursor.getString(22),
-                cursor.getInt(23) > 0,
-                cursor.getLong(24),
-                cursor.getInt(25) > 0,
-                cursor.getString(26)
-        );
-
     }
 }

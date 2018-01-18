@@ -16,6 +16,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.R;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.database.service.KeywordServiceLayer;
 import com.spindealsapp.util.Locales;
 
@@ -79,7 +80,7 @@ public class FilterActivity extends BaseActivity {
         filterListByCity = (ListView)findViewById(R.id.filterListByCity);
         filterListByCity.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        citiesList = DBHelper.getInstance(this).getCities();
+        citiesList = PlaceServiceLayer.getCities();
         arrayAdapter = new ArrayAdapter<String>(
                 this, R.layout.my_simple_list_item_multiple_choice, citiesList);
 

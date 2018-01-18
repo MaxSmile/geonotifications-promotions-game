@@ -12,6 +12,7 @@ import com.spindealsapp.Constants;
 import com.spindealsapp.activity.DetailsActivity;
 import com.spindealsapp.activity.SlideCouponsActivity;
 import com.spindealsapp.binding.handler.CompanyRowHandler;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.entity.Company;
@@ -108,7 +109,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         public void favorites(View view) {
             place.setFavorites(!place.isFavorites());
             binding.setPlace(place);
-            DBHelper.getInstance(context).updatePlace(place);
+            PlaceServiceLayer.update(place);
         }
     }
 }

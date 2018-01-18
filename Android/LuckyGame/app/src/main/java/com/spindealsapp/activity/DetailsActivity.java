@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class DetailsActivity extends BaseActivity implements DetailsHandler {
 
@@ -69,7 +70,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     private ImageView detailsArrowOther;
     private boolean geoNotification;
     private int countCoupons;
-    private HashMap<String, Place> otherPlacesCompany;
+    private Map<String, Place> otherPlacesCompany;
     private ArrayList<String> otherList;
     private ListView detailsOtherPlaces;
     private List<Box> boxes;
@@ -178,7 +179,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void initOther() {
-        otherPlacesCompany = DBHelper.getInstance(this).getOtherPlacesCompany(place.getCompanyKey(), place.getId());
+        otherPlacesCompany = PlaceServiceLayer.getOtherPlacesCompany(place.getCompanyKey(), place.getId());
         otherList = new ArrayList<String>(otherPlacesCompany.keySet());
 
         ArrayAdapter arrayFilterAdapter = new ArrayAdapter<String>(
@@ -327,7 +328,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
         } else {
             place.setInfoChecked(true);
             binding.setPlace(place);
-            DBHelper.getInstance(this).updatePlace(place);
+            PlaceServiceLayer.update(place);
 
             Intent intent = new Intent(this, InfoActivity.class);
             intent.putExtra("info", place.getInfo());

@@ -15,6 +15,7 @@ import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.activity.DetailsActivity;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.R;
 import com.spindealsapp.util.LocationDistance;
@@ -30,16 +31,18 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
         String key = LocationManager.KEY_PROXIMITY_ENTERING;
         Boolean entering = intent.getBooleanExtra(key, false);
         if (entering && Properties.getNotifications()) {
-            Place place = DBHelper.getInstance(context).getPlace(intent.getStringExtra(Constants.PLACE_KEY));
-            double distance = getDistance(CurrentLocation.lat, CurrentLocation.lon, place.getGeoLat(), place.getGeoLon());
-            long lastNotification = DBHelper.getInstance(context).getTimeNotification(intent.getStringExtra(Constants.PLACE_KEY));
-            if (distance <= (place.getGeoRadius() + 10)) {
-                if (lastNotification > 0) {
-                    if ((System.currentTimeMillis() - lastNotification) > place.getGeoTimeFrequency()) {
+            Place place = PlaceServiceLayer.getSimplePlace(intent.getStringExtra(Constants.PLACE_KEY));
+            if (place != null) {
+                double distance = getDistance(CurrentLocation.lat, CurrentLocation.lon, place.getGeoLat(), place.getGeoLon());
+                long lastNotification = DBHelper.getInstance(context).getTimeNotification(intent.getStringExtra(Constants.PLACE_KEY));
+                if (distance <= (place.getGeoRadius() + 10)) {
+                    if (lastNotification > 0) {
+                        if ((System.currentTimeMillis() - lastNotification) > place.getGeoTimeFrequency()) {
+                            sentNotification(context, intent, place);
+                        }
+                    } else {
                         sentNotification(context, intent, place);
                     }
-                } else {
-                    sentNotification(context, intent, place);
                 }
             }
         }

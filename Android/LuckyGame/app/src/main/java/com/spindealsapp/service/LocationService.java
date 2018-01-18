@@ -23,7 +23,6 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.activity.HomeActivity;
-import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
@@ -32,8 +31,6 @@ import com.spindealsapp.util.LocationDistance;
 import com.spindealsapp.R;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -149,7 +146,7 @@ public class LocationService extends Service {
     }*/
 
     private void loadPlaces() {
-        ArrayList<Place> places = new ArrayList<Place>(DBHelper.getInstance(App.getInstance()).getPlaces().values());
+        List<Place> places = PlaceServiceLayer.getSimplePlaces();
         for (int i = 0; i < places.size(); i++) {
             Place place = places.get(i);
             if (place.getGeoTimeStart() < System.currentTimeMillis() && place.getGeoTimeFinish() > System.currentTimeMillis()) {

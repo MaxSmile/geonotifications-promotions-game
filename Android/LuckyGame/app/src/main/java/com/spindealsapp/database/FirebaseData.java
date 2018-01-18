@@ -227,13 +227,13 @@ public class FirebaseData {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (initPlaces) {
-                    PlaceServiceLayer.insertPlace(dataSnapshot.getValue(Place.class));
+                    PlaceServiceLayer.add(dataSnapshot.getValue(Place.class));
                 } else {
                     places.add(dataSnapshot.getValue(Place.class));
                     countPlaces++;
                     if (countPlaces == countChildren.getPlaces()) {
                         initPlaces = true;
-                        PlaceServiceLayer.updatePlaces(places);
+                        PlaceServiceLayer.add(places);
                         giftListener();
                         EventBus.getDefault().post(new Events.LoadingData(70));
                     }
@@ -242,7 +242,7 @@ public class FirebaseData {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                PlaceServiceLayer.insertPlace(dataSnapshot.getValue(Place.class));
+                PlaceServiceLayer.add(dataSnapshot.getValue(Place.class));
             }
 
             @Override
