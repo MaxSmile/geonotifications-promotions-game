@@ -5,9 +5,8 @@ import android.widget.ProgressBar;
 
 import com.spindealsapp.Constants;
 import com.spindealsapp.R;
-import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.FirebaseData;
-import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.util.NetworkState;

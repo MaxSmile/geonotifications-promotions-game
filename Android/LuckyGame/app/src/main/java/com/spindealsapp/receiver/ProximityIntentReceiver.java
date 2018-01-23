@@ -15,7 +15,7 @@ import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.activity.DetailsActivity;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
-import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.R;
 import com.spindealsapp.util.LocationDistance;

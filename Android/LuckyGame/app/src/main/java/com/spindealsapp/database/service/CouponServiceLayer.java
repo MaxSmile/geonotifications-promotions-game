@@ -6,6 +6,7 @@ import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.repository.CouponSqlRepository;
 import com.spindealsapp.database.repository.specification.CouponsByCodeSpecification;
 import com.spindealsapp.database.repository.specification.CouponsByPlaceAndGiftSpecification;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Kvm on 23.06.2017.
@@ -38,8 +40,31 @@ public class CouponServiceLayer {
     public static void add(List<CouponExtension> coupons, boolean offer) {
         if (offer) {
             repository.remove(new DeleteOfferSpecification());
+            repository.add(coupons);
+        } else {
+            List<CouponExtension> couponsList = repository.query(new CouponsSqlSpecification());
+            if (couponsList.size() > 0) {
+                List<CouponExtension> newCoupons = new ArrayList<>();
+                for (int i = 0; i < couponsList.size(); i++) {
+                    for (int j = 0; j < coupons.size(); j++) {
+                        if (couponsList.get(i).getCode().equals(coupons.get(j).getCode())) {
+                            newCoupons.add(coupons.get(j));
+                        }
+                    }
+                }
+
+                if (newCoupons.size() > 0) {
+                    repository.add(newCoupons);
+                }
+            } else {
+                repository.add(coupons);
+            }
         }
-        repository.add(coupons);
+
+    }
+
+    public static void remove(CouponExtension coupon) {
+        repository.remove(coupon);
     }
 
     public static void removeOld() {

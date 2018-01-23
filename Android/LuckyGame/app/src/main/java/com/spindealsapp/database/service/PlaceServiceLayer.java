@@ -1,10 +1,11 @@
-package com.spindealsapp.database;
+package com.spindealsapp.database.service;
 
 import android.content.res.TypedArray;
 
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
+import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.database.repository.PlaceSqlRepository;
 import com.spindealsapp.database.repository.specification.GetCitySpecification;
 import com.spindealsapp.database.repository.specification.OrderPlacesSpecification;

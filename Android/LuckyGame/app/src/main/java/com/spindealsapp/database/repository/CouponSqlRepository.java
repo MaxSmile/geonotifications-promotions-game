@@ -60,7 +60,9 @@ public class CouponSqlRepository implements Repository<CouponExtension> {
 
     @Override
     public void remove(CouponExtension item) {
-
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
+        database.delete(CouponTable.TABLE_NAME, CouponTable.Fields.CODE + " = ?", new String[] {item.getCode()});
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     @Override

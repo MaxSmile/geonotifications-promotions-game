@@ -1,13 +1,11 @@
 package com.spindealsapp.activity;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,14 +16,12 @@ import com.spindealsapp.binding.handler.FilteredHandler;
 import com.spindealsapp.common.Filters;
 import com.spindealsapp.common.PlaceDistanceComparator;
 import com.spindealsapp.common.Properties;
-import com.spindealsapp.database.DBHelper;
-import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityFilteredCompanyBinding;
-import com.spindealsapp.util.Locales;
 import com.spindealsapp.util.LocationState;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,8 +34,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class FilteredCompanyActivity extends BaseActivity implements FilteredHandler {
     private int type;

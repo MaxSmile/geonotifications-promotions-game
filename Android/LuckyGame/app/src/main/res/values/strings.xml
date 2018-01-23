@@ -154,4 +154,6 @@
     <string name="expired">Expired:</string>
     <string name="near_me_message">Searching for your location</string>
     <string name="directions_message">All over Cyprus</string>
+    <string name="delete_coupon_dialog_title">Confirm</string>
+    <string name="delete_coupon_dialog_message">Do you want delete this coupon?</string>
 </resources>

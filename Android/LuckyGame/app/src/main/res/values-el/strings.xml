@@ -154,4 +154,6 @@
     <string name="expired">Έχει λήξει:</string>
     <string name="near_me_message">Aναζήτηση της τοποθεσίας σας</string>
     <string name="directions_message">Σε όλη την Κύπρο</string>
+    <string name="delete_coupon_dialog_title">Επιβεβαιώνω</string>
+    <string name="delete_coupon_dialog_message">Θέλετε να διαγράψετε αυτό το κουπόνι;</string>
 </resources>

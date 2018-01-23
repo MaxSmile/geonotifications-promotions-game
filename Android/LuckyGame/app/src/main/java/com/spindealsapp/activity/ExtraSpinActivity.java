@@ -7,15 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.spindealsapp.Constants;
-import com.spindealsapp.database.PlaceServiceLayer;
 import com.spindealsapp.database.SpinServiceLayer;
 import com.spindealsapp.entity.Company;
-import com.spindealsapp.entity.Gift;
-import com.spindealsapp.entity.Place;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityExtraSpinBinding;
-
-import java.util.HashMap;
 
 
 public class ExtraSpinActivity extends BaseFacebookActivity {

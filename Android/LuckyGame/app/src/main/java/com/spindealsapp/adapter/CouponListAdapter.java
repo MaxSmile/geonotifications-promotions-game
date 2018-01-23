@@ -1,6 +1,8 @@
 package com.spindealsapp.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import com.spindealsapp.activity.SendCouponActivity;
 import com.spindealsapp.activity.SlideCouponsActivity;
 import com.spindealsapp.activity.UnlockActivity;
 import com.spindealsapp.binding.handler.CouponsRowHandler;
+import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.CouponsRowBinding;
@@ -74,6 +77,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
                             Intent intent = new Intent(context, SlideCouponsActivity.class);
                             intent.putExtra(Constants.COUPON_KEY, coupon.getCode());
                             context.startActivity(intent);
+                        } else {
+                            deleteDialog();
                         }
                     }
                 }
@@ -98,6 +103,29 @@ public class CouponListAdapter extends RecyclerView.Adapter<CouponListAdapter.Ho
             Intent intent = new Intent(context, UnlockActivity.class);
             intent.putExtra(CouponExtension.class.getCanonicalName(), coupon);
             context.startActivity(intent);
+        }
+
+        private void deleteDialog() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(context.getString(R.string.delete_coupon_dialog_title))
+                    .setMessage(context.getString(R.string.delete_coupon_dialog_message))
+                    .setNegativeButton(context.getString(R.string.cancel),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            })
+                    .setPositiveButton(context.getString(R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                    CouponServiceLayer.remove(coupon);
+                                    couponsList.remove(coupon);
+                                    notifyDataSetChanged();
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 }

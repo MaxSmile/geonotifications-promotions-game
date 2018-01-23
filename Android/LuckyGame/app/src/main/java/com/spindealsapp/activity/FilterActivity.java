@@ -1,11 +1,8 @@
 package com.spindealsapp.activity;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,9 +11,8 @@ import android.widget.ListView;
 
 import com.spindealsapp.Constants;
 import com.spindealsapp.common.Filters;
-import com.spindealsapp.database.DBHelper;
 import com.spindealsapp.R;
-import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.database.service.KeywordServiceLayer;
 import com.spindealsapp.util.Locales;
 

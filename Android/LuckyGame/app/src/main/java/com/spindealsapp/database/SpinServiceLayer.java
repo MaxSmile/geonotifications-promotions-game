@@ -5,9 +5,9 @@ import android.content.res.TypedArray;
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.R;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.entity.Spin;
 import com.spindealsapp.eventbus.Events;
-import com.spindealsapp.util.DateFormat;
 import com.spindealsapp.util.DateUtils;
 import com.spindealsapp.util.Rrule;
 

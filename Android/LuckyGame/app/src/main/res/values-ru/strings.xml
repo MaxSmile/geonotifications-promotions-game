@@ -154,4 +154,6 @@
     <string name="expired">Закончился:</string>
     <string name="near_me_message">Поиск  для вашего местоположения</string>
     <string name="directions_message">По всему Кипру</string>
+    <string name="delete_coupon_dialog_title">Подтвердить</string>
+    <string name="delete_coupon_dialog_message">Вы хотите удалить этот купон?</string>
 </resources>

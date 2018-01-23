@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.spindealsapp.Constants;
 import com.spindealsapp.database.service.CouponServiceLayer;
-import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.database.service.CompanyServiceLayer;
 import com.spindealsapp.entity.CouponExtension;
 import com.spindealsapp.R;

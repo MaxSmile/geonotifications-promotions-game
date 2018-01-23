@@ -1,14 +1,12 @@
 package com.spindealsapp.service;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,19 +14,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
-import android.widget.RemoteViews;
 
-import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.CurrentLocation;
-import com.spindealsapp.activity.HomeActivity;
-import com.spindealsapp.database.PlaceServiceLayer;
+import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.eventbus.Events;
 import com.spindealsapp.receiver.ProximityIntentReceiver;
-import com.spindealsapp.util.LocationDistance;
-import com.spindealsapp.R;
 
 import org.greenrobot.eventbus.EventBus;
 import java.util.List;
