@@ -526,7 +526,7 @@ public class FirebaseData {
             countOffers++;
             if (countOffers == countChildren.getOffers()) {
                 initOffers = true;
-                CouponServiceLayer.add(offersList, true);
+                CouponServiceLayer.add(offersList, true, false);
                 EventBus.getDefault().post(new Events.FinishLoadData());
             }
         }
@@ -660,7 +660,7 @@ public class FirebaseData {
     }
 
     private static void updateCoupons(List<CouponExtension> coupons, boolean addedCoupon) {
-        CouponServiceLayer.add(coupons, false);
+        CouponServiceLayer.add(coupons, false, addedCoupon);
         if (addedCoupon) {
             EventBus.getDefault().post(new Events.AddedCoupon());
         } else {

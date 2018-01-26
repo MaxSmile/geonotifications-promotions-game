@@ -37,27 +37,31 @@ public class CouponServiceLayer {
         repository.add(coupon);
     }
 
-    public static void add(List<CouponExtension> coupons, boolean offer) {
+    public static void add(List<CouponExtension> coupons, boolean offer, boolean addedCoupon) {
         if (offer) {
             repository.remove(new DeleteOfferSpecification());
             repository.add(coupons);
         } else {
-            List<CouponExtension> couponsList = repository.query(new CouponsSqlSpecification());
-            if (couponsList.size() > 0) {
-                List<CouponExtension> newCoupons = new ArrayList<>();
-                for (int i = 0; i < couponsList.size(); i++) {
-                    for (int j = 0; j < coupons.size(); j++) {
-                        if (couponsList.get(i).getCode().equals(coupons.get(j).getCode())) {
-                            newCoupons.add(coupons.get(j));
+            if (addedCoupon) {
+                repository.add(coupons);
+            } else {
+                List<CouponExtension> couponsList = repository.query(new CouponsSqlSpecification());
+                if (couponsList.size() > 0) {
+                    List<CouponExtension> newCoupons = new ArrayList<>();
+                    for (int i = 0; i < couponsList.size(); i++) {
+                        for (int j = 0; j < coupons.size(); j++) {
+                            if (couponsList.get(i).getCode().equals(coupons.get(j).getCode())) {
+                                newCoupons.add(coupons.get(j));
+                            }
                         }
                     }
-                }
 
-                if (newCoupons.size() > 0) {
-                    repository.add(newCoupons);
+                    if (newCoupons.size() > 0) {
+                        repository.add(newCoupons);
+                    }
+                } else {
+                    repository.add(coupons);
                 }
-            } else {
-                repository.add(coupons);
             }
         }
 

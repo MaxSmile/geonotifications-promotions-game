@@ -242,7 +242,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void startGame() {
-        if (CurrentUser.user != null && CurrentUser.user.getId() != null) {
+        if (checkLogin() && CurrentUser.user.getId() != null) {
             if (place.getSpin().isAvailable() || (geoNotification && Rrule.isAvailable(place.getSpin().getRrule()))) {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra(Company.class.getCanonicalName(), company);
@@ -390,7 +390,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     @Override
     public void getExtraSpin(View view) {
         if (NetworkState.isOnline()) {
-            if (CurrentUser.user != null) {
+            if (checkLogin() && CurrentUser.user.getId() != null) {
                 if (place.getSpin().getStatus() != Constants.SPIN_STATUS_COMING) {
                     if (boxes.size() > 0) {
                         if (place.getSpin().isExtraAvailable()) {
