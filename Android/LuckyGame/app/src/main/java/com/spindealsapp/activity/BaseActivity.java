@@ -43,8 +43,6 @@ import java.util.TreeMap;
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         BaseHandler {
 
-    static DBHelper dbHelper;
-
     static GoogleApiClient mGoogleApiClient;
     static GoogleSignInAccount accountGoogle;
     static JSONObject objectFacebook;
@@ -61,14 +59,9 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public static boolean showPopUpLogin = true;
 
-    public static TreeMap<String, String> cities;
-
-
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
-
-        dbHelper = DBHelper.getInstance(this);
 
         if (mGoogleApiClient == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

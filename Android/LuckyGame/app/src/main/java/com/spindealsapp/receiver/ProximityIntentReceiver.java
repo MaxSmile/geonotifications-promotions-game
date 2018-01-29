@@ -15,9 +15,11 @@ import com.spindealsapp.CurrentLocation;
 import com.spindealsapp.activity.DetailsActivity;
 import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.DBHelper;
+import com.spindealsapp.database.service.NotificationServiceLayer;
 import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.entity.Place;
 import com.spindealsapp.R;
+import com.spindealsapp.entity.PlaceNotification;
 import com.spindealsapp.util.LocationDistance;
 
 /**
@@ -34,7 +36,7 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
             Place place = PlaceServiceLayer.getSimplePlace(intent.getStringExtra(Constants.PLACE_KEY));
             if (place != null) {
                 double distance = getDistance(CurrentLocation.lat, CurrentLocation.lon, place.getGeoLat(), place.getGeoLon());
-                long lastNotification = DBHelper.getInstance(context).getTimeNotification(intent.getStringExtra(Constants.PLACE_KEY));
+                long lastNotification = NotificationServiceLayer.getTimeNotification(intent.getStringExtra(Constants.PLACE_KEY));
                 if (distance <= (place.getGeoRadius() + 10)) {
                     if (lastNotification > 0) {
                         if ((System.currentTimeMillis() - lastNotification) > place.getGeoTimeFrequency()) {
@@ -49,7 +51,7 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
     }
 
     private void sentNotification(Context context, Intent intent, Place place) {
-        DBHelper.getInstance(context).saveTimeNotification(place.getId());
+        NotificationServiceLayer.add(new PlaceNotification(place.getId(),System.currentTimeMillis()));
 
         Intent activityIntent = new Intent(context, DetailsActivity.class);
         activityIntent.putExtra(Constants.PLACE_KEY, intent.getStringExtra(Constants.PLACE_KEY));

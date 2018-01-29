@@ -15,6 +15,7 @@ import com.spindealsapp.database.table.CouponTable;
 import com.spindealsapp.database.table.GalleryTable;
 import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.database.table.KeywordTable;
+import com.spindealsapp.database.table.NotificationTable;
 import com.spindealsapp.database.table.PlaceTable;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
@@ -39,7 +40,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
-    private static final String TABLE_NOTIFICATION = "notification";
     private static final String TABLE_BOX = "box";
     private static final String TABLE_SPIN = "spin";
     private static final String KEY_ID = "_id";
@@ -48,10 +48,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_BOX_COLOR = "color";
     private static final String KEY_BOX_COUNT = "count";
     private static final String KEY_BOX_GIFT = "gift";
-
-    private static final String KEY_LAST_NOTIFICATION = "lastNotification";
-
-    private static final String KEY_PLACE_ID = "id";
 
     private static final String KEY_SPIN_ID = "id";
     private static final String KEY_SPIN_COMPANY_KEY = "companyKey";
@@ -99,7 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists " + CouponTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + PlaceTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_NOTIFICATION);
+        sqLiteDatabase.execSQL("drop table if exists " + NotificationTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + GalleryTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
@@ -221,12 +217,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTableNotification(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NOTIFICATION + "("
+        db.execSQL("create table " + NotificationTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_PLACE_ID  + " text,"
-                + KEY_LAST_NOTIFICATION + " INTEGER,"
+                + NotificationTable.Fields.PLACE_ID  + " text,"
+                + NotificationTable.Fields.LAST_NOTIFICATION + " INTEGER,"
                 + "UNIQUE ("
-                + KEY_PLACE_ID
+                + NotificationTable.Fields.PLACE_ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
     }
@@ -264,39 +260,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + PlaceTable.Fields.ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
-    }
-
-    public void saveTimeNotification(String placeI) {
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_PLACE_ID, placeI);
-        contentValues.put(KEY_LAST_NOTIFICATION, System.currentTimeMillis());
-
-        db.insert(TABLE_NOTIFICATION, null, contentValues);
-        DatabaseManager.getInstance().closeDatabase();
-    }
-
-    public long getTimeNotification(String placeId) {
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_NOTIFICATION
-                        + " WHERE "
-                        + KEY_PLACE_ID
-                        + " = ?"
-                , new String[] {placeId});
-
-        if (cursor.moveToFirst()) {
-            do {
-                return cursor.getLong(2);
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return 0;
     }
 
     public void insertSpin(Spin spin) {
