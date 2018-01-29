@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 public class Box implements Parcelable {
 
+    private String owner;
     private int color;
     private int count;
     private String gift;
@@ -22,7 +23,15 @@ public class Box implements Parcelable {
         this.gift = gift;
     }
 
+    public Box(String owner, int color, int count, String gift) {
+        this.owner = owner;
+        this.color = color;
+        this.count = count;
+        this.gift = gift;
+    }
+
     protected Box(Parcel in) {
+        owner = in.readString();
         color = in.readInt();
         count = in.readInt();
         gift = in.readString();
@@ -39,6 +48,14 @@ public class Box implements Parcelable {
             return new Box[size];
         }
     };
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
     public int getColor() {
         return color;
@@ -70,9 +87,10 @@ public class Box implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(color);
-        dest.writeInt(count);
-        dest.writeString(gift);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(owner);
+        parcel.writeInt(color);
+        parcel.writeInt(count);
+        parcel.writeString(gift);
     }
 }

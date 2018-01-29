@@ -10,6 +10,7 @@ import android.util.Log;
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.database.mapper.CouponToContentValuesMapper;
+import com.spindealsapp.database.table.BoxTable;
 import com.spindealsapp.database.table.CompanyTable;
 import com.spindealsapp.database.table.CouponTable;
 import com.spindealsapp.database.table.GalleryTable;
@@ -98,7 +99,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + NotificationTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + CompanyTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + GalleryTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_BOX);
+        sqLiteDatabase.execSQL("drop table if exists " + BoxTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + GiftTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + KeywordTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + TABLE_SPIN);
@@ -143,12 +144,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createTableBox(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_BOX + "("
+        db.execSQL("create table " + BoxTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_BOX_SPIN_ID  + " text,"
-                + KEY_BOX_COLOR + " INTEGER,"
-                + KEY_BOX_COUNT + " INTEGER,"
-                + KEY_BOX_GIFT + " text"
+                + BoxTable.Fields.OWNER  + " text,"
+                + BoxTable.Fields.COLOR + " INTEGER,"
+                + BoxTable.Fields.COUNT + " INTEGER,"
+                + BoxTable.Fields.GIFT + " text"
                 + ")");
     }
 
