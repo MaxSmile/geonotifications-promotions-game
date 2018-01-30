@@ -20,14 +20,6 @@
         <item>@drawable/e_shop_icon</item>
         <item>@drawable/favourites</item>
     </array>
-    <string-array name="box_name_type" translatable="false">
-        <item>green</item>
-        <item>yellow</item>
-        <item>red</item>
-        <item>blue</item>
-        <item>grey</item>
-        <item>pink</item>
-    </string-array>
     <integer-array name="box_type">
         <item>@drawable/box_green</item>
         <item>@drawable/box_yellow</item>

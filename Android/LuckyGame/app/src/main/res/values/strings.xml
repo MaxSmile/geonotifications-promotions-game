@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">SpinDeals</string>
     <string name="coupon_redeem">Redeem</string>
-    <string name="location_service_stop">Push for stop searching</string>
-    <string name="location_service_text">Search for deals in progress</string>
     <string name="fragment_companies_title">All \nPartners</string>
     <string name="fragment_active_companies_title">Active \nSpins</string>
     <string name="fragment_coupons_title">My \nCoupons</string>
-    <string name="login_success_message">You succeeded login</string>
     <string name="search">Search</string>
     <string name="near_me">Near me</string>
     <string name="filters">Filters</string>
@@ -31,10 +28,8 @@
     <string name="rules_conditions_title">Rules &amp; Conditions</string>
     <string name="locks">Locks in:</string>
     <string name="expires">Expires in:</string>
-    <string name="share_coupon">Share\ncoupon</string>
     <string name="unlock">Unlock</string>
     <string name="send_friends">Send to\nfriends</string>
-    <string name="next_version">Coming soon in the next version!</string>
     <string name="login_title">Do you feel lucky today?</string>
     <string name="call">Call</string>
     <string name="news">News</string>
@@ -51,7 +46,6 @@
     <string name="days">%ddays</string>
     <string name="time">%1$dh,%2$dm</string>
     <string name="time_short">%dm</string>
-    <string name="direction_distance">Distance: %s</string>
     <string name="more_about">More\nAbout</string>
     <string name="coupon_code">Coupon Code</string>
     <string name="important">Important!</string>
@@ -63,7 +57,6 @@
     <string name="unlock_text3">You can always tell your friends next to you to try their luck</string>
     <string name="unlock_text4">send you their coupons</string>
     <string name="time_left">Time left:</string>
-    <string name="unlock_facebook_like">Like %s facebook page</string>
     <string name="unlock_facebook_share">Share with friends %s</string>
     <string name="unlock_invite_friends">Invite your friends</string>
     <string name="login_license">By login in or accessing SpinDeals app you agree and accept our <u>Terms &amp; Conditions</u></string>
@@ -83,7 +76,6 @@
     <string name="game_out_of_spins">Out of spins?</string>
     <string name="game_get_extra_spins">Get an extra spin</string>
     <string name="redeemed">Redeemed:</string>
-    <string name="wait_for_update_data">Wait for update data</string>
     <string name="empty_category">This category is empty</string>
     <string name="spin_coming_message">No Spin today for this place. For the next Spin see the: About Spins and Coupons for this place</string>
     <string name="network_title">No connection found</string>
@@ -91,8 +83,6 @@
     <string name="settings">Settings</string>
     <string name="cancel">cancel</string>
     <string name="network_unavailable">Network is unavailable</string>
-    <string name="please_wait">Please wait</string>
-    <string name="finding_direction">Finding direction</string>
     <string name="unknown_location">Unknown your current location</string>
     <string name="near_me_category">Filter near me</string>
     <string name="near_me_title">Set radius in meters</string>
@@ -114,7 +104,6 @@
     <string name="tutorial">Tutorial</string>
     <string name="visit_our_website">Visit our website</string>
     <string name="visit_our_facebook">Visit our Facebook page</string>
-    <string name="settings_invite">Invite friends</string>
     <string name="rating_us">Rating us</string>
     <string name="mail_chooser">Send email:</string>
     <string name="filter_by_town"><u>By town</u></string>
@@ -129,7 +118,6 @@
     <string name="add_coupon_title">Add coupon</string>
     <string name="add_coupon_button">Add</string>
     <string name="add_coupon_code_wrong">Wrong coupon code</string>
-    <string name="gifts_left">%d gifts left</string>
     <string name="gifts_over">Sorry, all gifts are over for now.</string>
     <string name="other_places">Other locations of this company</string>
     <string name="select_maps_app">Select your maps app</string>

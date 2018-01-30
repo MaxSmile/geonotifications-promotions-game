@@ -5,7 +5,6 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorBg">#fafafb</color>
-    <color name="colorBgWhite">#ffffff</color>
     <color name="colorLine">#e1e1e1</color>
     <color name="colorTabText">#ffffff</color>
     <color name="colorTabTextSelected">#ffbf44</color>
@@ -14,12 +13,10 @@
     <color name="colorCouponPercent">#ddcd0c</color>
     <color name="colorRedeemBg">#50e352</color>
     <color name="colorRedeemText">#ffffff</color>
-    <color name="colorCouponBg">#804c4c4c</color>
     <color name="colorCouponCode">#000000</color>
     <color name="colorCouponName">#000000</color>
     <color name="colorLoginText">#ffffff</color>
     <color name="colorGameTitle">#ffffff</color>
-    <color name="colorCouponInfoBg">#ffffff</color>
     <color name="colorCouponRulesBg">#f1f4f9</color>
     <color name="colorCouponCongratsText">#ffffff</color>
     <color name="colorCouponRulesTitle">#B5BBC7</color>

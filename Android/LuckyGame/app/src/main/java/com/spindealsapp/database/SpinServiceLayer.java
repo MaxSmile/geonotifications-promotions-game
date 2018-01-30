@@ -5,6 +5,10 @@ import android.content.res.TypedArray;
 import com.spindealsapp.App;
 import com.spindealsapp.Constants;
 import com.spindealsapp.R;
+import com.spindealsapp.database.repository.SpinSqlRepository;
+import com.spindealsapp.database.repository.specification.SpinByIdSqlSpecification;
+import com.spindealsapp.database.repository.specification.SpinsSqlSpecification;
+import com.spindealsapp.database.service.BoxServiceLayer;
 import com.spindealsapp.database.service.PlaceServiceLayer;
 import com.spindealsapp.entity.Spin;
 import com.spindealsapp.eventbus.Events;
@@ -16,6 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,22 +28,33 @@ import java.util.Map;
  */
 
 public class SpinServiceLayer {
+
+    private static SpinSqlRepository repository = new SpinSqlRepository();
+
     public static void insertSpin(Spin spin) {
-        Spin oldSpin = DBHelper.getInstance(App.getInstance()).getSpin(spin.getId());
+        Spin oldSpin = null;
+        List<Spin> spinList = repository.query(new SpinByIdSqlSpecification(spin.getId()));
+        if (spinList.size() > 0) {
+            oldSpin = spinList.get(0);
+        }
         setOldData(spin, oldSpin);
-        DBHelper.getInstance(App.getInstance()).insertSpin(spin);
+        repository.add(spin);
         PlaceServiceLayer.calculateData();
     }
 
     public static void saveSpins(ArrayList<Spin> spins) {
-        Map<String, Spin> oldSpins = DBHelper.getInstance(App.getInstance()).getSpins();
+        List<Spin> spinList = repository.query(new SpinsSqlSpecification());
+        Map<String, Spin> oldSpins = new HashMap<>();
+        for (Spin spin : spinList) {
+            oldSpins.put(spin.getId(), spin);
+        }
         for (Spin spin : spins) {
             Spin oldSpin = oldSpins.get(spin.getId());
             setOldData(spin, oldSpin);
         }
-        if (DBHelper.getInstance(App.getInstance()).saveSpins(spins)) {
-            EventBus.getDefault().post(new Events.UpdatePlaces());
-        }
+
+        repository.add(spins);
+        EventBus.getDefault().post(new Events.UpdatePlaces());
     }
 
     private static void setOldData(Spin spin, Spin oldSpin) {
@@ -49,11 +65,13 @@ public class SpinServiceLayer {
     }
 
     public static Map<String, Spin> getSpins() {
-        ArrayList<Spin> spins = new ArrayList<Spin>(DBHelper.getInstance(App.getInstance()).getSpins().values());
+        List<Spin> spins = repository.query(new SpinsSqlSpecification());
         Map<String, Spin> mSpins = new HashMap<String, Spin>();
         TypedArray spinIcon = App.getInstance().getResources().obtainTypedArray(R.array.spin_type_icon);
         String[] spinType = App.getInstance().getResources().getStringArray(R.array.spin_type);
         for (Spin spin : spins) {
+            spin.setBox(BoxServiceLayer.getBoxesByOwner(spin.getId()));
+
             if (spin.getExtraCreateTime() > 0 && DateUtils.isToday(new Date(spin.getExtraCreateTime()))) {
                 spin.setExtraAvailable(false);
             } else {
@@ -96,7 +114,7 @@ public class SpinServiceLayer {
     }
 
     public static void updateSpin(Spin spin) {
-        DBHelper.getInstance(App.getInstance()).updateSpin(spin);
+        repository.add(spin);
         PlaceServiceLayer.calculateData();
     }
 

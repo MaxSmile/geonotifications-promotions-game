@@ -22,10 +22,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="customCheckBoxStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/checkbox_selector</item>
-    </style>
-
     <style name="MineCustomTabText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textAllCaps">false</item>
     </style>
@@ -69,12 +65,5 @@
         <item name="android:textSize">20sp</item>
         <item name="android:layout_marginBottom">1dp</item>
     </style>
-
-    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="notificationTitle" parent="android:TextAppearance.Medium" />
-    <style name="notificationText" parent="android:TextAppearance.Small" />
 
 </resources>

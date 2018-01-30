@@ -17,12 +17,6 @@ public class Box implements Parcelable {
     public Box() {
     }
 
-    public Box(int color, int count, String gift) {
-        this.color = color;
-        this.count = count;
-        this.gift = gift;
-    }
-
     public Box(String owner, int color, int count, String gift) {
         this.owner = owner;
         this.color = color;

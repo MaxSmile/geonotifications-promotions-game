@@ -1,15 +1,10 @@
 package com.spindealsapp.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.spindealsapp.App;
-import com.spindealsapp.Constants;
-import com.spindealsapp.database.mapper.CouponToContentValuesMapper;
 import com.spindealsapp.database.table.BoxTable;
 import com.spindealsapp.database.table.CompanyTable;
 import com.spindealsapp.database.table.CouponTable;
@@ -18,16 +13,7 @@ import com.spindealsapp.database.table.GiftTable;
 import com.spindealsapp.database.table.KeywordTable;
 import com.spindealsapp.database.table.NotificationTable;
 import com.spindealsapp.database.table.PlaceTable;
-import com.spindealsapp.entity.Box;
-import com.spindealsapp.entity.Company;
-import com.spindealsapp.entity.CouponExtension;
-import com.spindealsapp.entity.Gift;
-import com.spindealsapp.entity.Place;
-import com.spindealsapp.entity.Spin;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.spindealsapp.database.table.SpinTable;
 
 /**
  * Created by Kusenko on 14.02.2017.
@@ -38,35 +24,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private static DBHelper sInstance;
 
     private static final int DATABASE_VERSION = 14;
-    private static final String TAG = "DBHelper";
 
     private static final String DATABASE_NAME = "data.db";
-    private static final String TABLE_BOX = "box";
-    private static final String TABLE_SPIN = "spin";
     private static final String KEY_ID = "_id";
-
-    private static final String KEY_BOX_SPIN_ID = "spinId";
-    private static final String KEY_BOX_COLOR = "color";
-    private static final String KEY_BOX_COUNT = "count";
-    private static final String KEY_BOX_GIFT = "gift";
-
-    private static final String KEY_SPIN_ID = "id";
-    private static final String KEY_SPIN_COMPANY_KEY = "companyKey";
-    private static final String KEY_SPIN_PLACE_KEY = "placeKey";
-    private static final String KEY_SPIN_LIMIT = "spinLimit";
-    private static final String KEY_SPIN_RRULE = "rrule";
-    private static final String KEY_SPIN_SPENT = "spent";
-    private static final String KEY_SPIN_AVAILABLE = "available";
-    private static final String KEY_SPIN_EXTRA_AVAILABLE = "extraAvailable";
-    private static final String KEY_SPIN_EXTRA = "extra";
-    private static final String KEY_SPIN_EXTRA_CREATE_TIME = "extraCreateTime";
-
-    public static synchronized DBHelper getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new DBHelper(context.getApplicationContext());
-        }
-        return sInstance;
-    }
 
     public static synchronized DBHelper getInstance() {
         if (sInstance == null) {
@@ -102,25 +62,25 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + BoxTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + GiftTable.TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + KeywordTable.TABLE_NAME);
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_SPIN);
+        sqLiteDatabase.execSQL("drop table if exists " + SpinTable.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
     private void createTableSpin(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_SPIN + "("
+        db.execSQL("create table " + SpinTable.TABLE_NAME + "("
                 + KEY_ID + " integer primary key,"
-                + KEY_SPIN_ID  + " text,"
-                + KEY_SPIN_COMPANY_KEY + " text,"
-                + KEY_SPIN_PLACE_KEY + " text,"
-                + KEY_SPIN_RRULE + " text,"
-                + KEY_SPIN_LIMIT + " INTEGER,"
-                + KEY_SPIN_SPENT + " INTEGER,"
-                + KEY_SPIN_AVAILABLE + " INTEGER,"
-                + KEY_SPIN_EXTRA_AVAILABLE + " INTEGER,"
-                + KEY_SPIN_EXTRA_CREATE_TIME + " INTEGER,"
-                + KEY_SPIN_EXTRA + " INTEGER,"
+                + SpinTable.Fields.ID  + " text,"
+                + SpinTable.Fields.COMPANY_KEY + " text,"
+                + SpinTable.Fields.PLACE_KEY + " text,"
+                + SpinTable.Fields.RRULE + " text,"
+                + SpinTable.Fields.LIMIT + " INTEGER,"
+                + SpinTable.Fields.SPENT + " INTEGER,"
+                + SpinTable.Fields.AVAILABLE + " INTEGER,"
+                + SpinTable.Fields.EXTRA_AVAILABLE + " INTEGER,"
+                + SpinTable.Fields.EXTRA_CREATE_TIME + " INTEGER,"
+                + SpinTable.Fields.EXTRA + " INTEGER,"
                 + "UNIQUE ("
-                + KEY_SPIN_ID
+                + SpinTable.Fields.ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
     }
@@ -261,180 +221,5 @@ public class DBHelper extends SQLiteOpenHelper {
                 + PlaceTable.Fields.ID
                 + ") ON CONFLICT REPLACE"
                 + ")");
-    }
-
-    public void insertSpin(Spin spin) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.insert(TABLE_SPIN, null, getSpinValues(spin));
-        db.delete(TABLE_BOX, KEY_BOX_SPIN_ID + " = ?", new String[] {spin.getId()});
-        saveBoxes(db, spin);
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-    }
-
-    public void updateSpin(Spin spin) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.update(TABLE_SPIN, getSpinValues(spin), KEY_SPIN_ID + " = ?", new String[] {spin.getId()});
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-    }
-
-    public Spin getSpin(String Id) {
-        Spin spin = new Spin();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_SPIN
-                        + " WHERE "
-                        + KEY_SPIN_ID
-                        + " = ?"
-                , new String[] {Id});
-        if (cursor.moveToFirst()) {
-            do {
-                spin = parseSpin(cursor);
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-        return spin;
-    }
-
-    private ContentValues getSpinValues(Spin spin) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_SPIN_ID, spin.getId());
-        contentValues.put(KEY_SPIN_COMPANY_KEY, spin.getCompanyKey());
-        contentValues.put(KEY_SPIN_PLACE_KEY, spin.getPlaceKey());
-        contentValues.put(KEY_SPIN_LIMIT, spin.getLimit());
-        contentValues.put(KEY_SPIN_RRULE, spin.getRrule());
-        contentValues.put(KEY_SPIN_SPENT, spin.getSpent());
-        contentValues.put(KEY_SPIN_AVAILABLE, spin.isAvailable() ? 1 : 0);
-        contentValues.put(KEY_SPIN_EXTRA_AVAILABLE, spin.isExtraAvailable() ? 1 : 0);
-        contentValues.put(KEY_SPIN_EXTRA_CREATE_TIME, spin.getExtraCreateTime());
-        contentValues.put(KEY_SPIN_EXTRA, spin.isExtra() ? 1 : 0);
-
-        return contentValues;
-    }
-
-
-    public boolean saveSpins(ArrayList<Spin> spins) {
-        long rowInserted = -1;
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        db.beginTransaction();
-        try {
-            db.delete(TABLE_SPIN, null, null);
-            db.delete(TABLE_BOX, null, null);
-
-            for (Spin spin: spins) {
-                rowInserted = db.insert(TABLE_SPIN, null, getSpinValues(spin));
-
-                if (rowInserted > -1) {
-                    rowInserted = saveBoxes(db, spin);
-                }
-            }
-
-            if (rowInserted > -1) {
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return rowInserted > -1;
-    }
-
-    private long saveBoxes(SQLiteDatabase db, Spin spin) {
-        long rowInserted = -1;
-        List<Box> box = spin.getBox();
-        if (box != null) {
-            for (int i = 0; i < box.size(); i++) {
-                ContentValues boxValues = new ContentValues();
-                boxValues.put(KEY_BOX_SPIN_ID, spin.getId());
-                boxValues.put(KEY_BOX_COLOR, box.get(i).getColor());
-                boxValues.put(KEY_BOX_COUNT, box.get(i).getCount());
-                boxValues.put(KEY_BOX_GIFT, box.get(i).getGift());
-                rowInserted = db.insert(TABLE_BOX, null, boxValues);
-            }
-        }
-
-        return rowInserted;
-    }
-
-    public HashMap<String, Spin> getSpins() {
-        HashMap<String, Spin> spins = new HashMap<String, Spin>();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                + TABLE_SPIN
-                + " ORDER BY "
-                + KEY_SPIN_ID
-                + " DESC", null);
-        if (cursor.moveToFirst()) {
-            do {
-                Spin spin = parseSpin(cursor);
-                spin.setBox(getBox(spin.getId()));
-                spins.put(spin.getId(), spin);
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        DatabaseManager.getInstance().closeDatabase();
-        return spins;
-    }
-
-    private List<Box> getBox(String spinId) {
-        List<Box> box = new ArrayList<Box>();
-        //SQLiteDatabase db = this.getWritableDatabase();
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "
-                        + TABLE_BOX
-                        + " WHERE "
-                        + KEY_BOX_SPIN_ID
-                        + " = ?"
-                , new String[] {spinId});
-
-        if (cursor.moveToFirst()) {
-            do {
-                box.add(parseBox(cursor));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d(TAG ,"0 rows");
-        }
-
-        cursor.close();
-        //db.close();
-        DatabaseManager.getInstance().closeDatabase();
-
-        return box;
-    }
-
-    private Box parseBox(Cursor cursor) {
-        return new Box(
-                cursor.getInt(2),
-                cursor.getInt(3),
-                cursor.getString(4)
-        );
-    }
-
-    private Spin parseSpin(Cursor cursor) {
-        return new Spin(
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getLong(5),
-                cursor.getLong(6),
-                cursor.getInt(7) > 0,
-                cursor.getInt(8) > 0,
-                cursor.getLong(9),
-                cursor.getInt(10) > 0
-        );
     }
 }

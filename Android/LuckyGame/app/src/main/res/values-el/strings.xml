@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">SpinDeals</string>
     <string name="coupon_redeem"> Εξαργύρωση</string>
-    <string name="location_service_stop">Επιλέξτε για κλείσιμο</string>
-    <string name="location_service_text">Αναζήτηση νέου spin σε εξέλιξη</string>
     <string name="fragment_companies_title">\'Ολοι οι \nΣυνέταιροι</string>
     <string name="fragment_active_companies_title">Ενεργά \nSpins</string>
     <string name="fragment_coupons_title">Τα \nΚουπόνια μου</string>
-    <string name="login_success_message">Επιτύχατε σύνδεση</string>
     <string name="search">Αναζήτηση</string>
     <string name="near_me">Κοντά μου</string>
     <string name="filters">Φίλτρα</string>
@@ -31,10 +28,8 @@
     <string name="rules_conditions_title">Κανόνες &amp; Συνθήκες</string>
     <string name="locks">Κλειδώνει σε:</string>
     <string name="expires">Λήγει σε:</string>
-    <string name="share_coupon">Μοιράσου\nΚουπόνι</string>
     <string name="unlock">Ξεκλείδωμα</string>
     <string name="send_friends">Στείλε σε\nφίλους</string>
-    <string name="next_version">Σύντομα θα έρθει στην επόμενη έκδοση!</string>
     <string name="login_title">Νιώθεις τυχερός σήμερα;</string>
     <string name="call">Κλήση</string>
     <string name="news">Νέα</string>
@@ -51,7 +46,6 @@
     <string name="days">%dμέρες</string>
     <string name="time">%1$dω,%2$dλ</string>
     <string name="time_short">%dλ</string>
-    <string name="direction_distance">Απόσταση: %s</string>
     <string name="more_about">Σχετικά</string>
     <string name="coupon_code">Κωδικός </string>
     <string name="important">Σημαντικό!</string>
@@ -63,7 +57,6 @@
     <string name="unlock_text3">Μπορείς να πεις στους φίλους σου δίπλα σου να δοκιμάσουν την τύχη τους</string>
     <string name="unlock_text4">Να σου στείλουν τα κουπόνια τους</string>
     <string name="time_left">Χρόνος:</string>
-    <string name="unlock_facebook_like">Like %s σελίδα facebook</string>
     <string name="unlock_facebook_share">Μοιράσου με φίλους %s</string>
     <string name="unlock_invite_friends">Προσκάλεσε τους φίλους σου</string>
     <string name="login_license">Με την είσοδο ή την πρόσβαση στην εφαρμογή SpinDeals, συμφωνείτε και αποδέχεστε τους <u>\'Ορους &amp; Προϋποθέσεις</u></string>
@@ -83,7 +76,6 @@
     <string name="game_out_of_spins">Έλλειψη spins?</string>
     <string name="game_get_extra_spins">Πάρε ένα επιπλέον</string>
     <string name="redeemed">Εξαργυρωμένο:</string>
-    <string name="wait_for_update_data">Περιμένετε για δεδομένα ενημέρωσης</string>
     <string name="empty_category">Αυτή η κατηγορία είναι κενή</string>
     <string name="spin_coming_message">Οχι Spin σήμερα για αυτό το μέρος. Για το επόμενο Spin κοίταξε στο:Σχετικά με Spins και Κουπόνια για αυτό το μέρος</string>
     <string name="network_title">Δεν βρέθηκε σύνδεση</string>
@@ -91,8 +83,6 @@
     <string name="settings">Ρυθμίσεις</string>
     <string name="cancel">Ματαίωση</string>
     <string name="network_unavailable">Το δίκτυο δεν είναι διαθέσιμο</string>
-    <string name="please_wait">Παρακαλώ περιμένετε</string>
-    <string name="finding_direction">Εύρεση κατεύθυνσης</string>
     <string name="unknown_location">Δεν είναι γνωστή η τρέχουσα τοποθεσία σας</string>
     <string name="near_me_category">Φίλτρα κοντά μου</string>
     <string name="near_me_title">Ρυθμίστε την ακτίνα σε μέτρα</string>
@@ -114,7 +104,6 @@
     <string name="tutorial">Τρόπος Χρήσης</string>
     <string name="visit_our_website">Επισκεφτείτε την ιστοσελίδα μας</string>
     <string name="visit_our_facebook">Επισκεφθείτε τη σελίδα μας στο Facebook</string>
-    <string name="settings_invite">Προσκαλέσετε τους φίλους σας</string>
     <string name="rating_us">Αξιολογήστε μας</string>
     <string name="mail_chooser">Στείλτε e-mail:</string>
     <string name="filter_by_town"><u>Ανα πόλη</u></string>
@@ -129,7 +118,6 @@
     <string name="add_coupon_title">Προσθήκη κουπονιού</string>
     <string name="add_coupon_button">Προσθήκη</string>
     <string name="add_coupon_code_wrong">Λάθος κωδικός κουπονιού</string>
-    <string name="gifts_left">%d Υπολειπόμενα δώρα</string>
     <string name="gifts_over">Συγνώμη, όλα τα δώρα έχουν τελειώσει για τώρα.</string>
     <string name="other_places"> Άλλες τοποθεσίες της εταιρείας</string>
     <string name="select_maps_app">Επιλέξτε την εφαρμογή με χάρτες που θέλετε</string>
