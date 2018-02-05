@@ -203,6 +203,11 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         });
     }
 
+    public void reloadData() {
+        startActivity(new Intent(this, LoaderActivity.class));
+        finish();
+    }
+
    /* public boolean checkFb() {
         if (CurrentUser.user == null || CurrentUser.user.getType() == Constants.USER_TYPE_GOOGLE) {
             Intent intent = new Intent(this, ChooseAccountActivity.class);

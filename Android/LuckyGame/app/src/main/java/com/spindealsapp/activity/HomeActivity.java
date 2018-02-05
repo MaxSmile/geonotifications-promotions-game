@@ -162,7 +162,12 @@ public class HomeActivity extends BaseActivity implements DataBridge, HomeHandle
 
         binding.setFilterNearMe(Filters.nearMe);
         binding.setFiltersCount(Filters.count);
-        FirebaseData.getCoupons();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FirebaseData.getCoupons();
+            }
+        }).start();
     }
 
     @Override

@@ -143,7 +143,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
     }
 
     private void refreshView() {
-        if (place != null && place.getCompanyKey() != null) {
+        if (place != null && place.getCompanyKey() != null && place.getSpin() != null) {
             boxes = place.getSpin().getBox();
             gifts = GiftServiceLayer.getGifts(place);
             if (!isTaskRoot() && !geoNotification) {
@@ -171,7 +171,7 @@ public class DetailsActivity extends BaseActivity implements DetailsHandler {
             }
             initOther();
         } else {
-            onBackPressed();
+            reloadData();
         }
 
     }

@@ -26,7 +26,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="f3381de560e52052038ffb42a852d4b4df492896" />
+            android:value="02bb9557b406fe37d4a04efa437abc1a85a93b0c" />
         <activity android:name=".activity.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

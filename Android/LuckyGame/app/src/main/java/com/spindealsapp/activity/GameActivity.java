@@ -128,8 +128,7 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (place == null) {
-            startActivity(new Intent(this, LoaderActivity.class));
-            finish();
+            reloadData();
         } else {
             company = getIntent().getParcelableExtra(Company.class.getCanonicalName());
             gifts = GiftServiceLayer.getGifts(place);
