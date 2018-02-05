@@ -1,5 +1,6 @@
 package com.spindealsapp.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -122,7 +123,9 @@ public class CouponFragment extends Fragment implements CouponHandler {
                     startActivity(intent);
                 } else if (coupon.getStatus() == Constants.COUPON_STATUS_ACTIVE) {
                     if (Rrule.isAvailable(coupon.getRrule())) {
-                        showPopUp();
+                        if(getActivity() != null && !getActivity().isFinishing()) {
+                            showPopUp();
+                        }
                     } else {
                         Toast.makeText(getActivity(), R.string.coupon_not_available, Toast.LENGTH_SHORT).show();
                     }

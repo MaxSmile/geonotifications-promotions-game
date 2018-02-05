@@ -48,7 +48,7 @@ import com.spindealsapp.common.Properties;
 import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.FirebaseData;
 import com.spindealsapp.database.service.GiftServiceLayer;
-import com.spindealsapp.database.SpinServiceLayer;
+import com.spindealsapp.database.service.SpinServiceLayer;
 import com.spindealsapp.entity.Box;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Coupon;
@@ -616,6 +616,9 @@ public class GameActivity extends BaseActivity implements GameHandler, Animation
         if (sp != null) {
             sp.release();
             sp = null;
+        }
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
         }
         super.onDestroy();
     }

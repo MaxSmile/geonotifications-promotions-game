@@ -7,14 +7,16 @@ package com.spindealsapp.entity;
 public class User {
 
     private String id;
+    private String token;
     private String name;
     private int type;
 
     public User() {
     }
 
-    public User(String id, String name, int type) {
+    public User(String id, String token, String name, int type) {
         this.id = id;
+        this.token = token;
         this.name = name;
         this.type = type;
     }
@@ -25,6 +27,14 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getName() {

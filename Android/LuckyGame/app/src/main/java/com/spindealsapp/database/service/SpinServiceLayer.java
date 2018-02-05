@@ -1,4 +1,4 @@
-package com.spindealsapp.database;
+package com.spindealsapp.database.service;
 
 import android.content.res.TypedArray;
 

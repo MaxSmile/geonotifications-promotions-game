@@ -24,8 +24,6 @@ import com.spindealsapp.databinding.ActivitySettingBinding;
 
 public class SettingActivity extends BaseActivity implements SettingHandler {
 
-    private boolean disconnect = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +54,7 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
     @Override
     public void logout(View view) {
         if (CurrentUser.user != null) {
-            LoginManager.getInstance().logOut();
-            logoutGoogle();
-            CurrentUser.user = null;
-            Properties.setUser(null);
+            logoutAccount();
         }
         startActivity(new Intent(this, ChooseAccountActivity.class));
         finish();
@@ -127,31 +122,5 @@ public class SettingActivity extends BaseActivity implements SettingHandler {
         } else {
             Toast.makeText(this, "Unknown user, need login", Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-    private void logoutGoogle() {
-        disconnect = true;
-        mGoogleApiClient.connect();
-        mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
-                if (disconnect) {
-                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                    mGoogleApiClient.disconnect();
-                }
-            }
-
-            @Override
-            public void onConnectionSuspended(int i) {
-
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disconnect = false;
     }
 }

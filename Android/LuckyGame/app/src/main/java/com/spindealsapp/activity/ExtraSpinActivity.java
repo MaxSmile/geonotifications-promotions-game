@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.spindealsapp.Constants;
-import com.spindealsapp.database.SpinServiceLayer;
+import com.spindealsapp.database.service.SpinServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.R;
 import com.spindealsapp.databinding.ActivityExtraSpinBinding;

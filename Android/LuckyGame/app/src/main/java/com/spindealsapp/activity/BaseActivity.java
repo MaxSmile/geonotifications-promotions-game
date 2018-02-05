@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.View;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -59,6 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     public static boolean showPopUpLogin = true;
 
+    private boolean disconnect = false;
+
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
@@ -81,9 +85,12 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
 
     boolean checkLogin() {
         User user = Properties.getUser();
-        if (user != null) {
+        if (user != null && user.getToken() != null) {
             CurrentUser.user = user;
             return true;
+        } else {
+            logoutAccount();
+            return false;
         }
         /*
         if (AccessToken.getCurrentAccessToken() != null) {
@@ -97,7 +104,6 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                 return true;
             }
         }*/
-        return false;
     }
 
 
@@ -107,6 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
             accountGoogle = result.getSignInAccount();
             CurrentUser.user = new User(
                     accountGoogle.getId(),
+                    accountGoogle.getIdToken(),
                     accountGoogle.getDisplayName(),
                     Constants.USER_TYPE_GOOGLE
             );
@@ -125,7 +132,14 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         Log.d(G_TAG, "onConnectionFailed:" + connectionResult);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disconnect = false;
+    }
+
     void getFacebookUserInfo() {
+        System.out.println("myTest exp= " + AccessToken.getCurrentAccessToken().getExpires());
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -136,6 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
                             try {
                                 CurrentUser.user = new User(
                                         objectFacebook.getString("id"),
+                                        AccessToken.getCurrentAccessToken().getToken(),
                                         objectFacebook.getString("name"),
                                         Constants.USER_TYPE_FACEBOOK);
                                 Properties.setUser(CurrentUser.user);
@@ -160,6 +175,32 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     public void favorites(View view) {
         place.setFavorites(!place.isFavorites());
         PlaceServiceLayer.update(place);
+    }
+
+    public void logoutAccount() {
+        LoginManager.getInstance().logOut();
+        logoutGoogle();
+        CurrentUser.user = null;
+        Properties.setUser(null);
+    }
+
+    private void logoutGoogle() {
+        disconnect = true;
+        mGoogleApiClient.connect();
+        mGoogleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+                if (disconnect) {
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                    mGoogleApiClient.disconnect();
+                }
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+            }
+        });
     }
 
    /* public boolean checkFb() {

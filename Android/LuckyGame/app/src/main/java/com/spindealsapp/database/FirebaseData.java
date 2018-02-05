@@ -13,6 +13,7 @@ import com.spindealsapp.database.service.CouponServiceLayer;
 import com.spindealsapp.database.service.GiftServiceLayer;
 import com.spindealsapp.database.service.KeywordServiceLayer;
 import com.spindealsapp.database.service.PlaceServiceLayer;
+import com.spindealsapp.database.service.SpinServiceLayer;
 import com.spindealsapp.entity.Company;
 import com.spindealsapp.entity.Count;
 import com.spindealsapp.entity.CouponExtension;
